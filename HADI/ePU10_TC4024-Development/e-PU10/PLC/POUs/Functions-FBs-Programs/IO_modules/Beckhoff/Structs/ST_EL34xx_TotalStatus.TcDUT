@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_EL34xx_TotalStatus" Id="{ed317c56-20ac-4fd2-9f71-7c3d86c73c8a}">
+    <Declaration><![CDATA[TYPE ST_EL34xx_TotalStatus :
+STRUCT
+	bit_SystemState						: BIT;
+	bit_GridDirection					: BIT;
+	bit_FrequencyGuardWarning			: BIT;
+	bit_FrequencyGuardError             : BIT;
+	bit_NeutralCurrentGuardWarning      : BIT;
+	bit_NeutralCurrentGuardError        : BIT;
+	bit_ActivePowerGuardWarning         : BIT;
+	bit_ActivePowerGuardError           : BIT;
+	bit_ApparentPowerGuardWarning       : BIT;
+	bit_ApparentPowerGuardError         : BIT;
+	bit_PowerQualityGuardWarning        : BIT;
+	bit_PowerQualityGuardError          : BIT;
+	bit_TxPDOState                      : BIT;
+	bit_TxPDOToggle                     : BIT;
+	r_PowerQualityFactor				: REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

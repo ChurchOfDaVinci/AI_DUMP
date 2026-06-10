@@ -1,0 +1,3419 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.35" ClassName="CPnIoBoxDef" SubType="9120">
+	<DataTypes>
+		<DataType>
+			<Name GUID="{8C57F3C0-9711-0C51-7684-446A4D7D4592}">PN_Status_78079DEA</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>Reserved_0</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Reserved_1</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>EcFrameError</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Reserved_2</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>NeedEBusReset</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{9B729920-03D2-BA6B-C1D8-8162077679C2}">PN_Output_BitArray_81E13434</Name>
+			<BitSize>8</BitSize>
+			<SubItem>
+				<Name>Channel_1_Output</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Channel_2_Output</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Channel_3_Output</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Channel_4_Output</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Channel_5_Output</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Channel_6_Output</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Channel_7_Output</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>6</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Channel_8_Output</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>7</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{2A08EE56-D4B9-5EE9-8239-977C8FE2ECED}">PN_Input_BitArray_E59AE1E2</Name>
+			<BitSize>8</BitSize>
+			<SubItem>
+				<Name>Channel_1_Input</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Channel_2_Input</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Channel_3_Input</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>2</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Channel_4_Input</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>3</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Channel_5_Input</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>4</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Channel_6_Input</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>5</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Channel_7_Input</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>6</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Channel_8_Input</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>7</BitOffs>
+			</SubItem>
+		</DataType>
+		<DataType>
+			<Name GUID="{6C40BA49-1A5B-351C-E4D9-06790D6367CF}">PN_RTD_Inputs_Channel_1_Status_EF3D1AFB</Name>
+			<BitSize>16</BitSize>
+			<SubItem>
+				<Name>Underrange</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>0</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Overrange</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>1</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>Error</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>6</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TxPDO_State</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>14</BitOffs>
+			</SubItem>
+			<SubItem>
+				<Name>TxPDO_Toggle</Name>
+				<Type GUID="{18071995-0000-0000-0000-000000000010}">BIT</Type>
+				<BitSize>1</BitSize>
+				<BitOffs>15</BitOffs>
+			</SubItem>
+		</DataType>
+	</DataTypes>
+	<Box Id="17" BoxType="9120">
+		<Name>__FILENAME__</Name>
+		<Comment><![CDATA[GSDML Name: GSDML-V2.43-beckhoff-EK9320-20230313.xml
+Path: $(TWINCAT3DIR)Config\Io\Profinet\
+VendorName: Beckhoff Automation
+OrderNumber: EK9320
+HW Release Version: 1
+SW Release Version: V1.00]]></Comment>
+		<ImageId>5</ImageId>
+		<Vars VarGrpType="1">
+			<Name>Inputs</Name>
+			<Var>
+				<Name>PnIoBoxState</Name>
+				<Comment><![CDATA[0 = No error
+1 = Profinet device state machine is in boot mode
+2 = Device not found
+3 = The stationname is not unique
+4 = IP could not be set
+5 = IP conflict
+6 = DCP set was not successful
+7 = Watchdog error
+8 = Datahold error
+9 = RTC3: Sync mode could not be initiated
+10 = Profinet controller has a link error
+11 = The aliasname is not unique
+12 = The automatic name assignement isn't possible - wrong device type
+13 = IOC-AR is established but no application ready
+14 = IOC-AR is established but module difference
+15 = At least one InputCR is invalid, provider in stop or problemindicator is set
+16 = At least one OutputCR is invalid, provider in stop or problemindicator is set
+31 = Only for EtherCAT gateways: WC-State of cyclic EtherCAT frame is 1
+]]></Comment>
+				<Type>UINT</Type>
+				<BitOffs>1152</BitOffs>
+			</Var>
+			<Var>
+				<Name>PnIoBoxDiag</Name>
+				<Comment><![CDATA[0x0000 = No diagnosis
+0x0001 = IOC-AR is not established
+0x0002 = IOC-AR is established
+0x0004 = IOC-AR is established but no application ready
+0x0008 = IOC-AR is established but module difference
+0x0010 = At least one AlarmCR got a diagnosis alarm
+0x0100 = At least one InputCR is invalid
+0x0200 = At least one InputCR Provider is in stop
+0x0400 = At least one InputCR Problemindicator is set
+0x1000 = At least one OutputCR is invalid
+0x2000 = At least one OutputCR Provider is in stop
+0x4000 = At least one OutputCR Problemindicator is set
+]]></Comment>
+				<Type>UINT</Type>
+				<BitOffs>1168</BitOffs>
+			</Var>
+		</Vars>
+		<Vars VarGrpType="2">
+			<Name>Outputs</Name>
+			<Var>
+				<Name>PnIoBoxCtrl</Name>
+				<Type>UINT</Type>
+				<BitOffs>1936</BitOffs>
+			</Var>
+		</Vars>
+		<Profinet DeviceId="9320" VendorId="288" FrameOffset="32768" Flags="16" IPAdd="c0a80103" ProtocolType="3" BoxOnDeviceTyp="113" MaxPhysSlotNr="255" InstanceServerPort="61000" InstanceClientPort="60000" InstanceNumberOfARs="1" InstanceNumberOfAPIs="1" MinDeviceInterval="32" SavePnIoBoxValues="4d00" MultipleWriteSupported="true" Phase="1" WatchdogFaktor="3" ReductionRatio="1" SendClockFaktor="32" MaxInputLen="1440" MaxOutputLen="1440" MaxDataLen="2880" SendClockFactorData="2000" RedRatio="0100020004000800100020004000800000010002" BoxTypeInfo="PROFINET I/O - EtherCAT coupler, IRT, V2.43, port diagnostic, shared device and system redundancy supported" GSDMLPath="$(TWINCAT3DIR)Config\Io\Profinet\GSDML-V2.43-beckhoff-EK9320-20230313.xml" ImagePath="C:\TwinCAT\3.1\Config\Io\Profinet\GSDML-0120-2468-ek9320.bmp" MainFamily="I/O" ProductFamily="EK Device" OrderNr="EK9320" DefaultDNSName="ek9320" VendorName="Beckhoff Automation" FamDescription="EK products, protection type IP20" GraphicFile="GSDML-0120-2468-ek9320" SWVersion="V1.00" HWVersion="1" AltLanguage="7">
+			<GsdmlValue Id="Activ_Inactiv" Content="00000100">
+				<RecordText>inactive</RecordText>
+				<RecordText>active</RecordText>
+			</GsdmlValue>
+			<GsdmlValue Id="EnumList_0" Content="00000100">
+				<RecordText>False</RecordText>
+				<RecordText>True</RecordText>
+			</GsdmlValue>
+			<GsdmlValue HelpInfo="At the release of the AR take the fallback values that are configured from profinet. If no fallback value available the outputs would be set to zero. If that fetaure is disabled the output values are frozen." Id="EnumList_1" Content="00000100">
+				<RecordText>Off</RecordText>
+				<RecordText>On</RecordText>
+			</GsdmlValue>
+			<GsdmlValue HelpInfo="Define the data presentation format." Id="EnumList_2" Content="00000100">
+				<RecordText>Intel Format</RecordText>
+				<RecordText>Motorola Format</RecordText>
+			</GsdmlValue>
+			<GsdmlValue HelpInfo="Define the behavior of the IOs if the EBus frame is incorrect. The &quot;Legacy&quot; mode means that the Outputs will be updated and the inputs will be frozen (it depends from the location of the EBus error). The &quot;Set IOs to 0&quot; mode means that the IOs set to zero and automatic restart of EBus if the error disappear. Other than the &quot;Set IOs to 0 without EBus restart&quot; option, the EBus will not automatic restarted." Id="EnumList_3" Content="000001000200">
+				<RecordText>Legacy</RecordText>
+				<RecordText>Set IOs to 0</RecordText>
+				<RecordText>Set IOs to 0 without EBus restart</RecordText>
+			</GsdmlValue>
+			<GsdmlValue HelpInfo="Define the cycle time of the EBus. The default is 1ms, but it's possible to trigger it with the PN cycle (max 64 ms)." Id="EnumList_4" Content="00000100">
+				<RecordText>Internal Task cycle</RecordText>
+				<RecordText>PN cycle</RecordText>
+			</GsdmlValue>
+			<GsdmlValue HelpInfo="Defines the fallback value for the outputs if the AR is released (if that feature is enabled at the DAP)." Id="FallbackValue" Content="000001000200">
+				<RecordText>Set 0</RecordText>
+				<RecordText>Set 1</RecordText>
+				<RecordText>Frozen</RecordText>
+			</GsdmlValue>
+			<GsdmlValue Id="EnumList_19" Content="000001000200">
+				<RecordText>Signed</RecordText>
+				<RecordText>Absolute MSB sign</RecordText>
+				<RecordText>High resolution (1/100°C)</RecordText>
+			</GsdmlValue>
+			<GsdmlValue Id="EnumList_20" Content="00000100020003000400050006000700080009000a000b00">
+				<RecordText>50 Hz</RecordText>
+				<RecordText>60 Hz</RecordText>
+				<RecordText>100 Hz</RecordText>
+				<RecordText>500 Hz</RecordText>
+				<RecordText>1 kHz</RecordText>
+				<RecordText>2 kHz</RecordText>
+				<RecordText>3,75 kHz</RecordText>
+				<RecordText>7,5 kHz</RecordText>
+				<RecordText>15 kHz</RecordText>
+				<RecordText>30 kHz</RecordText>
+				<RecordText>5 Hz</RecordText>
+				<RecordText>10 Hz</RecordText>
+			</GsdmlValue>
+			<GsdmlValue Id="EnumList_21" Content="00000100020003000400050006000700080009000a000b000c000d000e000f0010001100120013001400150016001700180019001a001b001c001d001e001f002000">
+				<RecordText>PT100 (-200...850°C)</RecordText>
+				<RecordText>NI100 (-60...250°C)</RecordText>
+				<RecordText>PT1000 (-200...850°C)</RecordText>
+				<RecordText>PT500 (-200...850°C)</RecordText>
+				<RecordText>PT200 (-200...850°C)</RecordText>
+				<RecordText>NI1000 (-60...250°C)</RecordText>
+				<RecordText>NI1000 100°C: 1500Ohm (-30...160°C)</RecordText>
+				<RecordText>NI120 (-60...320°C)</RecordText>
+				<RecordText>Resistor 1/16 Ohm resolution (0..4095 Ohm)</RecordText>
+				<RecordText>Resistor 1/64 Ohm resolution (0..1047 Ohm)</RecordText>
+				<RecordText>KT100/110/130/210/230 KTY10/11/13/16/19</RecordText>
+				<RecordText>KTY81/82-110,120,150 (-50...150°C)</RecordText>
+				<RecordText>KTY81-121</RecordText>
+				<RecordText>KTY81-122</RecordText>
+				<RecordText>KTY81-151</RecordText>
+				<RecordText>KTY81-152</RecordText>
+				<RecordText>KTY81/82-210,220,250</RecordText>
+				<RecordText>KTY81-221</RecordText>
+				<RecordText>KTY81-222</RecordText>
+				<RecordText>KTY81-251</RecordText>
+				<RecordText>KTY81-252</RecordText>
+				<RecordText>KTY83-110,120,150 (-50...175°C)</RecordText>
+				<RecordText>KTY83-121</RecordText>
+				<RecordText>KTY83-122</RecordText>
+				<RecordText>KTY83-151</RecordText>
+				<RecordText>KTY83-152</RecordText>
+				<RecordText>KTY84-130,150 (-40...300°C)</RecordText>
+				<RecordText>KTY84-151</RecordText>
+				<RecordText>KTY21/23-6 (-50...150°C)</RecordText>
+				<RecordText>KTY1x-5</RecordText>
+				<RecordText>KTY1x-7</RecordText>
+				<RecordText>KTY21/23-5</RecordText>
+				<RecordText>KTY21/23-7</RecordText>
+			</GsdmlValue>
+			<GsdmlValue HelpInfo="A internal communication error appears at the profinet device." Id="EC_Error" Content="000001000200030004000500">
+				<RecordText>State Change</RecordText>
+				<RecordText>Abnormal State Change</RecordText>
+				<RecordText>State Change Aborted</RecordText>
+				<RecordText>SDO Request Aborted</RecordText>
+				<RecordText>SDO Data Invalid</RecordText>
+				<RecordText>SDO Data Length Invalid</RecordText>
+			</GsdmlValue>
+			<GsdmlValue Id="EC_State" Content="0000010002000300040008001000">
+				<RecordText>Unknown</RecordText>
+				<RecordText>Init</RecordText>
+				<RecordText>PreOP</RecordText>
+				<RecordText>Bootstrap</RecordText>
+				<RecordText>SafeOP</RecordText>
+				<RecordText>OP</RecordText>
+				<RecordText>Error</RecordText>
+			</GsdmlValue>
+			<GsdmlValue Id="EC_AlStatusCode" Content="0000010002001100120013001400150016001700180019001a001b001c001d001e001f0020002100220023002400250026002700280029002a002b002c002d0030003100320033003400350036003700410042004300440045004f00500051006000">
+				<RecordText>No error.</RecordText>
+				<RecordText>Unspecified error.</RecordText>
+				<RecordText>No memory.</RecordText>
+				<RecordText>Invalid requested state change.</RecordText>
+				<RecordText>Unknown requested state.</RecordText>
+				<RecordText>Bootstrap not supported.</RecordText>
+				<RecordText>No valid firmware.</RecordText>
+				<RecordText>Invalid mailbox configuration (bootstrap).</RecordText>
+				<RecordText>Invalid mailbox configuration.</RecordText>
+				<RecordText>Invalid sync manager configuration.</RecordText>
+				<RecordText>No valid inputs available.</RecordText>
+				<RecordText>No valid outputs.</RecordText>
+				<RecordText>Synchronization error.</RecordText>
+				<RecordText>Sync manager watchdog.</RecordText>
+				<RecordText>SYNC types not compatible.</RecordText>
+				<RecordText>Invalid SM OUT cfg.</RecordText>
+				<RecordText>Invalid SM IN cfg.</RecordText>
+				<RecordText>Invalid WD cfg.</RecordText>
+				<RecordText>Slave needs cold start.</RecordText>
+				<RecordText>Slave needs INIT.</RecordText>
+				<RecordText>Slave needs PREOP.</RecordText>
+				<RecordText>Slave needs SAFEOP.</RecordText>
+				<RecordText>Invalid Input mapping.</RecordText>
+				<RecordText>Invalid output mapping.</RecordText>
+				<RecordText>Inconsistent settings.</RecordText>
+				<RecordText>Free run not supported.</RecordText>
+				<RecordText>Synchron not supported.</RecordText>
+				<RecordText>Free run needs 3 buffer mode.</RecordText>
+				<RecordText>Background watchdog.</RecordText>
+				<RecordText>No valid inputs and outputs.</RecordText>
+				<RecordText>SYNC0 or SYNC1 failed.</RecordText>
+				<RecordText>No SYNC0 or SYNC1 received.</RecordText>
+				<RecordText>DC invalid sync cfg.</RecordText>
+				<RecordText>DC invalid latch cfg.</RecordText>
+				<RecordText>DC PLL sync error.</RecordText>
+				<RecordText>DC sync io error.</RecordText>
+				<RecordText>DC sync missed error.</RecordText>
+				<RecordText>Invalid master cycle time.</RecordText>
+				<RecordText>Invalid SYNC0 cycle time.</RecordText>
+				<RecordText>Invalid SYNC1 cycle time.</RecordText>
+				<RecordText>MBX AoE</RecordText>
+				<RecordText>MBX EoE</RecordText>
+				<RecordText>MBX CoE</RecordText>
+				<RecordText>MBX FoE</RecordText>
+				<RecordText>MBX SoE</RecordText>
+				<RecordText>MBX VoE</RecordText>
+				<RecordText>No EEPROM access.</RecordText>
+				<RecordText>EEPROM error</RecordText>
+				<RecordText>Slave has been restarted locally.</RecordText>
+			</GsdmlValue>
+			<GsdmlValue Id="EC_VendorId" Content="00000200">
+				<RecordText>Unknown</RecordText>
+				<RecordText>Beckhoff Automation GmbH</RecordText>
+			</GsdmlValue>
+			<GsdmlValue Id="EC_AbortCode" Content="00000100020003000400050006000700080009000a000b000c000d000e000f0010001100120013001400150016001700180019001a001b001c001d00">
+				<RecordText>Unknown</RecordText>
+				<RecordText>Toggle bit not alternated.</RecordText>
+				<RecordText>SDO protocol timed out.</RecordText>
+				<RecordText>Client/server command specifier not valid or unknown.</RecordText>
+				<RecordText>Invalid block size (block mode only).</RecordText>
+				<RecordText>Invalid sequence number (block mode only).</RecordText>
+				<RecordText>CRC error (block mode only).</RecordText>
+				<RecordText>Out of memory.</RecordText>
+				<RecordText>Unsupported access to an object.</RecordText>
+				<RecordText>Attempt to read a write only object.</RecordText>
+				<RecordText>Attempt to write a read only object.</RecordText>
+				<RecordText>Object does not exist in the object dictionary.</RecordText>
+				<RecordText>Object cannot be mapped to the PDO.</RecordText>
+				<RecordText>The number and length of the objects to be mapped would exceed PDO length.</RecordText>
+				<RecordText>General parameter incompatibility reason.</RecordText>
+				<RecordText>General internal incompatibility in the device.</RecordText>
+				<RecordText>Access failed due to an hardware error.</RecordText>
+				<RecordText>Data type does not match, length of service parameter does not match.</RecordText>
+				<RecordText>Data type does not match, length of service parameter too high.</RecordText>
+				<RecordText>Data type does not match, length of service parameter too low.</RecordText>
+				<RecordText>Sub-index does not exist.</RecordText>
+				<RecordText>Value range of parameter exceeded (only for write access).</RecordText>
+				<RecordText>Value of parameter written too high.</RecordText>
+				<RecordText>Value of parameter written too low.</RecordText>
+				<RecordText>Maximum value is less than minimum value.</RecordText>
+				<RecordText>general error</RecordText>
+				<RecordText>Data cannot be transferred or stored to the application.</RecordText>
+				<RecordText>Data cannot be transferred or stored to the application because of local control.</RecordText>
+				<RecordText>Data cannot be transferred or stored to the application because of the present device state.</RecordText>
+				<RecordText>Object dictionary dynamic generation fails or no object dictionary is present.</RecordText>
+			</GsdmlValue>
+			<GsdmlValue Id="EnumList_70" Content="00000300">
+				<RecordText>2-wire</RecordText>
+				<RecordText>not connected</RecordText>
+			</GsdmlValue>
+			<GsdmlValue HelpInfo="Define the behavior of the EBus outputs if the profinet connection was released." Id="EnumList_86" Content="0100020003000400">
+				<RecordText>Set to zero</RecordText>
+				<RecordText>Defined fallback</RecordText>
+				<RecordText>Frozen</RecordText>
+				<RecordText>Stop EBus</RecordText>
+			</GsdmlValue>
+			<GsdmlValue Id="MultiConfigMode" Content="00000200">
+				<RecordText>PN-DataExchange (default)</RecordText>
+				<RecordText>disabled (MultiConfigMode)</RecordText>
+			</GsdmlValue>
+			<GsdmlUnitDiag UserStructureIdent="4096" Name="StateChangeFinished">
+				<UnitDiagData Name="EC Error: " DataType="Unsigned32" DataLength="4" ValueItemTarget="EC_Error"/>
+				<UnitDiagData Name="EC Current State: " DataType="Unsigned32" DataLength="4" ByteOffset="4" ValueItemTarget="EC_State"/>
+				<UnitDiagData Name="EC VendorId: " DataType="Unsigned32" DataLength="4" ByteOffset="8" ValueItemTarget="EC_VendorId"/>
+				<UnitDiagData Name="EC ProductCode: " DataType="Unsigned32" DataLength="4" ByteOffset="12"/>
+				<UnitDiagData Name="EC RevisionNr: " DataType="Unsigned32" DataLength="4" ByteOffset="16"/>
+				<UnitDiagData Name="EC SerialNr: " DataType="Unsigned32" DataLength="4" ByteOffset="20"/>
+			</GsdmlUnitDiag>
+			<GsdmlUnitDiag UserStructureIdent="4097" Name="AbnormalState">
+				<UnitDiagData Name="EC Error: " DataType="Unsigned32" DataLength="4" ValueItemTarget="EC_Error"/>
+				<UnitDiagData Name="EC Previous State: " DataType="Unsigned32" DataLength="4" ByteOffset="4" ValueItemTarget="EC_State"/>
+				<UnitDiagData Name="EC Current State: " DataType="Unsigned32" DataLength="4" ByteOffset="8" ValueItemTarget="EC_State"/>
+				<UnitDiagData Name="EC AL State Code: " DataType="Unsigned32" DataLength="4" ByteOffset="12" ValueItemTarget="EC_AlStatusCode"/>
+				<UnitDiagData Name="EC VendorId: " DataType="Unsigned32" DataLength="4" ByteOffset="16" ValueItemTarget="EC_VendorId"/>
+				<UnitDiagData Name="EC ProductCode: " DataType="Unsigned32" DataLength="4" ByteOffset="20"/>
+				<UnitDiagData Name="EC RevisionNr: " DataType="Unsigned32" DataLength="4" ByteOffset="24"/>
+				<UnitDiagData Name="EC SerialNr: " DataType="Unsigned32" DataLength="4" ByteOffset="28"/>
+			</GsdmlUnitDiag>
+			<GsdmlUnitDiag UserStructureIdent="4098" Name="StateChangeAborted">
+				<UnitDiagData Name="EC Error: " DataType="Unsigned32" DataLength="4" ValueItemTarget="EC_Error"/>
+				<UnitDiagData Name="EC Current State: " DataType="Unsigned32" DataLength="4" ByteOffset="4" ValueItemTarget="EC_State"/>
+				<UnitDiagData Name="EC Requested State: " DataType="Unsigned32" DataLength="4" ByteOffset="8" ValueItemTarget="EC_State"/>
+				<UnitDiagData Name="EC AL State Code: " DataType="Unsigned32" DataLength="4" ByteOffset="12" ValueItemTarget="EC_AlStatusCode"/>
+				<UnitDiagData Name="EC VendorId: " DataType="Unsigned32" DataLength="4" ByteOffset="16" ValueItemTarget="EC_VendorId"/>
+				<UnitDiagData Name="EC ProductCode: " DataType="Unsigned32" DataLength="4" ByteOffset="20"/>
+				<UnitDiagData Name="EC RevisionNr: " DataType="Unsigned32" DataLength="4" ByteOffset="24"/>
+				<UnitDiagData Name="EC SerialNr: " DataType="Unsigned32" DataLength="4" ByteOffset="28"/>
+			</GsdmlUnitDiag>
+			<GsdmlUnitDiag UserStructureIdent="4099" Name="SDO Req">
+				<UnitDiagData Name="EC Error: " DataType="Unsigned32" DataLength="4" ValueItemTarget="EC_Error"/>
+				<UnitDiagData Name="EC Index: " DataType="Unsigned32" DataLength="4" ByteOffset="4"/>
+				<UnitDiagData Name="EC SubIndex: " DataType="Unsigned32" DataLength="4" ByteOffset="8"/>
+				<UnitDiagData Name="EC Abort Code: " DataType="Unsigned32" DataLength="4" ByteOffset="12" ValueItemTarget="EC_AbortCode"/>
+				<UnitDiagData Name="EC VendorId: " DataType="Unsigned32" DataLength="4" ByteOffset="16" ValueItemTarget="EC_VendorId"/>
+				<UnitDiagData Name="EC ProductCode: " DataType="Unsigned32" DataLength="4" ByteOffset="20"/>
+				<UnitDiagData Name="EC RevisionNr: " DataType="Unsigned32" DataLength="4" ByteOffset="24"/>
+				<UnitDiagData Name="EC SerialNr: " DataType="Unsigned32" DataLength="4" ByteOffset="28"/>
+			</GsdmlUnitDiag>
+			<GsdmlUnitDiag UserStructureIdent="4100" Name="SDO DataInvalid">
+				<UnitDiagData Name="EC Error: " DataType="Unsigned32" DataLength="4" ValueItemTarget="EC_Error"/>
+				<UnitDiagData Name="EC Index: " DataType="Unsigned32" DataLength="4" ByteOffset="4"/>
+				<UnitDiagData Name="EC SubIndex: " DataType="Unsigned32" DataLength="4" ByteOffset="8"/>
+				<UnitDiagData Name="EC VendorId: " DataType="Unsigned32" DataLength="4" ByteOffset="12" ValueItemTarget="EC_VendorId"/>
+				<UnitDiagData Name="EC ProductCode: " DataType="Unsigned32" DataLength="4" ByteOffset="16"/>
+				<UnitDiagData Name="EC RevisionNr: " DataType="Unsigned32" DataLength="4" ByteOffset="20"/>
+				<UnitDiagData Name="EC SerialNr: " DataType="Unsigned32" DataLength="4" ByteOffset="24"/>
+			</GsdmlUnitDiag>
+			<GsdmlUnitDiag UserStructureIdent="4101" Name="SDO LengthError">
+				<UnitDiagData Name="EC Error: " DataType="Unsigned32" DataLength="4" ValueItemTarget="EC_Error"/>
+				<UnitDiagData Name="EC Index: " DataType="Unsigned32" DataLength="4" ByteOffset="4"/>
+				<UnitDiagData Name="EC SubIndex: " DataType="Unsigned32" DataLength="4" ByteOffset="8"/>
+				<UnitDiagData Name="EC Expected Length: " DataType="Unsigned32" DataLength="4" ByteOffset="12"/>
+				<UnitDiagData Name="EC Actual Length: " DataType="Unsigned32" DataLength="4" ByteOffset="16"/>
+				<UnitDiagData Name="EC VendorId: " DataType="Unsigned32" DataLength="4" ByteOffset="20" ValueItemTarget="EC_VendorId"/>
+				<UnitDiagData Name="EC ProductCode: " DataType="Unsigned32" DataLength="4" ByteOffset="24"/>
+				<UnitDiagData Name="EC RevisionNr: " DataType="Unsigned32" DataLength="4" ByteOffset="28"/>
+				<UnitDiagData Name="EC SerialNr: " DataType="Unsigned32" DataLength="4" ByteOffset="32"/>
+			</GsdmlUnitDiag>
+			<GsdmlUnitDiag UserStructureIdent="4103" Name="EBus backplane error"/>
+			<GsdmlUnitDiag UserStructureIdent="4104" Name="EBus error disappears but the backplan need an EBus reset."/>
+			<UsedGsdmlModule ModuleIdentNumber="1" ModuleName="DAP Module" InfoText="PROFINET I/O - EtherCAT coupler, IRT, V2.43, port diagnostic, shared device and system redundancy supported" OrderNumber="EK9320">
+				<Slot>0</Slot>
+			</UsedGsdmlModule>
+			<UsedGsdmlModule ModuleIdentNumber="131596288" Id="EL2008" ModuleName="EL2008" InfoText="8Ch. Dig. Output 24V, 0.5A (at least RevNr. 0017)" OrderNumber="EL2008" ModuleCategory="Digital Output Terminals (EL2xxx)">
+				<Slot>1</Slot>
+				<Slot>2</Slot>
+				<Slot>3</Slot>
+				<Slot>4</Slot>
+				<Slot>5</Slot>
+				<Slot>6</Slot>
+				<Slot>7</Slot>
+				<Slot>8</Slot>
+				<Slot>9</Slot>
+				<Slot>10</Slot>
+				<Slot>11</Slot>
+				<Slot>12</Slot>
+				<Slot>13</Slot>
+				<Slot>14</Slot>
+				<Slot>15</Slot>
+				<Slot>16</Slot>
+				<Slot>17</Slot>
+				<Slot>18</Slot>
+				<Slot>19</Slot>
+				<Slot>20</Slot>
+				<Slot>21</Slot>
+				<Slot>22</Slot>
+				<Slot>23</Slot>
+				<Slot>24</Slot>
+				<Slot>25</Slot>
+				<Slot>26</Slot>
+				<Slot>27</Slot>
+				<Slot>28</Slot>
+				<Slot>29</Slot>
+				<Slot>30</Slot>
+				<Slot>31</Slot>
+				<Slot>32</Slot>
+				<Slot>33</Slot>
+				<Slot>34</Slot>
+				<Slot>35</Slot>
+				<Slot>36</Slot>
+				<Slot>37</Slot>
+				<Slot>38</Slot>
+				<Slot>39</Slot>
+				<Slot>40</Slot>
+				<Slot>41</Slot>
+				<Slot>42</Slot>
+				<Slot>43</Slot>
+				<Slot>44</Slot>
+				<Slot>45</Slot>
+				<Slot>46</Slot>
+				<Slot>47</Slot>
+				<Slot>48</Slot>
+				<Slot>49</Slot>
+				<Slot>50</Slot>
+				<Slot>51</Slot>
+				<Slot>52</Slot>
+				<Slot>53</Slot>
+				<Slot>54</Slot>
+				<Slot>55</Slot>
+				<Slot>56</Slot>
+				<Slot>57</Slot>
+				<Slot>58</Slot>
+				<Slot>59</Slot>
+				<Slot>60</Slot>
+				<Slot>61</Slot>
+				<Slot>62</Slot>
+				<Slot>63</Slot>
+				<Slot>64</Slot>
+				<Slot>65</Slot>
+				<Slot>66</Slot>
+				<Slot>67</Slot>
+				<Slot>68</Slot>
+				<Slot>69</Slot>
+				<Slot>70</Slot>
+				<Slot>71</Slot>
+				<Slot>72</Slot>
+				<Slot>73</Slot>
+				<Slot>74</Slot>
+				<Slot>75</Slot>
+				<Slot>76</Slot>
+				<Slot>77</Slot>
+				<Slot>78</Slot>
+				<Slot>79</Slot>
+				<Slot>80</Slot>
+				<Slot>81</Slot>
+				<Slot>82</Slot>
+				<Slot>83</Slot>
+				<Slot>84</Slot>
+				<Slot>85</Slot>
+				<Slot>86</Slot>
+				<Slot>87</Slot>
+				<Slot>88</Slot>
+				<Slot>89</Slot>
+				<Slot>90</Slot>
+				<Slot>91</Slot>
+				<Slot>92</Slot>
+				<Slot>93</Slot>
+				<Slot>94</Slot>
+				<Slot>95</Slot>
+				<Slot>96</Slot>
+				<Slot>97</Slot>
+				<Slot>98</Slot>
+				<Slot>99</Slot>
+				<Slot>100</Slot>
+				<Slot>101</Slot>
+				<Slot>102</Slot>
+				<Slot>103</Slot>
+				<Slot>104</Slot>
+				<Slot>105</Slot>
+				<Slot>106</Slot>
+				<Slot>107</Slot>
+				<Slot>108</Slot>
+				<Slot>109</Slot>
+				<Slot>110</Slot>
+				<Slot>111</Slot>
+				<Slot>112</Slot>
+				<Slot>113</Slot>
+				<Slot>114</Slot>
+				<Slot>115</Slot>
+				<Slot>116</Slot>
+				<Slot>117</Slot>
+				<Slot>118</Slot>
+				<Slot>119</Slot>
+				<Slot>120</Slot>
+				<Slot>121</Slot>
+				<Slot>122</Slot>
+				<Slot>123</Slot>
+				<Slot>124</Slot>
+				<Slot>125</Slot>
+				<Slot>126</Slot>
+				<Slot>127</Slot>
+				<Slot>128</Slot>
+				<Slot>129</Slot>
+				<Slot>130</Slot>
+				<Slot>131</Slot>
+				<Slot>132</Slot>
+				<Slot>133</Slot>
+				<Slot>134</Slot>
+				<Slot>135</Slot>
+				<Slot>136</Slot>
+				<Slot>137</Slot>
+				<Slot>138</Slot>
+				<Slot>139</Slot>
+				<Slot>140</Slot>
+				<Slot>141</Slot>
+				<Slot>142</Slot>
+				<Slot>143</Slot>
+				<Slot>144</Slot>
+				<Slot>145</Slot>
+				<Slot>146</Slot>
+				<Slot>147</Slot>
+				<Slot>148</Slot>
+				<Slot>149</Slot>
+				<Slot>150</Slot>
+				<Slot>151</Slot>
+				<Slot>152</Slot>
+				<Slot>153</Slot>
+				<Slot>154</Slot>
+				<Slot>155</Slot>
+				<Slot>156</Slot>
+				<Slot>157</Slot>
+				<Slot>158</Slot>
+				<Slot>159</Slot>
+				<Slot>160</Slot>
+				<Slot>161</Slot>
+				<Slot>162</Slot>
+				<Slot>163</Slot>
+				<Slot>164</Slot>
+				<Slot>165</Slot>
+				<Slot>166</Slot>
+				<Slot>167</Slot>
+				<Slot>168</Slot>
+				<Slot>169</Slot>
+				<Slot>170</Slot>
+				<Slot>171</Slot>
+				<Slot>172</Slot>
+				<Slot>173</Slot>
+				<Slot>174</Slot>
+				<Slot>175</Slot>
+				<Slot>176</Slot>
+				<Slot>177</Slot>
+				<Slot>178</Slot>
+				<Slot>179</Slot>
+				<Slot>180</Slot>
+				<Slot>181</Slot>
+				<Slot>182</Slot>
+				<Slot>183</Slot>
+				<Slot>184</Slot>
+				<Slot>185</Slot>
+				<Slot>186</Slot>
+				<Slot>187</Slot>
+				<Slot>188</Slot>
+				<Slot>189</Slot>
+				<Slot>190</Slot>
+				<Slot>191</Slot>
+				<Slot>192</Slot>
+				<Slot>193</Slot>
+				<Slot>194</Slot>
+				<Slot>195</Slot>
+				<Slot>196</Slot>
+				<Slot>197</Slot>
+				<Slot>198</Slot>
+				<Slot>199</Slot>
+				<Slot>200</Slot>
+				<Slot>201</Slot>
+				<Slot>202</Slot>
+				<Slot>203</Slot>
+				<Slot>204</Slot>
+				<Slot>205</Slot>
+				<Slot>206</Slot>
+				<Slot>207</Slot>
+				<Slot>208</Slot>
+				<Slot>209</Slot>
+				<Slot>210</Slot>
+				<Slot>211</Slot>
+				<Slot>212</Slot>
+				<Slot>213</Slot>
+				<Slot>214</Slot>
+				<Slot>215</Slot>
+				<Slot>216</Slot>
+				<Slot>217</Slot>
+				<Slot>218</Slot>
+				<Slot>219</Slot>
+				<Slot>220</Slot>
+				<Slot>221</Slot>
+				<Slot>222</Slot>
+				<Slot>223</Slot>
+				<Slot>224</Slot>
+				<Slot>225</Slot>
+				<Slot>226</Slot>
+				<Slot>227</Slot>
+				<Slot>228</Slot>
+				<Slot>229</Slot>
+				<Slot>230</Slot>
+				<Slot>231</Slot>
+				<Slot>232</Slot>
+				<Slot>233</Slot>
+				<Slot>234</Slot>
+				<Slot>235</Slot>
+				<Slot>236</Slot>
+				<Slot>237</Slot>
+				<Slot>238</Slot>
+				<Slot>239</Slot>
+				<Slot>240</Slot>
+				<Slot>241</Slot>
+				<Slot>242</Slot>
+				<Slot>243</Slot>
+				<Slot>244</Slot>
+				<Slot>245</Slot>
+				<Slot>246</Slot>
+				<Slot>247</Slot>
+				<Slot>248</Slot>
+				<Slot>249</Slot>
+				<Slot>250</Slot>
+				<Slot>251</Slot>
+				<Slot>252</Slot>
+				<Slot>253</Slot>
+				<Slot>254</Slot>
+				<Slot>255</Slot>
+			</UsedGsdmlModule>
+			<UsedGsdmlModule ModuleIdentNumber="66060288" Id="EL1008" ModuleName="EL1008" InfoText="8Ch. Dig. Input 24V, 3ms (at least RevNr. 0017)" OrderNumber="EL1008" ModuleCategory="Digital Input Terminals (EL1xxx)">
+				<Slot>1</Slot>
+				<Slot>2</Slot>
+				<Slot>3</Slot>
+				<Slot>4</Slot>
+				<Slot>5</Slot>
+				<Slot>6</Slot>
+				<Slot>7</Slot>
+				<Slot>8</Slot>
+				<Slot>9</Slot>
+				<Slot>10</Slot>
+				<Slot>11</Slot>
+				<Slot>12</Slot>
+				<Slot>13</Slot>
+				<Slot>14</Slot>
+				<Slot>15</Slot>
+				<Slot>16</Slot>
+				<Slot>17</Slot>
+				<Slot>18</Slot>
+				<Slot>19</Slot>
+				<Slot>20</Slot>
+				<Slot>21</Slot>
+				<Slot>22</Slot>
+				<Slot>23</Slot>
+				<Slot>24</Slot>
+				<Slot>25</Slot>
+				<Slot>26</Slot>
+				<Slot>27</Slot>
+				<Slot>28</Slot>
+				<Slot>29</Slot>
+				<Slot>30</Slot>
+				<Slot>31</Slot>
+				<Slot>32</Slot>
+				<Slot>33</Slot>
+				<Slot>34</Slot>
+				<Slot>35</Slot>
+				<Slot>36</Slot>
+				<Slot>37</Slot>
+				<Slot>38</Slot>
+				<Slot>39</Slot>
+				<Slot>40</Slot>
+				<Slot>41</Slot>
+				<Slot>42</Slot>
+				<Slot>43</Slot>
+				<Slot>44</Slot>
+				<Slot>45</Slot>
+				<Slot>46</Slot>
+				<Slot>47</Slot>
+				<Slot>48</Slot>
+				<Slot>49</Slot>
+				<Slot>50</Slot>
+				<Slot>51</Slot>
+				<Slot>52</Slot>
+				<Slot>53</Slot>
+				<Slot>54</Slot>
+				<Slot>55</Slot>
+				<Slot>56</Slot>
+				<Slot>57</Slot>
+				<Slot>58</Slot>
+				<Slot>59</Slot>
+				<Slot>60</Slot>
+				<Slot>61</Slot>
+				<Slot>62</Slot>
+				<Slot>63</Slot>
+				<Slot>64</Slot>
+				<Slot>65</Slot>
+				<Slot>66</Slot>
+				<Slot>67</Slot>
+				<Slot>68</Slot>
+				<Slot>69</Slot>
+				<Slot>70</Slot>
+				<Slot>71</Slot>
+				<Slot>72</Slot>
+				<Slot>73</Slot>
+				<Slot>74</Slot>
+				<Slot>75</Slot>
+				<Slot>76</Slot>
+				<Slot>77</Slot>
+				<Slot>78</Slot>
+				<Slot>79</Slot>
+				<Slot>80</Slot>
+				<Slot>81</Slot>
+				<Slot>82</Slot>
+				<Slot>83</Slot>
+				<Slot>84</Slot>
+				<Slot>85</Slot>
+				<Slot>86</Slot>
+				<Slot>87</Slot>
+				<Slot>88</Slot>
+				<Slot>89</Slot>
+				<Slot>90</Slot>
+				<Slot>91</Slot>
+				<Slot>92</Slot>
+				<Slot>93</Slot>
+				<Slot>94</Slot>
+				<Slot>95</Slot>
+				<Slot>96</Slot>
+				<Slot>97</Slot>
+				<Slot>98</Slot>
+				<Slot>99</Slot>
+				<Slot>100</Slot>
+				<Slot>101</Slot>
+				<Slot>102</Slot>
+				<Slot>103</Slot>
+				<Slot>104</Slot>
+				<Slot>105</Slot>
+				<Slot>106</Slot>
+				<Slot>107</Slot>
+				<Slot>108</Slot>
+				<Slot>109</Slot>
+				<Slot>110</Slot>
+				<Slot>111</Slot>
+				<Slot>112</Slot>
+				<Slot>113</Slot>
+				<Slot>114</Slot>
+				<Slot>115</Slot>
+				<Slot>116</Slot>
+				<Slot>117</Slot>
+				<Slot>118</Slot>
+				<Slot>119</Slot>
+				<Slot>120</Slot>
+				<Slot>121</Slot>
+				<Slot>122</Slot>
+				<Slot>123</Slot>
+				<Slot>124</Slot>
+				<Slot>125</Slot>
+				<Slot>126</Slot>
+				<Slot>127</Slot>
+				<Slot>128</Slot>
+				<Slot>129</Slot>
+				<Slot>130</Slot>
+				<Slot>131</Slot>
+				<Slot>132</Slot>
+				<Slot>133</Slot>
+				<Slot>134</Slot>
+				<Slot>135</Slot>
+				<Slot>136</Slot>
+				<Slot>137</Slot>
+				<Slot>138</Slot>
+				<Slot>139</Slot>
+				<Slot>140</Slot>
+				<Slot>141</Slot>
+				<Slot>142</Slot>
+				<Slot>143</Slot>
+				<Slot>144</Slot>
+				<Slot>145</Slot>
+				<Slot>146</Slot>
+				<Slot>147</Slot>
+				<Slot>148</Slot>
+				<Slot>149</Slot>
+				<Slot>150</Slot>
+				<Slot>151</Slot>
+				<Slot>152</Slot>
+				<Slot>153</Slot>
+				<Slot>154</Slot>
+				<Slot>155</Slot>
+				<Slot>156</Slot>
+				<Slot>157</Slot>
+				<Slot>158</Slot>
+				<Slot>159</Slot>
+				<Slot>160</Slot>
+				<Slot>161</Slot>
+				<Slot>162</Slot>
+				<Slot>163</Slot>
+				<Slot>164</Slot>
+				<Slot>165</Slot>
+				<Slot>166</Slot>
+				<Slot>167</Slot>
+				<Slot>168</Slot>
+				<Slot>169</Slot>
+				<Slot>170</Slot>
+				<Slot>171</Slot>
+				<Slot>172</Slot>
+				<Slot>173</Slot>
+				<Slot>174</Slot>
+				<Slot>175</Slot>
+				<Slot>176</Slot>
+				<Slot>177</Slot>
+				<Slot>178</Slot>
+				<Slot>179</Slot>
+				<Slot>180</Slot>
+				<Slot>181</Slot>
+				<Slot>182</Slot>
+				<Slot>183</Slot>
+				<Slot>184</Slot>
+				<Slot>185</Slot>
+				<Slot>186</Slot>
+				<Slot>187</Slot>
+				<Slot>188</Slot>
+				<Slot>189</Slot>
+				<Slot>190</Slot>
+				<Slot>191</Slot>
+				<Slot>192</Slot>
+				<Slot>193</Slot>
+				<Slot>194</Slot>
+				<Slot>195</Slot>
+				<Slot>196</Slot>
+				<Slot>197</Slot>
+				<Slot>198</Slot>
+				<Slot>199</Slot>
+				<Slot>200</Slot>
+				<Slot>201</Slot>
+				<Slot>202</Slot>
+				<Slot>203</Slot>
+				<Slot>204</Slot>
+				<Slot>205</Slot>
+				<Slot>206</Slot>
+				<Slot>207</Slot>
+				<Slot>208</Slot>
+				<Slot>209</Slot>
+				<Slot>210</Slot>
+				<Slot>211</Slot>
+				<Slot>212</Slot>
+				<Slot>213</Slot>
+				<Slot>214</Slot>
+				<Slot>215</Slot>
+				<Slot>216</Slot>
+				<Slot>217</Slot>
+				<Slot>218</Slot>
+				<Slot>219</Slot>
+				<Slot>220</Slot>
+				<Slot>221</Slot>
+				<Slot>222</Slot>
+				<Slot>223</Slot>
+				<Slot>224</Slot>
+				<Slot>225</Slot>
+				<Slot>226</Slot>
+				<Slot>227</Slot>
+				<Slot>228</Slot>
+				<Slot>229</Slot>
+				<Slot>230</Slot>
+				<Slot>231</Slot>
+				<Slot>232</Slot>
+				<Slot>233</Slot>
+				<Slot>234</Slot>
+				<Slot>235</Slot>
+				<Slot>236</Slot>
+				<Slot>237</Slot>
+				<Slot>238</Slot>
+				<Slot>239</Slot>
+				<Slot>240</Slot>
+				<Slot>241</Slot>
+				<Slot>242</Slot>
+				<Slot>243</Slot>
+				<Slot>244</Slot>
+				<Slot>245</Slot>
+				<Slot>246</Slot>
+				<Slot>247</Slot>
+				<Slot>248</Slot>
+				<Slot>249</Slot>
+				<Slot>250</Slot>
+				<Slot>251</Slot>
+				<Slot>252</Slot>
+				<Slot>253</Slot>
+				<Slot>254</Slot>
+				<Slot>255</Slot>
+			</UsedGsdmlModule>
+			<UsedGsdmlModule ModuleIdentNumber="210239488" Id="EL3208" ModuleName="EL3208" InfoText="8Ch. Ana. Input PT100 (RTD) (at least RevNr. 0017)" OrderNumber="EL3208" ModuleCategory="Analog Input Terminals (EL3xxx)">
+				<Slot>1</Slot>
+				<Slot>2</Slot>
+				<Slot>3</Slot>
+				<Slot>4</Slot>
+				<Slot>5</Slot>
+				<Slot>6</Slot>
+				<Slot>7</Slot>
+				<Slot>8</Slot>
+				<Slot>9</Slot>
+				<Slot>10</Slot>
+				<Slot>11</Slot>
+				<Slot>12</Slot>
+				<Slot>13</Slot>
+				<Slot>14</Slot>
+				<Slot>15</Slot>
+				<Slot>16</Slot>
+				<Slot>17</Slot>
+				<Slot>18</Slot>
+				<Slot>19</Slot>
+				<Slot>20</Slot>
+				<Slot>21</Slot>
+				<Slot>22</Slot>
+				<Slot>23</Slot>
+				<Slot>24</Slot>
+				<Slot>25</Slot>
+				<Slot>26</Slot>
+				<Slot>27</Slot>
+				<Slot>28</Slot>
+				<Slot>29</Slot>
+				<Slot>30</Slot>
+				<Slot>31</Slot>
+				<Slot>32</Slot>
+				<Slot>33</Slot>
+				<Slot>34</Slot>
+				<Slot>35</Slot>
+				<Slot>36</Slot>
+				<Slot>37</Slot>
+				<Slot>38</Slot>
+				<Slot>39</Slot>
+				<Slot>40</Slot>
+				<Slot>41</Slot>
+				<Slot>42</Slot>
+				<Slot>43</Slot>
+				<Slot>44</Slot>
+				<Slot>45</Slot>
+				<Slot>46</Slot>
+				<Slot>47</Slot>
+				<Slot>48</Slot>
+				<Slot>49</Slot>
+				<Slot>50</Slot>
+				<Slot>51</Slot>
+				<Slot>52</Slot>
+				<Slot>53</Slot>
+				<Slot>54</Slot>
+				<Slot>55</Slot>
+				<Slot>56</Slot>
+				<Slot>57</Slot>
+				<Slot>58</Slot>
+				<Slot>59</Slot>
+				<Slot>60</Slot>
+				<Slot>61</Slot>
+				<Slot>62</Slot>
+				<Slot>63</Slot>
+				<Slot>64</Slot>
+				<Slot>65</Slot>
+				<Slot>66</Slot>
+				<Slot>67</Slot>
+				<Slot>68</Slot>
+				<Slot>69</Slot>
+				<Slot>70</Slot>
+				<Slot>71</Slot>
+				<Slot>72</Slot>
+				<Slot>73</Slot>
+				<Slot>74</Slot>
+				<Slot>75</Slot>
+				<Slot>76</Slot>
+				<Slot>77</Slot>
+				<Slot>78</Slot>
+				<Slot>79</Slot>
+				<Slot>80</Slot>
+				<Slot>81</Slot>
+				<Slot>82</Slot>
+				<Slot>83</Slot>
+				<Slot>84</Slot>
+				<Slot>85</Slot>
+				<Slot>86</Slot>
+				<Slot>87</Slot>
+				<Slot>88</Slot>
+				<Slot>89</Slot>
+				<Slot>90</Slot>
+				<Slot>91</Slot>
+				<Slot>92</Slot>
+				<Slot>93</Slot>
+				<Slot>94</Slot>
+				<Slot>95</Slot>
+				<Slot>96</Slot>
+				<Slot>97</Slot>
+				<Slot>98</Slot>
+				<Slot>99</Slot>
+				<Slot>100</Slot>
+				<Slot>101</Slot>
+				<Slot>102</Slot>
+				<Slot>103</Slot>
+				<Slot>104</Slot>
+				<Slot>105</Slot>
+				<Slot>106</Slot>
+				<Slot>107</Slot>
+				<Slot>108</Slot>
+				<Slot>109</Slot>
+				<Slot>110</Slot>
+				<Slot>111</Slot>
+				<Slot>112</Slot>
+				<Slot>113</Slot>
+				<Slot>114</Slot>
+				<Slot>115</Slot>
+				<Slot>116</Slot>
+				<Slot>117</Slot>
+				<Slot>118</Slot>
+				<Slot>119</Slot>
+				<Slot>120</Slot>
+				<Slot>121</Slot>
+				<Slot>122</Slot>
+				<Slot>123</Slot>
+				<Slot>124</Slot>
+				<Slot>125</Slot>
+				<Slot>126</Slot>
+				<Slot>127</Slot>
+				<Slot>128</Slot>
+				<Slot>129</Slot>
+				<Slot>130</Slot>
+				<Slot>131</Slot>
+				<Slot>132</Slot>
+				<Slot>133</Slot>
+				<Slot>134</Slot>
+				<Slot>135</Slot>
+				<Slot>136</Slot>
+				<Slot>137</Slot>
+				<Slot>138</Slot>
+				<Slot>139</Slot>
+				<Slot>140</Slot>
+				<Slot>141</Slot>
+				<Slot>142</Slot>
+				<Slot>143</Slot>
+				<Slot>144</Slot>
+				<Slot>145</Slot>
+				<Slot>146</Slot>
+				<Slot>147</Slot>
+				<Slot>148</Slot>
+				<Slot>149</Slot>
+				<Slot>150</Slot>
+				<Slot>151</Slot>
+				<Slot>152</Slot>
+				<Slot>153</Slot>
+				<Slot>154</Slot>
+				<Slot>155</Slot>
+				<Slot>156</Slot>
+				<Slot>157</Slot>
+				<Slot>158</Slot>
+				<Slot>159</Slot>
+				<Slot>160</Slot>
+				<Slot>161</Slot>
+				<Slot>162</Slot>
+				<Slot>163</Slot>
+				<Slot>164</Slot>
+				<Slot>165</Slot>
+				<Slot>166</Slot>
+				<Slot>167</Slot>
+				<Slot>168</Slot>
+				<Slot>169</Slot>
+				<Slot>170</Slot>
+				<Slot>171</Slot>
+				<Slot>172</Slot>
+				<Slot>173</Slot>
+				<Slot>174</Slot>
+				<Slot>175</Slot>
+				<Slot>176</Slot>
+				<Slot>177</Slot>
+				<Slot>178</Slot>
+				<Slot>179</Slot>
+				<Slot>180</Slot>
+				<Slot>181</Slot>
+				<Slot>182</Slot>
+				<Slot>183</Slot>
+				<Slot>184</Slot>
+				<Slot>185</Slot>
+				<Slot>186</Slot>
+				<Slot>187</Slot>
+				<Slot>188</Slot>
+				<Slot>189</Slot>
+				<Slot>190</Slot>
+				<Slot>191</Slot>
+				<Slot>192</Slot>
+				<Slot>193</Slot>
+				<Slot>194</Slot>
+				<Slot>195</Slot>
+				<Slot>196</Slot>
+				<Slot>197</Slot>
+				<Slot>198</Slot>
+				<Slot>199</Slot>
+				<Slot>200</Slot>
+				<Slot>201</Slot>
+				<Slot>202</Slot>
+				<Slot>203</Slot>
+				<Slot>204</Slot>
+				<Slot>205</Slot>
+				<Slot>206</Slot>
+				<Slot>207</Slot>
+				<Slot>208</Slot>
+				<Slot>209</Slot>
+				<Slot>210</Slot>
+				<Slot>211</Slot>
+				<Slot>212</Slot>
+				<Slot>213</Slot>
+				<Slot>214</Slot>
+				<Slot>215</Slot>
+				<Slot>216</Slot>
+				<Slot>217</Slot>
+				<Slot>218</Slot>
+				<Slot>219</Slot>
+				<Slot>220</Slot>
+				<Slot>221</Slot>
+				<Slot>222</Slot>
+				<Slot>223</Slot>
+				<Slot>224</Slot>
+				<Slot>225</Slot>
+				<Slot>226</Slot>
+				<Slot>227</Slot>
+				<Slot>228</Slot>
+				<Slot>229</Slot>
+				<Slot>230</Slot>
+				<Slot>231</Slot>
+				<Slot>232</Slot>
+				<Slot>233</Slot>
+				<Slot>234</Slot>
+				<Slot>235</Slot>
+				<Slot>236</Slot>
+				<Slot>237</Slot>
+				<Slot>238</Slot>
+				<Slot>239</Slot>
+				<Slot>240</Slot>
+				<Slot>241</Slot>
+				<Slot>242</Slot>
+				<Slot>243</Slot>
+				<Slot>244</Slot>
+				<Slot>245</Slot>
+				<Slot>246</Slot>
+				<Slot>247</Slot>
+				<Slot>248</Slot>
+				<Slot>249</Slot>
+				<Slot>250</Slot>
+				<Slot>251</Slot>
+				<Slot>252</Slot>
+				<Slot>253</Slot>
+				<Slot>254</Slot>
+				<Slot>255</Slot>
+				<SubSlot InsertedSubModuleID="RealSubMod_425" SubSlotNumber="2">
+					<PossibleSubModule>RealSubMod_425</PossibleSubModule>
+				</SubSlot>
+			</UsedGsdmlModule>
+			<UsedGsdmlSubModule SubModuleIdentNumber="1" SubSlotNumber="1" TypeOfSubmodule="3" Id="DAP 1" SubModuleName="EK9320 V2.43" InfoText="PROFINET I/O - EtherCAT coupler, IRT, V2.43, port diagnostic, shared device and system redundancy supported">
+				<Record Name="ek9320 Settings" TransferSequence="1" Length="4" Index="8193">
+					<ConstData>10</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="Activate PN Fallback Value " DataType="Bit" MaxAllowedValue="1" BitLength="1" ValueItemTarget="EnumList_1"/>
+					<RecordDataDef Name="Data Presentation" DataType="Bit" MaxAllowedValue="1" DefaultValue="1" BitOffset="1" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_2"/>
+					<RecordDataDef Name="EBus error behaviour" DataType="BitArea" MaxAllowedValue="7" DefaultValue="2" BitOffset="2" BitLength="3" Visible="true" Changeable="true" ValueItemTarget="EnumList_3"/>
+					<RecordDataDef Name="Set EBus cycle" DataType="Bit" MaxAllowedValue="1" BitOffset="5" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_4"/>
+					<RecordDataDef Name="MultiConfigurationMode" DataType="Bit" MaxAllowedValue="1" BitOffset="6" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="Activ_Inactiv"/>
+					<RecordDataDef Name="Webserver" DataType="Bit" MaxAllowedValue="1" BitOffset="7" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="Activ_Inactiv"/>
+					<RecordDataDef Name="PN error behavior" DataType="BitArea" MaxAllowedValue="15" DefaultValue="1" ByteOffset="1" BitLength="4" Visible="true" Changeable="true" ValueItemTarget="EnumList_86"/>
+					<RecordDataDef Name="Acyclic frame prioritization" DataType="Bit" MaxAllowedValue="1" ByteOffset="1" BitOffset="4" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="Activ_Inactiv"/>
+				</Record>
+				<Record Name="MultiConfigurationMode" TransferSequence="2" Length="64" Index="8208">
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="Slot 1" DataType="BitArea" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 2" DataType="BitArea" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 3" DataType="BitArea" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 4" DataType="BitArea" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 5" DataType="BitArea" ByteOffset="1" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 6" DataType="BitArea" ByteOffset="1" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 7" DataType="BitArea" ByteOffset="1" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 8" DataType="BitArea" ByteOffset="1" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 9" DataType="BitArea" ByteOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 10" DataType="BitArea" ByteOffset="2" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 11" DataType="BitArea" ByteOffset="2" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 12" DataType="BitArea" ByteOffset="2" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 13" DataType="BitArea" ByteOffset="3" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 14" DataType="BitArea" ByteOffset="3" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 15" DataType="BitArea" ByteOffset="3" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 16" DataType="BitArea" ByteOffset="3" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 17" DataType="BitArea" ByteOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 18" DataType="BitArea" ByteOffset="4" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 19" DataType="BitArea" ByteOffset="4" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 20" DataType="BitArea" ByteOffset="4" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 21" DataType="BitArea" ByteOffset="5" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 22" DataType="BitArea" ByteOffset="5" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 23" DataType="BitArea" ByteOffset="5" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 24" DataType="BitArea" ByteOffset="5" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 25" DataType="BitArea" ByteOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 26" DataType="BitArea" ByteOffset="6" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 27" DataType="BitArea" ByteOffset="6" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 28" DataType="BitArea" ByteOffset="6" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 29" DataType="BitArea" ByteOffset="7" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 30" DataType="BitArea" ByteOffset="7" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 31" DataType="BitArea" ByteOffset="7" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 32" DataType="BitArea" ByteOffset="7" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 33" DataType="BitArea" ByteOffset="8" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 34" DataType="BitArea" ByteOffset="8" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 35" DataType="BitArea" ByteOffset="8" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 36" DataType="BitArea" ByteOffset="8" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 37" DataType="BitArea" ByteOffset="9" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 38" DataType="BitArea" ByteOffset="9" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 39" DataType="BitArea" ByteOffset="9" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 40" DataType="BitArea" ByteOffset="9" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 41" DataType="BitArea" ByteOffset="10" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 42" DataType="BitArea" ByteOffset="10" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 43" DataType="BitArea" ByteOffset="10" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 44" DataType="BitArea" ByteOffset="10" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 45" DataType="BitArea" ByteOffset="11" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 46" DataType="BitArea" ByteOffset="11" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 47" DataType="BitArea" ByteOffset="11" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 48" DataType="BitArea" ByteOffset="11" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 49" DataType="BitArea" ByteOffset="12" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 50" DataType="BitArea" ByteOffset="12" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 51" DataType="BitArea" ByteOffset="12" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 52" DataType="BitArea" ByteOffset="12" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 53" DataType="BitArea" ByteOffset="13" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 54" DataType="BitArea" ByteOffset="13" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 55" DataType="BitArea" ByteOffset="13" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 56" DataType="BitArea" ByteOffset="13" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 57" DataType="BitArea" ByteOffset="14" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 58" DataType="BitArea" ByteOffset="14" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 59" DataType="BitArea" ByteOffset="14" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 60" DataType="BitArea" ByteOffset="14" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 61" DataType="BitArea" ByteOffset="15" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 62" DataType="BitArea" ByteOffset="15" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 63" DataType="BitArea" ByteOffset="15" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 64" DataType="BitArea" ByteOffset="15" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 65" DataType="BitArea" ByteOffset="16" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 66" DataType="BitArea" ByteOffset="16" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 67" DataType="BitArea" ByteOffset="16" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 68" DataType="BitArea" ByteOffset="16" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 69" DataType="BitArea" ByteOffset="17" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 70" DataType="BitArea" ByteOffset="17" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 71" DataType="BitArea" ByteOffset="17" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 72" DataType="BitArea" ByteOffset="17" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 73" DataType="BitArea" ByteOffset="18" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 74" DataType="BitArea" ByteOffset="18" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 75" DataType="BitArea" ByteOffset="18" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 76" DataType="BitArea" ByteOffset="18" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 77" DataType="BitArea" ByteOffset="19" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 78" DataType="BitArea" ByteOffset="19" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 79" DataType="BitArea" ByteOffset="19" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 80" DataType="BitArea" ByteOffset="19" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 81" DataType="BitArea" ByteOffset="20" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 82" DataType="BitArea" ByteOffset="20" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 83" DataType="BitArea" ByteOffset="20" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 84" DataType="BitArea" ByteOffset="20" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 85" DataType="BitArea" ByteOffset="21" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 86" DataType="BitArea" ByteOffset="21" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 87" DataType="BitArea" ByteOffset="21" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 88" DataType="BitArea" ByteOffset="21" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 89" DataType="BitArea" ByteOffset="22" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 90" DataType="BitArea" ByteOffset="22" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 91" DataType="BitArea" ByteOffset="22" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 92" DataType="BitArea" ByteOffset="22" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 93" DataType="BitArea" ByteOffset="23" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 94" DataType="BitArea" ByteOffset="23" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 95" DataType="BitArea" ByteOffset="23" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 96" DataType="BitArea" ByteOffset="23" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 97" DataType="BitArea" ByteOffset="24" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 98" DataType="BitArea" ByteOffset="24" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 99" DataType="BitArea" ByteOffset="24" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 100" DataType="BitArea" ByteOffset="24" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 101" DataType="BitArea" ByteOffset="25" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 102" DataType="BitArea" ByteOffset="25" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 103" DataType="BitArea" ByteOffset="25" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 104" DataType="BitArea" ByteOffset="25" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 105" DataType="BitArea" ByteOffset="26" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 106" DataType="BitArea" ByteOffset="26" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 107" DataType="BitArea" ByteOffset="26" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 108" DataType="BitArea" ByteOffset="26" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 109" DataType="BitArea" ByteOffset="27" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 110" DataType="BitArea" ByteOffset="27" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 111" DataType="BitArea" ByteOffset="27" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 112" DataType="BitArea" ByteOffset="27" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 113" DataType="BitArea" ByteOffset="28" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 114" DataType="BitArea" ByteOffset="28" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 115" DataType="BitArea" ByteOffset="28" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 116" DataType="BitArea" ByteOffset="28" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 117" DataType="BitArea" ByteOffset="29" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 118" DataType="BitArea" ByteOffset="29" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 119" DataType="BitArea" ByteOffset="29" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 120" DataType="BitArea" ByteOffset="29" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 121" DataType="BitArea" ByteOffset="30" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 122" DataType="BitArea" ByteOffset="30" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 123" DataType="BitArea" ByteOffset="30" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 124" DataType="BitArea" ByteOffset="30" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 125" DataType="BitArea" ByteOffset="31" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 126" DataType="BitArea" ByteOffset="31" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 127" DataType="BitArea" ByteOffset="31" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 128" DataType="BitArea" ByteOffset="31" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 129" DataType="BitArea" ByteOffset="32" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 130" DataType="BitArea" ByteOffset="32" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 131" DataType="BitArea" ByteOffset="32" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 132" DataType="BitArea" ByteOffset="32" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 133" DataType="BitArea" ByteOffset="33" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 134" DataType="BitArea" ByteOffset="33" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 135" DataType="BitArea" ByteOffset="33" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 136" DataType="BitArea" ByteOffset="33" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 137" DataType="BitArea" ByteOffset="34" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 138" DataType="BitArea" ByteOffset="34" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 139" DataType="BitArea" ByteOffset="34" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 140" DataType="BitArea" ByteOffset="34" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 141" DataType="BitArea" ByteOffset="35" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 142" DataType="BitArea" ByteOffset="35" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 143" DataType="BitArea" ByteOffset="35" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 144" DataType="BitArea" ByteOffset="35" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 145" DataType="BitArea" ByteOffset="36" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 146" DataType="BitArea" ByteOffset="36" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 147" DataType="BitArea" ByteOffset="36" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 148" DataType="BitArea" ByteOffset="36" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 149" DataType="BitArea" ByteOffset="37" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 150" DataType="BitArea" ByteOffset="37" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 151" DataType="BitArea" ByteOffset="37" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 152" DataType="BitArea" ByteOffset="37" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 153" DataType="BitArea" ByteOffset="38" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 154" DataType="BitArea" ByteOffset="38" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 155" DataType="BitArea" ByteOffset="38" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 156" DataType="BitArea" ByteOffset="38" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 157" DataType="BitArea" ByteOffset="39" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 158" DataType="BitArea" ByteOffset="39" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 159" DataType="BitArea" ByteOffset="39" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 160" DataType="BitArea" ByteOffset="39" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 161" DataType="BitArea" ByteOffset="40" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 162" DataType="BitArea" ByteOffset="40" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 163" DataType="BitArea" ByteOffset="40" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 164" DataType="BitArea" ByteOffset="40" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 165" DataType="BitArea" ByteOffset="41" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 166" DataType="BitArea" ByteOffset="41" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 167" DataType="BitArea" ByteOffset="41" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 168" DataType="BitArea" ByteOffset="41" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 169" DataType="BitArea" ByteOffset="42" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 170" DataType="BitArea" ByteOffset="42" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 171" DataType="BitArea" ByteOffset="42" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 172" DataType="BitArea" ByteOffset="42" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 173" DataType="BitArea" ByteOffset="43" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 174" DataType="BitArea" ByteOffset="43" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 175" DataType="BitArea" ByteOffset="43" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 176" DataType="BitArea" ByteOffset="43" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 177" DataType="BitArea" ByteOffset="44" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 178" DataType="BitArea" ByteOffset="44" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 179" DataType="BitArea" ByteOffset="44" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 180" DataType="BitArea" ByteOffset="44" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 181" DataType="BitArea" ByteOffset="45" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 182" DataType="BitArea" ByteOffset="45" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 183" DataType="BitArea" ByteOffset="45" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 184" DataType="BitArea" ByteOffset="45" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 185" DataType="BitArea" ByteOffset="46" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 186" DataType="BitArea" ByteOffset="46" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 187" DataType="BitArea" ByteOffset="46" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 188" DataType="BitArea" ByteOffset="46" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 189" DataType="BitArea" ByteOffset="47" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 190" DataType="BitArea" ByteOffset="47" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 191" DataType="BitArea" ByteOffset="47" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 192" DataType="BitArea" ByteOffset="47" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 193" DataType="BitArea" ByteOffset="48" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 194" DataType="BitArea" ByteOffset="48" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 195" DataType="BitArea" ByteOffset="48" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 196" DataType="BitArea" ByteOffset="48" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 197" DataType="BitArea" ByteOffset="49" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 198" DataType="BitArea" ByteOffset="49" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 199" DataType="BitArea" ByteOffset="49" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 200" DataType="BitArea" ByteOffset="49" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 201" DataType="BitArea" ByteOffset="50" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 202" DataType="BitArea" ByteOffset="50" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 203" DataType="BitArea" ByteOffset="50" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 204" DataType="BitArea" ByteOffset="50" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 205" DataType="BitArea" ByteOffset="51" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 206" DataType="BitArea" ByteOffset="51" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 207" DataType="BitArea" ByteOffset="51" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 208" DataType="BitArea" ByteOffset="51" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 209" DataType="BitArea" ByteOffset="52" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 210" DataType="BitArea" ByteOffset="52" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 211" DataType="BitArea" ByteOffset="52" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 212" DataType="BitArea" ByteOffset="52" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 213" DataType="BitArea" ByteOffset="53" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 214" DataType="BitArea" ByteOffset="53" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 215" DataType="BitArea" ByteOffset="53" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 216" DataType="BitArea" ByteOffset="53" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 217" DataType="BitArea" ByteOffset="54" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 218" DataType="BitArea" ByteOffset="54" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 219" DataType="BitArea" ByteOffset="54" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 220" DataType="BitArea" ByteOffset="54" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 221" DataType="BitArea" ByteOffset="55" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 222" DataType="BitArea" ByteOffset="55" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 223" DataType="BitArea" ByteOffset="55" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 224" DataType="BitArea" ByteOffset="55" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 225" DataType="BitArea" ByteOffset="56" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 226" DataType="BitArea" ByteOffset="56" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 227" DataType="BitArea" ByteOffset="56" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 228" DataType="BitArea" ByteOffset="56" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 229" DataType="BitArea" ByteOffset="57" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 230" DataType="BitArea" ByteOffset="57" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 231" DataType="BitArea" ByteOffset="57" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 232" DataType="BitArea" ByteOffset="57" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 233" DataType="BitArea" ByteOffset="58" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 234" DataType="BitArea" ByteOffset="58" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 235" DataType="BitArea" ByteOffset="58" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 236" DataType="BitArea" ByteOffset="58" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 237" DataType="BitArea" ByteOffset="59" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 238" DataType="BitArea" ByteOffset="59" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 239" DataType="BitArea" ByteOffset="59" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 240" DataType="BitArea" ByteOffset="59" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 241" DataType="BitArea" ByteOffset="60" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 242" DataType="BitArea" ByteOffset="60" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 243" DataType="BitArea" ByteOffset="60" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 244" DataType="BitArea" ByteOffset="60" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 245" DataType="BitArea" ByteOffset="61" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 246" DataType="BitArea" ByteOffset="61" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 247" DataType="BitArea" ByteOffset="61" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 248" DataType="BitArea" ByteOffset="61" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 249" DataType="BitArea" ByteOffset="62" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 250" DataType="BitArea" ByteOffset="62" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 251" DataType="BitArea" ByteOffset="62" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 252" DataType="BitArea" ByteOffset="62" BitOffset="6" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 253" DataType="BitArea" ByteOffset="63" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 254" DataType="BitArea" ByteOffset="63" BitOffset="2" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+					<RecordDataDef Name="Slot 255" DataType="BitArea" ByteOffset="63" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MultiConfigMode">
+						<AllowedValue>0</AllowedValue>
+						<AllowedValue>2</AllowedValue>
+					</RecordDataDef>
+				</Record>
+				<DataItemIn/>
+				<DataItemIn>
+					<BitText Offset="0" Length="0">Reserved</BitText>
+					<BitText Offset="0" Length="0">Reserved</BitText>
+					<BitText Offset="0" Length="0">EcFrameError</BitText>
+					<BitText Offset="0" Length="0">Reserved</BitText>
+					<BitText Offset="0" Length="0">NeedEBusReset</BitText>
+				</DataItemIn>
+			</UsedGsdmlSubModule>
+			<UsedGsdmlSubModule SubModuleIdentNumber="810680321" SubSlotNumber="1" TypeOfSubmodule="3" Id="EL2008" SubModuleName="EL2008" InfoText="8Ch. Dig. Output 24V, 0.5A (at least RevNr. 0017)">
+				<Record Name="FallbackValue" TransferSequence="1" Length="4" Index="8192">
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="Output Value" DataType="BitArea" MaxAllowedValue="2" ByteOffset="3" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="FallbackValue"/>
+				</Record>
+				<DataItemOut Name="Output.BitArray" VarSize="8" VarType="{18071995-0000-0000-0000-000300000001}">
+					<BitText Offset="0" Length="1">Channel 1(Output)</BitText>
+					<BitText Offset="1" Length="1">Channel 2(Output)</BitText>
+					<BitText Offset="2" Length="1">Channel 3(Output)</BitText>
+					<BitText Offset="3" Length="1">Channel 4(Output)</BitText>
+					<BitText Offset="4" Length="1">Channel 5(Output)</BitText>
+					<BitText Offset="5" Length="1">Channel 6(Output)</BitText>
+					<BitText Offset="6" Length="1">Channel 7(Output)</BitText>
+					<BitText Offset="7" Length="1">Channel 8(Output)</BitText>
+				</DataItemOut>
+			</UsedGsdmlSubModule>
+			<UsedGsdmlSubModule SubModuleIdentNumber="810680321" SubSlotNumber="1" TypeOfSubmodule="3" Id="EL1008" SubModuleName="EL1008" InfoText="8Ch. Dig. Input 24V, 3ms (at least RevNr. 0017)">
+				<DataItemIn Name="Input.BitArray" VarSize="8" VarType="{18071995-0000-0000-0000-000300000001}">
+					<BitText Offset="0" Length="1">Channel 1(Input)</BitText>
+					<BitText Offset="1" Length="1">Channel 2(Input)</BitText>
+					<BitText Offset="2" Length="1">Channel 3(Input)</BitText>
+					<BitText Offset="3" Length="1">Channel 4(Input)</BitText>
+					<BitText Offset="4" Length="1">Channel 5(Input)</BitText>
+					<BitText Offset="5" Length="1">Channel 6(Input)</BitText>
+					<BitText Offset="6" Length="1">Channel 7(Input)</BitText>
+					<BitText Offset="7" Length="1">Channel 8(Input)</BitText>
+				</DataItemIn>
+			</UsedGsdmlSubModule>
+			<UsedGsdmlSubModule SubModuleIdentNumber="810680321" SubSlotNumber="1" TypeOfSubmodule="3" Id="EL3208" SubModuleName="ModuleAccessPoint" InfoText="ModuleAccessPoint"/>
+			<UsedGsdmlSubModule SubModuleIdentNumber="98729" TypeOfSubmodule="4" Id="RealSubMod_425" SubModuleName="standard" InfoText="standard">
+				<Record Name="SwapDataInput" TransferSequence="1" Length="32" Index="8194">
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>6</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>10</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>14</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>18</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>22</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>26</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>30</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+				</Record>
+				<Record Name="PDOInputMapping" TransferSequence="2" Length="18" Index="8200">
+					<ConstData>8</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>26</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>26</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>26</ConstData>
+					<ConstData>3</ConstData>
+					<ConstData>26</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>26</ConstData>
+					<ConstData>5</ConstData>
+					<ConstData>26</ConstData>
+					<ConstData>6</ConstData>
+					<ConstData>26</ConstData>
+					<ConstData>7</ConstData>
+					<ConstData>26</ConstData>
+				</Record>
+				<Record Name="RTD Settings Ch.1" TransferSequence="3" Length="58" Index="12288">
+					<ConstData>175</ConstData>
+					<ConstData>254</ConstData>
+					<ConstData>34</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>6</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>3</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>10</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>12</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>14</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>16</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>18</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>20</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>27</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="SubIndex 000" DataType="Unsigned8" DefaultValue="27" DataLength="1" ByteOffset="36"/>
+					<RecordDataDef Name="aligned" DataType="OctetString" DataLength="1" ByteOffset="37">
+						<DefaultValueArray>0</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="Enable user scale" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Data Presentation" DataType="BitArea" MaxAllowedValue="7" ByteOffset="38" BitOffset="1" BitLength="3" Visible="true" Changeable="true" ValueItemTarget="EnumList_19"/>
+					<RecordDataDef Name="Siemens bits" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitOffset="4" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable user calibration" DataType="Bit" MaxAllowedValue="1" ByteOffset="39" BitOffset="1" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable vendor calibration" DataType="Bit" MaxAllowedValue="1" DefaultValue="1" ByteOffset="39" BitOffset="2" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="User scale offset" DataType="Integer16" DataLength="2" ByteOffset="40" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User scale gain" DataType="Integer32" DefaultValue="65536" DataLength="4" ByteOffset="42" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="Filter settings" DataType="Unsigned16" DataLength="2" ByteOffset="46" Visible="true" Changeable="true" ValueItemTarget="EnumList_20"/>
+					<RecordDataDef Name="User calibration offset" DataType="Integer16" DataLength="2" ByteOffset="48" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User calibration gain" DataType="Unsigned16" DefaultValue="65535" DataLength="2" ByteOffset="50" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="RTD element" DataType="Unsigned16" DefaultValue="2" DataLength="2" ByteOffset="52" Visible="true" Changeable="true" ValueItemTarget="EnumList_21"/>
+					<RecordDataDef Name="Connection technology" DataType="Unsigned16" DataLength="2" ByteOffset="54" Visible="true" Changeable="true" ValueItemTarget="EnumList_70"/>
+					<RecordDataDef Name="Wire calibration 1/32 Ohm" DataType="Integer16" DataLength="2" ByteOffset="56" Visible="true" Changeable="true"/>
+				</Record>
+				<Record Name="RTD Settings Ch.2" TransferSequence="4" Length="58" Index="12304">
+					<ConstData>175</ConstData>
+					<ConstData>254</ConstData>
+					<ConstData>34</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>6</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>3</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>10</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>12</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>14</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>16</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>18</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>20</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>27</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="SubIndex 000" DataType="Unsigned8" DefaultValue="27" DataLength="1" ByteOffset="36"/>
+					<RecordDataDef Name="aligned" DataType="OctetString" DataLength="1" ByteOffset="37">
+						<DefaultValueArray>0</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="Enable user scale" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Data Presentation" DataType="BitArea" MaxAllowedValue="7" ByteOffset="38" BitOffset="1" BitLength="3" Visible="true" Changeable="true" ValueItemTarget="EnumList_19"/>
+					<RecordDataDef Name="Siemens bits" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitOffset="4" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable user calibration" DataType="Bit" MaxAllowedValue="1" ByteOffset="39" BitOffset="1" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable vendor calibration" DataType="Bit" MaxAllowedValue="1" DefaultValue="1" ByteOffset="39" BitOffset="2" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="User scale offset" DataType="Integer16" DataLength="2" ByteOffset="40" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User scale gain" DataType="Integer32" DefaultValue="65536" DataLength="4" ByteOffset="42" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="Filter settings" DataType="Unsigned16" DataLength="2" ByteOffset="46" Visible="true" Changeable="true" ValueItemTarget="EnumList_20"/>
+					<RecordDataDef Name="User calibration offset" DataType="Integer16" DataLength="2" ByteOffset="48" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User calibration gain" DataType="Unsigned16" DefaultValue="65535" DataLength="2" ByteOffset="50" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="RTD element" DataType="Unsigned16" DefaultValue="2" DataLength="2" ByteOffset="52" Visible="true" Changeable="true" ValueItemTarget="EnumList_21"/>
+					<RecordDataDef Name="Connection technology" DataType="Unsigned16" DataLength="2" ByteOffset="54" Visible="true" Changeable="true" ValueItemTarget="EnumList_70"/>
+					<RecordDataDef Name="Wire calibration 1/32 Ohm" DataType="Integer16" DataLength="2" ByteOffset="56" Visible="true" Changeable="true"/>
+				</Record>
+				<Record Name="RTD Settings Ch.3" TransferSequence="5" Length="58" Index="12320">
+					<ConstData>175</ConstData>
+					<ConstData>254</ConstData>
+					<ConstData>34</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>6</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>3</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>10</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>12</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>14</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>16</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>18</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>20</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>27</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="SubIndex 000" DataType="Unsigned8" DefaultValue="27" DataLength="1" ByteOffset="36"/>
+					<RecordDataDef Name="aligned" DataType="OctetString" DataLength="1" ByteOffset="37">
+						<DefaultValueArray>0</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="Enable user scale" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Data Presentation" DataType="BitArea" MaxAllowedValue="7" ByteOffset="38" BitOffset="1" BitLength="3" Visible="true" Changeable="true" ValueItemTarget="EnumList_19"/>
+					<RecordDataDef Name="Siemens bits" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitOffset="4" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable user calibration" DataType="Bit" MaxAllowedValue="1" ByteOffset="39" BitOffset="1" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable vendor calibration" DataType="Bit" MaxAllowedValue="1" DefaultValue="1" ByteOffset="39" BitOffset="2" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="User scale offset" DataType="Integer16" DataLength="2" ByteOffset="40" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User scale gain" DataType="Integer32" DefaultValue="65536" DataLength="4" ByteOffset="42" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="Filter settings" DataType="Unsigned16" DataLength="2" ByteOffset="46" Visible="true" Changeable="true" ValueItemTarget="EnumList_20"/>
+					<RecordDataDef Name="User calibration offset" DataType="Integer16" DataLength="2" ByteOffset="48" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User calibration gain" DataType="Unsigned16" DefaultValue="65535" DataLength="2" ByteOffset="50" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="RTD element" DataType="Unsigned16" DefaultValue="2" DataLength="2" ByteOffset="52" Visible="true" Changeable="true" ValueItemTarget="EnumList_21"/>
+					<RecordDataDef Name="Connection technology" DataType="Unsigned16" DataLength="2" ByteOffset="54" Visible="true" Changeable="true" ValueItemTarget="EnumList_70"/>
+					<RecordDataDef Name="Wire calibration 1/32 Ohm" DataType="Integer16" DataLength="2" ByteOffset="56" Visible="true" Changeable="true"/>
+				</Record>
+				<Record Name="RTD Settings Ch.4" TransferSequence="6" Length="58" Index="12336">
+					<ConstData>175</ConstData>
+					<ConstData>254</ConstData>
+					<ConstData>34</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>6</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>3</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>10</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>12</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>14</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>16</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>18</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>20</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>27</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="SubIndex 000" DataType="Unsigned8" DefaultValue="27" DataLength="1" ByteOffset="36"/>
+					<RecordDataDef Name="aligned" DataType="OctetString" DataLength="1" ByteOffset="37">
+						<DefaultValueArray>0</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="Enable user scale" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Data Presentation" DataType="BitArea" MaxAllowedValue="7" ByteOffset="38" BitOffset="1" BitLength="3" Visible="true" Changeable="true" ValueItemTarget="EnumList_19"/>
+					<RecordDataDef Name="Siemens bits" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitOffset="4" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable user calibration" DataType="Bit" MaxAllowedValue="1" ByteOffset="39" BitOffset="1" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable vendor calibration" DataType="Bit" MaxAllowedValue="1" DefaultValue="1" ByteOffset="39" BitOffset="2" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="User scale offset" DataType="Integer16" DataLength="2" ByteOffset="40" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User scale gain" DataType="Integer32" DefaultValue="65536" DataLength="4" ByteOffset="42" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="Filter settings" DataType="Unsigned16" DataLength="2" ByteOffset="46" Visible="true" Changeable="true" ValueItemTarget="EnumList_20"/>
+					<RecordDataDef Name="User calibration offset" DataType="Integer16" DataLength="2" ByteOffset="48" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User calibration gain" DataType="Unsigned16" DefaultValue="65535" DataLength="2" ByteOffset="50" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="RTD element" DataType="Unsigned16" DefaultValue="2" DataLength="2" ByteOffset="52" Visible="true" Changeable="true" ValueItemTarget="EnumList_21"/>
+					<RecordDataDef Name="Connection technology" DataType="Unsigned16" DataLength="2" ByteOffset="54" Visible="true" Changeable="true" ValueItemTarget="EnumList_70"/>
+					<RecordDataDef Name="Wire calibration 1/32 Ohm" DataType="Integer16" DataLength="2" ByteOffset="56" Visible="true" Changeable="true"/>
+				</Record>
+				<Record Name="RTD Settings Ch.5" TransferSequence="7" Length="58" Index="12352">
+					<ConstData>175</ConstData>
+					<ConstData>254</ConstData>
+					<ConstData>34</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>6</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>3</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>10</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>12</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>14</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>16</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>18</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>20</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>27</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="SubIndex 000" DataType="Unsigned8" DefaultValue="27" DataLength="1" ByteOffset="36"/>
+					<RecordDataDef Name="aligned" DataType="OctetString" DataLength="1" ByteOffset="37">
+						<DefaultValueArray>0</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="Enable user scale" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Data Presentation" DataType="BitArea" MaxAllowedValue="7" ByteOffset="38" BitOffset="1" BitLength="3" Visible="true" Changeable="true" ValueItemTarget="EnumList_19"/>
+					<RecordDataDef Name="Siemens bits" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitOffset="4" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable user calibration" DataType="Bit" MaxAllowedValue="1" ByteOffset="39" BitOffset="1" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable vendor calibration" DataType="Bit" MaxAllowedValue="1" DefaultValue="1" ByteOffset="39" BitOffset="2" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="User scale offset" DataType="Integer16" DataLength="2" ByteOffset="40" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User scale gain" DataType="Integer32" DefaultValue="65536" DataLength="4" ByteOffset="42" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="Filter settings" DataType="Unsigned16" DataLength="2" ByteOffset="46" Visible="true" Changeable="true" ValueItemTarget="EnumList_20"/>
+					<RecordDataDef Name="User calibration offset" DataType="Integer16" DataLength="2" ByteOffset="48" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User calibration gain" DataType="Unsigned16" DefaultValue="65535" DataLength="2" ByteOffset="50" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="RTD element" DataType="Unsigned16" DefaultValue="2" DataLength="2" ByteOffset="52" Visible="true" Changeable="true" ValueItemTarget="EnumList_21"/>
+					<RecordDataDef Name="Connection technology" DataType="Unsigned16" DataLength="2" ByteOffset="54" Visible="true" Changeable="true" ValueItemTarget="EnumList_70"/>
+					<RecordDataDef Name="Wire calibration 1/32 Ohm" DataType="Integer16" DataLength="2" ByteOffset="56" Visible="true" Changeable="true"/>
+				</Record>
+				<Record Name="RTD Settings Ch.6" TransferSequence="8" Length="58" Index="12368">
+					<ConstData>175</ConstData>
+					<ConstData>254</ConstData>
+					<ConstData>34</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>6</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>3</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>10</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>12</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>14</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>16</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>18</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>20</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>27</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="SubIndex 000" DataType="Unsigned8" DefaultValue="27" DataLength="1" ByteOffset="36"/>
+					<RecordDataDef Name="aligned" DataType="OctetString" DataLength="1" ByteOffset="37">
+						<DefaultValueArray>0</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="Enable user scale" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Data Presentation" DataType="BitArea" MaxAllowedValue="7" ByteOffset="38" BitOffset="1" BitLength="3" Visible="true" Changeable="true" ValueItemTarget="EnumList_19"/>
+					<RecordDataDef Name="Siemens bits" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitOffset="4" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable user calibration" DataType="Bit" MaxAllowedValue="1" ByteOffset="39" BitOffset="1" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable vendor calibration" DataType="Bit" MaxAllowedValue="1" DefaultValue="1" ByteOffset="39" BitOffset="2" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="User scale offset" DataType="Integer16" DataLength="2" ByteOffset="40" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User scale gain" DataType="Integer32" DefaultValue="65536" DataLength="4" ByteOffset="42" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="Filter settings" DataType="Unsigned16" DataLength="2" ByteOffset="46" Visible="true" Changeable="true" ValueItemTarget="EnumList_20"/>
+					<RecordDataDef Name="User calibration offset" DataType="Integer16" DataLength="2" ByteOffset="48" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User calibration gain" DataType="Unsigned16" DefaultValue="65535" DataLength="2" ByteOffset="50" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="RTD element" DataType="Unsigned16" DefaultValue="2" DataLength="2" ByteOffset="52" Visible="true" Changeable="true" ValueItemTarget="EnumList_21"/>
+					<RecordDataDef Name="Connection technology" DataType="Unsigned16" DataLength="2" ByteOffset="54" Visible="true" Changeable="true" ValueItemTarget="EnumList_70"/>
+					<RecordDataDef Name="Wire calibration 1/32 Ohm" DataType="Integer16" DataLength="2" ByteOffset="56" Visible="true" Changeable="true"/>
+				</Record>
+				<Record Name="RTD Settings Ch.7" TransferSequence="9" Length="58" Index="12384">
+					<ConstData>175</ConstData>
+					<ConstData>254</ConstData>
+					<ConstData>34</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>6</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>3</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>10</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>12</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>14</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>16</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>18</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>20</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>27</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="SubIndex 000" DataType="Unsigned8" DefaultValue="27" DataLength="1" ByteOffset="36"/>
+					<RecordDataDef Name="aligned" DataType="OctetString" DataLength="1" ByteOffset="37">
+						<DefaultValueArray>0</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="Enable user scale" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Data Presentation" DataType="BitArea" MaxAllowedValue="7" ByteOffset="38" BitOffset="1" BitLength="3" Visible="true" Changeable="true" ValueItemTarget="EnumList_19"/>
+					<RecordDataDef Name="Siemens bits" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitOffset="4" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable user calibration" DataType="Bit" MaxAllowedValue="1" ByteOffset="39" BitOffset="1" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable vendor calibration" DataType="Bit" MaxAllowedValue="1" DefaultValue="1" ByteOffset="39" BitOffset="2" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="User scale offset" DataType="Integer16" DataLength="2" ByteOffset="40" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User scale gain" DataType="Integer32" DefaultValue="65536" DataLength="4" ByteOffset="42" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="Filter settings" DataType="Unsigned16" DataLength="2" ByteOffset="46" Visible="true" Changeable="true" ValueItemTarget="EnumList_20"/>
+					<RecordDataDef Name="User calibration offset" DataType="Integer16" DataLength="2" ByteOffset="48" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User calibration gain" DataType="Unsigned16" DefaultValue="65535" DataLength="2" ByteOffset="50" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="RTD element" DataType="Unsigned16" DefaultValue="2" DataLength="2" ByteOffset="52" Visible="true" Changeable="true" ValueItemTarget="EnumList_21"/>
+					<RecordDataDef Name="Connection technology" DataType="Unsigned16" DataLength="2" ByteOffset="54" Visible="true" Changeable="true" ValueItemTarget="EnumList_70"/>
+					<RecordDataDef Name="Wire calibration 1/32 Ohm" DataType="Integer16" DataLength="2" ByteOffset="56" Visible="true" Changeable="true"/>
+				</Record>
+				<Record Name="RTD Settings Ch.8" TransferSequence="10" Length="58" Index="12400">
+					<ConstData>175</ConstData>
+					<ConstData>254</ConstData>
+					<ConstData>34</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>6</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>3</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>10</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>12</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>14</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>16</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>18</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>20</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>27</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>4</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>1</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>255</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>2</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="SubIndex 000" DataType="Unsigned8" DefaultValue="27" DataLength="1" ByteOffset="36"/>
+					<RecordDataDef Name="aligned" DataType="OctetString" DataLength="1" ByteOffset="37">
+						<DefaultValueArray>0</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="Enable user scale" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Data Presentation" DataType="BitArea" MaxAllowedValue="7" ByteOffset="38" BitOffset="1" BitLength="3" Visible="true" Changeable="true" ValueItemTarget="EnumList_19"/>
+					<RecordDataDef Name="Siemens bits" DataType="Bit" MaxAllowedValue="1" ByteOffset="38" BitOffset="4" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable user calibration" DataType="Bit" MaxAllowedValue="1" ByteOffset="39" BitOffset="1" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="Enable vendor calibration" DataType="Bit" MaxAllowedValue="1" DefaultValue="1" ByteOffset="39" BitOffset="2" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="EnumList_0"/>
+					<RecordDataDef Name="User scale offset" DataType="Integer16" DataLength="2" ByteOffset="40" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User scale gain" DataType="Integer32" DefaultValue="65536" DataLength="4" ByteOffset="42" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="Filter settings" DataType="Unsigned16" DataLength="2" ByteOffset="46" Visible="true" Changeable="true" ValueItemTarget="EnumList_20"/>
+					<RecordDataDef Name="User calibration offset" DataType="Integer16" DataLength="2" ByteOffset="48" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="User calibration gain" DataType="Unsigned16" DefaultValue="65535" DataLength="2" ByteOffset="50" Visible="true" Changeable="true"/>
+					<RecordDataDef Name="RTD element" DataType="Unsigned16" DefaultValue="2" DataLength="2" ByteOffset="52" Visible="true" Changeable="true" ValueItemTarget="EnumList_21"/>
+					<RecordDataDef Name="Connection technology" DataType="Unsigned16" DataLength="2" ByteOffset="54" Visible="true" Changeable="true" ValueItemTarget="EnumList_70"/>
+					<RecordDataDef Name="Wire calibration 1/32 Ohm" DataType="Integer16" DataLength="2" ByteOffset="56" Visible="true" Changeable="true"/>
+				</Record>
+				<DataItemIn Name="RTD Inputs Channel 1.Status" VarSize="16" VarType="{18071995-0000-0000-0000-000300000002}">
+					<BitText Offset="0" Length="1">Underrange</BitText>
+					<BitText Offset="1" Length="1">Overrange</BitText>
+					<BitText Offset="6" Length="1">Error</BitText>
+					<BitText Offset="14" Length="1">TxPDO State</BitText>
+					<BitText Offset="15" Length="1">TxPDO Toggle</BitText>
+				</DataItemIn>
+				<DataItemIn Name="RTD Inputs Channel 1.Value" VarSize="16" VarType="{18071995-0000-0000-0000-000000000006}"/>
+				<DataItemIn Name="RTD Inputs Channel 2.Status" VarSize="16" VarType="{18071995-0000-0000-0000-000300000002}">
+					<BitText Offset="0" Length="1">Underrange</BitText>
+					<BitText Offset="1" Length="1">Overrange</BitText>
+					<BitText Offset="6" Length="1">Error</BitText>
+					<BitText Offset="14" Length="1">TxPDO State</BitText>
+					<BitText Offset="15" Length="1">TxPDO Toggle</BitText>
+				</DataItemIn>
+				<DataItemIn Name="RTD Inputs Channel 2.Value" VarSize="16" VarType="{18071995-0000-0000-0000-000000000006}"/>
+				<DataItemIn Name="RTD Inputs Channel 3.Status" VarSize="16" VarType="{18071995-0000-0000-0000-000300000002}">
+					<BitText Offset="0" Length="1">Underrange</BitText>
+					<BitText Offset="1" Length="1">Overrange</BitText>
+					<BitText Offset="6" Length="1">Error</BitText>
+					<BitText Offset="14" Length="1">TxPDO State</BitText>
+					<BitText Offset="15" Length="1">TxPDO Toggle</BitText>
+				</DataItemIn>
+				<DataItemIn Name="RTD Inputs Channel 3.Value" VarSize="16" VarType="{18071995-0000-0000-0000-000000000006}"/>
+				<DataItemIn Name="RTD Inputs Channel 4.Status" VarSize="16" VarType="{18071995-0000-0000-0000-000300000002}">
+					<BitText Offset="0" Length="1">Underrange</BitText>
+					<BitText Offset="1" Length="1">Overrange</BitText>
+					<BitText Offset="6" Length="1">Error</BitText>
+					<BitText Offset="14" Length="1">TxPDO State</BitText>
+					<BitText Offset="15" Length="1">TxPDO Toggle</BitText>
+				</DataItemIn>
+				<DataItemIn Name="RTD Inputs Channel 4.Value" VarSize="16" VarType="{18071995-0000-0000-0000-000000000006}"/>
+				<DataItemIn Name="RTD Inputs Channel 5.Status" VarSize="16" VarType="{18071995-0000-0000-0000-000300000002}">
+					<BitText Offset="0" Length="1">Underrange</BitText>
+					<BitText Offset="1" Length="1">Overrange</BitText>
+					<BitText Offset="6" Length="1">Error</BitText>
+					<BitText Offset="14" Length="1">TxPDO State</BitText>
+					<BitText Offset="15" Length="1">TxPDO Toggle</BitText>
+				</DataItemIn>
+				<DataItemIn Name="RTD Inputs Channel 5.Value" VarSize="16" VarType="{18071995-0000-0000-0000-000000000006}"/>
+				<DataItemIn Name="RTD Inputs Channel 6.Status" VarSize="16" VarType="{18071995-0000-0000-0000-000300000002}">
+					<BitText Offset="0" Length="1">Underrange</BitText>
+					<BitText Offset="1" Length="1">Overrange</BitText>
+					<BitText Offset="6" Length="1">Error</BitText>
+					<BitText Offset="14" Length="1">TxPDO State</BitText>
+					<BitText Offset="15" Length="1">TxPDO Toggle</BitText>
+				</DataItemIn>
+				<DataItemIn Name="RTD Inputs Channel 6.Value" VarSize="16" VarType="{18071995-0000-0000-0000-000000000006}"/>
+				<DataItemIn Name="RTD Inputs Channel 7.Status" VarSize="16" VarType="{18071995-0000-0000-0000-000300000002}">
+					<BitText Offset="0" Length="1">Underrange</BitText>
+					<BitText Offset="1" Length="1">Overrange</BitText>
+					<BitText Offset="6" Length="1">Error</BitText>
+					<BitText Offset="14" Length="1">TxPDO State</BitText>
+					<BitText Offset="15" Length="1">TxPDO Toggle</BitText>
+				</DataItemIn>
+				<DataItemIn Name="RTD Inputs Channel 7.Value" VarSize="16" VarType="{18071995-0000-0000-0000-000000000006}"/>
+				<DataItemIn Name="RTD Inputs Channel 8.Status" VarSize="16" VarType="{18071995-0000-0000-0000-000300000002}">
+					<BitText Offset="0" Length="1">Underrange</BitText>
+					<BitText Offset="1" Length="1">Overrange</BitText>
+					<BitText Offset="6" Length="1">Error</BitText>
+					<BitText Offset="14" Length="1">TxPDO State</BitText>
+					<BitText Offset="15" Length="1">TxPDO Toggle</BitText>
+				</DataItemIn>
+				<DataItemIn Name="RTD Inputs Channel 8.Value" VarSize="16" VarType="{18071995-0000-0000-0000-000000000006}"/>
+			</UsedGsdmlSubModule>
+			<API Id="1">
+				<Name>API</Name>
+				<ImageId>4</ImageId>
+				<Module Id="#x031d0001" DAP="true" ModuleIdentNumber="1" ModuleInfo="PROFINET I/O - EtherCAT coupler, IRT, V2.43, port diagnostic, shared device and system redundancy supported">
+					<Name>Term 1 (DAP Module)</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.43-beckhoff-EK9320-20230313.xml
+Module Info: PROFINET I/O - EtherCAT coupler, IRT, V2.43, port diagnostic, shared device and system redundancy supported
+OrderNumber: EK9320]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0001" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="DAP 1" AddSubModFlags="124">
+						<Name>Subterm 1 (EK9320 V2.43)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.43-beckhoff-EK9320-20230313.xml
+Submodule Info: PROFINET I/O - EtherCAT coupler, IRT, V2.43, port diagnostic, shared device and system redundancy supported
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record TransferSequence="1" Length="4" Index="8193" ConstData="0a010000"/>
+						<Record TransferSequence="2" Length="64" Index="8208"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+							<Var Swapping="#x1">
+								<Name>ECCycleCounter</Name>
+								<Type>UINT</Type>
+								<BitOffs>1184</BitOffs>
+							</Var>
+							<Var>
+								<Name>Status</Name>
+								<Type GUID="{8C57F3C0-9711-0C51-7684-446A4D7D4592}">PN_Status_78079DEA</Type>
+								<BitOffs>1200</BitOffs>
+							</Var>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+					<SubModule Id="#x031c0002" SubModuleIdentNumber="32768" TypeOfSubModule="1" SubSlotNumber="32768" IsFixSubmodule="true" SubModuleID="IDS_IF_ek9320_V2.43" InterfaceData="0100000000000000000000000000000000000000000098030f00000000000000">
+						<Name>Subterm 2 (Interface)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.43-beckhoff-EK9320-20230313.xml
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+					<SubModule Id="#x031c0003" SubModuleIdentNumber="32769" TypeOfSubModule="2" SubSlotNumber="32769" IsFixSubmodule="true" SubModuleID="IDS_P1_V243" PortData="9001fa0000000a010000000000000000000000000000000000000000">
+						<Name>Subterm 3 (Port 1)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.43-beckhoff-EK9320-20230313.xml
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+					<SubModule Id="#x031c0004" SubModuleIdentNumber="32770" TypeOfSubModule="2" SubSlotNumber="32770" IsFixSubmodule="true" SubModuleID="IDS_P2_V243" PortData="9001fa0000000a010000000000000000000000000000000000000000">
+						<Name>Subterm 4 (Port 2)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.43-beckhoff-EK9320-20230313.xml
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0002" ModuleIdentNumber="131596288" SlotNumber="1" ModuleInfo="8Ch. Dig. Output 24V, 0.5A (at least RevNr. 0017)" ModuleID="EL2008" DirectDeletable="true">
+					<Name>Term 2 (EL2008)</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.43-beckhoff-EK9320-20230313.xml
+Module Info: 8Ch. Dig. Output 24V, 0.5A (at least RevNr. 0017)
+OrderNumber: EL2008]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0005" SubModuleIdentNumber="810680321" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="EL2008">
+						<Name>Subterm 5 (EL2008)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.43-beckhoff-EK9320-20230313.xml
+Submodule Info: 8Ch. Dig. Output 24V, 0.5A (at least RevNr. 0017)
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record TransferSequence="1" Length="4" Index="8192"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+							<Var>
+								<Name>Output.BitArray</Name>
+								<Type GUID="{9B729920-03D2-BA6B-C1D8-8162077679C2}">PN_Output_BitArray_81E13434</Type>
+								<BitOffs>1952</BitOffs>
+							</Var>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0003" ModuleIdentNumber="66060288" SlotNumber="2" ModuleInfo="8Ch. Dig. Input 24V, 3ms (at least RevNr. 0017)" ModuleID="EL1008" DirectDeletable="true">
+					<Name>Term 3 (EL1008)</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.43-beckhoff-EK9320-20230313.xml
+Module Info: 8Ch. Dig. Input 24V, 3ms (at least RevNr. 0017)
+OrderNumber: EL1008]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0006" SubModuleIdentNumber="810680321" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="EL1008">
+						<Name>Subterm 6 (EL1008)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.43-beckhoff-EK9320-20230313.xml
+Submodule Info: 8Ch. Dig. Input 24V, 3ms (at least RevNr. 0017)
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+							<Var>
+								<Name>Input.BitArray</Name>
+								<Type GUID="{2A08EE56-D4B9-5EE9-8239-977C8FE2ECED}">PN_Input_BitArray_E59AE1E2</Type>
+								<BitOffs>1216</BitOffs>
+							</Var>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0008" ModuleIdentNumber="210239488" SlotNumber="3" ModuleInfo="8Ch. Ana. Input PT100 (RTD) (at least RevNr. 0017)" ModuleID="EL3208" DirectDeletable="true">
+					<Name>Term 8 (EL3208)</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.43-beckhoff-EK9320-20230313.xml
+Module Info: 8Ch. Ana. Input PT100 (RTD) (at least RevNr. 0017)
+OrderNumber: EL3208]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0007" SubModuleIdentNumber="810680321" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="EL3208">
+						<Name>Subterm 7 (ModuleAccessPoint)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.43-beckhoff-EK9320-20230313.xml
+Submodule Info: ModuleAccessPoint
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+					<SubModule Id="#x031c0008" SubModuleIdentNumber="98729" TypeOfSubModule="4" SubSlotNumber="2" SubModuleID="RealSubMod_425">
+						<Name>Subterm 8 (standard)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.43-beckhoff-EK9320-20230313.xml
+Submodule Info: standard
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record TransferSequence="1" Length="32" Index="8194" ConstData="02000100060001000a0001000e00010012000100160001001a0001001e000100"/>
+						<Record TransferSequence="2" Length="18" Index="8200" ConstData="0800001a011a021a031a041a051a061a071a"/>
+						<Record TransferSequence="3" Length="58" Index="12288" ConstData="affe220004000100060003000a0002000c0001000e0002001000020012000200140001001b00000400000000010000000000ffff020000000000"/>
+						<Record TransferSequence="4" Length="58" Index="12304" ConstData="affe220004000100060003000a0002000c0001000e0002001000020012000200140001001b00000400000000010000000000ffff020000000000"/>
+						<Record TransferSequence="5" Length="58" Index="12320" ConstData="affe220004000100060003000a0002000c0001000e0002001000020012000200140001001b00000400000000010000000000ffff020000000000"/>
+						<Record TransferSequence="6" Length="58" Index="12336" ConstData="affe220004000100060003000a0002000c0001000e0002001000020012000200140001001b00000400000000010000000000ffff020000000000"/>
+						<Record TransferSequence="7" Length="58" Index="12352" ConstData="affe220004000100060003000a0002000c0001000e0002001000020012000200140001001b00000400000000010000000000ffff020000000000"/>
+						<Record TransferSequence="8" Length="58" Index="12368" ConstData="affe220004000100060003000a0002000c0001000e0002001000020012000200140001001b00000400000000010000000000ffff020000000000"/>
+						<Record TransferSequence="9" Length="58" Index="12384" ConstData="affe220004000100060003000a0002000c0001000e0002001000020012000200140001001b00000400000000010000000000ffff020000000000"/>
+						<Record TransferSequence="10" Length="58" Index="12400" ConstData="affe220004000100060003000a0002000c0001000e0002001000020012000200140001001b00000400000000010000000000ffff020000000000"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+							<Var>
+								<Name>RTD Inputs Channel 1.Status</Name>
+								<Type GUID="{6C40BA49-1A5B-351C-E4D9-06790D6367CF}">PN_RTD_Inputs_Channel_1_Status_EF3D1AFB</Type>
+								<BitOffs>1224</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>RTD Inputs Channel 1.Value</Name>
+								<Type>INT</Type>
+								<BitOffs>1240</BitOffs>
+							</Var>
+							<Var>
+								<Name>RTD Inputs Channel 2.Status</Name>
+								<Type GUID="{6C40BA49-1A5B-351C-E4D9-06790D6367CF}">PN_RTD_Inputs_Channel_1_Status_EF3D1AFB</Type>
+								<BitOffs>1256</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>RTD Inputs Channel 2.Value</Name>
+								<Type>INT</Type>
+								<BitOffs>1272</BitOffs>
+							</Var>
+							<Var>
+								<Name>RTD Inputs Channel 3.Status</Name>
+								<Type GUID="{6C40BA49-1A5B-351C-E4D9-06790D6367CF}">PN_RTD_Inputs_Channel_1_Status_EF3D1AFB</Type>
+								<BitOffs>1288</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>RTD Inputs Channel 3.Value</Name>
+								<Type>INT</Type>
+								<BitOffs>1304</BitOffs>
+							</Var>
+							<Var>
+								<Name>RTD Inputs Channel 4.Status</Name>
+								<Type GUID="{6C40BA49-1A5B-351C-E4D9-06790D6367CF}">PN_RTD_Inputs_Channel_1_Status_EF3D1AFB</Type>
+								<BitOffs>1320</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>RTD Inputs Channel 4.Value</Name>
+								<Type>INT</Type>
+								<BitOffs>1336</BitOffs>
+							</Var>
+							<Var>
+								<Name>RTD Inputs Channel 5.Status</Name>
+								<Type GUID="{6C40BA49-1A5B-351C-E4D9-06790D6367CF}">PN_RTD_Inputs_Channel_1_Status_EF3D1AFB</Type>
+								<BitOffs>1352</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>RTD Inputs Channel 5.Value</Name>
+								<Type>INT</Type>
+								<BitOffs>1368</BitOffs>
+							</Var>
+							<Var>
+								<Name>RTD Inputs Channel 6.Status</Name>
+								<Type GUID="{6C40BA49-1A5B-351C-E4D9-06790D6367CF}">PN_RTD_Inputs_Channel_1_Status_EF3D1AFB</Type>
+								<BitOffs>1384</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>RTD Inputs Channel 6.Value</Name>
+								<Type>INT</Type>
+								<BitOffs>1400</BitOffs>
+							</Var>
+							<Var>
+								<Name>RTD Inputs Channel 7.Status</Name>
+								<Type GUID="{6C40BA49-1A5B-351C-E4D9-06790D6367CF}">PN_RTD_Inputs_Channel_1_Status_EF3D1AFB</Type>
+								<BitOffs>1416</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>RTD Inputs Channel 7.Value</Name>
+								<Type>INT</Type>
+								<BitOffs>1432</BitOffs>
+							</Var>
+							<Var>
+								<Name>RTD Inputs Channel 8.Status</Name>
+								<Type GUID="{6C40BA49-1A5B-351C-E4D9-06790D6367CF}">PN_RTD_Inputs_Channel_1_Status_EF3D1AFB</Type>
+								<BitOffs>1448</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>RTD Inputs Channel 8.Value</Name>
+								<Type>INT</Type>
+								<BitOffs>1464</BitOffs>
+							</Var>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+				</Module>
+			</API>
+		</Profinet>
+	</Box>
+	<Mappings>
+		<OwnerA Name="__THIS__">
+			<OwnerB Name="TIPC^PLC^PLC Instance">
+				<Link VarA="API^Term 8 (EL3208)^Subterm 8 (standard)^Inputs^RTD Inputs Channel 1.Value" VarB="PlcTask Inputs^MAIN.PowerStack.powermodule1.Buscoupler.a_EL3208[1]"/>
+				<Link VarA="API^Term 8 (EL3208)^Subterm 8 (standard)^Inputs^RTD Inputs Channel 2.Value" VarB="PlcTask Inputs^MAIN.PowerStack.powermodule1.Buscoupler.a_EL3208[2]"/>
+				<Link VarA="API^Term 8 (EL3208)^Subterm 8 (standard)^Inputs^RTD Inputs Channel 3.Value" VarB="PlcTask Inputs^MAIN.PowerStack.powermodule1.Buscoupler.a_EL3208[3]"/>
+				<Link VarA="API^Term 8 (EL3208)^Subterm 8 (standard)^Inputs^RTD Inputs Channel 4.Value" VarB="PlcTask Inputs^MAIN.PowerStack.powermodule1.Buscoupler.a_EL3208[4]"/>
+				<Link VarA="API^Term 8 (EL3208)^Subterm 8 (standard)^Inputs^RTD Inputs Channel 5.Value" VarB="PlcTask Inputs^MAIN.PowerStack.powermodule1.Buscoupler.a_EL3208[5]"/>
+				<Link VarA="API^Term 8 (EL3208)^Subterm 8 (standard)^Inputs^RTD Inputs Channel 6.Value" VarB="PlcTask Inputs^MAIN.PowerStack.powermodule1.Buscoupler.a_EL3208[6]"/>
+				<Link VarA="API^Term 8 (EL3208)^Subterm 8 (standard)^Inputs^RTD Inputs Channel 7.Value" VarB="PlcTask Inputs^MAIN.PowerStack.powermodule1.Buscoupler.a_EL3208[7]"/>
+				<Link VarA="API^Term 8 (EL3208)^Subterm 8 (standard)^Inputs^RTD Inputs Channel 8.Value" VarB="PlcTask Inputs^MAIN.PowerStack.powermodule1.Buscoupler.a_EL3208[8]"/>
+			</OwnerB>
+		</OwnerA>
+	</Mappings>
+</TcSmItem>

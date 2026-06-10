@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_OvercurrentProtection_InternalLinking" Id="{b0e61979-3fdc-433c-8b9e-591250c843bb}">
+    <Declaration><![CDATA[TYPE ST_OvercurrentProtection_InternalLinking :
+STRUCT
+	a_r_CurrentInput			: ARRAY [1..2] OF ARRAY[1..4] OF REAL; //first array of powerlockset, second of powerlock
+	a_r_CurrentOutput			: ARRAY [1..3] OF ARRAY[1..4] OF REAL;
+	b_InputSectionAvailable 	: BOOL;
+	b_thirdOutputAvailable 		: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

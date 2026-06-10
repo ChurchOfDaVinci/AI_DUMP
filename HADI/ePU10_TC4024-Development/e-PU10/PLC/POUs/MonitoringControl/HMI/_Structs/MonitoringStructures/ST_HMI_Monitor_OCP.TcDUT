@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_HMI_Monitor_OCP" Id="{82419d34-2980-4dfe-adfc-46343c87ccde}">
+    <Declaration><![CDATA[TYPE ST_HMI_Monitor_OCP : //overcurrent protection
+STRUCT
+	b_InputMCCBstate			: BOOL;
+	b_OutputMCCBstate			: BOOL;
+	b_InputOverloadWarning		: BOOL;
+	b_InputOverloadAlarm		: BOOL;
+	b_OutputOverloadWarning		: BOOL;
+	b_OutputOverloadAlarm		: BOOL;
+	s_Location					: STRING;
+	r_CurrentPeak				: REAL;
+	t_PeakDuration				: TIME;	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="st_BMS_Params" Id="{60c5bfe9-7595-4abd-90ef-e9945cabb399}">
+    <Declaration><![CDATA[TYPE st_BMS_Params :
+STRUCT
+	IP_BMS							:	STRING(16) := '192.168.1.60';
+	r_SocHysteresis					:   REAL := 1; // % 
+	r_SoCAbsoluteMin				: 	REAL := 6; // unscaled value
+	r_SoCAbsoluteMax				: 	REAL := 100; //unscaled value
+
+	r_KwhperString					: REAL := 208; //
+	r_CrateBattery					: REAL := 0.5; //C
+	r_AhperString					: REAL := 306; //Ah	
+	b_DisableSOCAlarm				: BOOL := FALSE;
+	b_ResetPersistentVars			: BOOL := FALSE;
+	b_forcePrecharging				: BOOL := FALSE;
+	r_InternalConditioningSoCMin	: REAL :=	10;
+	
+	T_AutoCalibrationInterval		: TIME := T#14D;
+	b_EnableAutoCalibration			: BOOL := TRUE;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

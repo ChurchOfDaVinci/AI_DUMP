@@ -1,0 +1,29 @@
+<div id="Content1_8" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-creator-viewport-width="1360" data-tchmi-is-enabled="true" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-width-mode="Parent" data-tchmi-height-mode="Parent" data-tchmi-zindex="1" data-tchmi-creator-viewport-height="768">
+<div id="TcHmiGrid_ExtController" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0">
+
+<script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
+[
+  {
+    "width": 1.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  },
+  {
+    "width": 1.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+<div id="TcHmiRegion_IoTcontroller" data-tchmi-type="TcHmi.Controls.System.TcHmiRegion" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="0" data-tchmi-height-unit="px" data-tchmi-left="10" data-tchmi-left-unit="px" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="10" data-tchmi-bottom="10" data-tchmi-scrolling="Auto" data-tchmi-scale-mode="ScaleToFitWidth" data-tchmi-target-content="Contents/V3/4.MachineStatus/4-6-StatusIoTcontroller.content">
+</div>
+<div id="TcHmiRegion_PNcontroller" data-tchmi-type="TcHmi.Controls.System.TcHmiRegion" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="0" data-tchmi-height-unit="px" data-tchmi-left="10" data-tchmi-left-unit="px" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="10" data-tchmi-bottom="10" data-tchmi-scrolling="Auto" data-tchmi-scale-mode="ScaleToFitWidth" data-tchmi-target-content="Contents/V3/4.MachineStatus/4-6-StatusPNControl.content" data-tchmi-bottom-unit="px" data-tchmi-visibility="Visible">
+</div>
+</div>
+</div>

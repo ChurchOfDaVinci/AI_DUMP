@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="kWToCurrent" Id="{32729d80-6894-44ee-9769-9e7bb5830d11}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION kWToCurrent : REAL
+VAR_INPUT
+	kw			: REAL;
+	linevoltage	: REAL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF linevoltage > 100 THEN
+	kWToCurrent := kw *1000 / (linevoltage * 1.73);
+ELSE
+	kWToCurrent := kw *1000 / (400 * 1.73);
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="kWToCurrent">
+      <LineId Id="19" Count="1" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

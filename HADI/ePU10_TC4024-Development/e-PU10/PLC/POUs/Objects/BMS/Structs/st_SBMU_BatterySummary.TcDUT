@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="st_SBMU_BatterySummary" Id="{a9d0b8b9-ecf2-4768-9b1a-e32b98aa17fb}">
+    <Declaration><![CDATA[TYPE st_SBMU_BatterySummary :
+STRUCT
+	r_SystemVoltage			:	REAL;
+	r_SystemCurrent			:	REAL;
+	r_SOC					:	REAL;
+	r_SOH					:	REAL;
+	ar_CellVoltage				:	ARRAY[0..2] OF REAL;
+	ar_CellTemperature			:	ARRAY[0..2] OF REAL;
+	r_MaxChargeCurrentAllowed		:	REAL;
+	r_MaxDischargeCurrentAllowed	:	REAL;
+	r_HistAccChargeEnergy			:	REAL;
+	r_HistAccDischargeEnergy		:	REAL;
+	
+	//Gaan we hier uberhaupt iets mee doen?
+	w_MaxVoltageCellLocation 	: 	WORD;//ARRAY[0..1] OF BYTE;
+	w_MinVoltageCellLocation 	:	 WORD;//ARRAY[0..1] OF BYTE;
+	w_MaxTempCellLocation 		: 	WORD;//ARRAY[0..1] OF BYTE;
+	w_MinTempCellLocation 		: 	WORD;//ARRAY[0..1] OF BYTE;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

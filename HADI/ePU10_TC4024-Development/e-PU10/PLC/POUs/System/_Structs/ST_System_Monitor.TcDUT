@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_System_Monitor" Id="{70a94fbd-dad4-4764-821e-d46da3808f02}">
+    <Declaration><![CDATA[{ attribute 'TcHmiSymbol.ShowRecursively' }
+
+TYPE ST_System_Monitor :
+STRUCT
+	b_modeSwitchEnable					: BOOL;
+	
+	safety								: ST_Safety_get;
+	system								: ST_System_get;
+	powerstack							: REFERENCE TO ST_Powerstack_get;
+	powermonitor						: REFERENCE TO ST_PowerMonitor_get;
+	AcDcCharger							: REFERENCE TO ST_AcDcCharger_get;
+	ACswitchgear						: REFERENCE TO ST_ACSwitchgear_Get;
+	neutraltransformer					: REFERENCE TO ST_NeutralTransformer_Get;
+	battery								: REFERENCE TO st_BMS_get;
+	protections							: REFERENCE TO ST_ProtectionSystems_get;
+	peakshavebox						: REFERENCE TO ST_Peakshavebox_get;
+	enclosure							: REFERENCE TO ST_Enclosure_get;
+	internalpsu							: REFERENCE TO ST_InternalPowersupply_Get;
+	DCswitchgear						: REFERENCE TO ST_DCSwitchgear_Get;
+	PLC									: REFERENCE TO ST_plcstate_get;
+	Cooling								: REFERENCE TO ST_Coolingsystem_get;
+	Router								: REFERENCE TO ST_Router_get;
+	controlfb							: REFERENCE TO ST_System_Control;
+	Generator							: REFERENCE TO ST_Genset_Get;
+	HartingIO							: REFERENCE TO ST_HartingIO_Get;
+	//Cooling							
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

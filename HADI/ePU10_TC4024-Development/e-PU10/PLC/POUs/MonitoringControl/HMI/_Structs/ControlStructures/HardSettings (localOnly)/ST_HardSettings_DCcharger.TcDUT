@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_HardSettings_DCcharger" Id="{2f92fac2-7ed7-4d50-b4ab-7b9f6a582359}">
+    <Declaration><![CDATA[TYPE ST_HardSettings_DCcharger :
+STRUCT
+	r_PowerMax			: REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

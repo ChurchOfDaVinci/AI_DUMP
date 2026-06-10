@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eSubValues" Id="{c90aa7e7-15ee-4088-952d-0f4bbf685883}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eSubValues :
+(
+	Minimum := 0,
+	Average := 1,
+	Maximum := 2
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

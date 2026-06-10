@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_HardSettings" Id="{a22de91f-9ede-42b7-ae4e-9770e9bc33cf}">
+    <Declaration><![CDATA[TYPE ST_HardSettings :
+STRUCT
+	{ attribute 'TcHmiSymbol.ShowRecursively' }
+	setup						: ST_HardSettings_Setup;
+	charger						: ST_HardSettings_DCcharger;
+	parallel					: ST_HardSettings_ParallelOperation;
+	PSB							: ST_HardSettings_PeakshaveBox;
+	{ attribute 'TcHmiSymbol.ShowRecursively' }
+	system						: ST_HardSettings_System;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

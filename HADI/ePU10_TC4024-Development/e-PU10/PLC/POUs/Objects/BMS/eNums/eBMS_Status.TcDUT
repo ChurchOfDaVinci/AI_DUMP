@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eBMS_Status" Id="{706930a3-0c43-49f7-b113-6180a399ca2e}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'} 
+TYPE eBMS_Status :
+(
+	Init := 0,
+	Normal := 1,
+	FullCharge := 2,
+	FullDischarge := 3,
+	Warning := 4,
+	Fault := 5,
+	off := 6
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

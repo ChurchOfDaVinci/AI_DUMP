@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="ControlManager" Id="{577c07d5-5ed9-4810-b750-322177b24f72}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM ControlManager
+VAR_OUTPUT PERSISTENT
+	PLCpersistvars				: ST_PLCPersistentvars;
+END_VAR
+
+VAR_IN_OUT
+	control						: ST_ControlVars;
+	Operation					: ST_OperationVars;
+END_VAR
+
+VAR
+	{ attribute 'TcHmiSymbol.Show' }
+	IoT							: FB_IotController;	
+	PNController				: FB_ExternalController;
+	TestScripts					: FB_Testscripts;	
+END_VAR
+
+VAR_IN_OUT CONSTANT
+	{ attribute 'TcHmiSymbol.Hide' }
+	monitor						: ST_System_Monitor;
+END_VAR
+
+//For persistentvars method
+VAR
+	
+	fb_WritePersistentData		: WritePersistentData;
+	r_trigWritePersistent		: R_TRIG;
+	f_trigPersistentSucces		: F_Trig;
+	b_PersistentWritten			: BOOL;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//instantiate fbs
+//Call HMI program 
+hmi(monitor:=monitor,
+	PNControlvars := PnController.get,
+	IotControlvars:= Iot.get,
+	PLCpersistvars	:= PLCpersistvars);
+
+//Call PNcontroller FB
+PNController(monitor := monitor, st_params := Settings.MachineParams.PNController,
+	controlvars := HMI.Controlvars);
+	PNcontroller.set.b_available := settings.Configuration.e_PNcouplerType <> ePNcouplerType.None;
+	
+//Call IoT FB
+Iot(monitor:=monitor, st_params:= settings.MachineParams.IOT,
+	controlvars := HMI.Controlvars, a_ActiveEvents := Errorhandling.a_ActiveEvents);
+
+//Test scripts	
+TestScripts(monitor := monitor, controlvars := HMI.Controlvars);
+
+//Select  Control source
+ControlSourceSelector();
+
+
+
+//WRITE PERSISTENT DATA
+r_trigWritePersistent(CLK:= HMI.Controlvars.control.b_ActivateSettings);
+f_trigPersistentSucces(CLK := fb_WritePersistentData.BUSY);
+fb_WritePersistentData(NETID := '', PORT:= 851, START:=r_trigWritePersistent.Q,  TMOUT := T#5S);
+
+IF f_trigPersistentSucces.Q AND NOT fb_WritePersistentData.ERR THEN
+	b_PersistentWritten := TRUE;
+ELSIF r_trigWritePersistent.Q THEN
+	b_PersistentWritten := FALSE;
+END_IF
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <Method Name="ControlSourceSelector" Id="{282021cb-018e-48a7-8725-07889a38c5dd}">
+      <Declaration><![CDATA[METHOD PROTECTED ControlSourceSelector]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF HMI.controlvars.control.b_ActivateSettings or hmi.Controlvars.HMIonly.b_ActivateSetting THEN
+	IF monitor.b_modeSwitchEnable THEN
+		PLCpersistvars.Hardsettings := HMI.controlvars.HardSettings;
+	END_IF
+END_IF
+
+//Fixed binding
+control		:= HMI.Controlvars.control;
+Operation	:= HMI.controlvars.Operation;
+
+
+IF (MEMCMP(ADR(HMI.controlvars.Softsettings), ADR(PLCpersistvars.Softsettings), SIZEOF(PLCpersistvars.Softsettings)) <> 0) THEN
+	PLCpersistvars.Softsettings	:= HMI.controlvars.SoftSettings;
+END_IF
+
+
+ 
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="ControlManager">
+      <LineId Id="26" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="32" Count="1" />
+      <LineId Id="237" Count="0" />
+      <LineId Id="272" Count="0" />
+      <LineId Id="269" Count="1" />
+      <LineId Id="71" Count="1" />
+      <LineId Id="344" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="197" Count="9" />
+      <LineId Id="177" Count="0" />
+      <LineId Id="175" Count="0" />
+      <LineId Id="172" Count="1" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="ControlManager.ControlSourceSelector">
+      <LineId Id="502" Count="3" />
+      <LineId Id="501" Count="0" />
+      <LineId Id="506" Count="0" />
+      <LineId Id="418" Count="1" />
+      <LineId Id="408" Count="0" />
+      <LineId Id="411" Count="0" />
+      <LineId Id="450" Count="0" />
+      <LineId Id="448" Count="0" />
+      <LineId Id="447" Count="0" />
+      <LineId Id="451" Count="0" />
+      <LineId Id="491" Count="0" />
+      <LineId Id="398" Count="0" />
+      <LineId Id="401" Count="3" />
+      <LineId Id="161" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

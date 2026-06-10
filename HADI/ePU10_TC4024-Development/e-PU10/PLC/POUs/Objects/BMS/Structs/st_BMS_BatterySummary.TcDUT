@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="st_BMS_BatterySummary" Id="{17a35420-21e6-47ec-97f3-3d39268a3e7e}">
+    <Declaration><![CDATA[TYPE st_BMS_BatterySummary EXTENDS st_MBMU_BatterySummary :
+STRUCT
+	r_ratedPower				: REAL;
+	r_ratedCurrent				: REAL;
+	r_ratedEnergyCapacity		: REAL;
+	ui_CycleCount				: UINT;
+	r_SOCScaled					: REAL;
+	b_chargingAllowed			: BOOL;
+	b_dischargingAllowed		: BOOL;
+	r_RemainingDischargeEnergyNett: REAL;
+	r_RemainingChargeEnergyNett	: REAL;
+	r_maxVoltageEver	 		: REAL;
+	r_maxChargeCurrentEver		: REAL;
+	r_maxDischargeCurrentEver	: REAL;
+END_STRUCT
+END_TYPE
+	
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

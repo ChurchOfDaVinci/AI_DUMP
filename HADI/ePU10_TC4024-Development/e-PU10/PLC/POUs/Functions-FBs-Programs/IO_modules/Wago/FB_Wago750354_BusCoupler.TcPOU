@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Wago750354_BusCoupler" Id="{a3eaf8fd-93ad-4046-9f1d-fb7a9e737f06}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK INTERNAL FB_Wago750354_BusCoupler
+VAR_INPUT
+//	b_KbusCycleOverrunFlagDisable			AT %Q* : BOOL;
+//	b_InputProcessDataHoldRequest			AT %Q* : BOOL;
+//	b_OutputProcessDataHoldRequest			AT %Q* : BOOL;
+//	b_OutputDataClearRequest				AT %Q* : BOOL;
+	
+	b_AckDiagnostics						: BOOL;
+	b_ClearDiagnostics						: BOOL;
+END_VAR
+VAR_OUTPUT
+//	b_kBusCycleOverRun						AT %I* : BOOL;
+//	b_InputProcessDataHoldAck				AT %I* : BOOL;
+//	b_OutputProcessDataHoldAck				AT %I* : BOOL;
+//	b_OutputProcessDataClearAck				AT %I* : BOOL;
+//	b_NewMessageAvailable					AT %I* : BOOL;
+	get											  : ST_Wago750354_get;
+END_VAR
+VAR	
+	ui_DiagnosticsStatusWord			AT %I* : UINT;
+	ui_State							AT %I* : UINT;
+	DiagnosticsControlWord				AT %Q* : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[get.b_SlaveReady := ui_State = 8;
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Wago750354_BusCoupler">
+      <LineId Id="9" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="47" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

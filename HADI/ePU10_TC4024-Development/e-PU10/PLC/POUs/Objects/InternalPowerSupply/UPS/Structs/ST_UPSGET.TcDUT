@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_UPSGET" Id="{797933e8-58da-45ca-b216-51b4073f8130}">
+    <Declaration><![CDATA[TYPE ST_UPSGET :
+STRUCT
+	r_InputVoltage		:	REAL;
+	r_OutputVoltage		:	REAL;
+	r_BatteryVoltage	:	REAL;
+	r_OutputCurrent		: 	REAL;
+	ui_SOC				:	UINT	:=	100;
+	
+	b_ChargerActive		:	BOOL;
+	b_SystemOnBattery	:	BOOL;
+	b_SystemOnDCInput		:	BOOL;
+	
+	Events			:	ST_UPSEvents;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

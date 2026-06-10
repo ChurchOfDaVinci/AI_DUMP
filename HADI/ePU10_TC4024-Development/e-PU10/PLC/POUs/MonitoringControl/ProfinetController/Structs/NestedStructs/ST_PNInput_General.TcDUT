@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PNInput_General" Id="{8077cd0e-0007-4ebb-8c06-90caa777c5f2}">
+    <Declaration><![CDATA[TYPE ST_PNInput_General :
+STRUCT
+	W_Control				:	WORD;
+	ui_HeatBeat				:	UINT;
+	ui_GridMode				:	UINT;
+	ui_GridFormingSubMode	:	UINT;	
+	ui_Earthingsystem		:	UINT;
+	GridConnectionMode		:	UINT;
+	PrimaryDigOutState		:	UINT := 99;
+	SecondaryDigOutState	:	UINT := 99;
+	PrimaryDigInState		:	UINT := 99;
+	SecondaryDiginState		:	UINT := 99;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

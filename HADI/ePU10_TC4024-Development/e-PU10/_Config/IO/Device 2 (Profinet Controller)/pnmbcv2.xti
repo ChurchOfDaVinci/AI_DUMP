@@ -1,0 +1,3716 @@
+<?xml version="1.0"?>
+<TcSmItem xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.beckhoff.com/schemas/2012/07/TcSmProject" TcSmVersion="1.0" TcVersion="3.1.4024.35" ClassName="CPnIoBoxDef" SubType="9121" TcProjectVariant="ePU10_360_3P_O">
+	<Box Id="36" BoxType="9121">
+		<Name>__FILENAME__</Name>
+		<Comment><![CDATA[
+The GSDML is not available!
+
+GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+GSDML path: C:\Users\Admin\Desktop\
+VendorName: Helmholz GmbH & Co. KG
+OrderNumber: 700-159-3MB02
+HW Release Version: 2
+SW Release Version: V 2]]></Comment>
+		<ImageId>121</ImageId>
+		<ProjectVariant PvUseDisable="true">
+			<Variant>
+				<Name>ePU10_360_3P_O</Name>
+				<Name>ePU10_360_N_IO</Name>
+				<Name>ePU10_360_N_IO_PSB</Name>
+				<Name>ePU10_368_3P_O_PSB</Name>
+				<Disable>0</Disable>
+			</Variant>
+		</ProjectVariant>
+		<Vars VarGrpType="1">
+			<Name>Inputs</Name>
+			<Var>
+				<Name>PnIoBoxState</Name>
+				<Comment><![CDATA[0 = No error
+1 = Profinet device state machine is in boot mode
+2 = Device not found
+3 = The stationname is not unique
+4 = IP could not be set
+5 = IP conflict
+6 = DCP set was not successful
+7 = Watchdog error
+8 = Datahold error
+9 = RTC3: Sync mode could not be initiated
+10 = Profinet controller has a link error
+11 = The aliasname is not unique
+12 = The automatic name assignement isn't possible - wrong device type
+13 = IOC-AR is established but no application ready
+14 = IOC-AR is established but module difference
+15 = At least one InputCR is invalid, provider in stop or problemindicator is set
+16 = At least one OutputCR is invalid, provider in stop or problemindicator is set
+31 = Only for EtherCAT gateways: WC-State of cyclic EtherCAT frame is 1
+]]></Comment>
+				<Type>UINT</Type>
+				<BitOffs>1448</BitOffs>
+			</Var>
+			<Var>
+				<Name>PnIoBoxDiag</Name>
+				<Comment><![CDATA[0x0000 = No diagnosis
+0x0001 = IOC-AR is not established
+0x0002 = IOC-AR is established
+0x0004 = IOC-AR is established but no application ready
+0x0008 = IOC-AR is established but module difference
+0x0010 = At least one AlarmCR got a diagnosis alarm
+0x0100 = At least one InputCR is invalid
+0x0200 = At least one InputCR Provider is in stop
+0x0400 = At least one InputCR Problemindicator is set
+0x1000 = At least one OutputCR is invalid
+0x2000 = At least one OutputCR Provider is in stop
+0x4000 = At least one OutputCR Problemindicator is set
+]]></Comment>
+				<Type>UINT</Type>
+				<BitOffs>1464</BitOffs>
+			</Var>
+		</Vars>
+		<Vars VarGrpType="2">
+			<Name>Outputs</Name>
+			<Var>
+				<Name>PnIoBoxCtrl</Name>
+				<Type>UINT</Type>
+				<BitOffs>2176</BitOffs>
+			</Var>
+		</Vars>
+		<Profinet DeviceId="864" VendorId="539" FrameOffset="32768" Flags="16" IPAdd="c0a8012c" ProtocolType="3" BoxOnDeviceTyp="113" MaxPhysSlotNr="300" InstanceServerPort="61000" InstanceClientPort="60000" InstanceId="1" InstanceNumberOfARs="1" InstanceNumberOfAPIs="1" MinDeviceInterval="512" NrOfGsdmlDap="2" SavePnIoBoxValues="0100" MultipleWriteSupported="true" Phase="1" WatchdogFaktor="3" ReductionRatio="16" SendClockFaktor="32" MaxInputLen="1024" MaxOutputLen="1024" MaxDataLen="1024" MaxSupportedRecordSize="8000" SendClockFactorData="200040008000" RedRatio="0100020004000800100020004000800000010002" BoxTypeInfo="PN/ModbusTCP Coupler V2, supports Conformance Class A,B" GSDMLPath="C:\Users\Admin\Desktop\GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml" ImagePath="C:\Users\Admin\Desktop\GSDML-021B-0360-PNModbusTCPcoupler.bmp" MainFamily="Gateway" ProductFamily="Helmholz PN/ModbusTCP-Coupler" OrderNr="700-159-3MB02" DefaultDNSName="PNModbusTCPcoupler" VendorName="Helmholz GmbH &amp; Co. KG" FamDescription="PN/ModbusTCP Coupler" GraphicFile="GSDML-021B-0360-PNModbusTCPcoupler" SWVersion="V 2" HWVersion="2" AltLanguage="7">
+			<GsdmlValue HelpInfo="ModbusTCP Register address" Id="Register"/>
+			<GsdmlValue Id="Webpage" Content="0000010002000300">
+				<RecordText>off</RecordText>
+				<RecordText>on PROFINET network side active</RecordText>
+				<RecordText>on ModbusTCP network side active</RecordText>
+				<RecordText>on both network sides active</RecordText>
+			</GsdmlValue>
+			<GsdmlValue HelpInfo="Modbus IP-address setting" Id="Modbus IP mode" Content="000001000200">
+				<RecordText>DHCP</RecordText>
+				<RecordText>Static IP</RecordText>
+				<RecordText>use IP from webpage setting</RecordText>
+			</GsdmlValue>
+			<GsdmlValue Id="DHCP hostname mode" Content="00000100">
+				<RecordText>From PROFINET configuration</RecordText>
+				<RecordText>From webpage</RecordText>
+			</GsdmlValue>
+			<GsdmlValue HelpInfo="ModbusTCP port (default: 502)" Id="Modbus port"/>
+			<GsdmlValue HelpInfo="ModbusTCP connection watchdog time (default: 10000 ms)" Id="Connection watchdog"/>
+			<GsdmlValue HelpInfo="Maximum Modbus-TCP connections (default/max.: 5)" Id="Maximum connections"/>
+			<GsdmlValue HelpInfo="Modbus register address for PROFINET-status" Id="PN-status register"/>
+			<GsdmlValue Id="MQTT Option" Content="000001000200">
+				<RecordText>off</RecordText>
+				<RecordText>on PROFINET network side active</RecordText>
+				<RecordText>on ModbusTCP network side active</RecordText>
+			</GsdmlValue>
+			<GsdmlValue Id="PS1"/>
+			<GsdmlValue Id="PS2"/>
+			<GsdmlValue Id="Diag: Power supply failure" Content="01000200">
+				<RecordText>Failure PS1 (left side)</RecordText>
+				<RecordText>Failure PS2 (right side)</RecordText>
+			</GsdmlValue>
+			<GsdmlValue Id="Diag: Configuration error" Content="010002000300040005000600">
+				<RecordText>Parameter DIA (data validity display) set but no input data configured</RecordText>
+				<RecordText>Configuration of the PROFINET-network sides differs</RecordText>
+				<RecordText>Other network is not configured or failed</RecordText>
+				<RecordText>Gap in module configuration</RecordText>
+				<RecordText>Multiple modules write to the same Modbus memory region</RecordText>
+				<RecordText>Invalid network configuration for ModbusTCP</RecordText>
+			</GsdmlValue>
+			<GsdmlUnitDiag UserStructureIdent="1" Name="Diagnostic on power fail">
+				<UnitDiagData Name="Failure of powersupply: " DataType="Unsigned8" DefaultValue="1" DataLength="1" ValueItemTarget="Diag: Power supply failure"/>
+			</GsdmlUnitDiag>
+			<GsdmlUnitDiag UserStructureIdent="2" Name="Diagnostic on configuration fault">
+				<UnitDiagData Name="Configuration fault: " DataType="Unsigned8" DefaultValue="1" DataLength="1" ValueItemTarget="Diag: Configuration error"/>
+			</GsdmlUnitDiag>
+			<UsedGsdmlModule ModuleIdentNumber="512" ModuleName="DAP Module" InfoText="PN/ModbusTCP Coupler V2, supports Conformance Class A,B" OrderNumber="700-159-3MB02">
+				<Slot>0</Slot>
+			</UsedGsdmlModule>
+			<UsedGsdmlModule ModuleIdentNumber="50" Id="50" ModuleName="Write Holding Register" InfoText="Write Holding Register (PLC write)" ModuleCategory="Holding Register">
+				<Slot>1</Slot>
+				<Slot>2</Slot>
+				<Slot>3</Slot>
+				<Slot>4</Slot>
+				<Slot>5</Slot>
+				<Slot>6</Slot>
+				<Slot>7</Slot>
+				<Slot>8</Slot>
+				<Slot>9</Slot>
+				<Slot>10</Slot>
+				<Slot>11</Slot>
+				<Slot>12</Slot>
+				<Slot>13</Slot>
+				<Slot>14</Slot>
+				<Slot>15</Slot>
+				<Slot>16</Slot>
+				<Slot>17</Slot>
+				<Slot>18</Slot>
+				<Slot>19</Slot>
+				<Slot>20</Slot>
+				<Slot>21</Slot>
+				<Slot>22</Slot>
+				<Slot>23</Slot>
+				<Slot>24</Slot>
+				<Slot>25</Slot>
+				<Slot>26</Slot>
+				<Slot>27</Slot>
+				<Slot>28</Slot>
+				<Slot>29</Slot>
+				<Slot>30</Slot>
+				<Slot>31</Slot>
+				<Slot>32</Slot>
+				<Slot>33</Slot>
+				<Slot>34</Slot>
+				<Slot>35</Slot>
+				<Slot>36</Slot>
+				<Slot>37</Slot>
+				<Slot>38</Slot>
+				<Slot>39</Slot>
+				<Slot>40</Slot>
+				<Slot>41</Slot>
+				<Slot>42</Slot>
+				<Slot>43</Slot>
+				<Slot>44</Slot>
+				<Slot>45</Slot>
+				<Slot>46</Slot>
+				<Slot>47</Slot>
+				<Slot>48</Slot>
+				<Slot>49</Slot>
+				<Slot>50</Slot>
+				<Slot>51</Slot>
+				<Slot>52</Slot>
+				<Slot>53</Slot>
+				<Slot>54</Slot>
+				<Slot>55</Slot>
+				<Slot>56</Slot>
+				<Slot>57</Slot>
+				<Slot>58</Slot>
+				<Slot>59</Slot>
+				<Slot>60</Slot>
+				<Slot>61</Slot>
+				<Slot>62</Slot>
+				<Slot>63</Slot>
+				<Slot>64</Slot>
+				<Slot>65</Slot>
+				<Slot>66</Slot>
+				<Slot>67</Slot>
+				<Slot>68</Slot>
+				<Slot>69</Slot>
+				<Slot>70</Slot>
+				<Slot>71</Slot>
+				<Slot>72</Slot>
+				<Slot>73</Slot>
+				<Slot>74</Slot>
+				<Slot>75</Slot>
+				<Slot>76</Slot>
+				<Slot>77</Slot>
+				<Slot>78</Slot>
+				<Slot>79</Slot>
+				<Slot>80</Slot>
+				<Slot>81</Slot>
+				<Slot>82</Slot>
+				<Slot>83</Slot>
+				<Slot>84</Slot>
+				<Slot>85</Slot>
+				<Slot>86</Slot>
+				<Slot>87</Slot>
+				<Slot>88</Slot>
+				<Slot>89</Slot>
+				<Slot>90</Slot>
+				<Slot>91</Slot>
+				<Slot>92</Slot>
+				<Slot>93</Slot>
+				<Slot>94</Slot>
+				<Slot>95</Slot>
+				<Slot>96</Slot>
+				<Slot>97</Slot>
+				<Slot>98</Slot>
+				<Slot>99</Slot>
+				<Slot>100</Slot>
+				<Slot>101</Slot>
+				<Slot>102</Slot>
+				<Slot>103</Slot>
+				<Slot>104</Slot>
+				<Slot>105</Slot>
+				<Slot>106</Slot>
+				<Slot>107</Slot>
+				<Slot>108</Slot>
+				<Slot>109</Slot>
+				<Slot>110</Slot>
+				<Slot>111</Slot>
+				<Slot>112</Slot>
+				<Slot>113</Slot>
+				<Slot>114</Slot>
+				<Slot>115</Slot>
+				<Slot>116</Slot>
+				<Slot>117</Slot>
+				<Slot>118</Slot>
+				<Slot>119</Slot>
+				<Slot>120</Slot>
+				<Slot>121</Slot>
+				<Slot>122</Slot>
+				<Slot>123</Slot>
+				<Slot>124</Slot>
+				<Slot>125</Slot>
+				<Slot>126</Slot>
+				<Slot>127</Slot>
+				<Slot>128</Slot>
+				<Slot>129</Slot>
+				<Slot>130</Slot>
+				<Slot>131</Slot>
+				<Slot>132</Slot>
+				<Slot>133</Slot>
+				<Slot>134</Slot>
+				<Slot>135</Slot>
+				<Slot>136</Slot>
+				<Slot>137</Slot>
+				<Slot>138</Slot>
+				<Slot>139</Slot>
+				<Slot>140</Slot>
+				<Slot>141</Slot>
+				<Slot>142</Slot>
+				<Slot>143</Slot>
+				<Slot>144</Slot>
+				<Slot>145</Slot>
+				<Slot>146</Slot>
+				<Slot>147</Slot>
+				<Slot>148</Slot>
+				<Slot>149</Slot>
+				<Slot>150</Slot>
+				<Slot>151</Slot>
+				<Slot>152</Slot>
+				<Slot>153</Slot>
+				<Slot>154</Slot>
+				<Slot>155</Slot>
+				<Slot>156</Slot>
+				<Slot>157</Slot>
+				<Slot>158</Slot>
+				<Slot>159</Slot>
+				<Slot>160</Slot>
+				<Slot>161</Slot>
+				<Slot>162</Slot>
+				<Slot>163</Slot>
+				<Slot>164</Slot>
+				<Slot>165</Slot>
+				<Slot>166</Slot>
+				<Slot>167</Slot>
+				<Slot>168</Slot>
+				<Slot>169</Slot>
+				<Slot>170</Slot>
+				<Slot>171</Slot>
+				<Slot>172</Slot>
+				<Slot>173</Slot>
+				<Slot>174</Slot>
+				<Slot>175</Slot>
+				<Slot>176</Slot>
+				<Slot>177</Slot>
+				<Slot>178</Slot>
+				<Slot>179</Slot>
+				<Slot>180</Slot>
+				<Slot>181</Slot>
+				<Slot>182</Slot>
+				<Slot>183</Slot>
+				<Slot>184</Slot>
+				<Slot>185</Slot>
+				<Slot>186</Slot>
+				<Slot>187</Slot>
+				<Slot>188</Slot>
+				<Slot>189</Slot>
+				<Slot>190</Slot>
+				<Slot>191</Slot>
+				<Slot>192</Slot>
+				<Slot>193</Slot>
+				<Slot>194</Slot>
+				<Slot>195</Slot>
+				<Slot>196</Slot>
+				<Slot>197</Slot>
+				<Slot>198</Slot>
+				<Slot>199</Slot>
+				<Slot>200</Slot>
+				<Slot>201</Slot>
+				<Slot>202</Slot>
+				<Slot>203</Slot>
+				<Slot>204</Slot>
+				<Slot>205</Slot>
+				<Slot>206</Slot>
+				<Slot>207</Slot>
+				<Slot>208</Slot>
+				<Slot>209</Slot>
+				<Slot>210</Slot>
+				<Slot>211</Slot>
+				<Slot>212</Slot>
+				<Slot>213</Slot>
+				<Slot>214</Slot>
+				<Slot>215</Slot>
+				<Slot>216</Slot>
+				<Slot>217</Slot>
+				<Slot>218</Slot>
+				<Slot>219</Slot>
+				<Slot>220</Slot>
+				<Slot>221</Slot>
+				<Slot>222</Slot>
+				<Slot>223</Slot>
+				<Slot>224</Slot>
+				<Slot>225</Slot>
+				<Slot>226</Slot>
+				<Slot>227</Slot>
+				<Slot>228</Slot>
+				<Slot>229</Slot>
+				<Slot>230</Slot>
+				<Slot>231</Slot>
+				<Slot>232</Slot>
+				<Slot>233</Slot>
+				<Slot>234</Slot>
+				<Slot>235</Slot>
+				<Slot>236</Slot>
+				<Slot>237</Slot>
+				<Slot>238</Slot>
+				<Slot>239</Slot>
+				<Slot>240</Slot>
+				<Slot>241</Slot>
+				<Slot>242</Slot>
+				<Slot>243</Slot>
+				<Slot>244</Slot>
+				<Slot>245</Slot>
+				<Slot>246</Slot>
+				<Slot>247</Slot>
+				<Slot>248</Slot>
+				<Slot>249</Slot>
+				<Slot>250</Slot>
+				<Slot>251</Slot>
+				<Slot>252</Slot>
+				<Slot>253</Slot>
+				<Slot>254</Slot>
+				<Slot>255</Slot>
+				<Slot>256</Slot>
+				<Slot>257</Slot>
+				<Slot>258</Slot>
+				<Slot>259</Slot>
+				<Slot>260</Slot>
+				<Slot>261</Slot>
+				<Slot>262</Slot>
+				<Slot>263</Slot>
+				<Slot>264</Slot>
+				<Slot>265</Slot>
+				<Slot>266</Slot>
+				<Slot>267</Slot>
+				<Slot>268</Slot>
+				<Slot>269</Slot>
+				<Slot>270</Slot>
+				<Slot>271</Slot>
+				<Slot>272</Slot>
+				<Slot>273</Slot>
+				<Slot>274</Slot>
+				<Slot>275</Slot>
+				<Slot>276</Slot>
+				<Slot>277</Slot>
+				<Slot>278</Slot>
+				<Slot>279</Slot>
+				<Slot>280</Slot>
+				<Slot>281</Slot>
+				<Slot>282</Slot>
+				<Slot>283</Slot>
+				<Slot>284</Slot>
+				<Slot>285</Slot>
+				<Slot>286</Slot>
+				<Slot>287</Slot>
+				<Slot>288</Slot>
+				<Slot>289</Slot>
+				<Slot>290</Slot>
+				<Slot>291</Slot>
+				<Slot>292</Slot>
+				<Slot>293</Slot>
+				<Slot>294</Slot>
+				<Slot>295</Slot>
+				<Slot>296</Slot>
+				<Slot>297</Slot>
+				<Slot>298</Slot>
+				<Slot>299</Slot>
+				<Slot>300</Slot>
+			</UsedGsdmlModule>
+			<UsedGsdmlModule ModuleIdentNumber="51" Id="51" ModuleName="Read Holding Register" InfoText="Read Holding Register (PLC read)" ModuleCategory="Holding Register">
+				<Slot>1</Slot>
+				<Slot>2</Slot>
+				<Slot>3</Slot>
+				<Slot>4</Slot>
+				<Slot>5</Slot>
+				<Slot>6</Slot>
+				<Slot>7</Slot>
+				<Slot>8</Slot>
+				<Slot>9</Slot>
+				<Slot>10</Slot>
+				<Slot>11</Slot>
+				<Slot>12</Slot>
+				<Slot>13</Slot>
+				<Slot>14</Slot>
+				<Slot>15</Slot>
+				<Slot>16</Slot>
+				<Slot>17</Slot>
+				<Slot>18</Slot>
+				<Slot>19</Slot>
+				<Slot>20</Slot>
+				<Slot>21</Slot>
+				<Slot>22</Slot>
+				<Slot>23</Slot>
+				<Slot>24</Slot>
+				<Slot>25</Slot>
+				<Slot>26</Slot>
+				<Slot>27</Slot>
+				<Slot>28</Slot>
+				<Slot>29</Slot>
+				<Slot>30</Slot>
+				<Slot>31</Slot>
+				<Slot>32</Slot>
+				<Slot>33</Slot>
+				<Slot>34</Slot>
+				<Slot>35</Slot>
+				<Slot>36</Slot>
+				<Slot>37</Slot>
+				<Slot>38</Slot>
+				<Slot>39</Slot>
+				<Slot>40</Slot>
+				<Slot>41</Slot>
+				<Slot>42</Slot>
+				<Slot>43</Slot>
+				<Slot>44</Slot>
+				<Slot>45</Slot>
+				<Slot>46</Slot>
+				<Slot>47</Slot>
+				<Slot>48</Slot>
+				<Slot>49</Slot>
+				<Slot>50</Slot>
+				<Slot>51</Slot>
+				<Slot>52</Slot>
+				<Slot>53</Slot>
+				<Slot>54</Slot>
+				<Slot>55</Slot>
+				<Slot>56</Slot>
+				<Slot>57</Slot>
+				<Slot>58</Slot>
+				<Slot>59</Slot>
+				<Slot>60</Slot>
+				<Slot>61</Slot>
+				<Slot>62</Slot>
+				<Slot>63</Slot>
+				<Slot>64</Slot>
+				<Slot>65</Slot>
+				<Slot>66</Slot>
+				<Slot>67</Slot>
+				<Slot>68</Slot>
+				<Slot>69</Slot>
+				<Slot>70</Slot>
+				<Slot>71</Slot>
+				<Slot>72</Slot>
+				<Slot>73</Slot>
+				<Slot>74</Slot>
+				<Slot>75</Slot>
+				<Slot>76</Slot>
+				<Slot>77</Slot>
+				<Slot>78</Slot>
+				<Slot>79</Slot>
+				<Slot>80</Slot>
+				<Slot>81</Slot>
+				<Slot>82</Slot>
+				<Slot>83</Slot>
+				<Slot>84</Slot>
+				<Slot>85</Slot>
+				<Slot>86</Slot>
+				<Slot>87</Slot>
+				<Slot>88</Slot>
+				<Slot>89</Slot>
+				<Slot>90</Slot>
+				<Slot>91</Slot>
+				<Slot>92</Slot>
+				<Slot>93</Slot>
+				<Slot>94</Slot>
+				<Slot>95</Slot>
+				<Slot>96</Slot>
+				<Slot>97</Slot>
+				<Slot>98</Slot>
+				<Slot>99</Slot>
+				<Slot>100</Slot>
+				<Slot>101</Slot>
+				<Slot>102</Slot>
+				<Slot>103</Slot>
+				<Slot>104</Slot>
+				<Slot>105</Slot>
+				<Slot>106</Slot>
+				<Slot>107</Slot>
+				<Slot>108</Slot>
+				<Slot>109</Slot>
+				<Slot>110</Slot>
+				<Slot>111</Slot>
+				<Slot>112</Slot>
+				<Slot>113</Slot>
+				<Slot>114</Slot>
+				<Slot>115</Slot>
+				<Slot>116</Slot>
+				<Slot>117</Slot>
+				<Slot>118</Slot>
+				<Slot>119</Slot>
+				<Slot>120</Slot>
+				<Slot>121</Slot>
+				<Slot>122</Slot>
+				<Slot>123</Slot>
+				<Slot>124</Slot>
+				<Slot>125</Slot>
+				<Slot>126</Slot>
+				<Slot>127</Slot>
+				<Slot>128</Slot>
+				<Slot>129</Slot>
+				<Slot>130</Slot>
+				<Slot>131</Slot>
+				<Slot>132</Slot>
+				<Slot>133</Slot>
+				<Slot>134</Slot>
+				<Slot>135</Slot>
+				<Slot>136</Slot>
+				<Slot>137</Slot>
+				<Slot>138</Slot>
+				<Slot>139</Slot>
+				<Slot>140</Slot>
+				<Slot>141</Slot>
+				<Slot>142</Slot>
+				<Slot>143</Slot>
+				<Slot>144</Slot>
+				<Slot>145</Slot>
+				<Slot>146</Slot>
+				<Slot>147</Slot>
+				<Slot>148</Slot>
+				<Slot>149</Slot>
+				<Slot>150</Slot>
+				<Slot>151</Slot>
+				<Slot>152</Slot>
+				<Slot>153</Slot>
+				<Slot>154</Slot>
+				<Slot>155</Slot>
+				<Slot>156</Slot>
+				<Slot>157</Slot>
+				<Slot>158</Slot>
+				<Slot>159</Slot>
+				<Slot>160</Slot>
+				<Slot>161</Slot>
+				<Slot>162</Slot>
+				<Slot>163</Slot>
+				<Slot>164</Slot>
+				<Slot>165</Slot>
+				<Slot>166</Slot>
+				<Slot>167</Slot>
+				<Slot>168</Slot>
+				<Slot>169</Slot>
+				<Slot>170</Slot>
+				<Slot>171</Slot>
+				<Slot>172</Slot>
+				<Slot>173</Slot>
+				<Slot>174</Slot>
+				<Slot>175</Slot>
+				<Slot>176</Slot>
+				<Slot>177</Slot>
+				<Slot>178</Slot>
+				<Slot>179</Slot>
+				<Slot>180</Slot>
+				<Slot>181</Slot>
+				<Slot>182</Slot>
+				<Slot>183</Slot>
+				<Slot>184</Slot>
+				<Slot>185</Slot>
+				<Slot>186</Slot>
+				<Slot>187</Slot>
+				<Slot>188</Slot>
+				<Slot>189</Slot>
+				<Slot>190</Slot>
+				<Slot>191</Slot>
+				<Slot>192</Slot>
+				<Slot>193</Slot>
+				<Slot>194</Slot>
+				<Slot>195</Slot>
+				<Slot>196</Slot>
+				<Slot>197</Slot>
+				<Slot>198</Slot>
+				<Slot>199</Slot>
+				<Slot>200</Slot>
+				<Slot>201</Slot>
+				<Slot>202</Slot>
+				<Slot>203</Slot>
+				<Slot>204</Slot>
+				<Slot>205</Slot>
+				<Slot>206</Slot>
+				<Slot>207</Slot>
+				<Slot>208</Slot>
+				<Slot>209</Slot>
+				<Slot>210</Slot>
+				<Slot>211</Slot>
+				<Slot>212</Slot>
+				<Slot>213</Slot>
+				<Slot>214</Slot>
+				<Slot>215</Slot>
+				<Slot>216</Slot>
+				<Slot>217</Slot>
+				<Slot>218</Slot>
+				<Slot>219</Slot>
+				<Slot>220</Slot>
+				<Slot>221</Slot>
+				<Slot>222</Slot>
+				<Slot>223</Slot>
+				<Slot>224</Slot>
+				<Slot>225</Slot>
+				<Slot>226</Slot>
+				<Slot>227</Slot>
+				<Slot>228</Slot>
+				<Slot>229</Slot>
+				<Slot>230</Slot>
+				<Slot>231</Slot>
+				<Slot>232</Slot>
+				<Slot>233</Slot>
+				<Slot>234</Slot>
+				<Slot>235</Slot>
+				<Slot>236</Slot>
+				<Slot>237</Slot>
+				<Slot>238</Slot>
+				<Slot>239</Slot>
+				<Slot>240</Slot>
+				<Slot>241</Slot>
+				<Slot>242</Slot>
+				<Slot>243</Slot>
+				<Slot>244</Slot>
+				<Slot>245</Slot>
+				<Slot>246</Slot>
+				<Slot>247</Slot>
+				<Slot>248</Slot>
+				<Slot>249</Slot>
+				<Slot>250</Slot>
+				<Slot>251</Slot>
+				<Slot>252</Slot>
+				<Slot>253</Slot>
+				<Slot>254</Slot>
+				<Slot>255</Slot>
+				<Slot>256</Slot>
+				<Slot>257</Slot>
+				<Slot>258</Slot>
+				<Slot>259</Slot>
+				<Slot>260</Slot>
+				<Slot>261</Slot>
+				<Slot>262</Slot>
+				<Slot>263</Slot>
+				<Slot>264</Slot>
+				<Slot>265</Slot>
+				<Slot>266</Slot>
+				<Slot>267</Slot>
+				<Slot>268</Slot>
+				<Slot>269</Slot>
+				<Slot>270</Slot>
+				<Slot>271</Slot>
+				<Slot>272</Slot>
+				<Slot>273</Slot>
+				<Slot>274</Slot>
+				<Slot>275</Slot>
+				<Slot>276</Slot>
+				<Slot>277</Slot>
+				<Slot>278</Slot>
+				<Slot>279</Slot>
+				<Slot>280</Slot>
+				<Slot>281</Slot>
+				<Slot>282</Slot>
+				<Slot>283</Slot>
+				<Slot>284</Slot>
+				<Slot>285</Slot>
+				<Slot>286</Slot>
+				<Slot>287</Slot>
+				<Slot>288</Slot>
+				<Slot>289</Slot>
+				<Slot>290</Slot>
+				<Slot>291</Slot>
+				<Slot>292</Slot>
+				<Slot>293</Slot>
+				<Slot>294</Slot>
+				<Slot>295</Slot>
+				<Slot>296</Slot>
+				<Slot>297</Slot>
+				<Slot>298</Slot>
+				<Slot>299</Slot>
+				<Slot>300</Slot>
+			</UsedGsdmlModule>
+			<UsedGsdmlModule ModuleIdentNumber="512" ModuleName="DAP Module" InfoText="PN/ModbusTCP Coupler V2, supports Conformance Class A,B" OrderNumber="700-159-3MB02">
+				<Slot>0</Slot>
+			</UsedGsdmlModule>
+			<UsedGsdmlModule ModuleIdentNumber="50" Id="50" ModuleName="Write Holding Register" InfoText="Write Holding Register (PLC write)" ModuleCategory="Holding Register">
+				<Slot>1</Slot>
+				<Slot>2</Slot>
+				<Slot>3</Slot>
+				<Slot>4</Slot>
+				<Slot>5</Slot>
+				<Slot>6</Slot>
+				<Slot>7</Slot>
+				<Slot>8</Slot>
+				<Slot>9</Slot>
+				<Slot>10</Slot>
+				<Slot>11</Slot>
+				<Slot>12</Slot>
+				<Slot>13</Slot>
+				<Slot>14</Slot>
+				<Slot>15</Slot>
+				<Slot>16</Slot>
+				<Slot>17</Slot>
+				<Slot>18</Slot>
+				<Slot>19</Slot>
+				<Slot>20</Slot>
+				<Slot>21</Slot>
+				<Slot>22</Slot>
+				<Slot>23</Slot>
+				<Slot>24</Slot>
+				<Slot>25</Slot>
+				<Slot>26</Slot>
+				<Slot>27</Slot>
+				<Slot>28</Slot>
+				<Slot>29</Slot>
+				<Slot>30</Slot>
+				<Slot>31</Slot>
+				<Slot>32</Slot>
+				<Slot>33</Slot>
+				<Slot>34</Slot>
+				<Slot>35</Slot>
+				<Slot>36</Slot>
+				<Slot>37</Slot>
+				<Slot>38</Slot>
+				<Slot>39</Slot>
+				<Slot>40</Slot>
+				<Slot>41</Slot>
+				<Slot>42</Slot>
+				<Slot>43</Slot>
+				<Slot>44</Slot>
+				<Slot>45</Slot>
+				<Slot>46</Slot>
+				<Slot>47</Slot>
+				<Slot>48</Slot>
+				<Slot>49</Slot>
+				<Slot>50</Slot>
+				<Slot>51</Slot>
+				<Slot>52</Slot>
+				<Slot>53</Slot>
+				<Slot>54</Slot>
+				<Slot>55</Slot>
+				<Slot>56</Slot>
+				<Slot>57</Slot>
+				<Slot>58</Slot>
+				<Slot>59</Slot>
+				<Slot>60</Slot>
+				<Slot>61</Slot>
+				<Slot>62</Slot>
+				<Slot>63</Slot>
+				<Slot>64</Slot>
+				<Slot>65</Slot>
+				<Slot>66</Slot>
+				<Slot>67</Slot>
+				<Slot>68</Slot>
+				<Slot>69</Slot>
+				<Slot>70</Slot>
+				<Slot>71</Slot>
+				<Slot>72</Slot>
+				<Slot>73</Slot>
+				<Slot>74</Slot>
+				<Slot>75</Slot>
+				<Slot>76</Slot>
+				<Slot>77</Slot>
+				<Slot>78</Slot>
+				<Slot>79</Slot>
+				<Slot>80</Slot>
+				<Slot>81</Slot>
+				<Slot>82</Slot>
+				<Slot>83</Slot>
+				<Slot>84</Slot>
+				<Slot>85</Slot>
+				<Slot>86</Slot>
+				<Slot>87</Slot>
+				<Slot>88</Slot>
+				<Slot>89</Slot>
+				<Slot>90</Slot>
+				<Slot>91</Slot>
+				<Slot>92</Slot>
+				<Slot>93</Slot>
+				<Slot>94</Slot>
+				<Slot>95</Slot>
+				<Slot>96</Slot>
+				<Slot>97</Slot>
+				<Slot>98</Slot>
+				<Slot>99</Slot>
+				<Slot>100</Slot>
+				<Slot>101</Slot>
+				<Slot>102</Slot>
+				<Slot>103</Slot>
+				<Slot>104</Slot>
+				<Slot>105</Slot>
+				<Slot>106</Slot>
+				<Slot>107</Slot>
+				<Slot>108</Slot>
+				<Slot>109</Slot>
+				<Slot>110</Slot>
+				<Slot>111</Slot>
+				<Slot>112</Slot>
+				<Slot>113</Slot>
+				<Slot>114</Slot>
+				<Slot>115</Slot>
+				<Slot>116</Slot>
+				<Slot>117</Slot>
+				<Slot>118</Slot>
+				<Slot>119</Slot>
+				<Slot>120</Slot>
+				<Slot>121</Slot>
+				<Slot>122</Slot>
+				<Slot>123</Slot>
+				<Slot>124</Slot>
+				<Slot>125</Slot>
+				<Slot>126</Slot>
+				<Slot>127</Slot>
+				<Slot>128</Slot>
+				<Slot>129</Slot>
+				<Slot>130</Slot>
+				<Slot>131</Slot>
+				<Slot>132</Slot>
+				<Slot>133</Slot>
+				<Slot>134</Slot>
+				<Slot>135</Slot>
+				<Slot>136</Slot>
+				<Slot>137</Slot>
+				<Slot>138</Slot>
+				<Slot>139</Slot>
+				<Slot>140</Slot>
+				<Slot>141</Slot>
+				<Slot>142</Slot>
+				<Slot>143</Slot>
+				<Slot>144</Slot>
+				<Slot>145</Slot>
+				<Slot>146</Slot>
+				<Slot>147</Slot>
+				<Slot>148</Slot>
+				<Slot>149</Slot>
+				<Slot>150</Slot>
+				<Slot>151</Slot>
+				<Slot>152</Slot>
+				<Slot>153</Slot>
+				<Slot>154</Slot>
+				<Slot>155</Slot>
+				<Slot>156</Slot>
+				<Slot>157</Slot>
+				<Slot>158</Slot>
+				<Slot>159</Slot>
+				<Slot>160</Slot>
+				<Slot>161</Slot>
+				<Slot>162</Slot>
+				<Slot>163</Slot>
+				<Slot>164</Slot>
+				<Slot>165</Slot>
+				<Slot>166</Slot>
+				<Slot>167</Slot>
+				<Slot>168</Slot>
+				<Slot>169</Slot>
+				<Slot>170</Slot>
+				<Slot>171</Slot>
+				<Slot>172</Slot>
+				<Slot>173</Slot>
+				<Slot>174</Slot>
+				<Slot>175</Slot>
+				<Slot>176</Slot>
+				<Slot>177</Slot>
+				<Slot>178</Slot>
+				<Slot>179</Slot>
+				<Slot>180</Slot>
+				<Slot>181</Slot>
+				<Slot>182</Slot>
+				<Slot>183</Slot>
+				<Slot>184</Slot>
+				<Slot>185</Slot>
+				<Slot>186</Slot>
+				<Slot>187</Slot>
+				<Slot>188</Slot>
+				<Slot>189</Slot>
+				<Slot>190</Slot>
+				<Slot>191</Slot>
+				<Slot>192</Slot>
+				<Slot>193</Slot>
+				<Slot>194</Slot>
+				<Slot>195</Slot>
+				<Slot>196</Slot>
+				<Slot>197</Slot>
+				<Slot>198</Slot>
+				<Slot>199</Slot>
+				<Slot>200</Slot>
+				<Slot>201</Slot>
+				<Slot>202</Slot>
+				<Slot>203</Slot>
+				<Slot>204</Slot>
+				<Slot>205</Slot>
+				<Slot>206</Slot>
+				<Slot>207</Slot>
+				<Slot>208</Slot>
+				<Slot>209</Slot>
+				<Slot>210</Slot>
+				<Slot>211</Slot>
+				<Slot>212</Slot>
+				<Slot>213</Slot>
+				<Slot>214</Slot>
+				<Slot>215</Slot>
+				<Slot>216</Slot>
+				<Slot>217</Slot>
+				<Slot>218</Slot>
+				<Slot>219</Slot>
+				<Slot>220</Slot>
+				<Slot>221</Slot>
+				<Slot>222</Slot>
+				<Slot>223</Slot>
+				<Slot>224</Slot>
+				<Slot>225</Slot>
+				<Slot>226</Slot>
+				<Slot>227</Slot>
+				<Slot>228</Slot>
+				<Slot>229</Slot>
+				<Slot>230</Slot>
+				<Slot>231</Slot>
+				<Slot>232</Slot>
+				<Slot>233</Slot>
+				<Slot>234</Slot>
+				<Slot>235</Slot>
+				<Slot>236</Slot>
+				<Slot>237</Slot>
+				<Slot>238</Slot>
+				<Slot>239</Slot>
+				<Slot>240</Slot>
+				<Slot>241</Slot>
+				<Slot>242</Slot>
+				<Slot>243</Slot>
+				<Slot>244</Slot>
+				<Slot>245</Slot>
+				<Slot>246</Slot>
+				<Slot>247</Slot>
+				<Slot>248</Slot>
+				<Slot>249</Slot>
+				<Slot>250</Slot>
+				<Slot>251</Slot>
+				<Slot>252</Slot>
+				<Slot>253</Slot>
+				<Slot>254</Slot>
+				<Slot>255</Slot>
+				<Slot>256</Slot>
+				<Slot>257</Slot>
+				<Slot>258</Slot>
+				<Slot>259</Slot>
+				<Slot>260</Slot>
+				<Slot>261</Slot>
+				<Slot>262</Slot>
+				<Slot>263</Slot>
+				<Slot>264</Slot>
+				<Slot>265</Slot>
+				<Slot>266</Slot>
+				<Slot>267</Slot>
+				<Slot>268</Slot>
+				<Slot>269</Slot>
+				<Slot>270</Slot>
+				<Slot>271</Slot>
+				<Slot>272</Slot>
+				<Slot>273</Slot>
+				<Slot>274</Slot>
+				<Slot>275</Slot>
+				<Slot>276</Slot>
+				<Slot>277</Slot>
+				<Slot>278</Slot>
+				<Slot>279</Slot>
+				<Slot>280</Slot>
+				<Slot>281</Slot>
+				<Slot>282</Slot>
+				<Slot>283</Slot>
+				<Slot>284</Slot>
+				<Slot>285</Slot>
+				<Slot>286</Slot>
+				<Slot>287</Slot>
+				<Slot>288</Slot>
+				<Slot>289</Slot>
+				<Slot>290</Slot>
+				<Slot>291</Slot>
+				<Slot>292</Slot>
+				<Slot>293</Slot>
+				<Slot>294</Slot>
+				<Slot>295</Slot>
+				<Slot>296</Slot>
+				<Slot>297</Slot>
+				<Slot>298</Slot>
+				<Slot>299</Slot>
+				<Slot>300</Slot>
+			</UsedGsdmlModule>
+			<UsedGsdmlModule ModuleIdentNumber="51" Id="51" ModuleName="Read Holding Register" InfoText="Read Holding Register (PLC read)" ModuleCategory="Holding Register">
+				<Slot>1</Slot>
+				<Slot>2</Slot>
+				<Slot>3</Slot>
+				<Slot>4</Slot>
+				<Slot>5</Slot>
+				<Slot>6</Slot>
+				<Slot>7</Slot>
+				<Slot>8</Slot>
+				<Slot>9</Slot>
+				<Slot>10</Slot>
+				<Slot>11</Slot>
+				<Slot>12</Slot>
+				<Slot>13</Slot>
+				<Slot>14</Slot>
+				<Slot>15</Slot>
+				<Slot>16</Slot>
+				<Slot>17</Slot>
+				<Slot>18</Slot>
+				<Slot>19</Slot>
+				<Slot>20</Slot>
+				<Slot>21</Slot>
+				<Slot>22</Slot>
+				<Slot>23</Slot>
+				<Slot>24</Slot>
+				<Slot>25</Slot>
+				<Slot>26</Slot>
+				<Slot>27</Slot>
+				<Slot>28</Slot>
+				<Slot>29</Slot>
+				<Slot>30</Slot>
+				<Slot>31</Slot>
+				<Slot>32</Slot>
+				<Slot>33</Slot>
+				<Slot>34</Slot>
+				<Slot>35</Slot>
+				<Slot>36</Slot>
+				<Slot>37</Slot>
+				<Slot>38</Slot>
+				<Slot>39</Slot>
+				<Slot>40</Slot>
+				<Slot>41</Slot>
+				<Slot>42</Slot>
+				<Slot>43</Slot>
+				<Slot>44</Slot>
+				<Slot>45</Slot>
+				<Slot>46</Slot>
+				<Slot>47</Slot>
+				<Slot>48</Slot>
+				<Slot>49</Slot>
+				<Slot>50</Slot>
+				<Slot>51</Slot>
+				<Slot>52</Slot>
+				<Slot>53</Slot>
+				<Slot>54</Slot>
+				<Slot>55</Slot>
+				<Slot>56</Slot>
+				<Slot>57</Slot>
+				<Slot>58</Slot>
+				<Slot>59</Slot>
+				<Slot>60</Slot>
+				<Slot>61</Slot>
+				<Slot>62</Slot>
+				<Slot>63</Slot>
+				<Slot>64</Slot>
+				<Slot>65</Slot>
+				<Slot>66</Slot>
+				<Slot>67</Slot>
+				<Slot>68</Slot>
+				<Slot>69</Slot>
+				<Slot>70</Slot>
+				<Slot>71</Slot>
+				<Slot>72</Slot>
+				<Slot>73</Slot>
+				<Slot>74</Slot>
+				<Slot>75</Slot>
+				<Slot>76</Slot>
+				<Slot>77</Slot>
+				<Slot>78</Slot>
+				<Slot>79</Slot>
+				<Slot>80</Slot>
+				<Slot>81</Slot>
+				<Slot>82</Slot>
+				<Slot>83</Slot>
+				<Slot>84</Slot>
+				<Slot>85</Slot>
+				<Slot>86</Slot>
+				<Slot>87</Slot>
+				<Slot>88</Slot>
+				<Slot>89</Slot>
+				<Slot>90</Slot>
+				<Slot>91</Slot>
+				<Slot>92</Slot>
+				<Slot>93</Slot>
+				<Slot>94</Slot>
+				<Slot>95</Slot>
+				<Slot>96</Slot>
+				<Slot>97</Slot>
+				<Slot>98</Slot>
+				<Slot>99</Slot>
+				<Slot>100</Slot>
+				<Slot>101</Slot>
+				<Slot>102</Slot>
+				<Slot>103</Slot>
+				<Slot>104</Slot>
+				<Slot>105</Slot>
+				<Slot>106</Slot>
+				<Slot>107</Slot>
+				<Slot>108</Slot>
+				<Slot>109</Slot>
+				<Slot>110</Slot>
+				<Slot>111</Slot>
+				<Slot>112</Slot>
+				<Slot>113</Slot>
+				<Slot>114</Slot>
+				<Slot>115</Slot>
+				<Slot>116</Slot>
+				<Slot>117</Slot>
+				<Slot>118</Slot>
+				<Slot>119</Slot>
+				<Slot>120</Slot>
+				<Slot>121</Slot>
+				<Slot>122</Slot>
+				<Slot>123</Slot>
+				<Slot>124</Slot>
+				<Slot>125</Slot>
+				<Slot>126</Slot>
+				<Slot>127</Slot>
+				<Slot>128</Slot>
+				<Slot>129</Slot>
+				<Slot>130</Slot>
+				<Slot>131</Slot>
+				<Slot>132</Slot>
+				<Slot>133</Slot>
+				<Slot>134</Slot>
+				<Slot>135</Slot>
+				<Slot>136</Slot>
+				<Slot>137</Slot>
+				<Slot>138</Slot>
+				<Slot>139</Slot>
+				<Slot>140</Slot>
+				<Slot>141</Slot>
+				<Slot>142</Slot>
+				<Slot>143</Slot>
+				<Slot>144</Slot>
+				<Slot>145</Slot>
+				<Slot>146</Slot>
+				<Slot>147</Slot>
+				<Slot>148</Slot>
+				<Slot>149</Slot>
+				<Slot>150</Slot>
+				<Slot>151</Slot>
+				<Slot>152</Slot>
+				<Slot>153</Slot>
+				<Slot>154</Slot>
+				<Slot>155</Slot>
+				<Slot>156</Slot>
+				<Slot>157</Slot>
+				<Slot>158</Slot>
+				<Slot>159</Slot>
+				<Slot>160</Slot>
+				<Slot>161</Slot>
+				<Slot>162</Slot>
+				<Slot>163</Slot>
+				<Slot>164</Slot>
+				<Slot>165</Slot>
+				<Slot>166</Slot>
+				<Slot>167</Slot>
+				<Slot>168</Slot>
+				<Slot>169</Slot>
+				<Slot>170</Slot>
+				<Slot>171</Slot>
+				<Slot>172</Slot>
+				<Slot>173</Slot>
+				<Slot>174</Slot>
+				<Slot>175</Slot>
+				<Slot>176</Slot>
+				<Slot>177</Slot>
+				<Slot>178</Slot>
+				<Slot>179</Slot>
+				<Slot>180</Slot>
+				<Slot>181</Slot>
+				<Slot>182</Slot>
+				<Slot>183</Slot>
+				<Slot>184</Slot>
+				<Slot>185</Slot>
+				<Slot>186</Slot>
+				<Slot>187</Slot>
+				<Slot>188</Slot>
+				<Slot>189</Slot>
+				<Slot>190</Slot>
+				<Slot>191</Slot>
+				<Slot>192</Slot>
+				<Slot>193</Slot>
+				<Slot>194</Slot>
+				<Slot>195</Slot>
+				<Slot>196</Slot>
+				<Slot>197</Slot>
+				<Slot>198</Slot>
+				<Slot>199</Slot>
+				<Slot>200</Slot>
+				<Slot>201</Slot>
+				<Slot>202</Slot>
+				<Slot>203</Slot>
+				<Slot>204</Slot>
+				<Slot>205</Slot>
+				<Slot>206</Slot>
+				<Slot>207</Slot>
+				<Slot>208</Slot>
+				<Slot>209</Slot>
+				<Slot>210</Slot>
+				<Slot>211</Slot>
+				<Slot>212</Slot>
+				<Slot>213</Slot>
+				<Slot>214</Slot>
+				<Slot>215</Slot>
+				<Slot>216</Slot>
+				<Slot>217</Slot>
+				<Slot>218</Slot>
+				<Slot>219</Slot>
+				<Slot>220</Slot>
+				<Slot>221</Slot>
+				<Slot>222</Slot>
+				<Slot>223</Slot>
+				<Slot>224</Slot>
+				<Slot>225</Slot>
+				<Slot>226</Slot>
+				<Slot>227</Slot>
+				<Slot>228</Slot>
+				<Slot>229</Slot>
+				<Slot>230</Slot>
+				<Slot>231</Slot>
+				<Slot>232</Slot>
+				<Slot>233</Slot>
+				<Slot>234</Slot>
+				<Slot>235</Slot>
+				<Slot>236</Slot>
+				<Slot>237</Slot>
+				<Slot>238</Slot>
+				<Slot>239</Slot>
+				<Slot>240</Slot>
+				<Slot>241</Slot>
+				<Slot>242</Slot>
+				<Slot>243</Slot>
+				<Slot>244</Slot>
+				<Slot>245</Slot>
+				<Slot>246</Slot>
+				<Slot>247</Slot>
+				<Slot>248</Slot>
+				<Slot>249</Slot>
+				<Slot>250</Slot>
+				<Slot>251</Slot>
+				<Slot>252</Slot>
+				<Slot>253</Slot>
+				<Slot>254</Slot>
+				<Slot>255</Slot>
+				<Slot>256</Slot>
+				<Slot>257</Slot>
+				<Slot>258</Slot>
+				<Slot>259</Slot>
+				<Slot>260</Slot>
+				<Slot>261</Slot>
+				<Slot>262</Slot>
+				<Slot>263</Slot>
+				<Slot>264</Slot>
+				<Slot>265</Slot>
+				<Slot>266</Slot>
+				<Slot>267</Slot>
+				<Slot>268</Slot>
+				<Slot>269</Slot>
+				<Slot>270</Slot>
+				<Slot>271</Slot>
+				<Slot>272</Slot>
+				<Slot>273</Slot>
+				<Slot>274</Slot>
+				<Slot>275</Slot>
+				<Slot>276</Slot>
+				<Slot>277</Slot>
+				<Slot>278</Slot>
+				<Slot>279</Slot>
+				<Slot>280</Slot>
+				<Slot>281</Slot>
+				<Slot>282</Slot>
+				<Slot>283</Slot>
+				<Slot>284</Slot>
+				<Slot>285</Slot>
+				<Slot>286</Slot>
+				<Slot>287</Slot>
+				<Slot>288</Slot>
+				<Slot>289</Slot>
+				<Slot>290</Slot>
+				<Slot>291</Slot>
+				<Slot>292</Slot>
+				<Slot>293</Slot>
+				<Slot>294</Slot>
+				<Slot>295</Slot>
+				<Slot>296</Slot>
+				<Slot>297</Slot>
+				<Slot>298</Slot>
+				<Slot>299</Slot>
+				<Slot>300</Slot>
+			</UsedGsdmlModule>
+			<UsedGsdmlSubModule SubModuleIdentNumber="1" SubSlotNumber="1" TypeOfSubmodule="3" Id="ID2 X1" SubModuleName="PN/ModbusTCP Coupler V2" InfoText="PN/ModbusTCP Coupler V2, supports Conformance Class A,B">
+				<Record Name="Settings" Length="312" Index="1">
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="ModbusTCP IP-address mode" DataType="BitArea" MaxAllowedValue="3" ByteOffset="1" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="Modbus IP mode"/>
+					<RecordDataDef Name="Static IP address" DataType="VisibleString" DataLength="15" ByteOffset="11" Visible="true" Changeable="true">
+						<DefaultValueArray>49</DefaultValueArray>
+						<DefaultValueArray>57</DefaultValueArray>
+						<DefaultValueArray>50</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>49</DefaultValueArray>
+						<DefaultValueArray>54</DefaultValueArray>
+						<DefaultValueArray>56</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>48</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>49</DefaultValueArray>
+						<DefaultValueArray>48</DefaultValueArray>
+						<DefaultValueArray>48</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="Static IP subnet mask" DataType="VisibleString" DataLength="15" ByteOffset="26" Visible="true" Changeable="true">
+						<DefaultValueArray>50</DefaultValueArray>
+						<DefaultValueArray>53</DefaultValueArray>
+						<DefaultValueArray>53</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>50</DefaultValueArray>
+						<DefaultValueArray>53</DefaultValueArray>
+						<DefaultValueArray>53</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>50</DefaultValueArray>
+						<DefaultValueArray>53</DefaultValueArray>
+						<DefaultValueArray>53</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>48</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="Static IP gateway" DataType="VisibleString" DataLength="15" ByteOffset="41" Visible="true" Changeable="true">
+						<DefaultValueArray>48</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>48</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>48</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>48</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="DHCP hostname mode" DataType="BitArea" MaxAllowedValue="1" ByteOffset="1" BitOffset="3" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="DHCP hostname mode"/>
+					<RecordDataDef Name="DHCP hostname" DataType="VisibleString" DataLength="254" ByteOffset="56" Visible="true" Changeable="true">
+						<DefaultValueArray>80</DefaultValueArray>
+						<DefaultValueArray>78</DefaultValueArray>
+						<DefaultValueArray>77</DefaultValueArray>
+						<DefaultValueArray>111</DefaultValueArray>
+						<DefaultValueArray>100</DefaultValueArray>
+						<DefaultValueArray>98</DefaultValueArray>
+						<DefaultValueArray>117</DefaultValueArray>
+						<DefaultValueArray>115</DefaultValueArray>
+						<DefaultValueArray>84</DefaultValueArray>
+						<DefaultValueArray>67</DefaultValueArray>
+						<DefaultValueArray>80</DefaultValueArray>
+						<DefaultValueArray>99</DefaultValueArray>
+						<DefaultValueArray>111</DefaultValueArray>
+						<DefaultValueArray>117</DefaultValueArray>
+						<DefaultValueArray>112</DefaultValueArray>
+						<DefaultValueArray>108</DefaultValueArray>
+						<DefaultValueArray>101</DefaultValueArray>
+						<DefaultValueArray>114</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="ModbusTCP port" DataType="Unsigned16" DefaultValue="502" DataLength="2" ByteOffset="2" Visible="true" Changeable="true" ValueItemTarget="Modbus port"/>
+					<RecordDataDef Name="Connection watchdog time (ms)" DataType="Unsigned16" DefaultValue="10000" DataLength="2" ByteOffset="4" Visible="true" Changeable="true" ValueItemTarget="Connection watchdog"/>
+					<RecordDataDef Name="Maximum ModbusTCP connections" DataType="Unsigned8" MinAllowedValue="1" MaxAllowedValue="5" DefaultValue="5" DataLength="1" ByteOffset="6" Visible="true" Changeable="true" ValueItemTarget="Maximum connections"/>
+					<RecordDataDef Name="Register for PROFINET-status" DataType="Unsigned32" MaxAllowedValue="65535" DefaultValue="65535" DataLength="4" ByteOffset="7" Visible="true" Changeable="true" ValueItemTarget="PN-status register"/>
+					<RecordDataDef Name="Status Webpage" DataType="BitArea" MaxAllowedValue="3" DefaultValue="3" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="Webpage"/>
+					<RecordDataDef Name="MQTT Publisher option" DataType="BitArea" MaxAllowedValue="3" ByteOffset="1" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MQTT Option"/>
+					<RecordDataDef Name="Diagnostic at PS1 failure" DataType="Bit" MaxAllowedValue="1" BitOffset="5" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="PS1"/>
+					<RecordDataDef Name="Diagnostic at PS2 failure" DataType="Bit" MaxAllowedValue="1" BitOffset="4" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="PS2"/>
+				</Record>
+				<DataItemIn/>
+				<DataItemIn/>
+				<DataItemOut/>
+			</UsedGsdmlSubModule>
+			<UsedGsdmlSubModule SubModuleIdentNumber="1" SubSlotNumber="1" TypeOfSubmodule="3" Id="50" SubModuleName="Write Holding Register" InfoText="Write Holding Register">
+				<Record Name="Parameter" Length="2" Index="1">
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="Register address" DataType="Unsigned16" MaxAllowedValue="65535" DataLength="2" Visible="true" Changeable="true" ValueItemTarget="Register"/>
+				</Record>
+				<DataItemOut/>
+			</UsedGsdmlSubModule>
+			<UsedGsdmlSubModule SubModuleIdentNumber="1" SubSlotNumber="1" TypeOfSubmodule="3" Id="51" SubModuleName="Read Holding Register" InfoText="Read Holding Register">
+				<Record Name="Parameter" Length="2" Index="1">
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="Register address" DataType="Unsigned16" MaxAllowedValue="65535" DataLength="2" Visible="true" Changeable="true" ValueItemTarget="Register"/>
+				</Record>
+				<DataItemIn/>
+			</UsedGsdmlSubModule>
+			<UsedGsdmlSubModule SubModuleIdentNumber="1" SubSlotNumber="1" TypeOfSubmodule="3" Id="ID2 X1" SubModuleName="PN/ModbusTCP Coupler V2" InfoText="PN/ModbusTCP Coupler V2, supports Conformance Class A,B">
+				<Record Name="Settings" Length="312" Index="1">
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="ModbusTCP IP-address mode" DataType="BitArea" MaxAllowedValue="3" ByteOffset="1" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="Modbus IP mode"/>
+					<RecordDataDef Name="Static IP address" DataType="VisibleString" DataLength="15" ByteOffset="11" Visible="true" Changeable="true">
+						<DefaultValueArray>49</DefaultValueArray>
+						<DefaultValueArray>57</DefaultValueArray>
+						<DefaultValueArray>50</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>49</DefaultValueArray>
+						<DefaultValueArray>54</DefaultValueArray>
+						<DefaultValueArray>56</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>48</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>49</DefaultValueArray>
+						<DefaultValueArray>48</DefaultValueArray>
+						<DefaultValueArray>48</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="Static IP subnet mask" DataType="VisibleString" DataLength="15" ByteOffset="26" Visible="true" Changeable="true">
+						<DefaultValueArray>50</DefaultValueArray>
+						<DefaultValueArray>53</DefaultValueArray>
+						<DefaultValueArray>53</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>50</DefaultValueArray>
+						<DefaultValueArray>53</DefaultValueArray>
+						<DefaultValueArray>53</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>50</DefaultValueArray>
+						<DefaultValueArray>53</DefaultValueArray>
+						<DefaultValueArray>53</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>48</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="Static IP gateway" DataType="VisibleString" DataLength="15" ByteOffset="41" Visible="true" Changeable="true">
+						<DefaultValueArray>48</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>48</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>48</DefaultValueArray>
+						<DefaultValueArray>46</DefaultValueArray>
+						<DefaultValueArray>48</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="DHCP hostname mode" DataType="BitArea" MaxAllowedValue="1" ByteOffset="1" BitOffset="3" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="DHCP hostname mode"/>
+					<RecordDataDef Name="DHCP hostname" DataType="VisibleString" DataLength="254" ByteOffset="56" Visible="true" Changeable="true">
+						<DefaultValueArray>80</DefaultValueArray>
+						<DefaultValueArray>78</DefaultValueArray>
+						<DefaultValueArray>77</DefaultValueArray>
+						<DefaultValueArray>111</DefaultValueArray>
+						<DefaultValueArray>100</DefaultValueArray>
+						<DefaultValueArray>98</DefaultValueArray>
+						<DefaultValueArray>117</DefaultValueArray>
+						<DefaultValueArray>115</DefaultValueArray>
+						<DefaultValueArray>84</DefaultValueArray>
+						<DefaultValueArray>67</DefaultValueArray>
+						<DefaultValueArray>80</DefaultValueArray>
+						<DefaultValueArray>99</DefaultValueArray>
+						<DefaultValueArray>111</DefaultValueArray>
+						<DefaultValueArray>117</DefaultValueArray>
+						<DefaultValueArray>112</DefaultValueArray>
+						<DefaultValueArray>108</DefaultValueArray>
+						<DefaultValueArray>101</DefaultValueArray>
+						<DefaultValueArray>114</DefaultValueArray>
+					</RecordDataDef>
+					<RecordDataDef Name="ModbusTCP port" DataType="Unsigned16" DefaultValue="502" DataLength="2" ByteOffset="2" Visible="true" Changeable="true" ValueItemTarget="Modbus port"/>
+					<RecordDataDef Name="Connection watchdog time (ms)" DataType="Unsigned16" DefaultValue="10000" DataLength="2" ByteOffset="4" Visible="true" Changeable="true" ValueItemTarget="Connection watchdog"/>
+					<RecordDataDef Name="Maximum ModbusTCP connections" DataType="Unsigned8" MinAllowedValue="1" MaxAllowedValue="5" DefaultValue="5" DataLength="1" ByteOffset="6" Visible="true" Changeable="true" ValueItemTarget="Maximum connections"/>
+					<RecordDataDef Name="Register for PROFINET-status" DataType="Unsigned32" MaxAllowedValue="65535" DefaultValue="65535" DataLength="4" ByteOffset="7" Visible="true" Changeable="true" ValueItemTarget="PN-status register"/>
+					<RecordDataDef Name="Status Webpage" DataType="BitArea" MaxAllowedValue="3" DefaultValue="3" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="Webpage"/>
+					<RecordDataDef Name="MQTT Publisher option" DataType="BitArea" MaxAllowedValue="3" ByteOffset="1" BitOffset="4" BitLength="2" Visible="true" Changeable="true" ValueItemTarget="MQTT Option"/>
+					<RecordDataDef Name="Diagnostic at PS1 failure" DataType="Bit" MaxAllowedValue="1" BitOffset="5" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="PS1"/>
+					<RecordDataDef Name="Diagnostic at PS2 failure" DataType="Bit" MaxAllowedValue="1" BitOffset="4" BitLength="1" Visible="true" Changeable="true" ValueItemTarget="PS2"/>
+				</Record>
+				<DataItemIn/>
+				<DataItemIn/>
+				<DataItemOut/>
+			</UsedGsdmlSubModule>
+			<UsedGsdmlSubModule SubModuleIdentNumber="1" SubSlotNumber="1" TypeOfSubmodule="3" Id="50" SubModuleName="Write Holding Register" InfoText="Write Holding Register">
+				<Record Name="Parameter" Length="2" Index="1">
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="Register address" DataType="Unsigned16" MaxAllowedValue="65535" DataLength="2" Visible="true" Changeable="true" ValueItemTarget="Register"/>
+				</Record>
+				<DataItemOut/>
+			</UsedGsdmlSubModule>
+			<UsedGsdmlSubModule SubModuleIdentNumber="1" SubSlotNumber="1" TypeOfSubmodule="3" Id="51" SubModuleName="Read Holding Register" InfoText="Read Holding Register">
+				<Record Name="Parameter" Length="2" Index="1">
+					<ConstData>0</ConstData>
+					<ConstData>0</ConstData>
+					<RecordDataDef Name="Register address" DataType="Unsigned16" MaxAllowedValue="65535" DataLength="2" Visible="true" Changeable="true" ValueItemTarget="Register"/>
+				</Record>
+				<DataItemIn/>
+			</UsedGsdmlSubModule>
+			<API Id="1">
+				<Name>API</Name>
+				<ImageId>4</ImageId>
+				<Module Id="#x031d0020" DAP="true" ModuleIdentNumber="512" ModuleInfo="PN/ModbusTCP Coupler V2, supports Conformance Class A,B">
+					<Name>Term 41 (DAP Module)</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: PN/ModbusTCP Coupler V2, supports Conformance Class A,B
+OrderNumber: 700-159-3MB02]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0040" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="ID2 X1" AddSubModFlags="28">
+						<Name>Subterm 62 (PN/ModbusTCP Coupler V2)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: PN/ModbusTCP Coupler V2, supports Conformance Class A,B
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="312" Index="1" ConstData="0308f601102705ffff00003139322e3136382e312e31303000003235352e3235352e3235352e300000302e302e302e30000000000000000065505531305f4d6f64627573436f6e74726f6c000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+							<Var>
+								<Name>Status bits</Name>
+								<Type>BITARR8</Type>
+								<BitOffs>1480</BitOffs>
+							</Var>
+							<Var>
+								<Name>Connections</Name>
+								<Type>BITARR8</Type>
+								<BitOffs>1488</BitOffs>
+							</Var>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+							<Var>
+								<Name>Control bits</Name>
+								<Type>BITARR8</Type>
+								<BitOffs>2192</BitOffs>
+							</Var>
+						</Vars>
+					</SubModule>
+					<SubModule Id="#x031c0041" SubModuleIdentNumber="2" TypeOfSubModule="1" SubSlotNumber="32768" IsFixSubmodule="true" SubModuleID="ID2_X1_INT1" InterfaceData="01000000000000000000000000000000000000000000b8000300000000000000">
+						<Name>Subterm 63 (Interface)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+					<SubModule Id="#x031c0042" SubModuleIdentNumber="3" TypeOfSubModule="2" SubSlotNumber="32769" IsFixSubmodule="true" SubModuleID="ID2_X1_P1" PortData="00000000000008000000000000000000000000000000000000000000">
+						<Name>Subterm 64 (X1 Port 1)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+					<SubModule Id="#x031c0043" SubModuleIdentNumber="4" TypeOfSubModule="2" SubSlotNumber="32770" IsFixSubmodule="true" SubModuleID="ID2_X1_P2" PortData="00000000000008000000000000000000000010000000000000000000">
+						<Name>Subterm 65 (X1 Port 2)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0021" ModuleIdentNumber="50" SlotNumber="1" ModuleInfo="Write Holding Register (PLC write)" ModuleID="50" DirectDeletable="true">
+					<Name>General_out</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Write Holding Register (PLC write)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0044" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="50">
+						<Name>Subterm 66 (Write Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Write Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+							<Var Swapping="#x1">
+								<Name>SWVersionLow</Name>
+								<Type>UINT</Type>
+								<BitOffs>2200</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SWVersionHigh</Name>
+								<Type>UINT</Type>
+								<BitOffs>2216</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ePU10SerialLow</Name>
+								<Type>UINT</Type>
+								<BitOffs>2232</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ePU10SerialHigh</Name>
+								<Type>UINT</Type>
+								<BitOffs>2248</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>UGridSubMode</Name>
+								<Type>UINT</Type>
+								<BitOffs>2264</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>PowerMode</Name>
+								<Type>UINT</Type>
+								<BitOffs>2280</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>HeartBeatOut</Name>
+								<Type>UINT</Type>
+								<BitOffs>2296</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>InternalSupplyErrors</Name>
+								<Type>UINT</Type>
+								<BitOffs>2312</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>InternalSupplyWarnings</Name>
+								<Type>UINT</Type>
+								<BitOffs>2328</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>InternalSupplyStatus</Name>
+								<Type>UINT</Type>
+								<BitOffs>2344</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CoolingSystemErrors</Name>
+								<Type>UINT</Type>
+								<BitOffs>2360</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CoolingSystemWarning</Name>
+								<Type>UINT</Type>
+								<BitOffs>2376</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CoolingSystemStatus</Name>
+								<Type>UINT</Type>
+								<BitOffs>2392</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SystemErrors</Name>
+								<Type>UINT</Type>
+								<BitOffs>2408</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SystemWarnings</Name>
+								<Type>UINT</Type>
+								<BitOffs>2424</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SystemStatus</Name>
+								<Type>UINT</Type>
+								<BitOffs>2440</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SystemState</Name>
+								<Type>UINT</Type>
+								<BitOffs>2456</BitOffs>
+							</Var>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0031" ModuleIdentNumber="51" SlotNumber="2" ModuleInfo="Read Holding Register (PLC read)" ModuleID="51" DirectDeletable="true">
+					<Name>General_in</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Read Holding Register (PLC read)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0045" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="51">
+						<Name>Subterm 84 (Read Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Read Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="3200"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+							<Var Swapping="#x1">
+								<Name>SecondaryDigitalInputState</Name>
+								<Type>UINT</Type>
+								<BitOffs>1496</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>PrimaryDigitalInputState</Name>
+								<Type>UINT</Type>
+								<BitOffs>1512</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SecondaryDigitalOutputState</Name>
+								<Type>UINT</Type>
+								<BitOffs>1528</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>PrimaryDigitalOutputState</Name>
+								<Type>UINT</Type>
+								<BitOffs>1544</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>GridConnMode</Name>
+								<Type>UINT</Type>
+								<BitOffs>1560</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>EarthingSystem</Name>
+								<Type>UINT</Type>
+								<BitOffs>1576</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>UGridSubMode</Name>
+								<Type>UINT</Type>
+								<BitOffs>1592</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>GridMode</Name>
+								<Type>UINT</Type>
+								<BitOffs>1608</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>HeartbeatIn</Name>
+								<Type>UINT</Type>
+								<BitOffs>1624</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Control</Name>
+								<Type>UINT</Type>
+								<BitOffs>1640</BitOffs>
+							</Var>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0032" ModuleIdentNumber="50" SlotNumber="3" ModuleInfo="Write Holding Register (PLC write)" ModuleID="50" DirectDeletable="true">
+					<Name>BMS_out</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Write Holding Register (PLC write)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0046" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="50">
+						<Name>Subterm 85 (Write Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Write Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="6400"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+							<Var Swapping="#x1">
+								<Name>CycleCount</Name>
+								<Type>UINT</Type>
+								<BitOffs>2472</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>RemainingDischargeEnergy</Name>
+								<Type>UINT</Type>
+								<BitOffs>2488</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>RemainingChargeEnergy</Name>
+								<Type>UINT</Type>
+								<BitOffs>2504</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>MaxCellTemperature</Name>
+								<Type>UINT</Type>
+								<BitOffs>2520</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>MinCellTemperature</Name>
+								<Type>UINT</Type>
+								<BitOffs>2536</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ChargeCurrentLimit</Name>
+								<Type>UINT</Type>
+								<BitOffs>2552</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>DischargeCurrentLimit</Name>
+								<Type>UINT</Type>
+								<BitOffs>2568</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>DClinkCurrent</Name>
+								<Type>UINT</Type>
+								<BitOffs>2584</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>DClinkVoltage</Name>
+								<Type>UINT</Type>
+								<BitOffs>2600</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SOH</Name>
+								<Type>UINT</Type>
+								<BitOffs>2616</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SOC</Name>
+								<Type>UINT</Type>
+								<BitOffs>2632</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Errors</Name>
+								<Type>UINT</Type>
+								<BitOffs>2648</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Warnings</Name>
+								<Type>UINT</Type>
+								<BitOffs>2664</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Status</Name>
+								<Type>UINT</Type>
+								<BitOffs>2680</BitOffs>
+							</Var>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0033" ModuleIdentNumber="51" SlotNumber="4" ModuleInfo="Read Holding Register (PLC read)" ModuleID="51" DirectDeletable="true">
+					<Name>BMS_in</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Read Holding Register (PLC read)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0047" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="51">
+						<Name>Subterm 86 (Read Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Read Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="9600"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+							<Var Swapping="#x1">
+								<Name>SoCMax</Name>
+								<Type>UINT</Type>
+								<BitOffs>1656</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SoCMin</Name>
+								<Type>UINT</Type>
+								<BitOffs>1672</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Control</Name>
+								<Type>UINT</Type>
+								<BitOffs>1688</BitOffs>
+							</Var>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0034" ModuleIdentNumber="50" SlotNumber="5" ModuleInfo="Write Holding Register (PLC write)" ModuleID="50" DirectDeletable="true">
+					<Name>OutputField_out</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Write Holding Register (PLC write)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0048" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="50">
+						<Name>Subterm 87 (Write Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Write Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="c800"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+							<Var Swapping="#x1">
+								<Name>Current3N</Name>
+								<Type>UINT</Type>
+								<BitOffs>2696</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current3L3</Name>
+								<Type>UINT</Type>
+								<BitOffs>2712</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current3L2</Name>
+								<Type>UINT</Type>
+								<BitOffs>2728</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current3L1</Name>
+								<Type>UINT</Type>
+								<BitOffs>2744</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current2N</Name>
+								<Type>UINT</Type>
+								<BitOffs>2760</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current2L3</Name>
+								<Type>UINT</Type>
+								<BitOffs>2776</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current2L2</Name>
+								<Type>UINT</Type>
+								<BitOffs>2792</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current2L1</Name>
+								<Type>UINT</Type>
+								<BitOffs>2808</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current1N</Name>
+								<Type>UINT</Type>
+								<BitOffs>2824</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current1L3</Name>
+								<Type>UINT</Type>
+								<BitOffs>2840</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current1L2</Name>
+								<Type>UINT</Type>
+								<BitOffs>2856</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current1L1</Name>
+								<Type>UINT</Type>
+								<BitOffs>2872</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>TotalEnergyConsumedLow</Name>
+								<Type>UINT</Type>
+								<BitOffs>2888</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>TotalEnergyConsumedHigh</Name>
+								<Type>UINT</Type>
+								<BitOffs>2904</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>TotalEnergyDeliveredLow</Name>
+								<Type>UINT</Type>
+								<BitOffs>2920</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>TotalEnergyDeliveredHigh</Name>
+								<Type>UINT</Type>
+								<BitOffs>2936</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentLimitField</Name>
+								<Type>UINT</Type>
+								<BitOffs>2952</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentN</Name>
+								<Type>UINT</Type>
+								<BitOffs>2968</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentL3</Name>
+								<Type>UINT</Type>
+								<BitOffs>2984</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentL2</Name>
+								<Type>UINT</Type>
+								<BitOffs>3000</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentL1</Name>
+								<Type>UINT</Type>
+								<BitOffs>3016</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL3L1</Name>
+								<Type>UINT</Type>
+								<BitOffs>3032</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL2L3</Name>
+								<Type>UINT</Type>
+								<BitOffs>3048</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL1L2</Name>
+								<Type>UINT</Type>
+								<BitOffs>3064</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL3</Name>
+								<Type>UINT</Type>
+								<BitOffs>3080</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL2</Name>
+								<Type>UINT</Type>
+								<BitOffs>3096</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL1</Name>
+								<Type>UINT</Type>
+								<BitOffs>3112</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Frequency</Name>
+								<Type>UINT</Type>
+								<BitOffs>3128</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>PowerFactor</Name>
+								<Type>UINT</Type>
+								<BitOffs>3144</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ReactivePower</Name>
+								<Type>UINT</Type>
+								<BitOffs>3160</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ActivePower</Name>
+								<Type>UINT</Type>
+								<BitOffs>3176</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Faults</Name>
+								<Type>UINT</Type>
+								<BitOffs>3192</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Warnings</Name>
+								<Type>UINT</Type>
+								<BitOffs>3208</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Status</Name>
+								<Type>UINT</Type>
+								<BitOffs>3224</BitOffs>
+							</Var>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0035" ModuleIdentNumber="50" SlotNumber="6" ModuleInfo="Write Holding Register (PLC write)" ModuleID="50" DirectDeletable="true">
+					<Name>InputField_out</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Write Holding Register (PLC write)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0049" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="50">
+						<Name>Subterm 88 (Write Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Write Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="2c01"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+							<Var Swapping="#x1">
+								<Name>Current2N</Name>
+								<Type>UINT</Type>
+								<BitOffs>3240</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current2L3</Name>
+								<Type>UINT</Type>
+								<BitOffs>3256</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current2L2</Name>
+								<Type>UINT</Type>
+								<BitOffs>3272</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current2L1</Name>
+								<Type>UINT</Type>
+								<BitOffs>3288</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current1N</Name>
+								<Type>UINT</Type>
+								<BitOffs>3304</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current1L3</Name>
+								<Type>UINT</Type>
+								<BitOffs>3320</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current1L2</Name>
+								<Type>UINT</Type>
+								<BitOffs>3336</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Current1L1</Name>
+								<Type>UINT</Type>
+								<BitOffs>3352</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>TotalEnergyConsumedLow</Name>
+								<Type>UINT</Type>
+								<BitOffs>3368</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>TotalEnergyConsumedHigh</Name>
+								<Type>UINT</Type>
+								<BitOffs>3384</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>TotalEnergyDeliveredLow</Name>
+								<Type>UINT</Type>
+								<BitOffs>3400</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>TotalEnergyDeliveredHigh</Name>
+								<Type>UINT</Type>
+								<BitOffs>3416</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentLimitField</Name>
+								<Type>UINT</Type>
+								<BitOffs>3432</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentN</Name>
+								<Type>UINT</Type>
+								<BitOffs>3448</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentL3</Name>
+								<Type>UINT</Type>
+								<BitOffs>3464</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentL2</Name>
+								<Type>UINT</Type>
+								<BitOffs>3480</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentL1</Name>
+								<Type>UINT</Type>
+								<BitOffs>3496</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL3L1</Name>
+								<Type>UINT</Type>
+								<BitOffs>3512</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL2L3</Name>
+								<Type>UINT</Type>
+								<BitOffs>3528</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL1L2</Name>
+								<Type>UINT</Type>
+								<BitOffs>3544</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL3</Name>
+								<Type>UINT</Type>
+								<BitOffs>3560</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL2</Name>
+								<Type>UINT</Type>
+								<BitOffs>3576</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL1</Name>
+								<Type>UINT</Type>
+								<BitOffs>3592</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Frequency</Name>
+								<Type>UINT</Type>
+								<BitOffs>3608</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>PowerFactor</Name>
+								<Type>UINT</Type>
+								<BitOffs>3624</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ReactivePower</Name>
+								<Type>UINT</Type>
+								<BitOffs>3640</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ActivePower</Name>
+								<Type>UINT</Type>
+								<BitOffs>3656</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>InputConnStatus</Name>
+								<Type>UINT</Type>
+								<BitOffs>3672</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>InputConnType</Name>
+								<Type>UINT</Type>
+								<BitOffs>3688</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Faults</Name>
+								<Type>UINT</Type>
+								<BitOffs>3704</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Warnings</Name>
+								<Type>UINT</Type>
+								<BitOffs>3720</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Status</Name>
+								<Type>UINT</Type>
+								<BitOffs>3736</BitOffs>
+							</Var>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0036" ModuleIdentNumber="51" SlotNumber="7" ModuleInfo="Read Holding Register (PLC read)" ModuleID="51" DirectDeletable="true">
+					<Name>InputField_in</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Read Holding Register (PLC read)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c004a" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="51">
+						<Name>Subterm 89 (Read Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Read Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="5e01"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+							<Var Swapping="#x1">
+								<Name>InputConnType</Name>
+								<Type>UINT</Type>
+								<BitOffs>1704</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Control</Name>
+								<Type>UINT</Type>
+								<BitOffs>1720</BitOffs>
+							</Var>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0022" ModuleIdentNumber="50" SlotNumber="8" ModuleInfo="Write Holding Register (PLC write)" ModuleID="50" DirectDeletable="true">
+					<Name>PowerStack_out</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Write Holding Register (PLC write)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c004b" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="50">
+						<Name>Subterm 90 (Write Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Write Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="9001"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+							<Var Swapping="#x1">
+								<Name>ApparentPowerLimitAct</Name>
+								<Type>UINT</Type>
+								<BitOffs>3752</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ACCurrentLimitAct</Name>
+								<Type>UINT</Type>
+								<BitOffs>3768</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ChargePowerLimitAct</Name>
+								<Type>UINT</Type>
+								<BitOffs>3784</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>DischargePowerLimitAct</Name>
+								<Type>UINT</Type>
+								<BitOffs>3800</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>RatedPower</Name>
+								<Type>UINT</Type>
+								<BitOffs>3816</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>RatedCurrent</Name>
+								<Type>UINT</Type>
+								<BitOffs>3832</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>LoadPercentage</Name>
+								<Type>UINT</Type>
+								<BitOffs>3848</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>PFSetpoint</Name>
+								<Type>UINT</Type>
+								<BitOffs>3864</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>QSetAct</Name>
+								<Type>UINT</Type>
+								<BitOffs>3880</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>PSetAct</Name>
+								<Type>UINT</Type>
+								<BitOffs>3896</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ACCurrent</Name>
+								<Type>UINT</Type>
+								<BitOffs>3912</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>LineFrequency</Name>
+								<Type>UINT</Type>
+								<BitOffs>3928</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>LineVoltage</Name>
+								<Type>UINT</Type>
+								<BitOffs>3944</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ReactivePower</Name>
+								<Type>UINT</Type>
+								<BitOffs>3960</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ActivePower</Name>
+								<Type>UINT</Type>
+								<BitOffs>3976</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>PowerstackStatus</Name>
+								<Type>UINT</Type>
+								<BitOffs>3992</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Faults</Name>
+								<Type>UINT</Type>
+								<BitOffs>4008</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Warnings</Name>
+								<Type>UINT</Type>
+								<BitOffs>4024</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Status</Name>
+								<Type>UINT</Type>
+								<BitOffs>4040</BitOffs>
+							</Var>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0023" ModuleIdentNumber="51" SlotNumber="9" ModuleInfo="Read Holding Register (PLC read)" ModuleID="51" DirectDeletable="true">
+					<Name>PowerStack_in</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Read Holding Register (PLC read)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c004c" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="51">
+						<Name>Subterm 91 (Read Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Read Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="c201"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+							<Var Swapping="#x1">
+								<Name>ACCurrentLimit</Name>
+								<Type>UINT</Type>
+								<BitOffs>1736</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>PowerLimitMode</Name>
+								<Type>UINT</Type>
+								<BitOffs>1752</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SOCDroopDownshiftStart</Name>
+								<Type>UINT</Type>
+								<BitOffs>1768</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SOCDroopUpshiftStart</Name>
+								<Type>UINT</Type>
+								<BitOffs>1784</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>PowerRampRate</Name>
+								<Type>UINT</Type>
+								<BitOffs>1800</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageDroop</Name>
+								<Type>UINT</Type>
+								<BitOffs>1816</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>FrequencyDroop</Name>
+								<Type>UINT</Type>
+								<BitOffs>1832</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>PFSet</Name>
+								<Type>UINT</Type>
+								<BitOffs>1848</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>QSet</Name>
+								<Type>UINT</Type>
+								<BitOffs>1864</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>PSet</Name>
+								<Type>UINT</Type>
+								<BitOffs>1880</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>NominalFrequency</Name>
+								<Type>UINT</Type>
+								<BitOffs>1896</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>NominalVoltage</Name>
+								<Type>UINT</Type>
+								<BitOffs>1912</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Control</Name>
+								<Type>UINT</Type>
+								<BitOffs>1928</BitOffs>
+							</Var>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0024" ModuleIdentNumber="50" SlotNumber="10" ModuleInfo="Write Holding Register (PLC write)" ModuleID="50" DirectDeletable="true">
+					<Name>PSB_out</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Write Holding Register (PLC write)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c004d" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="50">
+						<Name>Subterm 92 (Write Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Write Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="f401"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+							<Var Swapping="#x1">
+								<Name>CurrentN</Name>
+								<Type>UINT</Type>
+								<BitOffs>4056</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentL3</Name>
+								<Type>UINT</Type>
+								<BitOffs>4072</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentL2</Name>
+								<Type>UINT</Type>
+								<BitOffs>4088</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentL1</Name>
+								<Type>UINT</Type>
+								<BitOffs>4104</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL3L1</Name>
+								<Type>UINT</Type>
+								<BitOffs>4120</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL2L3</Name>
+								<Type>UINT</Type>
+								<BitOffs>4136</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL1L2</Name>
+								<Type>UINT</Type>
+								<BitOffs>4152</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL3</Name>
+								<Type>UINT</Type>
+								<BitOffs>4168</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL2</Name>
+								<Type>UINT</Type>
+								<BitOffs>4184</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageL1</Name>
+								<Type>UINT</Type>
+								<BitOffs>4200</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Frequency</Name>
+								<Type>UINT</Type>
+								<BitOffs>4216</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>PowerFactor</Name>
+								<Type>UINT</Type>
+								<BitOffs>4232</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ReactivePower</Name>
+								<Type>UINT</Type>
+								<BitOffs>4248</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ActivePower</Name>
+								<Type>UINT</Type>
+								<BitOffs>4264</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Faults</Name>
+								<Type>UINT</Type>
+								<BitOffs>4280</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Warning</Name>
+								<Type>UINT</Type>
+								<BitOffs>4296</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Status</Name>
+								<Type>UINT</Type>
+								<BitOffs>4312</BitOffs>
+							</Var>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0025" ModuleIdentNumber="51" SlotNumber="11" ModuleInfo="Read Holding Register (PLC read)" ModuleID="51" DirectDeletable="true">
+					<Name>PSB_in</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Read Holding Register (PLC read)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c004e" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="51">
+						<Name>Subterm 93 (Read Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Read Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="2602"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+							<Var Swapping="#x1">
+								<Name>CTRatio</Name>
+								<Type>UINT</Type>
+								<BitOffs>1944</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VTRatio</Name>
+								<Type>UINT</Type>
+								<BitOffs>1960</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SupplyCurrentLimit</Name>
+								<Type>UINT</Type>
+								<BitOffs>1976</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>FeedInCurrentLimit</Name>
+								<Type>UINT</Type>
+								<BitOffs>1992</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Control</Name>
+								<Type>UINT</Type>
+								<BitOffs>2008</BitOffs>
+							</Var>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0026" ModuleIdentNumber="50" SlotNumber="12" ModuleInfo="Write Holding Register (PLC write)" ModuleID="50" DirectDeletable="true">
+					<Name>ZPT_out</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Write Holding Register (PLC write)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c005f" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="50">
+						<Name>Subterm 94 (Write Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Write Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="5802"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+							<Var Swapping="#x1">
+								<Name>TransformerTemperature</Name>
+								<Type>UINT</Type>
+								<BitOffs>4328</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Powerload</Name>
+								<Type>UINT</Type>
+								<BitOffs>4344</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>RatedPower</Name>
+								<Type>UINT</Type>
+								<BitOffs>4360</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Faults</Name>
+								<Type>UINT</Type>
+								<BitOffs>4376</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Warnings</Name>
+								<Type>UINT</Type>
+								<BitOffs>4392</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Status</Name>
+								<Type>UINT</Type>
+								<BitOffs>4408</BitOffs>
+							</Var>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0027" ModuleIdentNumber="50" SlotNumber="13" ModuleInfo="Write Holding Register (PLC write)" ModuleID="50" DirectDeletable="true">
+					<Name>GenControl_out</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Write Holding Register (PLC write)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0062" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="50">
+						<Name>Subterm 92 (Write Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Write Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="bc02"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+							<Var Swapping="#x1">
+								<Name>GenStatus</Name>
+								<Type>UINT</Type>
+								<BitOffs>4424</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Faults</Name>
+								<Type>UINT</Type>
+								<BitOffs>4440</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Warning</Name>
+								<Type>UINT</Type>
+								<BitOffs>4456</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Status</Name>
+								<Type>UINT</Type>
+								<BitOffs>4472</BitOffs>
+							</Var>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0028" ModuleIdentNumber="51" SlotNumber="14" ModuleInfo="Read Holding Register (PLC read)" ModuleID="51" DirectDeletable="true">
+					<Name>GenControl_in</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Read Holding Register (PLC read)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0063" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="51">
+						<Name>Subterm 93 (Read Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Read Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="ee02"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+							<Var Swapping="#x1">
+								<Name>StartStopControl</Name>
+								<Type>UINT</Type>
+								<BitOffs>2024</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>GenManualSetpoint</Name>
+								<Type>UINT</Type>
+								<BitOffs>2040</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>IsoRampRate</Name>
+								<Type>UINT</Type>
+								<BitOffs>2056</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>GenCooldownTime</Name>
+								<Type>UINT</Type>
+								<BitOffs>2072</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>GenWarmupTime</Name>
+								<Type>UINT</Type>
+								<BitOffs>2088</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>GenMinPwrLvl</Name>
+								<Type>UINT</Type>
+								<BitOffs>2104</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>GenEffPwrLvl</Name>
+								<Type>UINT</Type>
+								<BitOffs>2120</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>GenMaxPwrLvl</Name>
+								<Type>UINT</Type>
+								<BitOffs>2136</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>GenRatedPwr</Name>
+								<Type>UINT</Type>
+								<BitOffs>2152</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Gentype</Name>
+								<Type>UINT</Type>
+								<BitOffs>2168</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>BattOvldStop</Name>
+								<Type>UINT</Type>
+								<BitOffs>2184</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>BattOvldStart</Name>
+								<Type>UINT</Type>
+								<BitOffs>2200</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SOCStop</Name>
+								<Type>UINT</Type>
+								<BitOffs>2216</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SOCStart</Name>
+								<Type>UINT</Type>
+								<BitOffs>2232</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Control</Name>
+								<Type>UINT</Type>
+								<BitOffs>2248</BitOffs>
+							</Var>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d002f" ModuleIdentNumber="50" SlotNumber="15" ModuleInfo="Write Holding Register (PLC write)" ModuleID="50" DirectDeletable="true">
+					<Name>InputGridControl_out</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Write Holding Register (PLC write)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0064" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="50">
+						<Name>Subterm 92 (Write Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Write Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="2003"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+							<Var Swapping="#x1">
+								<Name>InputGridStatus</Name>
+								<Type>UINT</Type>
+								<BitOffs>4488</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Faults</Name>
+								<Type>UINT</Type>
+								<BitOffs>4504</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Warning</Name>
+								<Type>UINT</Type>
+								<BitOffs>4520</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Status</Name>
+								<Type>UINT</Type>
+								<BitOffs>4536</BitOffs>
+							</Var>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0030" ModuleIdentNumber="51" SlotNumber="16" ModuleInfo="Read Holding Register (PLC read)" ModuleID="51" DirectDeletable="true">
+					<Name>InputGridControl_in</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Read Holding Register (PLC read)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0060" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="51">
+						<Name>Subterm 93 (Read Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Read Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="5203"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+							<Var Swapping="#x1">
+								<Name>ContactorControl</Name>
+								<Type>UINT</Type>
+								<BitOffs>2264</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentLimitRetries</Name>
+								<Type>UINT</Type>
+								<BitOffs>2280</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SupplyCurrentLimit</Name>
+								<Type>UINT</Type>
+								<BitOffs>2296</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>FeedInCurrLimit</Name>
+								<Type>UINT</Type>
+								<BitOffs>2312</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Control</Name>
+								<Type>UINT</Type>
+								<BitOffs>2328</BitOffs>
+							</Var>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0037" ModuleIdentNumber="50" SlotNumber="17" ModuleInfo="Write Holding Register (PLC write)" ModuleID="50" DirectDeletable="true">
+					<Name>ACDCCharger_out</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Write Holding Register (PLC write)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0066" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="50">
+						<Name>Subterm 92 (Write Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Write Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="8403"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+							<Var Swapping="#x1">
+								<Name>MinGridVoltageAct</Name>
+								<Type>UINT</Type>
+								<BitOffs>4552</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SocLimitAct</Name>
+								<Type>UINT</Type>
+								<BitOffs>4568</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>PsetAct</Name>
+								<Type>UINT</Type>
+								<BitOffs>4584</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ACCurrentLimitAct</Name>
+								<Type>UINT</Type>
+								<BitOffs>4600</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentL3</Name>
+								<Type>UINT</Type>
+								<BitOffs>4616</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentL2</Name>
+								<Type>UINT</Type>
+								<BitOffs>4632</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>CurrentL1</Name>
+								<Type>UINT</Type>
+								<BitOffs>4648</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageCA</Name>
+								<Type>UINT</Type>
+								<BitOffs>4664</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageBC</Name>
+								<Type>UINT</Type>
+								<BitOffs>4680</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>VoltageAB</Name>
+								<Type>UINT</Type>
+								<BitOffs>4696</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Frequency</Name>
+								<Type>UINT</Type>
+								<BitOffs>4712</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ActivePower</Name>
+								<Type>UINT</Type>
+								<BitOffs>4728</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>AvailableChargerPower</Name>
+								<Type>UINT</Type>
+								<BitOffs>4744</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>TotalChargerPower</Name>
+								<Type>UINT</Type>
+								<BitOffs>4760</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ChargerStatus</Name>
+								<Type>UINT</Type>
+								<BitOffs>4776</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Faults</Name>
+								<Type>UINT</Type>
+								<BitOffs>4792</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Warning</Name>
+								<Type>UINT</Type>
+								<BitOffs>4808</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Status</Name>
+								<Type>UINT</Type>
+								<BitOffs>4824</BitOffs>
+							</Var>
+						</Vars>
+					</SubModule>
+				</Module>
+				<Module Id="#x031d0038" ModuleIdentNumber="51" SlotNumber="18" ModuleInfo="Read Holding Register (PLC read)" ModuleID="51" DirectDeletable="true">
+					<Name>ACDCCharger_in</Name>
+					<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Module Info: Read Holding Register (PLC read)
+]]></Comment>
+					<ImageId>182</ImageId>
+					<SubModule Id="#x031c0065" SubModuleIdentNumber="1" TypeOfSubModule="3" SubSlotNumber="1" IsFixSubmodule="true" SubModuleID="51">
+						<Name>Subterm 93 (Read Holding Register)</Name>
+						<Comment><![CDATA[GSDML: GSDML-V2.35-Helmholz-PN-ModbusTCP-coupler-20200810.xml
+Submodule Info: Read Holding Register
+]]></Comment>
+						<ImageId>183</ImageId>
+						<Record Length="2" Index="1" ConstData="5203"/>
+						<Vars VarGrpType="1">
+							<Name>Inputs</Name>
+							<Var Swapping="#x1">
+								<Name>MinGridVoltage</Name>
+								<Type>UINT</Type>
+								<BitOffs>2344</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>SocTarget</Name>
+								<Type>UINT</Type>
+								<BitOffs>2360</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Pset</Name>
+								<Type>UINT</Type>
+								<BitOffs>2376</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>ACCurrentlimit</Name>
+								<Type>UINT</Type>
+								<BitOffs>2392</BitOffs>
+							</Var>
+							<Var Swapping="#x1">
+								<Name>Control</Name>
+								<Type>UINT</Type>
+								<BitOffs>2408</BitOffs>
+							</Var>
+						</Vars>
+						<Vars VarGrpType="2">
+							<Name>Outputs</Name>
+						</Vars>
+					</SubModule>
+				</Module>
+			</API>
+		</Profinet>
+	</Box>
+</TcSmItem>

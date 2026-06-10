@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="st_SBMU_Status" Id="{c8fbd8b0-9b3e-415d-84b3-fb87dbffe23a}">
+    <Declaration><![CDATA[TYPE st_SBMU_Status :
+STRUCT
+	w_SystemWarning			:	WORD;
+	SystemAlarm				:	ARRAY [0..2] OF WORD;
+	
+	b_PrechargeRelayClosed	:	BOOL;
+	b_MainPosRelayClosed	:	BOOL;
+	b_MainNegRelayClosed	:	BOOL;
+	b_ControlBoxFanOn		:	BOOL;
+	b_BalanceStatus			:	BOOL;
+	b_DoorState				:	BOOL;	
+	
+	s_SBMU_SWVer			:	STRING(16);
+	s_SBMU_HWVer			:	STRING(16);
+	s_CSC_SWVer				:	STRING(16);
+	s_CSC_HWVer				:	STRING(16);
+	
+	BatteryStatus			:	st_SBMU_BatterySummary;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,562 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_ContactorControl" Id="{bf49c90f-d477-4935-a9b5-137102c3be47}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ContactorControl
+VAR_IN_OUT CONSTANT
+	monitor								   	: ST_System_Monitor;
+	control									: ST_System_Control;
+	st_params								: ST_ContactorControl_params;
+END_VAR
+
+VAR_IN_OUT
+	SyncData								: ST_GenGridController_SyncData;
+
+END_VAR
+
+VAR_INPUT
+	b_fbIn			: BOOL;
+	b_deadbus		: BOOL;
+	b_SyncOK		: BOOL;
+	li_VoltCrossRef	: LINT;
+	li_VoltCrossBus	: LINT;
+	r_AcVoltageRef	: REAL;
+	r_AcFreqRef		: REAL;
+	e_AcRotationRef : eACRotationState; // Fsource of reference
+	e_AcRotationBus	: eACRotationState; //bus 
+	ar_current		: ARRAY [0..4] OF REAL;
+	r_power			: REAL;	
+	b_deloadEnable	: BOOL;
+END_VAR
+VAR_OUTPUT
+	CloseCMD		: BOOL;
+	OpenCMD			: BOOL;
+	SyncEnable		: BOOL;
+	FreqSet			: REAL;
+	VoltSet			: REAL;
+	ACok			: BOOL;	
+	b_fb			: BOOL;
+	b_Deload		: BOOL;
+	RotationFault	: BOOL;
+END_VAR
+
+VAR
+	ton_SyncDelay 	: TON := (PT:=  T#1S);
+	
+	ton_synccheckoffdelay : TON := (PT :=T#1s);
+	SyncCheck		: BOOL;
+	fb_VoltPID			: FB_CTRL_PID_EXT;
+	st_Params_VoltPID				: ST_CTRL_PID_EXT_PARAMS := ( 
+										tTaskCycleTime := T#1MS,
+										tCtrlCycleTime := T#1MS,
+										fKp	:= 0.3,
+										tTn := T#200MS,
+										tTd := T#0MS,
+										tTv := T#0MS,
+										fOutMaxLimit := 40,
+										fOutMinLimit := -40										
+);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ACok := ACcheck(r_voltage := r_ACVoltageRef, r_frequency := r_ACFreqRef);
+CheckRotationField();
+SyncEnable := syncdata.b_Sync OR SyncCheck;
+ton_SyncDelay(IN := SyncEnable);
+b_fb := b_fbIn;
+
+fb_VoltPID(stParams := st_Params_VoltPID);
+ton_synccheckoffdelay(IN:= b_fb);
+IF ton_synccheckoffdelay.Q THEN
+	synccheck := FALSE;
+	fb_VoltPID.eMode:= e_Ctrl_mode.eCTRL_MODE_RESET;
+END_IF
+
+
+]]></ST>
+    </Implementation>
+    <Method Name="CheckRotationField" Id="{797b2cba-4bb8-4975-9577-ff80db2e6678}">
+      <Declaration><![CDATA[METHOD CheckRotationField : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF e_ACRotationRef <> 0 AND e_ACRotationBus <> 0 THEN // if both are connected to AC
+	IF e_ACRotationRef = e_ACRotationBus THEN
+		CheckRotationField := TRUE;
+		RotationFault := FALSE;
+	ELSE
+		RotationFault := TRUE;
+	END_IF
+ELSE
+	RotationFault := FALSE;
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Close" Id="{e4115045-29a0-4c8f-a279-b9fb45c9b0a2}">
+      <Declaration><![CDATA[METHOD Close : BOOL
+VAR_INPUT
+	Force	: BOOL;
+END_VAR
+VAR_INST
+	ton_ACOKrelease : TON := (PT:= T#1S); 
+	b_VoltageDetected	: BOOL;
+	
+	ton_SyncOK			: TON := (PT := T#5S);
+END_VAR
+
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ton_ACOKrelease(IN:= ACok);
+b_VoltageDetected := r_ACVoltageRef > 100;
+OpenCMD := FALSE;
+syncCheck := FALSE;
+
+ton_SyncOK(IN :=b_syncOK);
+IF b_fbIN OR b_deadbus THEN
+	CloseCMD := TRUE;
+ELSIF force THEN
+	IF b_VoltageDetected AND NOT b_deadbus THEN
+		syncCheck := TRUE;
+		CloseCMD := ton_SyncOK.Q AND ton_ACOKrelease.Q;
+	ELSE
+		CloseCMD := TRUE;
+	END_IF
+ELSE
+	CloseCMD:= Sync();
+END_IF
+
+Close := b_fbIN;
+IF b_fbIN THEN
+	Syncdata.b_Sync := FALSE;
+	syncCheck := FALSE;
+	ton_SyncOK.IN := FALSE;
+	ton_ACOKrelease.IN :=  FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Deload" Id="{854ea28b-9cc9-49ad-9f29-739f9faf5879}">
+      <Declaration><![CDATA[METHOD Deload : BOOL
+VAR_INPUT
+	reset : BOOL;
+END_VAR
+
+VAR_INST
+	release : BOOL;
+	PowerReleaseThreshold : REAL;
+	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF b_deloadEnable AND NOT reset THEN
+	b_Deload := TRUE;
+	PowerReleaseThreshold := st_params.ui_DeloadCurrentRelease * r_AcVoltageRef *  1.73 / 1000; 
+	release := ABS(ar_current[0]) < st_params.ui_DeloadCurrentRelease OR ABS(r_power) < (PowerReleaseThreshold);
+	IF release THEN
+		Deload := TRUE;
+	END_IF
+ELSE
+    b_Deload := FALSE;
+	Deload := TRUE;
+END_IF
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FreqControlPID" Id="{397368cb-6f48-41ea-bd12-561d118b80bb}">
+      <Declaration><![CDATA[METHOD FreqControlPID : BOOL;
+VAR_INPUT
+	r_ACRef				: REAL;
+	r_ACintern			: REAL;
+END_VAR
+
+VAR_OUTPUT
+	Q					: REAL;
+END_VAR
+
+
+VAR_INST
+	r_phaseTimeDelta		: REAL;
+	r_PeriodTime			: REAL;
+	r_phaseAngle			: REAL;
+	Buffer  				: ARRAY[0..2] OF REAL;
+    Index   				: UINT := 0;
+	di_tempAngle			: DINT;
+	r_phaseAngleEMA        	: REAL := 0.0; // startwaarde
+    Alpha       			: REAL := 0.5; // dempingsfactor tussen 0 en 1
+	
+		fb_FreqPID						: FB_CTRL_PID_EXT;
+		st_Params_FreqPID				: ST_CTRL_PID_EXT_PARAMS := ( 
+										tTaskCycleTime := T#1MS,
+										tCtrlCycleTime := T#1MS,
+										fKp	:= 0.1,
+										tTn := T#20MS,
+										tTd := T#0MS,
+										tTv := T#0MS,
+										fOutMaxLimit := 0.03,
+										fOutMinLimit := -0.03										
+);
+	ton_SyncOKdelay						: TON := (PT := T#1S);
+	r_syncOKAngle						: REAL := 2.0;
+	r_FreqOffset 						: REAL := -0.05;
+	
+	li_voltcrossbusLast					: LINT;
+	li_VoltCrossRefLast					: LINT;
+	ton_FreqPIDBypass					: TON := (PT := T#2S);
+	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ton_FreqPIDBypass(IN := li_voltcrossbusLast = li_voltcrossbus OR li_VoltCrossRefLast = li_VoltCrossRef);
+IF ton_FreqPIDBypass.Q THEN
+	 r_freqOffset := -0.05;
+	 ton_SyncOKdelay(IN := b_syncOK, PT:= T#0S);
+ELSE
+	r_PeriodTime := SEL(r_ACintern = 0, 1/r_ACintern, 0) * 1000;
+	r_phaseTimeDelta := TO_REAL((li_VoltCrossbus - li_VoltCrossRef) MOD TO_DINT(r_PeriodTime*1000000)) /1000000;
+	
+	IF r_phaseTimeDelta > (r_PeriodTime /2)  THEN
+		r_phaseTimeDelta := r_phaseTimeDelta - r_PeriodTime; 
+	ELSIF r_phaseTimeDelta < -(r_PeriodTime /2) THEN
+		r_phaseTimeDelta := r_phaseTimeDelta + r_PeriodTime; 
+	END_IF
+	
+	// Stap 1: bereken eerst de DINT-waarde veilig
+	di_tempAngle := TO_DINT(r_phaseTimeDelta * r_ACintern * 360);
+	
+	// Stap 3: schaal naar REAL
+	r_phaseAngle := TO_REAL(di_tempAngle MOD 360000) / 1000;
+	
+	//setup filtering (median and exponential moving average)
+	Buffer[Index MOD 3] := r_phaseAngle;
+	Index := Index + 1;
+	r_phaseAngleEMA := Alpha * median(buffer) + (1.0 - Alpha) * r_phaseAngleEMA;
+	
+	fb_FreqPID(
+		fSetpointValue := 0,
+		fActualValue :=  r_phaseAngleEMA,
+		stParams:= st_Params_FreqPID,
+		fout => r_FreqOffset);
+		
+	fb_FreqPID.bHold := r_phaseAngleEMA > 170 OR r_phaseAngleEMA < -170;
+	
+		
+	IF NOT fb_FreqPID.bError THEN
+		fb_FreqPID.eMode := e_CTRL_MODE.eCTRL_MODE_ACTIVE;
+	ELSE
+		fb_FreqPID.eMode := e_CTRL_MODE.eCTRL_MODE_RESET;
+	END_IF
+	
+	ton_SyncOKdelay(IN := ABS(r_phaseAngleEMA) < r_syncOKAngle, PT:= T#2S);
+END_IF
+
+//set outputs
+Q := r_ACRef - r_freqOffset;
+FreqControlPID := ton_SyncOKdelay.Q;
+
+
+//update on change values
+li_voltcrossbusLast := li_voltcrossbus;
+li_voltcrossrefLast := li_voltcrossref;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FrequencyControl" Id="{026dad47-70d4-4da9-be87-8ebc71412c8f}">
+      <Declaration><![CDATA[METHOD FrequencyControl : BOOL
+VAR_INPUT
+	r_ACRef				: REAL;
+	r_ACintern			: REAL;
+END_VAR
+
+VAR_OUTPUT
+	Q					: REAL;
+END_VAR
+
+
+VAR_INST
+	OK					: BOOL;
+	r_FreqOffset 		: REAL := 0.1; // hz
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Go below ref Frequency.
+
+Q := r_ACRef + r_FreqOffset;
+OK := ABS(r_ACintern - r_ACRef) < ABS(4* r_FreqOffset);
+FrequencyControl := OK;
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="init" Id="{ca5fd94a-e778-439a-a606-68d527f979bd}">
+      <Declaration><![CDATA[METHOD init : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[syncCheck := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Open" Id="{70f64beb-e88f-491a-9ee2-33b30106dcab}">
+      <Declaration><![CDATA[METHOD Open : BOOL
+VAR_INPUT
+	b_force : BOOL;
+END_VAR
+
+VAR_INST
+	ton_TimeOut : TON;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ton_TimeOut(PT := TO_TIME(TO_REAL(st_params.ui_DeloadTimeOut)*1000));
+CloseCMD := FALSE;
+
+IF b_force OR ton_timeOut.Q THEN
+	OpenCMD := TRUE;
+ELSE
+	ton_TimeOut.IN := TRUE;
+	OpenCMD := Deload(FALSE);
+END_IF
+
+open := NOT b_FbIN;
+IF NOT b_fbIn THEN
+	//Syncdata.b_Sync:= FALSE;
+	ton_TimeOut.IN := FALSE;
+	b_deload := FALSE;
+	OpenCMD := FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Sync" Id="{1d855f21-1be1-472c-9b3b-189f0996fe7f}">
+      <Declaration><![CDATA[METHOD PRIVATE Sync : BOOL
+
+VAR_INST
+	//OK : BOOL;
+	phasecontrol : BOOL := FALSE;
+	SyncOKSum	: BOOL;
+	tp_SyncOK : TP := (PT := T#100MS);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Syncdata.b_Sync := ACok;
+
+IF phasecontrol THEN //new method beckhoff phase matching
+	SyncOKsum := FreqControlPID(r_ACFreqRef, monitor.powerstack.r_FrequencyD7, Q => Syncdata.r_freqSet);
+ELSE //old method
+	SyncOKSum := b_syncOK AND FrequencyControl(r_acRef := r_ACFreqRef,  r_ACintern := monitor.powerstack.r_FrequencyD7, Q => Syncdata.r_freqSet);
+END_IF
+
+tp_SyncOK(IN:= SyncOKsum AND
+	ACok AND
+	CheckRotationField() AND
+	VoltageControl(r_acRef := r_ACvoltageRef, r_ACintern := monitor.powerstack.r_ACVoltageD7, Q => Syncdata.r_VoltSet)
+	);
+
+IF ton_SyncDelay.Q AND tp_SyncOK.Q THEN
+	SyncOKSum := FALSE;
+	Sync := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="VoltageControl" Id="{cc9025fd-370b-4f32-bac9-782fd441da74}">
+      <Declaration><![CDATA[METHOD VoltageControl : BOOL
+VAR_INPUT
+	r_ACRef				: REAL;
+	r_ACintern			: REAL;
+END_VAR
+VAR_OUTPUT
+	Q : REAL;
+END_VAR
+
+VAR_INST
+	
+	OK			: BOOL;
+	VoltDev		: REAL;
+
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Go equal to ref voltage.
+VoltDev := r_ACintern - r_ACRef; 
+
+//TOTAL AC CURRENT LIMIT
+st_Params_VoltPID.fInnerWindow :=  st_Params.VoltagePID.InnerWindow;
+st_Params_VoltPID.fOuterWindow := st_Params.VoltagePID.OuterWindow;
+st_Params_VoltPID.fKp := st_params.VoltagePID.Kp;
+st_Params_VoltPID.tTn := TO_TIME(st_params.VoltagePID.Tn);
+st_Params_VoltPID.tTd := TO_TIME(st_params.VoltagePID.Td);
+st_Params_VoltPID.tTv := TO_TIME(st_params.VoltagePID.Tv);
+st_params_VoltPID.fDeadBandInput := st_Params.VoltagePID.InputDeadband;
+st_params_VoltPID.fDeadBandOutput := st_Params.VoltagePID.OutputDeadband;
+
+fb_VoltPID.fActualValue := VoltDev;
+	
+IF st_Params.VoltagePID.enable THEN
+	fb_VoltPID.eMode := e_CTRL_MODE.eCTRL_MODE_ACTIVE;
+ELSE
+	fb_VoltPID.eMode := e_CTRL_MODE.eCTRL_MODE_RESET;
+END_IF
+	
+OK := ABS(VoltDev) < st_params.ui_VoltageDevSyncOK;
+Q := r_ACRef + fb_VoltPId.fOut;
+VoltageControl := OK;
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_ContactorControl">
+      <LineId Id="261" Count="2" />
+      <LineId Id="306" Count="0" />
+      <LineId Id="264" Count="0" />
+      <LineId Id="399" Count="1" />
+      <LineId Id="394" Count="0" />
+      <LineId Id="393" Count="0" />
+      <LineId Id="395" Count="0" />
+      <LineId Id="448" Count="0" />
+      <LineId Id="396" Count="0" />
+      <LineId Id="446" Count="1" />
+      <LineId Id="350" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ContactorControl.CheckRotationField">
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ContactorControl.Close">
+      <LineId Id="71" Count="1" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="102" Count="2" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="22" Count="1" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="150" Count="4" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="34" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ContactorControl.Deload">
+      <LineId Id="22" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="23" Count="1" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="20" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ContactorControl.FreqControlPID">
+      <LineId Id="115" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="129" Count="23" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="153" Count="7" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="170" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="164" Count="1" />
+      <LineId Id="163" Count="0" />
+      <LineId Id="166" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_ContactorControl.FrequencyControl">
+      <LineId Id="15" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="20" Count="1" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ContactorControl.init">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ContactorControl.Open">
+      <LineId Id="35" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="18" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ContactorControl.Sync">
+      <LineId Id="42" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="75" Count="0" />
+      <LineId Id="78" Count="1" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="63" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ContactorControl.VoltageControl">
+      <LineId Id="18" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="132" Count="2" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="223" Count="3" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

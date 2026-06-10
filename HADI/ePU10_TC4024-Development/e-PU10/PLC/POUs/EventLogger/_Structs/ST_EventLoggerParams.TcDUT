@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_EventLoggerParams" Id="{b3515219-9a52-4d48-859a-51073dc104d1}">
+    <Declaration><![CDATA[TYPE ST_EventLoggerParams :
+STRUCT
+	MaxFileSize			: 	UDINT 	:= 5000000; // bytes, rotation trigger threshold (~5 MB)
+	MaxFileCount		: 	UINT 	:= 5; // active + archives
+
+	LogFileName			: 	STRING	:=	'C:\Users\Administrator\Documents\ePU10Log.txt';
+	LogWriteInterval	: 	TIME 	:= T#1M; // periodic flush interval
+	MaxFillGrade		: 	REAL 	:= 0.9; // flush when buffer reaches this count of RamBufferSize
+	EMstopWriteDelay	:	TIME	:=	T#1S;
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eUPSState" Id="{ee1430c3-9329-4848-8f4a-a6dc0e1d9388}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eUPSState :
+(
+	Inoperative 	:= 0,
+	Input_Active	:= 1,
+	On_Battery		:= 2
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

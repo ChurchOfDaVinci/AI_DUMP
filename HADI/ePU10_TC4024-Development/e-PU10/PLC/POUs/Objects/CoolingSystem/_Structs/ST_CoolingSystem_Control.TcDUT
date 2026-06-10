@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_CoolingSystem_Control" Id="{29df62c1-dd34-4dc3-ad1e-a858a2eebaad}">
+    <Declaration><![CDATA[TYPE ST_CoolingSystem_Control :
+STRUCT
+	//system outputs
+	b_CloseBatteryLoopValve		:	BOOL;
+	b_CloseInverterLoopValve	:	BOOL;
+	b_CloseFancoilLoopValve 	:	BOOL;
+	
+	b_BatteryLoopEnabled		:	BOOL;
+	b_InverterLoopEnabled		:	BOOL;
+	b_FancoilLoopEnabled		:	BOOL;
+	
+	b_DCFancoilEnable			: 	BOOL;
+	b_DCPumpEnable 				: 	BOOL;
+	b_ACPumpEnable				: 	BOOL;
+	
+	//System inputs
+	r_EnclosureHumidity			:	REAL;
+	r_EnclosureTemperature		:	REAL;
+	r_CoolantTemperature		:	REAL;
+	r_CoolantPressure			:	REAL;
+	r_CoolantIdlePressure		:	REAL;
+	
+	r_CurrentEnclosureDewPoint	: 	REAL;
+	
+	//Inputs via main sequence
+	//From BMS
+	r_BMSBatteryTemperature		:	REAL;
+	R_BMSMaxBatteryTemperature	: 	REAL;
+	
+	//From PowerModule
+	b_InverterRunning			: 	BOOL;
+	b_FanPowerstackEnable		:	BOOL;
+	
+	//HeatpumpData
+	r_HeatPumpSetpoint			:	REAL;
+	e_HeatpumpMode				:	eHeatPumpMode;
+	HeatPumpStatus				:	eHeatPumpState;
+	
+	//From Internal power supply
+	b_24V_Available				:	BOOL; 
+	b_400v_Available			:	BOOL;
+	e_400vSupplySource			: 	e400vSupplySource;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

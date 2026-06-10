@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_ModuleData" Id="{47158893-2b75-4ccf-9656-eebd0e7ee979}">
+    <Declaration><![CDATA[TYPE ST_ModuleData :
+STRUCT
+	rOutVoltageDc		: REAL;	// CMD 03
+	rOutCurrentDc		: REAL;	// CMD 03
+	rTemprature			: REAL;	// CMD 04
+	rStatus0			: REAL;	// CMD 04
+	rStatus1			: REAL;	// CMD 04
+	rStatus2			: REAL;	// CMD 04
+	rVoltageL1L2		: REAL;	// CMD 06
+	rVoltageL2L3		: REAL;	// CMD 06
+	rVoltageL3L1		: REAL;	// CMD 06
+	rExternalVoltageDc	: REAL;	// CMD 0C      this could be the same as rOutVoltageDc CMD 03
+	ravilableCurrentDc	: REAL;	// CMD 0C
+	
+	 stStatus           : ST_ModuleStatus;  // decoded status bits
+	 
+	 bValid		: BOOL; // validate if data are updating
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

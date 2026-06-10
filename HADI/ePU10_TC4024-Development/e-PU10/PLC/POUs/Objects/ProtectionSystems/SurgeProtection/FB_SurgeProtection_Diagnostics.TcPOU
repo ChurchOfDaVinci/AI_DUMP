@@ -1,0 +1,76 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_SurgeProtection_Diagnostics" Id="{45eb1363-45f0-43ab-937a-6ffc3d30548c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_SurgeProtection_Diagnostics IMPLEMENTS i_Diagnostics
+VAR CONSTANT
+	IO	: FB_SurgeProtection_IO;
+END_VAR
+
+VAR
+	w_Index														: WORD := 0;
+	in_b_Acknowledgeable: BOOL;
+END_VAR
+
+VAR_IN_OUT CONSTANT
+	w_ID										: WORD;									
+	w_ErrorControlWord							: WORD; //Bit0: ResetAlarms, Bit1: AutoResetAlarms, bit2: Clear Alarms bit3: AutoClearAlarms
+END_VAR
+
+VAR_IN_OUT
+	w_ErrorIndex												: WORD;
+	AddError													: ARRAY [*] OF FB_AddError_1;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Client panel surge protection failed
+AddError[w_Index + w_ErrorIndex](
+		in_b_ErrorActive		:= NOT IO.GridSurgeProtection_OK,
+		in_b_Acknowledgeable	:= FALSE,
+		in_b_ErrorReset			:= w_ErrorControlWord.1,
+		in_b_Clear				:= w_ErrorControlWord.2,
+		in_ErrorInfo			:= GetErrorMessage(0, w_ID)
+	);
+	w_Index := w_Index +1;
+
+// Control cabinet surge protection failed
+AddError[w_Index + w_ErrorIndex](
+		in_b_ErrorActive		:= NOT IO.SecondarySurgeProtection_OK,
+		in_b_Acknowledgeable	:= FALSE,
+		in_b_ErrorReset			:= w_ErrorControlWord.1,
+		in_b_Clear				:= w_ErrorControlWord.2,
+		in_ErrorInfo			:= GetErrorMessage(1, w_ID)
+	);
+	w_Index := w_Index +1;
+//FINAL STEP: increment w_ErrorIndex with the total number of errors that are added in this function block.
+w_ErrorIndex := w_Index + w_ErrorIndex;]]></ST>
+    </Implementation>
+    <Method Name="GetErrorMessage" Id="{503f4628-7e9f-4da1-9afa-a58e37b23253}">
+      <Declaration><![CDATA[METHOD PUBLIC GetErrorMessage : ST_ErrorInfo;
+VAR_INPUT
+	ObjectID	: WORD;
+	w_ErrorIndex: WORD;
+END_VAR
+
+VAR
+	Error: ST_ErrorInfo;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE w_ErrorIndex OF
+	0: Error.Message:= 'Primary Surge protection inoperative'; Error.Severity := eSeverity.Warning;
+	1: Error.Message:= 'Secondary Surge protection inoperative'; Error.Severity := eSeverity.Warning;
+END_CASE
+
+Error.ID := w_ErrorIndex + ObjectID;
+GetErrorMessage := Error;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_SurgeProtection_Diagnostics">
+      <LineId Id="10" Count="19" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_SurgeProtection_Diagnostics.GetErrorMessage">
+      <LineId Id="15" Count="2" />
+      <LineId Id="20" Count="2" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

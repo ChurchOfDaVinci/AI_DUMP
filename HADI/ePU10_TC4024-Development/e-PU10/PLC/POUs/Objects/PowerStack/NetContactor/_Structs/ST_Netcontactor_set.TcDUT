@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Netcontactor_set" Id="{b4b69345-3296-4468-915c-4d0bb03897b5}">
+    <Declaration><![CDATA[TYPE ST_Netcontactor_set :
+STRUCT
+	e_ACRotationState				: eACRotationState; // 0:No AC, 1: AC CLOCKWISE, 2: AC ANTI-CLOCKWISE
+	e_ClosingRequest				: eNetcontMode;
+	b_ACdetected					: BOOL;
+	b_RotationSwitchEnable			: BOOL;
+	b_SynchronizedToD7				: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_ACDCCharger_get" Id="{a70c7af0-128e-48c9-8ebe-ee29e06a6acc}">
+    <Declaration><![CDATA[TYPE ST_ACDCCharger_get :
+STRUCT
+	e_SystemStatus			: eAcDCChargerState := eACDCChargerState.init;
+	
+	by_NoModulesActive		: BYTE;	
+	by_NoModulesInstalled	: BYTE;
+	e_ChargerStatus 		: ARRAY [0..6] OF eAcDcChargerState;
+	
+	ar_ACvoltage			: ARRAY [0..3] OF REAL;
+	r_AvailablePower		: REAL;
+	ACmeasurements			: ST_MeasurementFieldData;
+	r_DcVoltage	   			: REAL;
+	r_DcCurrent				: REAL;
+	r_DcPower				: REAL;
+
+	Events					: ST_ACDCCharger_events;	
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

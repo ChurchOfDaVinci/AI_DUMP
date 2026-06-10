@@ -1,0 +1,167 @@
+<div id="Content1_22" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-creator-viewport-height="1024" data-tchmi-creator-viewport-width="1152" data-tchmi-width-mode="Value" data-tchmi-width="350">
+<div id="TcHmiGrid_systemparams_1259" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-bottom="40" data-tchmi-height-mode="Content" data-tchmi-right="0">
+<script data-tchmi-target-attribute="data-tchmi-row-options" type="application/json">
+[
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 30.0,
+    "heightUnit": "px",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-cell-options" type="application/json">
+[]
+</script>
+<div id="SwitchList_System" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/SwitchList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-title="%l%SystemSettings%/l%" data-tchmi-label1="%l%b_AutomaticSwitching%/l%" data-tchmi-info1="%l%b_AutomaticSwitchingTooltip%/l%" data-tchmi-data1="%s%PLC.HMI.Controlvars::SoftSettings::system::b_AutomaticSwitching|SubscriptionMode=Poll%/s%" data-tchmi-enable4="false" data-tchmi-enable3="false" data-tchmi-enable2="true" data-tchmi-data2="%s%PLC.HMI.Controlvars::Operation::system::b_PFsetEnable|SubscriptionMode=Poll%/s%" data-tchmi-label2="%l%b_PFsetEnable%/l%" data-tchmi-info2="%l%b_PFsetTooltip%/l%">
+</div>
+<div id="ParameterList_SystemSoftLimits" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="4" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-title="%l%SoftLimits%/l%" data-tchmi-label1="%l%r_Pmax%/l%" data-tchmi-label2="%l%r_Pmin%/l%" data-tchmi-label4="%l%r_ACcurrentlimit%/l%" data-tchmi-data1="%s%PLC.HMI.Controlvars::SoftSettings::system::r_PDischargeLimit|SubscriptionMode=Poll%/s%" data-tchmi-data2="%s%PLC.HMI.Controlvars::SoftSettings::system::r_PChargeLimit|SubscriptionMode=Poll%/s%" data-tchmi-data4="%s%PLC.HMI.Controlvars::SoftSettings::system::r_AMax|SubscriptionMode=Poll%/s%" data-tchmi-min1="0" data-tchmi-min2="0" data-tchmi-max1="900" data-tchmi-max2="900" data-tchmi-min3="0" data-tchmi-max3="900" data-tchmi-max4="1300" data-tchmi-min4="0" data-tchmi-enable3="false" data-tchmi-showtitle="true" data-tchmi-show="true" data-tchmi-info1="%l%DischargeLimitTooltip%/l%" data-tchmi-info2="%l%ChargeLimitTooltip%/l%" data-tchmi-info4="%l%ACcurrentLimitTooltip%/l%" data-tchmi-decimals1="0">
+</div>
+<div id="ParameterList_36" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="5" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-enable4="false" data-tchmi-enable3="false" data-tchmi-min1="%f%%s%PLC.HMI.Controlvars::SoftSettings::system::r_SocMin%/s%+5%/f%" data-tchmi-enable2="true" data-tchmi-show="%ctrl%ParameterList_SystemSoftLimits::Show%/ctrl%" data-tchmi-enable1="true" data-tchmi-label1="%l%r_SoCMax%/l%" data-tchmi-data1="%s%PLC.HMI.Controlvars::SoftSettings::system::r_SocMax%/s%" data-tchmi-max1="100" data-tchmi-label2="%l%r_SoCMin%/l%" data-tchmi-data2="%s%PLC.HMI.Controlvars::SoftSettings::system::r_SocMin%/s%" data-tchmi-max2="%f%%s%PLC.HMI.Controlvars::SoftSettings::system::r_SocMax%/s%-5%/f%" data-tchmi-min2="0" data-tchmi-showtitle="false" data-tchmi-decimals2="0" data-tchmi-decimals1="0" data-tchmi-info1="%l%SocMaxTooltip%/l%" data-tchmi-info2="%l%SocMinTooltip%/l%">
+</div>
+<div id="SwitchList_31" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height-unit="px" data-tchmi-labelfontsize="14" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/SwitchList.usercontrol" data-tchmi-titlefontsize="16" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-grid-row-index="3" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-enable4="false" data-tchmi-enable3="false" data-tchmi-enable2="false" data-tchmi-label1="Show soft limits" data-tchmi-data1="%ctrl%ParameterList_SystemSoftLimits::Show%/ctrl%" data-tchmi-show="true">
+</div>
+<div id="TcHmiLinearGauge_LEDbrightness" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiLinearGauge" data-tchmi-base-animation-time="1000" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="6" data-tchmi-height="60" data-tchmi-height-unit="px" data-tchmi-label-range="20" data-tchmi-left-unit="px" data-tchmi-show-labels="false" data-tchmi-show-ticks="false" data-tchmi-show-value-text="true" data-tchmi-start-from-zero="false" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-editable="true" data-tchmi-step="1" data-tchmi-min-value="10" data-tchmi-value-font-weight="Normal" data-tchmi-value-font-size="%i%DataTableFontSize%/i%" data-tchmi-label-font-weight="Bold" data-tchmi-right="0" data-tchmi-value="%s%PLC.HMI.Controlvars::SoftSettings::system::by_LEDbrightness|BindingMode=TwoWay%/s%" data-tchmi-left="0" data-tchmi-click-anywhere-to-edit="false" data-tchmi-unit="%l%LEDBrightness%/l%" data-tchmi-unit-orientation="Theme" data-tchmi-unit-font-style="Auto" data-tchmi-unit-font-weight="Normal" data-tchmi-unit-font-size="%i%DataTableFontSize%/i%">
+<script data-tchmi-target-attribute="data-tchmi-value-format" type="application/json">
+{
+  "objectType": "Function",
+  "active": true,
+  "fn": "TcHmi.Functions.Beckhoff.GaugeValueFormatter",
+  "fnParams": [
+    {
+      "objectType": "StaticValue",
+      "valueType": "tchmi:general#/definitions/Number",
+      "value": 0.0
+    }
+  ]
+}
+</script>
+<script data-tchmi-target-attribute="data-tchmi-tick-definition" type="application/json">
+{
+  "mainTickRange": 20,
+  "subTickRange": 5
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+</div>
+</div>
+<div data-tchmi-grid-column-index="0" id="TcHmiButton_AdvancedSystemSettings" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-grid-row-index="6" data-tchmi-right="10" data-tchmi-text-font-size="16" data-tchmi-text="%f%TcHmi.Functions.Beckhoff.ToUpperCase(%l%AdvancedSettings%/l%)%/f%" data-tchmi-left="10" data-tchmi-bottom="10">
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 5.0,
+  "topRight": 5.0,
+  "bottomLeft": 5.0,
+  "bottomRight": 5.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiButton_AdvancedSystemSettings.onPressed",
+    "actions": [
+      {
+        "objectType": "ActionTemplate",
+        "active": true,
+        "templateName": "PopUpOpen",
+        "fnParams": [
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:framework#/definitions/ContentPath",
+            "value": "Contents/V3/2.OperationControls/2.2 AdvancedSystemSettings.content"
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(207, 207, 207, 1)"
+}
+</script>
+</div>

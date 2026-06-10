@@ -1,0 +1,273 @@
+<div id="Dataview" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControl" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="100" data-tchmi-height="100" data-tchmi-width-unit="%" data-tchmi-height-unit="%" data-tchmi-creator-viewport-width="500" data-tchmi-creator-viewport-height="500" data-tchmi-height-mode="Content" data-tchmi-width-mode="Value">
+
+<div id="TcHmiGrid_1233" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content">
+<script data-tchmi-target-attribute="data-tchmi-row-options" type="application/json">
+[
+  {
+    "height": 30.0,
+    "heightUnit": "px",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Value",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+<div id="TcHmiDatagrid_14" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiDatagrid" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="1" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="%" data-tchmi-bottom="0" data-tchmi-show-row-numbers="false" data-tchmi-height-mode="Content" data-tchmi-width="100" data-tchmi-header-height="%f%if (%pp%ShowHeaderBar%/pp%){%pp%DataFontSize%/pp%+8}else{0}%/f%" data-tchmi-table-border-width="0" data-tchmi-src-data="%pp%DataArray%/pp%" data-tchmi-filter="%pp%Filter%/pp%" data-tchmi-row-height="%f%%pp%DataFontSize%/pp%+8%/f%" data-tchmi-grid-font-size="14" data-tchmi-header-font-size="16" data-tchmi-width-mode="Value">
+<script data-tchmi-target-attribute="data-tchmi-src-column" type="application/json">
+[
+  {
+    "name": "s_Name",
+    "label": "Variable",
+    "control": "TextBlock",
+    "width": 4,
+    "widthUnit": "factor",
+    "resize": false,
+    "sortable": true,
+    "minWidth": 75,
+    "minWidthUnit": "px",
+    "cellBackground": {
+      "color": "None"
+    },
+    "editable": false,
+    "horizontalAlignment": "Left",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Left",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false
+  },
+  {
+    "name": "s_Data",
+    "label": "Data",
+    "control": "TextBlock",
+    "width": 1,
+    "widthUnit": "factor",
+    "resize": true,
+    "sortable": false,
+    "minWidth": 50,
+    "minWidthUnit": "px",
+    "cellBackground": {
+      "color": "None"
+    },
+    "editable": false,
+    "horizontalAlignment": "Left",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Left",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false
+  },
+  {
+    "name": "s_Unit",
+    "label": "Unit",
+    "control": "TextBlock",
+    "width": 1,
+    "widthUnit": "factor",
+    "resize": false,
+    "sortable": false,
+    "minWidth": 50,
+    "minWidthUnit": "px",
+    "cellBackground": {
+      "color": "None"
+    },
+    "editable": false,
+    "horizontalAlignment": "Left",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Left",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-cell-content-padding" type="application/json">
+{
+  "left": 10,
+  "right": 5,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 5.0,
+  "topRight": 5.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-table-border-style" type="application/json">
+{
+  "left": "None",
+  "right": "None",
+  "top": "None",
+  "bottom": "None"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-header-cell-padding" type="application/json">
+{
+  "left": 5,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_785" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-text="%pp%Title%/pp%" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-horizontal-alignment="Center" data-tchmi-right="0" data-tchmi-text-font-size="%pp%TitleFontSize%/pp%" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-weight="Bold" data-tchmi-height-mode="Content">
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 5.0,
+  "topRight": 5.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 3,
+  "right": 3,
+  "top": 3,
+  "bottom": 3,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-style" type="application/json">
+{
+  "left": "Solid",
+  "right": "Solid",
+  "top": "Solid",
+  "bottom": "Solid"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 5.0,
+  "bottomRight": 5.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+
+
+</div>
+
+<script data-tchmi-target-attribute="data-tchmi-box-shadow" type="application/json">
+[]
+</script>
+
+
+</div>

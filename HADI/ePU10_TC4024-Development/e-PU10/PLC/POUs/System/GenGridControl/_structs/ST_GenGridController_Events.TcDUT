@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_GenGridController_Events" Id="{c115e66a-98b8-4deb-925a-feaa124fed36}">
+    <Declaration><![CDATA[TYPE ST_GenGridController_Events :
+STRUCT
+	b_InvalidGensetParameters 		: BOOL;
+	b_RotationFieldFault			: BOOL;
+	b_CurrentLimitDisconnect		: BOOL;
+	b_CurrentLimitTrip				: BOOL;
+	b_EmstopDisconnect				: BOOL;
+	b_ShutdownDisconnect			: BOOL;
+	b_OverloadTrip  				: BOOL;
+	b_OverFreqTrip					: BOOL;
+	b_UnderFreqTrip					: BOOL;
+	b_OverVoltTrip					: BOOL;
+	b_UnderVoltTrip					: BOOL;
+	b_ShutdownTimeOut				: BOOL;
+	b_SynchronisationFault			: BOOL;
+	b_StartupFault					: BOOL;
+	b_WarmupFault					: BOOL;
+	b_GenDownTrip					: BOOL;
+	b_GridLostTrip					: BOOL;
+	b_TransToGenIsoInhibit			: BOOL;
+	b_TransToGenDroopInhibit		: BOOL;
+	b_TransToGenFixInhibit			: BOOL;
+	b_TransFromInputGridAckRQ		: BOOL;
+	b_TransFromInputGenAckRQ		: BOOL;
+	b_StartingInhibit				: BOOL;
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,196 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_LedArduino" Id="{50068ffc-9ab7-4765-9343-61ec41c921a7}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_LedArduino
+VAR_INPUT
+	brightness					: BYTE; // in %
+	enable					: BOOL := TRUE;
+END_VAR
+
+VAR_IN_OUT CONSTANT
+	MachineData						: ST_Ledstrip_MachineData;
+	st_params						: st_ledstrip_params;
+END_VAR
+
+VAR CONSTANT
+	w_ID						: WORD := eObject_ID.Enclosure_LED;
+END_VAR
+
+VAR_OUTPUT
+	get						: ST_Ledstrip_get;
+END_VAR
+
+VAR
+	Write						: TON;
+	w_NoRegisters				: WORD;
+	CommFaultOffDelay			: TOF;
+	aw_LED_ModbusOutputRegs		: ARRAY [0..10] OF WORD;
+	WriteRegs					: FB_MBWriteRegs;
+	t_RefreshTime				: TIME := T#1S;
+	t_TimeOut					: TIME := T#1S;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[SetData();
+
+IF st_params.ColorOrder = eColororder.GRB THEN
+	w_NoRegisters		:= 7;
+ELSE
+	w_NoRegisters		:= 6;
+END_IF
+
+IF enable THEN
+	Write(IN:= NOT write.Q, PT := t_RefreshTime);
+	CommFaultOffDelay(IN:= writeregs.bError, PT := T#5S, Q => get.b_error);
+	
+	WriteRegs(sIPAddr := st_params.IP,
+		nTCPPort := 502,
+		nUnitID := 16#FF,
+		nQuantity := w_NoRegisters,
+		nMBaddr := 0,
+		cbLength := SIZEOF(aw_LED_ModbusOutputRegs),
+		pSrcAddr := ADR(aw_LED_ModbusOutputRegs),
+		bExecute := Write.Q,
+		tTimeOut := t_Timeout);	
+END_IF
+]]></ST>
+    </Implementation>
+    <Method Name="GetDiagnostics" Id="{3a536bba-6768-443a-9dbc-eb3b6a8d2df8}">
+      <Declaration><![CDATA[METHOD PUBLIC GetDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+
+VAR_OUTPUT
+	b_errorActive	: BOOL;
+	b_warningActive	: BOOL;
+END_VAR
+
+VAR
+	by_errCt	: BYTE;
+	by_warnCt	: BYTE;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	(*Led Com fault*)		AddError[w_Index](
+		b_ErrorTrig			:= get.b_error,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 1,
+		e_ObjectID				:=  eObject_ID.Enclosure_LED,
+		s_Message				:= 'communication fault',
+		e_sev					:= eseverity.info,
+		b_AutoClear			:= TRUE
+		);
+		w_Index := w_Index +1;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{d067fcd7-4ae1-44bc-9482-a55675def6c7}">
+      <Declaration><![CDATA[METHOD PUBLIC Reset : BOOL
+
+VAR_INST
+	ton_ResetPulse			: TON := (pt:=T#500MS);
+
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF get.b_error THEN
+	ton_resetPulse(IN:= NOT ton_ResetPulse.Q);
+	enable := ton_ResetPulse.Q;
+ELSE
+	enable := TRUE;
+END_IF
+
+reset := NOT get.b_error;
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetData" Id="{dcd32f3f-2552-4239-915d-3b09790f80db}">
+      <Declaration><![CDATA[METHOD PRIVATE SetData
+
+
+VAR
+	by_Status 					: BYTE;
+	by_mode						: BYTE := 0;
+END_VAR
+
+VAR_INST
+	TON_ledstripColorPulse			: TON := (PT:=T#500MS);
+	b_toggle						: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[TON_ledstripColorPulse(IN:= NOT TON_ledstripColorPulse.Q);
+IF ton_ledstripColorPulse.Q THEN
+	b_toggle := NOT b_toggle;
+END_IF
+
+
+ // Get status
+CASE machinedata.e_systemStatus OF
+	eSystemstatus.error: by_Status := 4;
+	eSystemstatus.warning: by_Status := 3;
+	eSystemstatus.attention: by_Status := 2;
+	eSystemstatus.normal: by_Status := 1;
+	eSystemstatus.neutral: by_Status := 0;
+END_CASE
+
+IF machinedata.r_DCCurrent < -10 THEN
+	by_mode := 1; //charging
+ELSIF machinedata.r_DCCurrent > 10 THEN
+	by_mode := 2; //discharging
+ELSE
+	by_mode := 0; // idle
+END_IF
+
+
+// Fill in regs
+aw_LED_ModbusOutputRegs[0] := TO_WORD(MAX(LIMIT(0,machinedata.r_SOC,100) *2.55,1));   				// Battery usable state of charge (0.1%)
+aw_LED_ModbusOutputRegs[1] := TO_WORD(by_Status); // Battery status (0: Neutral, 1: Normal, 2: attention, 3: Warning, 4: Error)
+aw_LED_ModbusOutputRegs[2] := TO_WORD(by_mode);	// 0 = idle, 1 = charging, 2 = discharging				
+aw_LED_ModbusOutputRegs[3] := TO_WORD(SEL(machinedata.e_systemStatus = 0, LIMIT(10, brightness, 100), 0) * 2.55); 					// LED strip brightness (0-255)
+aw_LED_ModbusOutputRegs[4] := st_params.Numleds; 	
+aw_LED_ModbusOutputRegs[5] := 0; 	  
+aw_LED_ModbusOutputRegs[6] := st_params.ColorOrder;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_LedArduino">
+      <LineId Id="270" Count="21" />
+      <LineId Id="41" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LedArduino.GetDiagnostics">
+      <LineId Id="21" Count="8" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LedArduino.Reset">
+      <LineId Id="16" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_LedArduino.SetData">
+      <LineId Id="6" Count="0" />
+      <LineId Id="58" Count="0" />
+      <LineId Id="60" Count="1" />
+      <LineId Id="53" Count="1" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="135" Count="1" />
+      <LineId Id="138" Count="3" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="84" Count="2" />
+      <LineId Id="88" Count="3" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="30" Count="3" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="121" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Wago750495_Set" Id="{58df767f-719e-435f-83bb-f52abac0d20e}">
+    <Declaration><![CDATA[TYPE ST_Wago750495_Set :
+STRUCT
+	b_EnableRegisterComm		: BOOL;
+	e_statusQuery				: eWago750495_StatDataID; //0: status L1, 1: status L2, 2: Status L3, 3: Status IO Module			
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

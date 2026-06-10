@@ -1,0 +1,237 @@
+<div id="5-5_Settings_-_Config" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-creator-viewport-height="640" data-tchmi-creator-viewport-width="768" data-tchmi-right="0" data-tchmi-bottom="0">
+
+<div id="TcHmiGrid_1256" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="50" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content">
+
+<script data-tchmi-target-attribute="data-tchmi-row-options" type="application/json">
+[
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Value",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
+[
+  {
+    "width": 1.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  },
+  {
+    "width": 1.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+<div data-tchmi-grid-row-index="0" data-tchmi-grid-column-index="0" id="SwitchList_10" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/SwitchList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-data1="%s%PLC.Settings.Configuration::b_ACInputConnection%/s%" data-tchmi-data2="%s%PLC.Settings.Configuration::b_AutomaticACrotation|BindingMode=TwoWay%/s%" data-tchmi-data3="%s%PLC.Settings.Configuration::b_DCbuscoupling%/s%" data-tchmi-data4="%s%PLC.Settings.Configuration::b_NeutralTransformer%/s%" data-tchmi-title="HARDWARE" data-tchmi-label1="AC input powerlocks" data-tchmi-label2="Automatic rotation switch" data-tchmi-label3="DC-bus coupling" data-tchmi-label4="Neutral transformer" data-tchmi-creator-locked="True" data-tchmi-observeonly1="true" data-tchmi-observeonly2="false" data-tchmi-observeonly3="true" data-tchmi-oberveronly4="true" data-tchmi-enable4="true" data-tchmi-observeonly4="true">
+</div>
+<div id="ParameterList_1" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="0" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-data1="%s%PLC.Settings.Configuration::by_NoBatteryStrings%/s%" data-tchmi-label1="No of battery strings" data-tchmi-enable1="true" data-tchmi-decimals="0" data-tchmi-title=" " data-tchmi-label2="" data-tchmi-enable4="false" data-tchmi-info4=" " data-tchmi-enable3="false" data-tchmi-enable2="false" data-tchmi-is-enabled="true" data-tchmi-observeonly1="false" data-tchmi-decimals1="0">
+</div>
+<div data-tchmi-grid-row-index="1" data-tchmi-grid-column-index="0" id="SwitchList_11" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/SwitchList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-data1="%s%PLC.Settings.Configuration::b_PeakshaverBoxEnable%/s%" data-tchmi-title="" data-tchmi-label1="Peakshave box enabled" data-tchmi-enable2="true" data-tchmi-enable3="true" data-tchmi-data4="%s%PLC.Settings.Configuration::b_ClientHMI%/s%" data-tchmi-enable4="true" data-tchmi-label2="Double powermodule" data-tchmi-data2="%s%PLC.Settings.Configuration::b_DoublePowerModule%/s%" data-tchmi-label3="Third output powerlock" data-tchmi-data3="%s%PLC.Settings.Configuration::b_ThirdOutputConnection|BindingMode=TwoWay%/s%" data-tchmi-observeonly2="true" data-tchmi-observeonly3="false" data-tchmi-observeonly1="true" data-tchmi-observeonly4="false" data-tchmi-label4="Client HMI">
+</div>
+<div id="TcHmiGrid_1258" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="0" data-tchmi-height-unit="px" data-tchmi-left="10" data-tchmi-left-unit="px" data-tchmi-top="65" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-bottom="0" data-tchmi-right="10">
+<script data-tchmi-target-attribute="data-tchmi-row-options" type="application/json">
+[
+  {
+    "height": 25.0,
+    "heightUnit": "px",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 25.0,
+    "heightUnit": "px",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
+[
+  {
+    "width": 1.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  },
+  {
+    "width": 200.0,
+    "widthUnit": "px",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+<div id="TcHmiCombobox" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCombobox" data-tchmi-auto-focus-out="true" data-tchmi-combobox-text="Select" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="0" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-enum-data-symbol="%s%PLC.Settings.Configuration::e_BatteryType%/s%" data-tchmi-text-font-size="%i%DataTableFontSize%/i%" data-tchmi-height="20" data-tchmi-is-enabled="false">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiCombobox.onAttached",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiCombobox::EnumDataSymbol%/ctrl%",
+        "value": {
+          "objectType": "Symbol",
+          "valueType": "tchmi:general#/definitions/String",
+          "symbolExpression": "%s%PLC.Settings.Configuration::e_BatteryType%/s%"
+        },
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiTextblock_836" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-text="Battery type" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="%i%DataTableFontSize%/i%" data-tchmi-height="20">
+
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 5,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="TcHmiTextblock_837" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-text="PN coupler" data-tchmi-top="5" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-right="0" data-tchmi-text-horizontal-alignment="Left" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="%i%DataTableFontSize%/i%" data-tchmi-grid-row-index="1" data-tchmi-height="20">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 5,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="TcHmiCombobox_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCombobox" data-tchmi-auto-focus-out="true" data-tchmi-combobox-text="Select" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="1" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="5" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-text-font-size="%i%DataTableFontSize%/i%" data-tchmi-enum-data-symbol="%s%PLC.Settings.Configuration::e_PNcouplerType%/s%" data-tchmi-height="20" data-tchmi-is-enabled="true">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiCombobox_1.onAttached",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiCombobox_1::EnumDataSymbol%/ctrl%",
+        "value": {
+          "objectType": "Symbol",
+          "valueType": "tchmi:general#/definitions/String",
+          "symbolExpression": "%s%PLC.Settings.Configuration::e_PNcouplerType%/s%"
+        },
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+</div>
+<div id="TextInputList_SN_2" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="2" data-tchmi-height-unit="px" data-tchmi-labelfontsize="14" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/TextInputList.usercontrol" data-tchmi-titlefontsize="16" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-enablewrite2="false" data-tchmi-show="true" data-tchmi-height-mode="Content" data-tchmi-label1="Client" data-tchmi-enablewrite4="false" data-tchmi-enablewrite3="false" data-tchmi-enable3="true" data-tchmi-enable4="true" data-tchmi-enablewrite1="false" data-tchmi-enable2="true" data-tchmi-label2="Rated capacity [kWh]" data-tchmi-text2="%s%PLC.Settings.Properties::r_RatedEnergyCapacity%/s%" data-tchmi-label3="Rated power [kVA]" data-tchmi-text3="%s%PLC.Settings.Properties::r_RatedApparentPower%/s%" data-tchmi-label4="Rated current [A]" data-tchmi-text4="%s%PLC.Settings.Properties::r_RatedCurrent%/s%" data-tchmi-enable1="true" data-tchmi-title=" " data-tchmi-text1="%s%PLC.Settings.Properties::s_Client%/s%">
+</div>
+<div id="TextInputList_SN" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="2" data-tchmi-height-unit="px" data-tchmi-labelfontsize="14" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/TextInputList.usercontrol" data-tchmi-titlefontsize="16" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-enablewrite2="false" data-tchmi-show="true" data-tchmi-height-mode="Content" data-tchmi-label1="Serial number" data-tchmi-text1="%s%PLC.Settings.Properties::s_SerialNumber%/s%" data-tchmi-label2="Production date [dd/mm/yyyy]" data-tchmi-label4="Configuration code" data-tchmi-text4="%s%PLC.Settings.Properties::s_ConfigurationCode%/s%" data-tchmi-enablewrite4="false" data-tchmi-label3="SW version" data-tchmi-enablewrite3="false" data-tchmi-text3="%s%PLC.Settings.Properties::s_SWversionNumber%/s%" data-tchmi-title="SOFTWARE" data-tchmi-text2="%s%PLC.Settings.Properties::s_ProductionDate%/s%" data-tchmi-enable2="true" data-tchmi-enablewrite1="false">
+</div>
+<div id="TextInputList_SN_3" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="3" data-tchmi-height-unit="px" data-tchmi-labelfontsize="14" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/TextInputList.usercontrol" data-tchmi-titlefontsize="16" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-enablewrite2="false" data-tchmi-show="true" data-tchmi-height-mode="Content" data-tchmi-label4="HMI version" data-tchmi-text4="%s%TcHmiSrv.Config::PROJECTVERSION%/s%" data-tchmi-enablewrite4="false" data-tchmi-enablewrite3="false" data-tchmi-enable2="false" data-tchmi-enablewrite1="false" data-tchmi-enable1="false" data-tchmi-enable3="false" data-tchmi-is-enabled="true" data-tchmi-visibility="Visible" data-tchmi-enable4="true" data-tchmi-width-mode="Content" data-tchmi-creator-visibility="Visible">
+
+
+
+
+</div>
+<div data-tchmi-grid-row-index="1" data-tchmi-grid-column-index="1" id="SwitchList_34" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/SwitchList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-enable2="false" data-tchmi-enable3="false" data-tchmi-enable4="false" data-tchmi-observeonly2="true" data-tchmi-observeonly3="false" data-tchmi-observeonly1="true" data-tchmi-observeonly4="false" data-tchmi-label1="%l%DCcharger%/l%" data-tchmi-data1="%s%PLC.Settings.Configuration::b_DcCharger%/s%">
+</div>
+</div>
+<div id="TcHmiTextblock_834" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="1" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-text="CONFIGURATION" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-right="0" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="20" data-tchmi-height="50">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(207, 207, 207, 0.5019607)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 10.0,
+  "topRight": 10.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+</div>
+</div>

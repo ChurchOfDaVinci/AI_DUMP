@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="MAIN_Slow" Id="{13247e55-1e48-4bbb-86e5-7523dd639cd6}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN_Slow
+VAR
+	{ attribute 'TcHmiSymbol.Hide' }
+	monitor								: REFERENCE TO ST_System_Monitor;
+	control								: ST_system_Control;
+	
+	{ attribute 'TcHmiSymbol.Hide' }				
+	b_validref							: BOOL;
+	//InterMachineCom							: FB_InterMachineCommunication;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Errorhandling(b_ClearEvents := control.control.b_ClearHistory);
+//Eventlog(stparams:=Settings.MachineParams.Eventlogger);
+//InterMachineCom(monitor:=monitor);
+//Get refs of monitoring from fast cycle
+monitor REF= MAIN_fast.monitor;
+monitor.controlfb REF= control;
+
+
+b_validref := __ISVALIDREF(monitor.powerstack) AND 
+		__ISVALIDREF(monitor.battery) AND 
+		__ISVALIDREF(monitor.neutraltransformer) AND
+		__ISVALIDREF(monitor.powermonitor) AND
+		__ISVALIDREF(monitor.protections) AND
+		__ISVALIDREF(monitor.ACswitchgear) AND
+		__ISVALIDREF(monitor.AcDcCharger) AND
+		__ISVALIDREF(monitor.internalpsu) AND
+		__ISVALIDREF(monitor.peakshavebox); // AND __ISVALIDREF(monitor)
+
+IF b_validref THEN
+	ControlManager(
+		Monitor:=monitor,
+		operation := control.Operation,
+		control := control.control);
+		control.HardSettings := ControlManager.PLCpersistvars.Hardsettings;
+		control.SoftSettings := ControlManager.PLCpersistvars.Softsettings;
+
+//VERY IMPORTANT. This closes the initialization after the slow cycle is executed the first time.
+GVL.b_initCycle := FALSE;
+END_IF
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="MAIN_Slow">
+      <LineId Id="454" Count="13" />
+      <LineId Id="492" Count="0" />
+      <LineId Id="504" Count="0" />
+      <LineId Id="468" Count="13" />
+      <LineId Id="149" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

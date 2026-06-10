@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="ValueOutOfRange" Id="{688bf985-97e7-4389-8950-0fa55a80e377}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION ValueOutOfRange : BOOL
+VAR_INPUT
+	r_var				:REAL;
+	r_Min				:REAL;
+	r_Max				:REAL;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF r_var >= r_Min AND r_var <= r_Max THEN
+	ValueOutOfRange := FALSE;
+ELSE
+	ValueOutOfRange := TRUE;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="ValueOutOfRange">
+      <LineId Id="8" Count="3" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

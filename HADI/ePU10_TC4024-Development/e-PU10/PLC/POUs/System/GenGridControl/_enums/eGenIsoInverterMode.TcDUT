@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eGenIsoInverterMode" Id="{08f0b64a-abd3-46cf-bfe6-b026ff3002e8}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+
+TYPE eGenIsoInverterMode:
+(
+	AFE := 0,
+	ISO_CUSTOMDROOP := 1,
+	ISO_SLOWDROOP:= 2
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

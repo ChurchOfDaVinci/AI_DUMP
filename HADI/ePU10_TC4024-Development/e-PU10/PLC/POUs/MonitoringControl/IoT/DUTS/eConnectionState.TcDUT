@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eConnectionState" Id="{7f010d7f-b3e5-4466-9dc1-448e0a404b52}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+ 
+TYPE eConnectionState :
+(
+	disconnected := 0,			// no mqtt connection established
+	connected	:= 1,			 // connected but not authorized yet
+	authorization_declined := 2, // connected but authorization failed
+	authorized	:= 3			// connected and authorized
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

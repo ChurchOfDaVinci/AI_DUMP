@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Surgeprotection_get" Id="{29f060f0-183d-43bd-8388-a7713e3ffd19}">
+    <Declaration><![CDATA[TYPE ST_Surgeprotection_get :
+STRUCT
+	b_Type12_OK				: BOOL;
+	b_Type3_OK				: BOOL;			
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

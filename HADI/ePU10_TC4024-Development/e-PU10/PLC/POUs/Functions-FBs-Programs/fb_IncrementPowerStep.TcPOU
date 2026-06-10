@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="fb_IncrementPowerStep" Id="{9c7a4baf-b3a2-4bbe-9793-360fce1d08a5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fb_IncrementPowerStep
+VAR_INPUT
+	b_Up			: BOOL;
+	b_Down			: BOOL;
+	b_Reset			: BOOL;
+	r_incrementStep	: REAL:= 5;
+END_VAR
+
+VAR_IN_OUT
+	r_Power			: REAL;
+END_VAR
+
+VAR
+	ton_IncrementPulse				: TON := (PT := T#1S);
+	tof_MaxContinuesIncrementTime 	: TOF := (PT := T#10S);
+	r_TrigUpDown					: r_Trig;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[tof_MaxContinuesIncrementTime(IN:= b_Up OR b_Down);
+ton_incrementPulse(IN := NOT(ton_incrementpulse.Q) AND (b_Up OR b_Down));
+r_trigUpDown(CLK:= b_Up OR b_Down);
+
+IF (r_trigUpDown.Q OR ton_incrementPulse.Q) AND tof_MaxContinuesIncrementTime.Q THEN
+	IF (b_UP AND NOT b_Down) THEN
+		r_Power := r_Power + r_IncrementStep;
+	ELSIF (NOT b_UP AND b_Down) THEN
+		r_Power := r_Power - r_IncrementStep;
+	END_IF
+END_IF
+
+IF b_reset THEN
+	r_Power := 0;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="fb_IncrementPowerStep">
+      <LineId Id="10" Count="13" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

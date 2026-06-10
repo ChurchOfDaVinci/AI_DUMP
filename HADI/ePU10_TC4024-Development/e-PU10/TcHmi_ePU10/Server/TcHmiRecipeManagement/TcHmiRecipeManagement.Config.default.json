@@ -1,0 +1,1026 @@
+{
+    "recipeList": {
+        "System settings": {
+            "Default": {
+                "recipeTypeName": "System settings",
+                "values": {
+                    "Grid settings": {
+                        "r_CurrentUnbalanceLimit": 50.0,
+                        "r_GridFrequencyMax": 51.5,
+                        "r_GridFrequencyMin": 48.5,
+                        "r_GridNominalFrequency": 50.0,
+                        "r_GridNominalVoltage": 400.0,
+                        "r_GridVoltageMin": 360.0,
+                        "r_GridvoltageMax": 440.0,
+                        "ui_GCTripMaxTripTime": 40,
+                        "ui_GCokReleaseTime": 10
+                    },
+                    "Machine settings": {
+                        "ACDCCharger": {
+                            "BMSChargeLimitRampRate": 0.5,
+                            "GridVoltageHysteresis": 2.0,
+                            "SocHysteresis": 2.0,
+                            "r_VoltageWindow": 2.0,
+                            "ui_ModuleDesignPower": 30,
+                            "ui_NrOfInstalledModules": 2
+                        },
+                        "ACswitchgear": {
+                            "EnableInputContactor": true,
+                            "ForceCloseInput": false,
+                            "ForceOpenInput": false
+                        },
+                        "BMS": {
+                            "IP_BMS": "192.168.1.60",
+                            "T_AutoCalibrationInterval": "P14D",
+                            "b_DisableSOCAlarm": false,
+                            "b_EnableAutoCalibration": true,
+                            "b_ResetPersistentVars": false,
+                            "b_forcePrecharging": false,
+                            "r_AhperString": 306.0,
+                            "r_CrateBattery": 0.5,
+                            "r_InternalConditioningSoCMin": 10.0,
+                            "r_KwhperString": 208.0,
+                            "r_SoCAbsoluteMax": 100.0,
+                            "r_SoCAbsoluteMin": 6.0,
+                            "r_SocHysteresis": 1.0
+                        },
+                        "Coolingsystem": {
+                            "AllowedCoolantPressureDrop": 0.30000001192092896,
+                            "HeatpumpType": 0,
+                            "LGCoilSettings": 1,
+                            "PrimaryHeatpumpAddr": 1,
+                            "SecondaryHeatpumpAddr": 2,
+                            "b_ActivateCooling": false,
+                            "b_ActivateHeating": false,
+                            "b_DoubleHeatpump": false,
+                            "b_MainPumpFbInstalled": false,
+                            "dw_HeatpumpOperationDelay": 30,
+                            "i_MaximumValveOperatingTime": 10,
+                            "i_SkipHPPreheatingTime": 60,
+                            "i_modbusRetries": 30,
+                            "r_BatteryTempHysteresis": 5.0,
+                            "r_BatteryTempMax": 40.0,
+                            "r_BatteryTempMin": 15.0,
+                            "r_CoolantTempCoolingStart": 35.0,
+                            "r_CoolantTempHeatingStart": 0.0,
+                            "r_EnclosureIdleTempMax": 40.0,
+                            "r_EnclosureIdleTempMin": 10.0,
+                            "r_MainPumpMinimumPressure": 0.20000000298023224,
+                            "r_MaxCoolantTemperature": 40.0,
+                            "r_MaxInverterTemperature": 50.0,
+                            "r_MinCoolantTemperature": -20.0,
+                            "r_MinimumCoolantTemperatureForHPHeatingMode": 15.0,
+                            "r_MinimumSystemBasePressureErrorLevel": 0.4000000059604645,
+                            "r_MinimumSystemBasePressureWarningLevel": 0.699999988079071,
+                            "r_PressureHysteresis": 0.20000000298023224,
+                            "r_StartupPumpMinimumPressure": 0.10000000149011612,
+                            "t_ModbusTimeout": "PT2S"
+                        },
+                        "Enclosure": {
+                            "climate": {
+                                "r_HumidityHigh": 80.0,
+                                "r_HumidityHysteris": 2.0,
+                                "r_HumidityTooHigh": 90.0,
+                                "r_TemperatureHigh": 40.0,
+                                "r_TemperatureHysteris": 2.0,
+                                "r_TemperatureLow": -10.0,
+                                "r_TemperatureTooHigh": 50.0,
+                                "r_TemperatureTooLow": -20.0
+                            },
+                            "ledstrip": {
+                                "ColorOrder": 1,
+                                "IP": "192.168.1.43",
+                                "Numleds": 116
+                            }
+                        },
+                        "Eventlogger": {
+                            "EMstopWriteDelay": "PT1S",
+                            "LogFileName": "C:\\Users\\Administrator\\Documents\\ePU10Log.txt",
+                            "LogWriteInterval": "PT1M",
+                            "MaxFileCount": 5,
+                            "MaxFileSize": 5000000,
+                            "MaxFillGrade": 0.8999999761581421
+                        },
+                        "GenComm": {
+                            "GenControlProtocol": 0,
+                            "IP": "192.168.2.21"
+                        },
+                        "HartingIO": {
+                            "AO1Target": 1,
+                            "AO2Target": 2,
+                            "PrimaryInputContactSignal": 0,
+                            "PrimaryOutputContactSignal": 2,
+                            "SecondaryInputContactSignal": 0,
+                            "SecondaryOutputContactSignal": 2
+                        },
+                        "IOT": {
+                            "DefaultLoggingBudget": 100,
+                            "IotCommVersion": 0,
+                            "b_controlEnable": false,
+                            "r_UpdateTimeFast": 15.0,
+                            "r_UpdateTimeSlow": 60.0
+                        },
+                        "Interpowersupply": {
+                            "LowBatteryShutdownTimer": "PT10M",
+                            "b_InternalACfromBusbar": false,
+                            "i_ACPSU_StartupDelay": 5000,
+                            "i_ACStartupDelay": 100,
+                            "i_DCPSU_StartupDelay": 5000,
+                            "i_IntZPTStartupDelay": 100,
+                            "usi_UPSBattLowErrorSOC": 30,
+                            "usi_UPSBattLowinfoSOC": 60,
+                            "usi_UPSBattLowwarningSOC": 40,
+                            "usi_UPSBattOKSOC": 90
+                        },
+                        "NeutralTransformer": {
+                            "by_TemperatureHighAlarm": 90,
+                            "by_TemperatureHighWarning": 80,
+                            "by_VoltageUnbalanceAlarm": 20,
+                            "by_VoltageUnbalanceWarning": 10,
+                            "r_OCTripFactor": 1.399999976158142,
+                            "ui_TemperatureHighTripDelay": 10,
+                            "ui_VoltageUnbalanceTripDelay": 10,
+                            "ui_ratedpower": 60
+                        },
+                        "PNController": {
+                            "Limits": {
+                                "r_DroopMax": 10.0,
+                                "r_InputCtLimit": 800.0,
+                                "r_InverterCurrentLimit": 520.0,
+                                "r_InverterPowerLimit": 360.0,
+                                "r_NominalFreqMax": 52.5,
+                                "r_NominalFreqMin": 47.5,
+                                "r_NominalVoltageMax": 440.0,
+                                "r_NominalVoltageMin": 360.0,
+                                "r_PSBCtLimit": 4000.0,
+                                "r_PowerRampLimit": 300.0
+                            },
+                            "TestVars": {
+                                "b_CheckMonitoring": false,
+                                "b_MonitoringOK": false,
+                                "bit_AdvancedControl": false,
+                                "bit_AutoSwitching": false,
+                                "bit_EMStop": false,
+                                "bit_Reset": false,
+                                "bit_Shutdown": false,
+                                "bit_SystemShutdown": false,
+                                "bit_Transportmode": false,
+                                "bit_start": false,
+                                "bit_stop": false,
+                                "i_Pset": 0,
+                                "i_Qset": 0,
+                                "s_MonitoringErr": "",
+                                "w_SetAddress": 0,
+                                "w_SetValue": 0
+                            },
+                            "b_BigEndian": false,
+                            "b_ControlEnable": true,
+                            "b_MonitoringEnable": true,
+                            "b_testComm": false,
+                            "w_CommTimeOut": 10000
+                        },
+                        "PSB": {
+                            "PSBhardware": 1,
+                            "fastmode": true
+                        },
+                        "Powerstack": {
+                            "FreqVoltageShift": {
+                                "FreqMaxPu": 1.0299999713897705,
+                                "FreqMinPu": 0.9700000286102296,
+                                "InitialOverloadDelay": "PT1S",
+                                "ShiftingHoldTime": "PT20M",
+                                "ShiftingRate": "PT0.1S",
+                                "ShutdownDelay": "PT1M",
+                                "VoltMaxPu": 1.100000023841858,
+                                "VoltMinPu": 0.8999999761581421
+                            },
+                            "LOM": {
+                                "DetectionTimeFast_ms": 50,
+                                "DetectionTimeSlow_ms": 1000,
+                                "EnablePowerPulse": true,
+                                "ForceSlowDetection": false,
+                                "FreqFilterLength": 5,
+                                "PowerPulseSize": 0.5,
+                                "RoCofLimit": 0.5,
+                                "b_EnableAntiIslandingRelay": false
+                            },
+                            "PowermoduleMaster": {
+                                "b_FieldBusControlEnable": true,
+                                "i_DCVramprate": 200,
+                                "i_VoltageOffset": 4,
+                                "r_ACCurrentLimitMax": 650.0,
+                                "r_ACcurrentLimitMin": 100.0,
+                                "r_FilterTempAlarm": 90.0,
+                                "r_FilterTempWarning": 80.0,
+                                "r_InverterRatedCurrent": 460.0,
+                                "r_InverterRatedPower": 360.0,
+                                "r_InverterTempAlarm": 60.0,
+                                "r_InverterTempWarning": 55.0,
+                                "r_ModulationIndexLimit": 98.0,
+                                "r_ModulationIndexLimitHyst": 0.5,
+                                "r_ThrottlingMinimum": 0.30000001192092896,
+                                "r_powerLoadFanOn": 30.0,
+                                "r_tempfanOn": 50.0,
+                                "ui_DCVoltageDeltaPrechargeOK": 20,
+                                "ui_DCvoltageMinPrechargeOK": 590
+                            },
+                            "PowermoduleSlave": {
+                                "b_FieldBusControlEnable": true,
+                                "i_DCVramprate": 200,
+                                "i_VoltageOffset": 4,
+                                "r_ACCurrentLimitMax": 650.0,
+                                "r_ACcurrentLimitMin": 100.0,
+                                "r_FilterTempAlarm": 90.0,
+                                "r_FilterTempWarning": 80.0,
+                                "r_InverterRatedCurrent": 460.0,
+                                "r_InverterRatedPower": 360.0,
+                                "r_InverterTempAlarm": 60.0,
+                                "r_InverterTempWarning": 55.0,
+                                "r_ModulationIndexLimit": 98.0,
+                                "r_ModulationIndexLimitHyst": 0.5,
+                                "r_ThrottlingMinimum": 0.30000001192092896,
+                                "r_powerLoadFanOn": 30.0,
+                                "r_tempfanOn": 50.0,
+                                "ui_DCVoltageDeltaPrechargeOK": 20,
+                                "ui_DCvoltageMinPrechargeOK": 590
+                            },
+                            "b_GridcodesEnabled": true,
+                            "b_SoftStartEnable": true,
+                            "b_StandbyEnable": true,
+                            "i_ChargeOnlyIdlePower": -3,
+                            "i_MaxPowerChangeRate": 500,
+                            "r_ActiveSetpointGain": 1.0,
+                            "r_DroopIslandMode": 0.10000000149011612,
+                            "r_DroopMaximum": 10.0,
+                            "r_DroopMinimum": 0.0,
+                            "r_FreqHighLimit": 52.0,
+                            "r_FreqLowLimit": 48.0,
+                            "r_ReactiveOffset": 0.0,
+                            "r_ReactiveSetpointGain": 1.0,
+                            "ui_DeratingLimCooling": 80,
+                            "ui_DeratingStack": 5,
+                            "ui_FreqLimitTripDelay": 2000,
+                            "ui_OvercurrentRating": 150
+                        },
+                        "Protections": {
+                            "InsulationMonitor": {
+                                "i_EarthSystemDetectionDelay": 60
+                            },
+                            "OCP": {
+                                "OutputNormalShutdownDelay": "PT5S",
+                                "ui_Ik": 16,
+                                "ui_Irated": 400,
+                                "ui_OCPtripTime": 900,
+                                "ui_gain": 10
+                            },
+                            "firedetection": {
+                                "r_COalarmLevel": 120.0,
+                                "r_COrange": 500.0,
+                                "r_COwarningLevel_1": 10.0,
+                                "r_COwarningLevel_2": 20.0
+                            }
+                        },
+                        "Router": {
+                            "IP_TELTONIKA": "192.168.1.1",
+                            "MBPort_TELTONIKA": 502,
+                            "ManualSettings": {
+                                "AutoRebootEnable": false,
+                                "EnableWifiAP": false,
+                                "EnableWifiClient": false,
+                                "ManualReboot": false,
+                                "Sim1Pin": "0000",
+                                "Sim2Pin": "0000",
+                                "SimSelectionMode": 0,
+                                "UpdateSystemTime": false,
+                                "WifiAPPass": "Welkom!VDL",
+                                "WifiAPSSID": "ePU10_AP",
+                                "WifiAPSecType": 1,
+                                "WifiClientPass": "e4ff1c12kLL",
+                                "WifiClientSSID": "MachineAccessPoint@VDL",
+                                "WifiClientSecType": 1
+                            },
+                            "MinimumPhoneNumberLength": 10,
+                            "T_MBTimeout": "PT2S"
+                        },
+                        "system": {
+                            "GenGridController": {
+                                "Contactor": {
+                                    "VoltagePID": {
+                                        "InnerWindow": 0.0,
+                                        "InputDeadband": 0.5,
+                                        "Kp": 0.5,
+                                        "Outerwindow": 0.0,
+                                        "OutputDeadband": 0.0,
+                                        "Td": 0,
+                                        "Tn": 1000,
+                                        "Tv": 0,
+                                        "enable": true
+                                    },
+                                    "ui_DeloadCurrentRelease": 20,
+                                    "ui_DeloadTimeOut": 60,
+                                    "ui_VoltageDevSyncOK": 4
+                                },
+                                "CurrentLimitTripDelay": "PT5S",
+                                "GenIso_InverterMode": 2,
+                                "Genset": {
+                                    "GenDownRetries": 3,
+                                    "OverFrequencyLimit": 51.0,
+                                    "OverVoltageLimit": 435.0,
+                                    "OverVoltageTripDelay": 2000,
+                                    "OverfrequencyTripDelay": 2000,
+                                    "OverloadOffDelay": "PT10M",
+                                    "OverloadOnDelay": "PT10S",
+                                    "OverloadTripDelay": 3000,
+                                    "ShutdownTimeout": 180,
+                                    "UnderFrequencyLimit": 49.0,
+                                    "UnderVoltageLimit": 360.0,
+                                    "UnderVoltageTripDelay": 2000,
+                                    "UnderfrequencyTripDelay": 2000
+                                },
+                                "by_CurrentLimitMargin": 20.0,
+                                "by_SyncRetries": 5,
+                                "r_PIDLimitRampDefault": 10.0,
+                                "r_PIDLimitRampWeakgrid": 1.0,
+                                "r_SocHysteresis": 2.0
+                            },
+                            "OutputContactSignal": 2,
+                            "Powercontroller": {
+                                "ActivePID": {
+                                    "InnerWindow": 0.0,
+                                    "InputDeadband": 1.0,
+                                    "Kp": 5.0,
+                                    "Outerwindow": 0.0,
+                                    "OutputDeadband": 0.5,
+                                    "Td": 0,
+                                    "Tn": 15,
+                                    "Tv": 0,
+                                    "enable": true
+                                },
+                                "FreqShiftPID": {
+                                    "InnerWindow": 0.0,
+                                    "InputDeadband": 0.05000000074505806,
+                                    "Kp": 0.10000000149011612,
+                                    "Outerwindow": 0.0,
+                                    "OutputDeadband": 0.0,
+                                    "Td": 0,
+                                    "Tn": 1000,
+                                    "Tv": 0,
+                                    "enable": false
+                                },
+                                "ReactivePID": {
+                                    "InnerWindow": 0.0,
+                                    "InputDeadband": 1.0,
+                                    "Kp": 5.0,
+                                    "Outerwindow": 0.0,
+                                    "OutputDeadband": 0.5,
+                                    "Td": 0,
+                                    "Tn": 20,
+                                    "Tv": 0,
+                                    "enable": true
+                                },
+                                "SocDroop": {
+                                    "SocMaxDroopStart": 80.0,
+                                    "SocMinDroopStart": 20.0,
+                                    "enable": false
+                                },
+                                "TransitionRamp": 5,
+                                "TransitionTime": 500,
+                                "VoltagePeakshavePID": {
+                                    "InnerWindow": 0.0,
+                                    "InputDeadband": 20.0,
+                                    "Kp": 1.0,
+                                    "Outerwindow": 0.0,
+                                    "OutputDeadband": 0.0,
+                                    "Td": 0,
+                                    "Tn": 200,
+                                    "Tv": 0,
+                                    "enable": false
+                                }
+                            },
+                            "SystemTime": {
+                                "AutoSyncToGPS": false,
+                                "ManSyncValue": "1970-01-01T00:00:00Z",
+                                "ManualSync": false
+                            },
+                            "b_VDLReset": false
+                        }
+                    }
+                }
+            }
+        },
+        "User settings": {
+            "Default": {
+                "recipeTypeName": "User settings",
+                "values": {
+                    "PLC.HMI.Controlvars.HardSettings": {
+                        "PSB": {
+                            "b_BreakerControl": false,
+                            "b_ReverseCTDirection": false,
+                            "r_FeedInCurrentLimitHard": 800.0,
+                            "r_SupplyCurrentLimitHard": 800.0
+                        },
+                        "charger": {
+                            "r_PowerMax": 0.0
+                        },
+                        "inputgrid": {
+                            "r_FeedInCurrentLimitHard": 800.0,
+                            "r_SupplyCurrentLimitHard": 800.0
+                        },
+                        "parallel": {
+                            "b_EffiencyMode": false,
+                            "b_MasterSlaveEnabled": false,
+                            "b_ShutdownOnCommError": false,
+                            "b_UnitIsMaster": false,
+                            "r_FrequencyDroop": 0.0,
+                            "r_VoltageDroop": 0.0
+                        },
+                        "setup": {
+                            "e_ControlSource": 0
+                        },
+                        "system": {
+                            "a_ui_InputCurrentLimit": [
+                                400,
+                                400
+                            ],
+                            "a_ui_OutputCurrentLimit": [
+                                400,
+                                400,
+                                400
+                            ],
+                            "e_EarthingSystem": 1,
+                            "r_Amax": 650.0,
+                            "r_PChargeLimit": 360.0,
+                            "r_PDischargeLimit": 360.0,
+                            "r_SMax": 480.0
+                        }
+                    },
+                    "PLC.HMI.Controlvars.SoftSettings": {
+                        "PSB": {
+                            "b_EnableSchedule": false,
+                            "setpointTimeslot1": {
+                                "r_FeedInCurrentLimitSoft": 0.0,
+                                "r_IdleChargePower": 0.0,
+                                "r_SocTarget": 0.0,
+                                "r_SupplyCurrentLimitSoft": 0.0
+                            },
+                            "setpointTimeslot2": {
+                                "r_FeedInCurrentLimitSoft": 0.0,
+                                "r_IdleChargePower": 0.0,
+                                "r_SocTarget": 0.0,
+                                "r_SupplyCurrentLimitSoft": 0.0
+                            }
+                        },
+                        "inputgenset": {
+                            "Generator": {
+                                "b_GensetLoadshareLine": false,
+                                "e_GensetMode": 0,
+                                "r_PowerloadEff": 60.0,
+                                "r_PowerloadMin": 10.0,
+                                "r_RatedPower": 100.0,
+                                "r_powerloadMax": 80.0,
+                                "r_ramprate": 1.0,
+                                "ui_CooldownTime": 5,
+                                "ui_WarmupTime": 1
+                            },
+                            "Loadbank": {
+                                "b_Enable": false,
+                                "r_PowerRating": 0.0,
+                                "r_PowerStepSize": 0.0
+                            },
+                            "b_AutoStartStop": false,
+                            "b_EnableSchedule": false,
+                            "b_HydridMode": false,
+                            "b_PSBExtGensetMonitoring": false,
+                            "setpointTimeslot1": {
+                                "r_BatteryloadStart": 90.0,
+                                "r_BatteryloadStop": 50.0,
+                                "r_SoCStart": 10.0,
+                                "r_SoCStop": 90.0
+                            },
+                            "setpointTimeslot2": {
+                                "r_BatteryloadStart": 90.0,
+                                "r_BatteryloadStop": 50.0,
+                                "r_SoCStart": 10.0,
+                                "r_SoCStop": 90.0
+                            }
+                        },
+                        "inputgrid": {
+                            "b_EnableSchedule": false,
+                            "setpointTimeslot1": {
+                                "r_FeedInCurrentLimitSoft": 0.0,
+                                "r_IdleChargePower": 0.0,
+                                "r_SocTarget": 0.0,
+                                "r_SupplyCurrentLimitSoft": 0.0
+                            },
+                            "setpointTimeslot2": {
+                                "r_FeedInCurrentLimitSoft": 0.0,
+                                "r_IdleChargePower": 0.0,
+                                "r_SocTarget": 0.0,
+                                "r_SupplyCurrentLimitSoft": 0.0
+                            }
+                        },
+                        "setup": {
+                            "b_ExtGenset": false,
+                            "b_MasterSlaveMode": false,
+                            "b_PeakshaveBoxEnable": false,
+                            "e_AcInputType": 2,
+                            "e_DcCouplingType": 0,
+                            "e_GridFormingMode": 0,
+                            "e_Gridmode": 0
+                        },
+                        "system": {
+                            "ScheduleTimeSlot1": {
+                                "b_active": true,
+                                "usi_DayOfWeek": 0,
+                                "usi_HourOfDay": 0,
+                                "usi_MinuteOfHour": 0
+                            },
+                            "ScheduleTimeSlot2": {
+                                "b_active": false,
+                                "usi_DayOfWeek": 0,
+                                "usi_HourOfDay": 0,
+                                "usi_MinuteOfHour": 0
+                            },
+                            "b_AMF": true,
+                            "b_AutomaticSwitching": true,
+                            "b_EcoModeEnable": false,
+                            "b_EnableTransportMode": false,
+                            "by_LEDbrightness": 100,
+                            "e_NetcontactorMode": 0,
+                            "e_UgridPowerMode": 0,
+                            "r_AMax": 520.0,
+                            "r_FrequencyDroop": 1.0,
+                            "r_PChargeLimit": 320.0,
+                            "r_PDischargeLimit": 320.0,
+                            "r_SocMax": 100.0,
+                            "r_SocMin": 0.0,
+                            "r_VoltageDroop": 1.0,
+                            "s_SMSnumber": "",
+                            "s_SystemName": ""
+                        }
+                    }
+                }
+            },
+            "TemporaryBackup": {
+                "recipeTypeName": "User settings",
+                "values": {
+                    "PLC.HMI.Controlvars.HardSettings": {},
+                    "PLC.HMI.Controlvars.SoftSettings": {}
+                }
+            }
+        }
+    },
+    "recipeTypeList": {
+        "System settings": {
+            "members": {
+                "Grid settings": {
+                    "defaultValue": {
+                        "r_CurrentUnbalanceLimit": 50.0,
+                        "r_GridFrequencyMax": 51.5,
+                        "r_GridFrequencyMin": 48.5,
+                        "r_GridNominalFrequency": 50.0,
+                        "r_GridNominalVoltage": 400.0,
+                        "r_GridVoltageMin": 360.0,
+                        "r_GridvoltageMax": 440.0,
+                        "ui_GCTripMaxTripTime": 40,
+                        "ui_GCokReleaseTime": 10
+                    },
+                    "enabled": true,
+                    "group": "",
+                    "order": 0,
+                    "schema": {},
+                    "symbol": "PLC.Settings.GridParams",
+                    "unit": ""
+                },
+                "Machine settings": {
+                    "defaultValue": {
+                        "ACDCCharger": {
+                            "BMSChargeLimitRampRate": 0.5,
+                            "GridVoltageHysteresis": 2.0,
+                            "SocHysteresis": 2.0,
+                            "r_VoltageWindow": 2.0,
+                            "ui_ModuleDesignPower": 30,
+                            "ui_NrOfInstalledModules": 2
+                        },
+                        "ACswitchgear": {
+                            "EnableInputContactor": true,
+                            "ForceCloseInput": false,
+                            "ForceOpenInput": false
+                        },
+                        "BMS": {
+                            "IP_BMS": "192.168.1.60",
+                            "T_AutoCalibrationInterval": "P14D",
+                            "b_DisableSOCAlarm": false,
+                            "b_EnableAutoCalibration": true,
+                            "b_ResetPersistentVars": false,
+                            "b_forcePrecharging": false,
+                            "r_AhperString": 306.0,
+                            "r_CrateBattery": 0.5,
+                            "r_InternalConditioningSoCMin": 10.0,
+                            "r_KwhperString": 208.0,
+                            "r_SoCAbsoluteMax": 100.0,
+                            "r_SoCAbsoluteMin": 6.0,
+                            "r_SocHysteresis": 1.0
+                        },
+                        "Coolingsystem": {
+                            "AllowedCoolantPressureDrop": 0.30000001192092896,
+                            "HeatpumpType": 0,
+                            "LGCoilSettings": 1,
+                            "PrimaryHeatpumpAddr": 1,
+                            "SecondaryHeatpumpAddr": 2,
+                            "b_ActivateCooling": false,
+                            "b_ActivateHeating": false,
+                            "b_DoubleHeatpump": false,
+                            "b_MainPumpFbInstalled": false,
+                            "dw_HeatpumpOperationDelay": 30.0,
+                            "i_MaximumValveOperatingTime": 10,
+                            "i_SkipHPPreheatingTime": 60,
+                            "i_modbusRetries": 30,
+                            "r_BatteryTempHysteresis": 5.0,
+                            "r_BatteryTempMax": 40.0,
+                            "r_BatteryTempMin": 15.0,
+                            "r_CoolantTempCoolingStart": 35.0,
+                            "r_CoolantTempHeatingStart": 0.0,
+                            "r_EnclosureIdleTempMax": 40.0,
+                            "r_EnclosureIdleTempMin": 10.0,
+                            "r_MainPumpMinimumPressure": 0.20000000298023224,
+                            "r_MaxCoolantTemperature": 40.0,
+                            "r_MaxInverterTemperature": 50.0,
+                            "r_MinCoolantTemperature": -20.0,
+                            "r_MinimumCoolantTemperatureForHPHeatingMode": 15.0,
+                            "r_MinimumSystemBasePressureErrorLevel": 0.4000000059604645,
+                            "r_MinimumSystemBasePressureWarningLevel": 0.699999988079071,
+                            "r_PressureHysteresis": 0.20000000298023224,
+                            "r_StartupPumpMinimumPressure": 0.10000000149011612,
+                            "t_ModbusTimeout": "PT2S"
+                        },
+                        "Enclosure": {
+                            "climate": {
+                                "r_HumidityHigh": 80.0,
+                                "r_HumidityHysteris": 2.0,
+                                "r_HumidityTooHigh": 90.0,
+                                "r_TemperatureHigh": 40.0,
+                                "r_TemperatureHysteris": 2.0,
+                                "r_TemperatureLow": -10.0,
+                                "r_TemperatureTooHigh": 50.0,
+                                "r_TemperatureTooLow": -20.0
+                            },
+                            "ledstrip": {
+                                "ColorOrder": 1,
+                                "IP": "192.168.1.43",
+                                "Numleds": 116
+                            }
+                        },
+                        "Eventlogger": {
+                            "EMstopWriteDelay": "PT1S",
+                            "LogFileName": "C:\\Users\\Administrator\\Documents\\ePU10Log.txt",
+                            "LogWriteInterval": "PT1M",
+                            "MaxFileCount": 5,
+                            "MaxFileSize": 5000000.0,
+                            "MaxFillGrade": 0.8999999761581421
+                        },
+                        "GenComm": {
+                            "GenControlProtocol": 0,
+                            "IP": "192.168.2.21"
+                        },
+                        "HartingIO": {
+                            "AO1Target": 1,
+                            "AO2Target": 2,
+                            "PrimaryInputContactSignal": 0,
+                            "PrimaryOutputContactSignal": 2,
+                            "SecondaryInputContactSignal": 0,
+                            "SecondaryOutputContactSignal": 2
+                        },
+                        "IOT": {
+                            "DefaultLoggingBudget": 100,
+                            "IotCommVersion": 0,
+                            "b_controlEnable": false,
+                            "r_UpdateTimeFast": 15.0,
+                            "r_UpdateTimeSlow": 60.0
+                        },
+                        "Interpowersupply": {
+                            "LowBatteryShutdownTimer": "PT10M",
+                            "b_InternalACfromBusbar": false,
+                            "i_ACPSU_StartupDelay": 5000,
+                            "i_ACStartupDelay": 100,
+                            "i_DCPSU_StartupDelay": 5000,
+                            "i_IntZPTStartupDelay": 100,
+                            "usi_UPSBattLowErrorSOC": 30,
+                            "usi_UPSBattLowinfoSOC": 60,
+                            "usi_UPSBattLowwarningSOC": 40,
+                            "usi_UPSBattOKSOC": 90
+                        },
+                        "NeutralTransformer": {
+                            "by_TemperatureHighAlarm": 90,
+                            "by_TemperatureHighWarning": 80,
+                            "by_VoltageUnbalanceAlarm": 20,
+                            "by_VoltageUnbalanceWarning": 10,
+                            "r_OCTripFactor": 1.399999976158142,
+                            "ui_TemperatureHighTripDelay": 10,
+                            "ui_VoltageUnbalanceTripDelay": 10,
+                            "ui_ratedpower": 60
+                        },
+                        "PNController": {
+                            "Limits": {
+                                "r_DroopMax": 10.0,
+                                "r_InputCtLimit": 800.0,
+                                "r_InverterCurrentLimit": 520.0,
+                                "r_InverterPowerLimit": 360.0,
+                                "r_NominalFreqMax": 52.5,
+                                "r_NominalFreqMin": 47.5,
+                                "r_NominalVoltageMax": 440.0,
+                                "r_NominalVoltageMin": 360.0,
+                                "r_PSBCtLimit": 4000.0,
+                                "r_PowerRampLimit": 300.0
+                            },
+                            "TestVars": {
+                                "b_CheckMonitoring": false,
+                                "b_MonitoringOK": false,
+                                "bit_AdvancedControl": false,
+                                "bit_AutoSwitching": false,
+                                "bit_EMStop": false,
+                                "bit_Reset": false,
+                                "bit_Shutdown": false,
+                                "bit_SystemShutdown": false,
+                                "bit_Transportmode": false,
+                                "bit_start": false,
+                                "bit_stop": false,
+                                "i_Pset": 0,
+                                "i_Qset": 0,
+                                "s_MonitoringErr": "",
+                                "w_SetAddress": 0,
+                                "w_SetValue": 0
+                            },
+                            "b_BigEndian": false,
+                            "b_ControlEnable": true,
+                            "b_MonitoringEnable": true,
+                            "b_testComm": false,
+                            "w_CommTimeOut": 10000
+                        },
+                        "PSB": {
+                            "PSBhardware": 1,
+                            "fastmode": true
+                        },
+                        "Powerstack": {
+                            "FreqVoltageShift": {
+                                "FreqMaxPu": 1.0299999713897705,
+                                "FreqMinPu": 0.9700000286102296,
+                                "InitialOverloadDelay": "PT1S",
+                                "ShiftingHoldTime": "PT20M",
+                                "ShiftingRate": "PT0.1S",
+                                "ShutdownDelay": "PT1M",
+                                "VoltMaxPu": 1.100000023841858,
+                                "VoltMinPu": 0.8999999761581421
+                            },
+                            "LOM": {
+                                "DetectionTimeFast_ms": 50,
+                                "DetectionTimeSlow_ms": 1000,
+                                "EnablePowerPulse": true,
+                                "ForceSlowDetection": false,
+                                "FreqFilterLength": 5,
+                                "PowerPulseSize": 0.5,
+                                "RoCofLimit": 0.5,
+                                "b_EnableAntiIslandingRelay": false
+                            },
+                            "PowermoduleMaster": {
+                                "b_FieldBusControlEnable": true,
+                                "i_DCVramprate": 200,
+                                "i_VoltageOffset": 4,
+                                "r_ACCurrentLimitMax": 650.0,
+                                "r_ACcurrentLimitMin": 100.0,
+                                "r_FilterTempAlarm": 90.0,
+                                "r_FilterTempWarning": 80.0,
+                                "r_InverterRatedCurrent": 460.0,
+                                "r_InverterRatedPower": 360.0,
+                                "r_InverterTempAlarm": 60.0,
+                                "r_InverterTempWarning": 55.0,
+                                "r_ModulationIndexLimit": 98.0,
+                                "r_ModulationIndexLimitHyst": 0.5,
+                                "r_ThrottlingMinimum": 0.30000001192092896,
+                                "r_powerLoadFanOn": 30.0,
+                                "r_tempfanOn": 50.0,
+                                "ui_DCVoltageDeltaPrechargeOK": 20,
+                                "ui_DCvoltageMinPrechargeOK": 590
+                            },
+                            "PowermoduleSlave": {
+                                "b_FieldBusControlEnable": true,
+                                "i_DCVramprate": 200,
+                                "i_VoltageOffset": 4,
+                                "r_ACCurrentLimitMax": 650.0,
+                                "r_ACcurrentLimitMin": 100.0,
+                                "r_FilterTempAlarm": 90.0,
+                                "r_FilterTempWarning": 80.0,
+                                "r_InverterRatedCurrent": 460.0,
+                                "r_InverterRatedPower": 360.0,
+                                "r_InverterTempAlarm": 60.0,
+                                "r_InverterTempWarning": 55.0,
+                                "r_ModulationIndexLimit": 98.0,
+                                "r_ModulationIndexLimitHyst": 0.5,
+                                "r_ThrottlingMinimum": 0.30000001192092896,
+                                "r_powerLoadFanOn": 30.0,
+                                "r_tempfanOn": 50.0,
+                                "ui_DCVoltageDeltaPrechargeOK": 20,
+                                "ui_DCvoltageMinPrechargeOK": 590
+                            },
+                            "b_GridcodesEnabled": true,
+                            "b_SoftStartEnable": true,
+                            "b_StandbyEnable": true,
+                            "i_ChargeOnlyIdlePower": -3,
+                            "i_MaxPowerChangeRate": 500,
+                            "r_ActiveSetpointGain": 1.0,
+                            "r_DroopIslandMode": 0.10000000149011612,
+                            "r_DroopMaximum": 10.0,
+                            "r_DroopMinimum": 0.0,
+                            "r_FreqHighLimit": 52.0,
+                            "r_FreqLowLimit": 48.0,
+                            "r_ReactiveOffset": 0.0,
+                            "r_ReactiveSetpointGain": 1.0,
+                            "ui_DeratingLimCooling": 80,
+                            "ui_DeratingStack": 5,
+                            "ui_FreqLimitTripDelay": 2000,
+                            "ui_OvercurrentRating": 150
+                        },
+                        "Protections": {
+                            "InsulationMonitor": {
+                                "i_EarthSystemDetectionDelay": 60
+                            },
+                            "OCP": {
+                                "OutputNormalShutdownDelay": "PT5S",
+                                "ui_Ik": 16,
+                                "ui_Irated": 400,
+                                "ui_OCPtripTime": 900,
+                                "ui_gain": 10
+                            },
+                            "firedetection": {
+                                "r_COalarmLevel": 120.0,
+                                "r_COrange": 500.0,
+                                "r_COwarningLevel_1": 10.0,
+                                "r_COwarningLevel_2": 20.0
+                            }
+                        },
+                        "Router": {
+                            "IP_TELTONIKA": "192.168.1.1",
+                            "MBPort_TELTONIKA": 502,
+                            "ManualSettings": {
+                                "AutoRebootEnable": false,
+                                "EnableWifiAP": false,
+                                "EnableWifiClient": false,
+                                "ManualReboot": false,
+                                "Sim1Pin": "0000",
+                                "Sim2Pin": "0000",
+                                "SimSelectionMode": 0,
+                                "UpdateSystemTime": false,
+                                "WifiAPPass": "Welkom!VDL",
+                                "WifiAPSSID": "ePU10_AP",
+                                "WifiAPSecType": 1,
+                                "WifiClientPass": "e4ff1c12kLL",
+                                "WifiClientSSID": "MachineAccessPoint@VDL",
+                                "WifiClientSecType": 1
+                            },
+                            "MinimumPhoneNumberLength": 10,
+                            "T_MBTimeout": "PT2S"
+                        },
+                        "system": {
+                            "GenGridController": {
+                                "Contactor": {
+                                    "VoltagePID": {
+                                        "InnerWindow": 0.0,
+                                        "InputDeadband": 0.5,
+                                        "Kp": 0.5,
+                                        "Outerwindow": 0.0,
+                                        "OutputDeadband": 0.0,
+                                        "Td": 0,
+                                        "Tn": 1000,
+                                        "Tv": 0,
+                                        "enable": true
+                                    },
+                                    "ui_DeloadCurrentRelease": 20,
+                                    "ui_DeloadTimeOut": 60,
+                                    "ui_VoltageDevSyncOK": 4
+                                },
+                                "CurrentLimitTripDelay": "PT5S",
+                                "GenIso_InverterMode": 2,
+                                "Genset": {
+                                    "GenDownRetries": 3,
+                                    "OverFrequencyLimit": 51.0,
+                                    "OverVoltageLimit": 435.0,
+                                    "OverVoltageTripDelay": 2000,
+                                    "OverfrequencyTripDelay": 2000,
+                                    "OverloadOffDelay": "PT10M",
+                                    "OverloadOnDelay": "PT10S",
+                                    "OverloadTripDelay": 3000,
+                                    "ShutdownTimeout": 180,
+                                    "UnderFrequencyLimit": 49.0,
+                                    "UnderVoltageLimit": 360.0,
+                                    "UnderVoltageTripDelay": 2000,
+                                    "UnderfrequencyTripDelay": 2000
+                                },
+                                "by_CurrentLimitMargin": 20.0,
+                                "by_SyncRetries": 5,
+                                "r_PIDLimitRampDefault": 10.0,
+                                "r_PIDLimitRampWeakgrid": 1.0,
+                                "r_SocHysteresis": 2.0
+                            },
+                            "OutputContactSignal": 2,
+                            "Powercontroller": {
+                                "ActivePID": {
+                                    "InnerWindow": 0.0,
+                                    "InputDeadband": 1.0,
+                                    "Kp": 5.0,
+                                    "Outerwindow": 0.0,
+                                    "OutputDeadband": 0.5,
+                                    "Td": 0,
+                                    "Tn": 15,
+                                    "Tv": 0,
+                                    "enable": true
+                                },
+                                "FreqShiftPID": {
+                                    "InnerWindow": 0.0,
+                                    "InputDeadband": 0.05000000074505806,
+                                    "Kp": 0.10000000149011612,
+                                    "Outerwindow": 0.0,
+                                    "OutputDeadband": 0.0,
+                                    "Td": 0,
+                                    "Tn": 1000,
+                                    "Tv": 0,
+                                    "enable": false
+                                },
+                                "ReactivePID": {
+                                    "InnerWindow": 0.0,
+                                    "InputDeadband": 1.0,
+                                    "Kp": 5.0,
+                                    "Outerwindow": 0.0,
+                                    "OutputDeadband": 0.5,
+                                    "Td": 0,
+                                    "Tn": 20,
+                                    "Tv": 0,
+                                    "enable": true
+                                },
+                                "SocDroop": {
+                                    "SocMaxDroopStart": 80.0,
+                                    "SocMinDroopStart": 20.0,
+                                    "enable": false
+                                },
+                                "TransitionRamp": 5,
+                                "TransitionTime": 500,
+                                "VoltagePeakshavePID": {
+                                    "InnerWindow": 0.0,
+                                    "InputDeadband": 20.0,
+                                    "Kp": 1.0,
+                                    "Outerwindow": 0.0,
+                                    "OutputDeadband": 0.0,
+                                    "Td": 0,
+                                    "Tn": 200,
+                                    "Tv": 0,
+                                    "enable": false
+                                }
+                            },
+                            "SystemTime": {
+                                "AutoSyncToGPS": false,
+                                "ManSyncValue": "1970-01-01T00:00:00Z",
+                                "ManualSync": false
+                            },
+                            "b_VDLReset": false
+                        }
+                    },
+                    "enabled": true,
+                    "group": "",
+                    "order": 1,
+                    "schema": {},
+                    "symbol": "PLC.Settings.MachineParams",
+                    "unit": ""
+                }
+            },
+            "options": {
+                "enabled": "None"
+            },
+            "recipeTypeNames": []
+        },
+        "User settings": {
+            "members": {
+                "PLC.HMI.Controlvars.HardSettings": {
+                    "defaultValue": {},
+                    "enabled": true,
+                    "group": "Hard settings",
+                    "order": 1,
+                    "schema": {},
+                    "symbol": "PLC.HMI.Controlvars::HardSettings",
+                    "unit": ""
+                },
+                "PLC.HMI.Controlvars.SoftSettings": {
+                    "defaultValue": {},
+                    "enabled": true,
+                    "group": "Soft settings",
+                    "order": 0,
+                    "schema": {},
+                    "symbol": "PLC.HMI.Controlvars::SoftSettings",
+                    "unit": ""
+                }
+            },
+            "options": {
+                "enabled": "None"
+            },
+            "recipeTypeNames": []
+        }
+    }
+}

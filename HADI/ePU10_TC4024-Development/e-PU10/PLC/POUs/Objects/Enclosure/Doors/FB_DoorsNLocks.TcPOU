@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_DoorsNLocks" Id="{0f18930b-1276-414d-b991-129d0ca996c3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DoorsNLocks
+VAR_OUTPUT
+	get 		: ST_DoorsNLocks_get;
+END_VAR
+
+VAR
+	b_ControlPanelDoorfb	AT %I* : BOOL;
+	b_ClientPanelDoorfb		AT %I* : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[get.b_ControlPanelDoorClosed := b_ControlPanelDoorfb;
+get.b_ClientpanelDoorClosed	:= b_ClientPanelDoorfb; 
+]]></ST>
+    </Implementation>
+    <Method Name="GetDiagnostics" Id="{bb6cfa9e-5c58-4a2f-b5c4-c0e3a760ca17}">
+      <Declaration><![CDATA[METHOD PUBLIC GetDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+
+VAR_OUTPUT
+	b_errorActive	: BOOL;
+	b_warningActive	: BOOL;
+END_VAR
+
+VAR
+	by_errCt	: BYTE;
+	by_warnCt	: BYTE;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	(*Client door open*)		AddError[w_Index](
+		b_ErrorTrig			:= NOT(get.b_ClientpanelDoorClosed),
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 1,
+		e_ObjectID				:=  eObject_ID.Enclosure_doors,
+		s_Message				:= 'client panel opened',
+		e_sev					:= eseverity.info,
+		b_AutoClear			:= TRUE
+		);
+		w_Index := w_Index +1;
+		
+	(*Client door open*)		AddError[w_Index](
+		b_ErrorTrig			:= NOT(get.b_ControlPanelDoorClosed),
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 2,
+		s_Message				:= 'control panel opened',
+		e_sev					:= eseverity.info,
+		b_AutoClear			:= TRUE
+		);
+		w_Index := w_Index +1;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_DoorsNLocks">
+      <LineId Id="57" Count="1" />
+      <LineId Id="28" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_DoorsNLocks.GetDiagnostics">
+      <LineId Id="21" Count="8" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="32" Count="3" />
+      <LineId Id="37" Count="3" />
+      <LineId Id="31" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

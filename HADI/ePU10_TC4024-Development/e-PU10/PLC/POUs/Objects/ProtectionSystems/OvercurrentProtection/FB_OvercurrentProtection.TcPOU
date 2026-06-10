@@ -1,0 +1,534 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_OvercurrentProtection" Id="{0adf4920-ab52-433e-8523-a037439979c6}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_OvercurrentProtection
+VAR_IN_OUT CONSTANT
+	st_params 			: ST_overcurrentprotection_Params;
+	powermonitor		: ST_Powermonitor_get;
+END_VAR
+
+VAR_OUTPUT
+	get					: ST_Overcurrentprotection_get;
+END_VAR
+
+VAR_INPUT
+	set							: ST_Overcurrentprotection_set;
+	b_enable					: BOOL := TRUE;
+	b_InputSectionAvailable 	: BOOL;
+	b_thirdOutputAvailable 		: BOOL;
+END_VAR
+
+VAR
+	b_reset 					: BOOL;
+	//OvercurrentTest				: FB_Overcurrentdetect;
+	//r_test		: REAL;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF b_enable THEN
+	CheckOvercurrent(get, set, b_reset);
+END_IF
+
+IF b_InputSectionAvailable THEN
+	get.r_TotalInputCurrentLimit := set.ui_PowerlockInputCurrentLimit[1] + set.ui_PowerlockInputCurrentLimit[2];
+END_IF
+
+get.r_TotalOutputCurrentLimit := 
+	set.ui_PowerlockOutputCurrentLimit[1] + 
+	set.ui_PowerlockOutputCurrentLimit[2] + 
+	set.ui_PowerlockOutputCurrentLimit[3] * TO_BYTE(b_thirdOutputAvailable);
+
+	
+	
+	
+]]></ST>
+    </Implementation>
+    <Method Name="CheckOvercurrent" Id="{b9bccf10-a725-453f-a0fe-5e66eff43d72}">
+      <Declaration><![CDATA[METHOD CheckOvercurrent : BOOL
+
+VAR_IN_OUT
+	get			: ST_OvercurrentProtection_get;
+END_VAR
+
+VAR_IN_OUT CONSTANT
+	set 		: ST_OvercurrentProtection_set;
+	reset		: BOOL;
+END_VAR
+
+VAR
+	i : BYTE;
+	j : BYTE;
+	phase		: Phases;
+END_VAR
+
+VAR_INST
+	r_lastcurrent		: REAL;
+	sr_outputAlarm		: SR;
+	sr_inputAlarm		: SR;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[get.b_InputWarning := FALSE;
+get.b_OutputWarning := FALSE;
+get.b_InputAlarm := FALSE;
+get.b_OutputAlarm := FALSE;
+
+//Inputs
+FOR j:=1 TO 2 DO //loop through powerlock sets
+	FOR phase:=1 TO 4 DO //loop through powerlocks
+		get.events.Input[j][phase](b_reset := reset,
+				r_In := ABS(powermonitor.InputField.Powerlock[j].ar_Current[phase]),
+				ui_Ik := st_params.ui_Ik,
+				ui_gain := st_params.ui_gain,
+				ui_RatedCurrent := LIMIT(0, TO_UINT(set.ui_PowerlockInputCurrentLimit[j]), st_params.ui_Irated),
+				t_MaxPickupTime := TO_TIME(TO_REAL(st_params.ui_OCPtripTime)*1000),
+				);
+
+		IF get.Events.Input[j][phase].r_MaxCurrentDetected > r_lastcurrent THEN
+			r_lastcurrent := get.Events.input[j][phase].r_MaxCurrentDetected;
+			get.r_PeakCurrent := r_lastcurrent;
+			get.t_PeakCurrentDuration := get.Events.input[j][phase].t_MaxTimeActive;
+			get.s_locationPeak := CONCAT(CONCAT(CONCAT('Input group: ', TO_STRING(j)),' '), TO_STRING(phase));
+		END_IF	
+		IF get.events.input[j][phase].b_warning THEN
+			get.b_inputwarning := TRUE;
+		END_IF
+		IF get.events.Input[j][phase].b_alarm THEN
+			get.b_InputAlarm := TRUE;
+		END_IF
+	END_FOR
+END_FOR
+
+//Outputs
+FOR j:=1 TO 3 DO
+	FOR phase:=1 TO 4 DO 
+		get.events.Output[j][phase](b_reset := reset,
+			r_In := ABS(powermonitor.OutputField.Powerlock[j].ar_Current[phase]),
+			ui_Ik := st_params.ui_Ik,
+			ui_gain := st_params.ui_gain,
+			ui_RatedCurrent := LIMIT(0, TO_UINT(set.ui_PowerlockOutputCurrentLimit[j]), st_params.ui_Irated),
+			t_MaxPickupTime := TO_TIME(TO_REAL(st_params.ui_OCPtripTime)*1000)
+			);
+		IF get.Events.output[j][phase].r_MaxCurrentDetected > r_lastcurrent THEN
+			r_lastcurrent := get.Events.output[j][phase].r_MaxCurrentDetected;
+			get.r_PeakCurrent := r_lastcurrent;
+			get.t_PeakCurrentDuration := get.Events.output[j][phase].t_MaxTimeActive;
+			get.s_locationPeak := CONCAT(CONCAT(CONCAT('Output group: ', TO_STRING(j)),' '), TO_STRING(phase));
+		END_IF
+			
+		IF get.events.Output[j][phase].b_warning THEN
+			get.b_outputwarning := TRUE;
+		END_IF
+		IF get.events.Output[j][phase].b_alarm THEN
+			get.b_OutputAlarm := TRUE;
+		END_IF
+	END_FOR
+END_FOR
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetDiagnostics" Id="{e8141661-a4f1-49e0-a8a0-957f10020e26}">
+      <Declaration><![CDATA[METHOD PUBLIC GetDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+
+VAR	
+		
+	i : UINT; 
+END_VAR
+
+VAR_INST
+	index : WORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*OVC PROTECTION*)
+//INPUTS
+index := w_index;
+FOR i:= 1 TO 2 DO
+	//Warnings
+	(*Input set1 L1*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Input[i][phases.L1].b_warning,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 1,
+			e_ObjectID				:= eObject_ID.OCP,
+			s_Message				:= ConcatMultiString(s1:= 'warning: input ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - L1: ',
+										s4:= TO_STRING(Get.Events.Input[i][phases.L1].ui_actLoad),
+										s5:= ' %, remaining time ',
+										s6:= TO_STRING(Get.Events.Input[i][phases.L1].t_RemainingTime)),
+			e_sev					:= eseverity.Warning,
+			e_ErrAckAccess		:= eErrAckAccess.operator,
+			b_autoClear			:= TRUE
+			);
+		w_Index := w_Index +1;
+	(*Input set1 L2*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Input[i][phases.L2].b_warning,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 2,
+			s_Message				:= ConcatMultiString(s1:= 'warning: input ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - L2: ',
+										s4:= TO_STRING(Get.Events.Input[i][phases.L2].ui_actLoad),
+										s5:= ' %, remaining time ',
+										s6:= TO_STRING(Get.Events.Input[i][phases.L2].t_RemainingTime)),
+			e_sev					:= eseverity.Warning,
+			e_ErrAckAccess		:= eErrAckAccess.operator,
+			b_autoClear			:= TRUE
+			);
+		w_Index := w_Index +1;
+	(*Input set1 L3*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Input[i][phases.L3].b_warning,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 3,
+			s_Message				:= ConcatMultiString(s1:= 'warning: input ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - L3: ',
+										s4:= TO_STRING(Get.Events.Input[i][phases.L3].ui_actLoad),
+										s5:= ' %, remaining time ',
+										s6:= TO_STRING(Get.Events.Input[i][phases.L3].t_RemainingTime)),
+			e_sev					:= eseverity.Warning,
+			e_ErrAckAccess		:= eErrAckAccess.operator,
+			b_autoClear			:= TRUE
+			);
+		w_Index := w_Index +1;
+	(*Input set1 N*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Input[i][phases.N].b_warning,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 4,
+			s_Message				:= ConcatMultiString(s1:= 'warning: input ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - Neutral: ',
+										s4:= TO_STRING(Get.Events.Input[i][phases.N].ui_actLoad),
+										s5:= ' %, remaining time ',
+										s6:= TO_STRING(Get.Events.Input[i][phases.N].t_RemainingTime)),
+			e_sev					:= eseverity.Warning,
+			e_ErrAckAccess		:= eErrAckAccess.operator,
+			b_autoClear			:= TRUE
+			);
+		w_Index := w_Index +1;
+		
+		//ALARMS
+	(*Input set1 L1*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Input[i][phases.L1].b_alarm,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 5,
+			s_Message				:= ConcatMultiString(s1:= 'alarm: input ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - L1: ',
+										s4:= LREAL_TO_FMTSTR(Get.Events.Input[i][phases.L1].r_MaxCurrentDetected,1, TRUE),
+										s5:= ' A for ',
+										s6:= TO_STRING(Get.Events.Input[i][phases.L1].t_MaxTimeActive)),
+			e_sev					:= eseverity.Warning,
+			e_ErrAckAccess		:= eErrAckAccess.operator
+			);
+		w_Index := w_Index +1;
+	(*Input set1 L2*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Input[i][phases.L2].b_alarm,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 6,
+			s_Message				:= ConcatMultiString(s1:= 'alarm: input ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - L2: ',
+										s4:= LREAL_TO_FMTSTR(Get.Events.Input[i][phases.L2].r_MaxCurrentDetected,1, TRUE),
+										s5:= ' A for ',
+										s6:= TO_STRING(Get.Events.Input[i][phases.L2].t_MaxTimeActive)),
+			e_sev					:= eseverity.Warning,
+			e_ErrAckAccess		:= eErrAckAccess.operator
+			);
+		w_Index := w_Index +1;
+	(*Input set1 L3*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Input[i][phases.L3].b_alarm,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 7,
+			s_Message				:= ConcatMultiString(s1:= 'alarm: input ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - L3: ',
+										s4:= LREAL_TO_FMTSTR(Get.Events.Input[i][phases.L3].r_MaxCurrentDetected,1, TRUE),
+										s5:= ' A for ',
+										s6:= TO_STRING(Get.Events.Input[i][phases.L3].t_MaxTimeActive)),
+			e_sev					:= eseverity.Warning,
+			e_ErrAckAccess		:= eErrAckAccess.operator
+			);
+		w_Index := w_Index +1;
+	(*Input set1 N*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Input[i][phases.N].b_alarm,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 8,
+			s_Message				:= ConcatMultiString(s1:= 'alarm: input ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - N: ',
+										s4:= LREAL_TO_FMTSTR(Get.Events.Input[i][phases.N].r_MaxCurrentDetected,1, TRUE),
+										s5:= ' A for ',
+										s6:= TO_STRING(Get.Events.Input[i][phases.N].t_MaxTimeActive)),
+			e_sev					:= eseverity.Warning,
+			e_ErrAckAccess		:= eErrAckAccess.operator
+			);
+		w_Index := w_Index +1;
+END_FOR
+
+//OUTPUTS
+FOR i:= 1 TO 3 DO
+	//Warnings
+	(*Input set1 L1*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Output[i][phases.L1].b_warning,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 17,
+			s_Message				:= ConcatMultiString(s1:= 'warning: output ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - L1: ',
+										s4:= TO_STRING(Get.Events.Output[i][phases.L1].ui_actLoad),
+										s5:= ' %, remaining time ',
+										s6:= TO_STRING(Get.Events.Output[i][phases.L1].t_RemainingTime)),
+			e_sev					:= eseverity.Warning,
+			e_ErrAckAccess		:= eErrAckAccess.operator,
+			b_autoClear			:= TRUE
+			);
+		w_Index := w_Index +1;
+	(*Input set1 L2*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Output[i][phases.L2].b_warning,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 18,
+			s_Message				:= ConcatMultiString(s1:= 'warning: output ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - L2: ',
+										s4:= TO_STRING(Get.Events.Output[i][phases.L2].ui_actLoad),
+										s5:= ' %, remaining time ',
+										s6:= TO_STRING(Get.Events.Output[i][phases.L2].t_RemainingTime)),
+			e_sev					:= eseverity.Warning,
+			e_ErrAckAccess		:= eErrAckAccess.operator,
+			b_autoClear			:= TRUE
+			);
+		w_Index := w_Index +1;
+	(*Input set1 L3*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Output[i][phases.L3].b_warning,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 19,
+			s_Message				:= ConcatMultiString(s1:= 'warning: output ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - L3: ',
+										s4:= TO_STRING(Get.Events.Output[i][phases.L3].ui_actLoad),
+										s5:= ' %, remaining time ',
+										s6:= TO_STRING(Get.Events.Output[i][phases.L3].t_RemainingTime)),
+			e_sev					:= eseverity.Warning,
+			e_ErrAckAccess		:= eErrAckAccess.operator,
+			b_autoClear			:= TRUE
+			);
+		w_Index := w_Index +1;
+	(*Input set1 N*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Output[i][phases.N].b_warning,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= ((i -1) * 8) + 20,
+			s_Message				:= ConcatMultiString(s1:= 'warning: output ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - N: ',
+										s4:= TO_STRING(Get.Events.Output[i][phases.N].ui_actLoad),
+										s5:= ' %, remaining time ',
+										s6:= TO_STRING(Get.Events.Output[i][phases.N].t_RemainingTime)),
+			e_sev					:= eseverity.Warning,
+			e_ErrAckAccess		:= eErrAckAccess.operator,
+			b_autoClear			:= TRUE
+			);
+		w_Index := w_Index +1;
+		
+		//ALARMS					
+	(*Output set1 L1*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Output[i][phases.L1].b_alarm,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 21,
+			s_Message				:= ConcatMultiString(s1:= 'alarm: output ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - L1: ',
+										s4:= LREAL_TO_FMTSTR(Get.Events.output[i][phases.L1].r_MaxCurrentDetected,1, TRUE),
+										s5:= ' A for ',
+										s6:= TO_STRING(Get.Events.Output[i][phases.L1].t_MaxTimeActive)),
+			e_sev					:= eseverity.Normalshutdown,
+			t_triggerTime			:= st_params.OutputNormalShutdownDelay,
+			e_ErrAckAccess		:= eErrAckAccess.operator
+			);
+		w_Index := w_Index +1;
+	(*Output set1 L2*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Output[i][phases.L2].b_alarm,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 22,
+			s_Message				:= ConcatMultiString(s1:= 'alarm: output ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - L2: ',
+										s4:= LREAL_TO_FMTSTR(Get.Events.output[i][phases.L2].r_MaxCurrentDetected,1, TRUE),
+										s5:= ' A for ',
+										s6:= TO_STRING(Get.Events.Output[i][phases.L2].t_MaxTimeActive)),
+			e_sev					:= eseverity.Normalshutdown,
+			t_triggerTime			:= st_params.OutputNormalShutdownDelay,
+			);
+		w_Index := w_Index +1;
+	(*Output set1 L3*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.Output[i][phases.L3].b_alarm,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 23,
+			s_Message				:= ConcatMultiString(s1:= 'alarm: output ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - L3: ',
+										s4:= LREAL_TO_FMTSTR(Get.Events.output[i][phases.L3].r_MaxCurrentDetected,1, TRUE),
+										s5:= ' A for ',
+										s6:= TO_STRING(Get.Events.Output[i][phases.L3].t_MaxTimeActive)),
+			e_sev					:= eseverity.Normalshutdown,
+			t_triggerTime			:= st_params.OutputNormalShutdownDelay,
+			e_ErrAckAccess		:= eErrAckAccess.operator
+			);
+		w_Index := w_Index +1;
+	(*Output set1 N*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.output[i][phases.N].b_alarm,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= ((i -1) * 8) + 24,
+			s_Message				:= ConcatMultiString(s1:= 'alarm: output ',
+										s2:= TO_STRING(i),
+			 							s3:= ' - N: ',
+										s4:= LREAL_TO_FMTSTR(Get.Events.output[i][phases.N].r_MaxCurrentDetected,1, TRUE),
+										s5:= ' A for ',
+										s6:= TO_STRING(Get.Events.Output[i][phases.N].t_MaxTimeActive)),
+			e_sev					:= eseverity.Normalshutdown,
+			t_triggerTime 			:= st_params.OutputNormalShutdownDelay,
+			e_ErrAckAccess		:= eErrAckAccess.operator
+			);
+		w_Index := w_Index +1;
+END_FOR	
+
+(*output MCCB triggered*) 	AddError[w_Index](
+			b_ErrorTrig				:= Get.b_OutputAlarm,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 41,
+			s_Message				:= ConcatMultiString(s1:= 'Output MCCB trip. Phase: ',
+										s2:= get.s_locationPeak,
+			 							s3:= ', peakcurrent: ',
+										s4:= LREAL_TO_FMTSTR(get.r_PeakCurrent,1, TRUE),
+										s5:= ' A for ',
+										s6:= TO_STRING(get.t_PeakCurrentDuration)),
+			e_sev					:= eseverity.Warning
+			);
+		w_Index := w_Index +1;		
+
+
+
+		
+
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{bb0ca303-8673-4846-9e92-b4049d60602e}">
+      <Declaration><![CDATA[METHOD Reset : BOOL
+VAR_INPUT
+END_VAR
+
+VAR_INST
+	counter : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[reset := FALSE;
+
+
+//reset values if it was triggered by an alarm
+IF get.b_InputAlarm OR get.b_OutputAlarm OR get.r_PeakCurrent <>0 THEN
+	get.r_PeakCurrent := 0;
+	get.t_PeakCurrentDuration := T#0S;
+	get.s_locationPeak := '';
+	b_reset := TRUE;
+	counter := counter +1;
+ELSE
+	b_reset := FALSE;
+	reset := NOT b_reset;
+END_IF
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_OvercurrentProtection">
+      <LineId Id="125" Count="2" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="162" Count="4" />
+      <LineId Id="192" Count="0" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="190" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_OvercurrentProtection.CheckOvercurrent">
+      <LineId Id="246" Count="1" />
+      <LineId Id="348" Count="0" />
+      <LineId Id="347" Count="0" />
+      <LineId Id="248" Count="5" />
+      <LineId Id="373" Count="0" />
+      <LineId Id="404" Count="0" />
+      <LineId Id="374" Count="0" />
+      <LineId Id="256" Count="0" />
+      <LineId Id="376" Count="0" />
+      <LineId Id="339" Count="5" />
+      <LineId Id="338" Count="0" />
+      <LineId Id="345" Count="1" />
+      <LineId Id="264" Count="0" />
+      <LineId Id="325" Count="1" />
+      <LineId Id="324" Count="0" />
+      <LineId Id="266" Count="6" />
+      <LineId Id="377" Count="1" />
+      <LineId Id="405" Count="0" />
+      <LineId Id="379" Count="0" />
+      <LineId Id="276" Count="0" />
+      <LineId Id="380" Count="0" />
+      <LineId Id="328" Count="0" />
+      <LineId Id="331" Count="0" />
+      <LineId Id="335" Count="0" />
+      <LineId Id="333" Count="0" />
+      <LineId Id="336" Count="0" />
+      <LineId Id="332" Count="0" />
+      <LineId Id="327" Count="0" />
+      <LineId Id="277" Count="0" />
+      <LineId Id="282" Count="1" />
+      <LineId Id="321" Count="2" />
+      <LineId Id="287" Count="1" />
+      <LineId Id="114" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_OvercurrentProtection.GetDiagnostics">
+      <LineId Id="406" Count="201" />
+      <LineId Id="671" Count="0" />
+      <LineId Id="608" Count="13" />
+      <LineId Id="672" Count="0" />
+      <LineId Id="622" Count="12" />
+      <LineId Id="674" Count="0" />
+      <LineId Id="635" Count="13" />
+      <LineId Id="675" Count="0" />
+      <LineId Id="649" Count="3" />
+      <LineId Id="691" Count="4" />
+      <LineId Id="706" Count="4" />
+      <LineId Id="701" Count="1" />
+      <LineId Id="705" Count="0" />
+      <LineId Id="690" Count="0" />
+      <LineId Id="653" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_OvercurrentProtection.Reset">
+      <LineId Id="28" Count="0" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

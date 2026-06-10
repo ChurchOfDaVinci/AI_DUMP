@@ -1,0 +1,75 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PowerStack_get" Id="{cfaaa825-6e3a-49c4-a801-022f11a0f25b}">
+    <Declaration><![CDATA[TYPE ST_PowerStack_get :
+STRUCT
+	// ENUMS
+	e_State							: eStatusPowerStack;
+	e_PowerState					: ePowerstate;
+	e_InverterMode					: eInverterModes;			//0=AFE, Micro, Island, transition
+	e_PowerMode						: ePowerModes;				//0=IsoChronous, 1= Droop
+	e_ThrottlingStatus				: ePowerModuleThrottlingState;
+	
+	//POWER DATA (REALS)
+	r_VoltageDroop					: REAL;				
+	r_FrequencyDroop				: REAL;
+	r_ACVoltageD7					: REAL; 
+	r_FrequencyD7					: REAL; 
+	r_ActivePower					: REAL;
+	r_ReactivePower					: REAL;
+	r_Pmin							: REAL;
+	r_Pmax							: REAL; 
+	r_QMax							: REAL;
+	r_QMin							: REAL;	
+	r_Smax							: REAL;
+	r_ACcurrentLimit				: REAL;
+	r_ACcurrentLimitMax				: REAL;
+	r_PowerChangeRate				: REAL;
+	r_ApparentPower					: REAL;
+	r_CosPhi						: REAL;
+	r_AcCurrent						: REAL;
+	r_DCPower						: REAL;
+	r_DCVoltage						: REAL;
+	r_DCcurrent						: REAL;
+	r_ACVoltageSupply				: REAL;
+	r_FrequencySupply				: REAL;
+	r_LoadPercent					: REAL; //%
+	r_RatedCurrent					: REAL;
+	r_RatedPower					: REAL;
+	r_OvercurrentValueAct			: REAL; //actual overcurrent value
+	r_OvercurrentValueMax			: REAL; //max overcurrent value
+	r_ThrottlingValueAct			: REAL; // %percentage , inverse of overcurrent with 100%
+	
+	//Booleans
+	b_GridTied						: BOOL;
+	b_GridCodeCheckActive			: BOOL;
+	b_GridCodeOK					: BOOL := TRUE;
+	b_GridACdetected				: BOOL;
+	b_InverterGridFormingMode		: BOOL;
+	b_ACDetected					: BOOL;
+	b_DCDetected					: BOOL;
+	b_InverterRunning				: BOOL;
+	b_StartedState					: BOOL;
+	b_ControlEnabled				: BOOL;
+	b_EcomodeAvailable				: BOOL;
+	b_StartEnabled					: BOOL;				
+
+	//Temperatures
+	r_MaxTemperature				: REAL;
+	
+	//timers
+	t_ShiftHoldTimeRemaining		: TIME;
+	t_GridCodeReconnectTime			: TIME;
+	//structs
+	Events							: ST_PowerStack_Events;
+	
+	//Sublevel data
+	PowermoduleMaster				: REFERENCE TO ST_PowerModule_get();
+	PowermoduleSlave				: REFERENCE TO ST_PowerModule_get();
+	Netcontactor					: REFERENCE TO ST_Netcontactor_get();
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

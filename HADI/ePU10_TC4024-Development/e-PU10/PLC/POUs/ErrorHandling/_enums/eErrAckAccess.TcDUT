@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eErrAckAccess" Id="{5b9e8f97-7a8a-46d7-8323-b03c1d70ca32}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eErrAckAccess :
+(
+	General := 0,
+	Operator := 1,
+	VDL := 2
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

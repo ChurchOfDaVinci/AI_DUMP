@@ -1,0 +1,9 @@
+{
+    "devices": {
+        "PLC": {
+            "enabled": true,
+            "masterNetId": "5.135.136.167.6.1",
+            "targetNetId": "5.135.136.167.1.1"
+        }
+    }
+}

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PNOutput_ACDCCharger" Id="{18aa022f-aa69-497b-a330-c4286990e98b}">
+    <Declaration><![CDATA[TYPE ST_PNOutput_ACDCCharger :
+STRUCT
+	w_Status						: WORD;
+	w_Warnings						: WORD;
+	w_Faults						: WORD;
+	ui_ChargerStatus				: WORD;
+	TotalChargerPower				: WORD;
+	AvailableChargePower			: UINT;
+	ActivePower						: UINT;
+	Frequency						: UINT;
+	VoltageAB						: UINT;
+	VoltageBC						: UINT;
+	VoltageCA						: UINT;
+	CurrentL1						: UINT;
+	CurrentL2						: UINT;
+	CurrentL3						: UINT;
+	ui_ACCurrentLimitAct			: UINT;
+	ui_PSetAct						: UINT;
+	ui_SocLimitAct					: UINT;
+	ui_MinGridVoltageAct			: UINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

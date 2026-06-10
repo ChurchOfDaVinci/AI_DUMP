@@ -1,0 +1,61 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_NetContactor_IO" Id="{4356f18b-f1a8-4cd8-ab67-3b8eff04dfda}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_NetContactor_IO
+VAR
+	b_Write					AT %Q* : ARRAY[1..2] OF BOOL;	
+	b_Read					AT %I* : ARRAY[1..3] OF BOOL;
+END_VAR
+
+VAR_INPUT
+	b_RotationSelect					: BOOL := 0; //0: Clockwise, 1: Anti-Clockwise
+	b_ForceCloseCommand					: BOOL := 0; //O; Open, 1:close
+END_VAR
+
+VAR_IN_OUT
+	get								: ST_Netcontactor_get;
+	b_NetcontEDM					: BOOL;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[read();
+Write();]]></ST>
+    </Implementation>
+    <Method Name="Read" Id="{b07212c0-ccce-4d23-9a4c-59e59afc1434}">
+      <Declaration><![CDATA[METHOD PRIVATE Read
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[get.b_NetcontRightFb 	:= b_read[1];
+get.b_NetcontLeftFb		:= b_read[2];
+b_NetcontEDM			:= b_read[3];
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Write" Id="{edf143f9-d2e8-4f29-97a7-35116a7d9899}">
+      <Declaration><![CDATA[METHOD PRIVATE Write
+
+VAR_INST
+	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[b_Write[1] := b_RotationSelect;
+b_Write[2] := b_ForceCloseCommand;	]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_NetContactor_IO">
+      <LineId Id="18" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_NetContactor_IO.Read">
+      <LineId Id="5" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_NetContactor_IO.Write">
+      <LineId Id="5" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

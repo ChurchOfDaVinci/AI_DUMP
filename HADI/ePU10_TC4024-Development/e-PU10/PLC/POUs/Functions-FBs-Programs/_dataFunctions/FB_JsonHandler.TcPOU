@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_JsonHandler" Id="{a96a34c7-c198-4bf8-acd6-801b18ea974d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_JsonHandler
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+
+VAR
+    jsonWriter : FB_JsonSAXWriter;
+    jsonReader : FB_JsonSAXReader;
+	fbFileReader : FB_FileRead;
+	fbFileOpen   : FB_FileOpen;
+    fbFileClose  : FB_FileClose;
+	
+	
+    filePath   : STRING(255) := 'C:\TwinCAT\3.1\Boot\JsonData.json';
+    sJson      : STRING(2048);
+    pStruct    : POINTER TO BYTE;  (* Generieke pointer naar een struct *)
+    structSize : UDINT;    
+END_VAR
+ 
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="JsonWrite" Id="{2b24a10d-2748-48a6-8066-a0482f9646f7}">
+      <Declaration><![CDATA[METHOD JsonWrite : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WriteFile" Id="{15a99be4-3fea-428d-8feb-d1108ec57796}">
+      <Declaration><![CDATA[METHOD WriteFile : BOOL
+VAR_INPUT
+END_VAR
+
+VAR_INST
+	fbFileWriter : FB_FileWrite;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_JsonHandler">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_JsonHandler.JsonWrite">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_JsonHandler.WriteFile">
+      <LineId Id="5" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

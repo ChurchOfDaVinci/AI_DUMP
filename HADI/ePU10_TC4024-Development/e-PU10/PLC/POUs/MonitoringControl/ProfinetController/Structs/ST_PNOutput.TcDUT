@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PNOutput" Id="{af373b51-ee90-4c73-b745-85240a4fc96b}">
+    <Declaration><![CDATA[TYPE ST_PNOutput :
+STRUCT
+	General 		: ST_PNOutput_General;
+	Battery			: ST_PNOutput_Battery;
+	OutputField		: ST_PNOutput_Outputfield;
+	InputField		: ST_PNOutput_Inputfield;
+	Powerstack 		: ST_PNOutput_Powerstack;
+	PSB 			: ST_PNOutput_PeakshaveBox;
+	ZPT				: ST_PNOutput_ZPT;
+	GenControl 		: ST_PNOutput_GenControl;
+	InputGridControl: ST_PNOutput_InputGridControl;
+	ACDCCharger		: ST_PNOutput_ACDCCharger;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

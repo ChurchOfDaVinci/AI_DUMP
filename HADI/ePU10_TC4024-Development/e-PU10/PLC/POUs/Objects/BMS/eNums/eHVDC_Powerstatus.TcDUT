@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eHVDC_Powerstatus" Id="{3a9e00d3-05a3-4e49-8500-2bf928be5e48}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eHVDC_Powerstatus :
+(
+	OFF := 0,
+	Precharging := 1,
+	ON	:= 2	
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

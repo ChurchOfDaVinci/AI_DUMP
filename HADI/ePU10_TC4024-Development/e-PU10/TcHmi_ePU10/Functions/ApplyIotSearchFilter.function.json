@@ -1,0 +1,30 @@
+{
+  "function": {
+    "name": "ApplyIotSearchFilter",
+    "namespace": "TcHmi.Functions.TcHmi_ePU10",
+    "displayName": "ApplyIotSearchFilter",
+    "description": "Called from the TcHmiInput_SearchIotData.onTextChanged trigger. Applies a 400 ms debounce then calls setFilter() on the IoT data sharing datagrid with the current search text. After setFilter() a 1000 ms timeout ensures the overlay hides only after TcHMI finishes re-rendering the rows.",
+    "waitMode": "Synchronous",
+    "category": "",
+    "returnValue": null,
+    "visible": true,
+    "injectContextObject": false,
+    "arguments": []
+  },
+  "$schema": "./../../Packages/Beckhoff.TwinCAT.HMI.Framework.12.760.59/runtimes/native1.12-tchmi/Schema/FunctionDescription.Schema.json",
+  "apiVersion": 1,
+  "version": {
+    "full": "0.0.0.0",
+    "major": 0,
+    "minor": 0,
+    "revision": 0,
+    "build": 0
+  },
+  "dependencyFiles": [
+    {
+      "name": "ApplyIotSearchFilter.js",
+      "type": "JavaScript",
+      "description": ""
+    }
+  ]
+}

@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="fbValueOutOfRange" Id="{624ae231-1f9f-4297-8486-4ea2685772f9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fbValueOutOfRange
+VAR_INPUT
+	r_Min				:REAL;
+	r_Max				:REAL;
+	r_WhenError			:REAL;
+END_VAR
+
+VAR_IN_OUT
+	r_var				:REAL;
+END_VAR
+
+VAR_OUTPUT
+	Q					:BOOL;
+	r_Out				:REAL;	
+	b_IsError			:BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF r_var >= r_Min AND r_var <= r_Max THEN
+	Q := TRUE;
+ELSE
+	Q := FALSE;
+	r_var := r_WhenError;
+END_IF
+
+b_IsError := NOT Q;
+r_Out := r_var;
+	
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="fbValueOutOfRange">
+      <LineId Id="310" Count="5" />
+      <LineId Id="321" Count="0" />
+      <LineId Id="320" Count="0" />
+      <LineId Id="316" Count="2" />
+      <LineId Id="49" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

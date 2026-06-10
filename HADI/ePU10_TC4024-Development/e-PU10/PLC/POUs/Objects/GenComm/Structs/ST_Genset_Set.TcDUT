@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Genset_Set" Id="{863ff659-c018-4b30-ab11-82eee274ccaa}">
+    <Declaration><![CDATA[TYPE ST_Genset_Set :
+STRUCT
+	enable			:  	BOOL;
+	StartStop		:	BOOL; //true = start;
+	Pset			:	REAL;	//0..100%
+	Qset			:	REAL;	//60..100 = 0.6..1
+	PFset			:	REAL;	//0 - 1;
+	Uset			: 	REAL;
+	Fset			: 	REAL;
+	U_Fdroopset		: 	REAL := 4;
+	GensetMode		: 	eGensetMode := eGensetMode.FixedPower;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

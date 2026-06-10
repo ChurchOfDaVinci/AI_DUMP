@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_ErrorStruct" Id="{490887b5-fdfd-4614-997f-d2dcc0985e9c}">
+    <Declaration><![CDATA[TYPE ST_ErrorStruct :
+STRUCT
+	b_ErrorActive	:BOOL;
+	s_Severity 		:STRING(20);
+	w_ID			:WORD;
+	s_Message		:STRING(100);
+	s_DateError		:STRING(20);
+	s_TimeError		:STRING(20);
+	s_TimeCleared	:STRING(20);
+	b_SMSEnable		:BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

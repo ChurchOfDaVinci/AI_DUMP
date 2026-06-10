@@ -1,0 +1,51 @@
+name: Update Parent Issue Dates
+
+on:
+  issues:
+    types:
+      - edited # Voor sub-issues die worden bewerkt
+      - labeled # Voor sub-issues die worden toegevoegd (bijvoorbeeld via een label Sub-issue)
+
+jobs:
+  update-parent-dates:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Use GraphQL to fetch sub-issues and calculate dates
+      env:
+        GITHUB_TOKEN: ${{ secrets.ISSUETOKEN }}
+      run: |
+        # Parent issue ID and label for sub-issues
+        PARENT_ISSUE_ID=$(jq --raw-output '.issue.node_id' "$GITHUB_EVENT_PATH")
+        SUB_ISSUE_LABEL="sub-issue"
+
+        echo "Fetching all sub-issues associated with Parent Issue ID: $PARENT_ISSUE_ID"
+
+        # Fetch all sub-issues
+        RESPONSE=$(curl -s -H "Authorization: Bearer $GITHUB_TOKEN" \
+          -X POST \
+          -d '{"query":"query ($parentId: ID!) { node(id: $parentId) { ... on Issue { timelineItems(itemTypes: [SUB_ISSUE]) { edges { node { resourcePath timelineItem { dueDate completedAt createdAt } } } } } } }","variables":{"parentId":"'$PARENT_ISSUE_ID'"}}' \
+          https://api.github.com/graphql)
+
+        echo "Response from GraphQL: $RESPONSE"
+
+        # Extract datums from sub-issues
+        DATES=$(echo $RESPONSE | jq -r '.data.node.timelineItems.edges[].node.timelineItem | { dueDate, completedAt, createdAt }')
+
+        # Calculate earliest start date (createdAt) and latest end date (dueDate or completedAt)
+        START_DATE=$(echo $DATES | jq -s 'min_by(.createdAt).createdAt')
+        END_DATE=$(echo $DATES | jq -s 'max_by(.dueDate // .completedAt // .createdAt)')
+
+        echo "Start date of Parent Issue: $START_DATE"
+        echo "End date of Parent Issue: $END_DATE"
+
+        # Update Parent Issue with calculated dates
+        curl \
+          -X PATCH \
+          -H "Authorization: Bearer $GITHUB_TOKEN" \
+          -H "Content-Type: application/json" \
+          -d '{"title": "Updated Parent Issue", "body": "Start Date: '$START_DATE'\nEnd Date: '$END_DATE'"}' \
+          "https://api.github.com/repos/${{ github.repository }}/issues/$PARENT_ISSUE_ID"

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PNOutput_ZPT" Id="{c765ef42-cb77-41c1-9693-2e3fa15655e5}">
+    <Declaration><![CDATA[TYPE ST_PNOutput_ZPT :
+STRUCT
+	w_Status					:	WORD;
+	w_Warnings					:	WORD;
+	w_Errors					:	WORD;
+	ui_RatedPower				:	UINT;
+	ui_Powerload				:	UINT;
+	i_TransformerTemperature	:	INT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

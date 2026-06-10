@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="st_Device" Id="{352b9ebc-ec38-4c5d-8e18-14d0766fff60}">
+    <Declaration><![CDATA[TYPE st_Device :
+STRUCT
+	SystemUptime	:	UDINT;	
+	Temperature		:	REAL;
+	RouterSerial	:	STRING(32);
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

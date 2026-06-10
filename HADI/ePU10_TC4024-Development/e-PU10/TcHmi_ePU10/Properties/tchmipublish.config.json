@@ -1,0 +1,72 @@
+[
+  {
+    "serverExtensions": [
+      {
+        "publishServerExtension": true,
+        "name": "ADS"
+      },
+      {
+        "publishServerExtension": true,
+        "name": "TcHmiEcDiagnostics"
+      },
+      {
+        "publishServerExtension": true,
+        "name": "TcHmiLua"
+      },
+      {
+        "publishServerExtension": true,
+        "name": "TcHmiRecipeManagement"
+      },
+      {
+        "publishServerExtension": true,
+        "name": "TcHmiSqliteHistorize"
+      },
+      {
+        "publishServerExtension": true,
+        "name": "TcHmiSqliteLogger"
+      },
+      {
+        "publishServerExtension": true,
+        "name": "TcHmiSrv"
+      },
+      {
+        "publishServerExtension": true,
+        "name": "TcHmiUserManagement"
+      }
+    ],
+    "isNew": false,
+    "profileName": "e-PU10",
+    "publishMode": "TcHmi",
+    "targetDirectory": "",
+    "server": "",
+    "sitePath": "",
+    "destinationUrl": "",
+    "passiveMode": true,
+    "savePassword": true,
+    "deleteAllFilesBeforePublish": true,
+    "deleteExtensionDataBeforePublish": true,
+    "alwaysPublishLocalServerConfiguration": true,
+    "temporaryPublishWithoutServerConfiguration": false,
+    "abortOnErrors": true,
+    "createPublishLog": false,
+    "userName": "",
+    "encryptedPassword": "",
+    "encryptedTcHmiServerPassword": "fSanS/WZqXoRoEM6PAfpjw==",
+    "tcHmiServerHost": "10.4.0.40",
+    "tcHmiServerPort": "1020",
+    "uploadTimeout": "60",
+    "connectionTimeout": "5",
+    "requestTimeout": "60",
+    "extensionStartupTimeout": "120",
+    "clientCertificateCN": "",
+    "tcHmiUseTLS": true,
+    "useClientCertificate": false,
+    "launchBrowserAfterPublish": true,
+    "createVirtualDirectoriesOnTargetSystem": true,
+    "tcHmiServerUserName": "__SystemAdministrator",
+    "tcHmiDestinationUrl": "https://10.4.0.40:1020/",
+    "publishConfiguration": "VDL",
+    "tcHmiSavePassword": true,
+    "tcHmiIgnoreCertificateErrors": true
+  }
+]

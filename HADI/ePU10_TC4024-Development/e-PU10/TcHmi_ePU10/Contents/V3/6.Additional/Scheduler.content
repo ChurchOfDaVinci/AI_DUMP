@@ -1,0 +1,48 @@
+<div id="Scheduler_1" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="800" data-tchmi-height="640" data-tchmi-height-mode="Content">
+
+<div id="TcHmiGrid_1287" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content">
+
+<script data-tchmi-target-attribute="data-tchmi-row-options" type="application/json">
+[
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 10.0,
+    "heightUnit": "px",
+    "heightMode": "Value",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+<div id="ScheduleInputField_1" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="1" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ScheduleInputField.usercontrol" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-height-mode="Content" data-tchmi-scheduleenable="%s%PLC.HMI.Controlvars::SoftSettings::system::b_EnableSchedule|BindingMode=TwoWay%/s%" data-tchmi-timeslot1state="%s%PLC.HMI.Controlvars::SoftSettings::system::ScheduleTimeSlot1::b_active%/s%" data-tchmi-dayofweek1="%s%PLC.HMI.Controlvars::SoftSettings::system::ScheduleTimeSlot1::usi_DayOfWeek%/s%" data-tchmi-hourofday1="%s%PLC.HMI.Controlvars::SoftSettings::system::ScheduleTimeSlot1::usi_HourOfDay%/s%" data-tchmi-minuteofhour1="%s%PLC.HMI.Controlvars::SoftSettings::system::ScheduleTimeSlot1::usi_MinuteOfHour%/s%" data-tchmi-timeslot2state="%s%PLC.HMI.Controlvars::SoftSettings::system::ScheduleTimeSlot2::b_active%/s%" data-tchmi-dayofweek2="%s%PLC.HMI.Controlvars::SoftSettings::system::ScheduleTimeSlot2::usi_DayOfWeek%/s%" data-tchmi-hourofday2="%s%PLC.HMI.Controlvars::SoftSettings::system::ScheduleTimeSlot2::usi_HourOfDay%/s%" data-tchmi-minuteofhour2="%s%PLC.HMI.Controlvars::SoftSettings::system::ScheduleTimeSlot2::usi_MinuteOfHour%/s%">
+</div>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(188, 188, 188, 1)"
+}
+</script>
+</div>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(207, 207, 207, 0.5019607)"
+}
+</script>
+</div>

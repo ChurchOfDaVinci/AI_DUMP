@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="Units" Id="{536b8219-fac4-4e00-8264-f97e39c2888f}" ParameterList="True">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+	_PER : STRING := 'per';
+    _SQUARED : STRING := 'squared';
+    _CUBED : STRING := 'cubed';
+    _PEAK : STRING := 'peak';
+    _MEGA : STRING := 'mega';
+    _KILO : STRING := 'kilo';
+    _CENTI : STRING := 'centi';
+    _HECTO : STRING := 'hecto';
+    _MICRO : STRING := 'micro';
+    _MILLI : STRING := 'milli';
+    _PERCENTAGE : STRING := 'percentage';
+    _ACRE : STRING := 'acre';
+    _HECTARE : STRING := 'hectare';
+    _DECIBEL : STRING := 'decibel';
+    _DECIBEL_ATTENUATED : STRING := 'decibel_attenuated';
+    _KNOT : STRING := 'knot';
+    _CELSIUS : STRING := 'celsius';
+    _KELVIN : STRING := 'kelvin';
+    _FAHRENHEIT : STRING := 'fahrenheit';
+    _YEAR : STRING := 'year';
+    _MONTH : STRING := 'month';
+    _WEEK : STRING := 'week';
+    _DAY : STRING := 'day';
+    _HOUR : STRING := 'hour';
+    _MINUTE : STRING := 'minute';
+    _SECOND : STRING := 'second';
+    _METRE : STRING := 'metre';
+    _INCH : STRING := 'inch';
+    _FOOT : STRING := 'foot';
+    _YARD : STRING := 'yard';
+    _MILE : STRING := 'mile';
+    _MILE_SCANDINAVIAN : STRING := 'mile_scandinavian';
+    _GRAM : STRING := 'gram';
+    _OUNCE : STRING := 'ounce';
+    _POUND : STRING := 'pound';
+    _STONE : STRING := 'stone';
+    _DEGREE : STRING := 'degree';
+    _RADIAN : STRING := 'radian';
+    _LITRE : STRING := 'litre';
+    _GALLON : STRING := 'gallon';
+    _FLUID_OUNCE : STRING := 'fluid_ounce';
+    _JOULE : STRING := 'joule';
+    _BTU : STRING := 'btu';
+    _WATT : STRING := 'watt';
+    _LUX : STRING := 'lux';
+    _LUMEN : STRING := 'lumen';
+    _PASCAL : STRING := 'pascal';
+    _BAR : STRING := 'bar';
+    _INCH_MERCURY : STRING := 'inch_mercury';
+    _VOLT : STRING := 'volt';
+    _OHM : STRING := 'ohm';
+    _AMP : STRING := 'amp';
+    _HERTZ : STRING := 'hertz';
+    _RPM : STRING := 'rpm';
+    _PPM : STRING := 'ppm';
+    _CARBON : STRING := 'carbon';
+    _VAR : STRING := 'var';
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

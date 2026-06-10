@@ -1,0 +1,147 @@
+<div id="4-6-StatusIoTController" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-creator-viewport-height="768" data-tchmi-height-mode="Content" data-tchmi-width-unit="%" data-tchmi-width="100" data-tchmi-width-mode="Value">
+
+<div id="CombinedDataArrays_IoTWrite" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/CombinedDataArrays.usercontrol" data-tchmi-top="30" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-title="%l%PNcontroller%/l%" data-tchmi-dataarray="%s%PLC.HMI.Monitoringvars::arraydata::IotcontrolData%/s%" data-tchmi-header1="General" data-tchmi-header2="%l%Powerstack%/l%" data-tchmi-header3="%l%BatterySystem%/l%" data-tchmi-height-mode="Content" data-tchmi-width-mode="Content" data-tchmi-header4="%l%PSB%/l%" data-tchmi-show5="true" data-tchmi-header5="%l%Input%/l%" data-tchmi-header6="" data-tchmi-show6="false">
+
+<script data-tchmi-target-attribute="data-tchmi-filter1" type="application/json">
+[
+  {
+    "path": "s_Type",
+    "comparator": "==",
+    "value": "general"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-filter2" type="application/json">
+[
+  {
+    "path": "s_Type",
+    "comparator": "==",
+    "value": "powerstack"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-filter3" type="application/json">
+[
+  {
+    "path": "s_Type",
+    "comparator": "==",
+    "value": "battery"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-filter4" type="application/json">
+[
+  {
+    "path": "s_Type",
+    "comparator": "==",
+    "value": "PSB"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-filter5" type="application/json">
+[
+  {
+    "path": "s_Type",
+    "comparator": "==",
+    "value": "input"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-filter6" type="application/json">
+[
+  {
+    "path": "s_Type",
+    "comparator": "==",
+    "value": "inputgenset"
+  }
+]
+</script>
+</div>
+<div data-tchmi-grid-row-index="0" data-tchmi-grid-column-index="1" id="TcHmiTextblock_ExtIoTtitle" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-right="0" data-tchmi-text-font-size="%i%HeaderSize%/i%" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-weight="Bold" data-tchmi-text="%f%TcHmi.Functions.Beckhoff.ToUpperCase(%l%IoT%/l%)%/f%">
+</div>
+<div data-tchmi-grid-row-index="0" data-tchmi-grid-column-index="1" id="TcHmiTextblock_ExtIoTActive" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="%i%DataTableTitleFontSize%/i%" data-tchmi-right="0" data-tchmi-width="150" data-tchmi-text="%f%TcHmi.Functions.Beckhoff.ToUpperCase(TcHmi.Functions.TcHmi_ePU10.GetEnumString(%s%PLC.HMI.Monitoringvars::Connections::e_IoTConnectionState%/s%))%/f%">
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%s%PLC.HMI.Monitoringvars::Connections::e_ActiveController%/s%",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:server#/definitions/PLC.eControlSources-ShowRecursively",
+                  "symbolExpression": "%s%PLC.HMI.Monitoringvars::Connections::e_ActiveController%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:server#/definitions/PLC.eControlSources-ShowRecursively",
+                  "value": 2
+                },
+                "compareOperator": "==",
+                "logic": null
+              },
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "symbolExpression": "%s%PLC.HMI.Monitoringvars::Connections::b_IoTOK%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "value": "True"
+                },
+                "compareOperator": "==",
+                "logic": "AND"
+              }
+            ],
+            "then": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiTextblock_ExtIoTActive::TextColor%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/SolidColor",
+                  "value": {
+                    "color": "rgba(234, 47, 47, 1)"
+                  }
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiTextblock_ExtIoTActive::TextColor%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/SolidColor",
+                  "value": null
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+</div>

@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="ArrayVariables" Id="{75010c6c-bb2d-471f-b2c0-bc3aabab3aff}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM ArrayVariables
+VAR_IN_OUT CONSTANT
+	Monitoring			: ST_System_Monitor;
+END_VAR
+
+
+
+VAR
+	HeaderArray			: ARRAY [1..Datalogger.NUMBEROFCOLUMNS] OF STRING;
+	VariableArray		: ARRAY [1..Datalogger.NUMBEROFCOLUMNS] OF STRING;
+	milliSec			: STRING;
+END_VAR
+
+
+//When Removing or Adding file always change 'WriteToFile.NUMBEROFCOLUMNS' to the amount of variables]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[HeaderArray[1]   :='Time';
+HeaderArray[2]   :='ErrorID';			      								
+HeaderArray[3]   :='Severity'; 		                        
+HeaderArray[4]   :='Message'; 		                        
+HeaderArray[5]   :='System state';
+HeaderArray[6]   :='Powerstack state';   		                        
+HeaderArray[7]   :='BMS state'; 			        
+HeaderArray[8]   :='Cooling state';
+//HeaderArray[9]   :='T CMchoke L2 core';  		        
+//HeaderArray[10]   :='T CMchoke L3 Inner'; 			        
+//HeaderArray[11]   :='T CMchoke L3 Outer';
+//HeaderArray[12]   :='T CMchoke L3 core'; 		                        
+//HeaderArray[13]  :='T CMchoke DC Inner';		        
+//HeaderArray[14]  :='T CMchoke DC Outer';
+//HeaderArray[15]   :='T CMchoke DC core';			        
+//HeaderArray[16]  :='T GrChoke L1 Inner';              	        
+//HeaderArray[17]  :='T GrChoke L1 Outer';
+//HeaderArray[18]  :='T GrChoke L1 core';			        
+//HeaderArray[19]  :='T GrChoke L2 Inner'; 			        
+//HeaderArray[20]  :='T GrChoke L2 Outer';
+//HeaderArray[21]  :='T GrChoke L2 core';					        
+//HeaderArray[22]  :='T GrChoke L3 Inner';                      
+//HeaderArray[23]  :='T GrChoke L3 Outer';
+//HeaderArray[24]  :='T GrChoke L3 core';		                        
+//HeaderArray[25]  :='T AC Caps bottom';                        
+//HeaderArray[26]  :='T AC Caps top';                        
+//HeaderArray[27]  :='T DC Caps';                        
+//HeaderArray[28]  :='T Fancoil Compartment';                        
+//HeaderArray[29]  :='T air inlet';              	        
+//HeaderArray[30]  :='T air outlet (fancoil)';			        
+//HeaderArray[31]  :='T Water inlet (fancoil)';                        
+//HeaderArray[32]  :='T Water outlet (fancoil)';                        
+//HeaderArray[33]  :='T DC busbar CM choke';	                        
+//HeaderArray[34]  :='T AC busbar CM choke L3'; 
+//HeaderArray[35]  :='T AC busbar Output L1';                        
+//HeaderArray[36]  :='Active Power';	                        
+//HeaderArray[37]  :='Total current';	                        
+                     
+																													                                                                                       
+VariableArray[1]   :=  GVL.s_SystemTime;
+VariableArray[2]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_ambient);
+VariableArray[3]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.r_TemperatureInverter);
+VariableArray[4]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_CMchokeInner[1]);
+VariableArray[5]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_CMchokeOuter[1]);
+VariableArray[6]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.r_TemperatureCMChoke[1]);
+VariableArray[7]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_CMchokeInner[2]);
+VariableArray[8]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_CMchokeOuter[2]);
+VariableArray[9]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.r_TemperatureCMChoke[2]);
+VariableArray[10]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_CMchokeInner[3]);
+VariableArray[11]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_CMchokeOuter[3]);
+VariableArray[12]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.r_TemperatureCMChoke[3]);
+VariableArray[13]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_CMchokeInner[4]);
+VariableArray[14]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_CMchokeOuter[4]);
+VariableArray[15]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.r_TemperatureCMChoke[4]);
+VariableArray[16]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_GrChokeInner[1]);
+VariableArray[17]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_GrChokeOuter[1]);
+VariableArray[18]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.r_TemperatureGridChoke[1]);
+VariableArray[19]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_GrChokeInner[2]);
+VariableArray[20]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_GrChokeOuter[2]);
+VariableArray[21]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.r_TemperatureGridChoke[2]);
+VariableArray[22]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_GrChokeInner[3]);
+VariableArray[23]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_GrChokeOuter[3]);
+VariableArray[24]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.r_TemperatureGridChoke[3]);
+VariableArray[25]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_ACCapsBottom);
+VariableArray[26]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_ACCapsTop);
+VariableArray[27]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_DCCaps);
+VariableArray[28]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_FancoilCompartement);
+VariableArray[29]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_AirInletModule);
+VariableArray[30]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_AirOutletFancoil);
+VariableArray[31]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_WaterInletFancoil);
+VariableArray[32]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_WaterOutletFancoil);
+VariableArray[33]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_DCbusbarCMChoke);
+VariableArray[34]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_ACbusbarCMchoke);
+VariableArray[35]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.AddTemperatures.r_ACbusbarOutput);
+VariableArray[36]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.PowerMonitor.r_ActivePower[0]);
+VariableArray[37]   :=  TO_STRING(Monitoring.powerstack.PowermoduleMaster.PowerMonitor.r_Current[1]);]]></ST>
+    </Implementation>
+    <LineIds Name="ArrayVariables">
+      <LineId Id="2799" Count="33" />
+      <LineId Id="2875" Count="0" />
+      <LineId Id="2833" Count="3" />
+      <LineId Id="2840" Count="33" />
+      <LineId Id="2876" Count="0" />
+      <LineId Id="2874" Count="0" />
+      <LineId Id="2010" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

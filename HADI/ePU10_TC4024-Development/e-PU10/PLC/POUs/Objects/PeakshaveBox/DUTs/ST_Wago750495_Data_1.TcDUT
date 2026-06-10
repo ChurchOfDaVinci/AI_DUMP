@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Wago750495_Data_1" Id="{d63554df-25e5-46b5-9cf8-207a37caa05b}">
+    <Declaration><![CDATA[TYPE ST_Wago750495_Data_1 :
+STRUCT
+	//Voltages
+	r_VoltageL1N_RMS				: REAL;
+	r_VoltageL2N_RMS 				: REAL;
+	r_VoltageL3N_RMS				: REAL;
+	r_VoltageL1L2_RMS				: REAL;
+	r_VoltageL2L3_RMS 				: REAL;
+	r_VoltageL3L1_RMS				: REAL;
+	r_VoltageL1N_Peak 				: REAL;
+	r_VoltageL2N_Peak 				: REAL;
+	r_VoltageL3N_Peak 				: REAL;
+	                            	      
+	//Currents                  	      
+	r_CurrentL1_RMS					: REAL;
+	r_CurrentL2_RMS					: REAL;
+	r_CurrentL3_RMS					: REAL;
+	r_CurrentN_RMS					: REAL;
+	r_CurrentL1_Peak				: REAL;
+	r_CurrentL2_Peak				: REAL;
+	r_CurrentL3_Peak				: REAL;
+	                            	      
+	//Power                     	      
+	r_ActivePowerL1					: REAL;
+	r_ActivePowerL2					: REAL;
+	r_ActivePowerL3					: REAL;
+	r_ReactivePowerL1				: REAL;
+	r_ReactivePowerL2				: REAL;
+	r_ReactivePowerL3				: REAL;
+	r_ApparentPowerL1				: REAL;
+	r_ApparentPowerL2				: REAL;
+	r_ApparentPowerL3				: REAL;
+	
+	//Energy
+	r_ActiveEnergyTotal				: REAL;
+	r_ActiveEnergyImport			: REAL;
+	r_ActiveEnergyExport			: REAL;
+	r_ReactiveEnergyTotal			: REAL;
+	r_ReactiveEnergyInductive		: REAL;
+	r_AReactiveEnergyCapacitive		: REAL;
+	
+	//Frequency
+	r_FrequencyL1					: REAL;
+	r_FrequencyL2					: REAL;
+	r_FrequencyL3					: REAL;
+	                        		      
+	//Phase Angle           		      
+	r_PhaseAngleL1					: REAL;
+	r_PhaseAngleL2					: REAL;
+	r_PhaseAngleL3					: REAL;
+	                        		      
+	//PowerFactor           		      
+	r_PowerFactorL1					: REAL;
+	r_PowerFactorL2					: REAL;
+	r_PowerFactorL3					: REAL;
+	
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

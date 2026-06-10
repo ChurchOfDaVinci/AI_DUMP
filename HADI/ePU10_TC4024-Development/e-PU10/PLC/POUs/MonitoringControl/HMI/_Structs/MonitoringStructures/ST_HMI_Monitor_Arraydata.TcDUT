@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_HMI_Monitor_Arraydata" Id="{2be8cbaf-40fa-4c49-a0cc-93b3b42108f4}">
+    <Declaration><![CDATA[TYPE ST_HMI_Monitor_Arraydata :
+STRUCT
+	ACInputData			: ARRAY [1..35] OF ST_HMIData;
+	ACOutputData		: ARRAY [1..36] OF ST_HMIData;
+	AcDcChargerData		: ARRAY [1..13] OF ST_HMIData;
+	DcExtension			: ARRAY [1..4] OF ST_HMIData;
+	PowerstackData 		: ARRAY [1..20] OF ST_HMIData;
+	PmMasterData		: ARRAY [1..58] OF ST_HMIData;
+	PmSlaveData			: ARRAY [1..58] OF ST_HMIData;
+	PNcontrolData		: ARRAY [1..45] OF ST_HMIData;
+	IotcontrolData		: ARRAY [1..45] OF ST_HMIData;
+	PSBdata				: ARRAY [1..24] OF ST_HMIData;
+	MBMUdata			: ARRAY [1..20] OF ST_HMIData;
+	SBMU1Data			: ARRAY [1..21] OF ST_HMIData;
+	SBMU2Data			: ARRAY [1..21] OF ST_HMIData;
+	SBMU3Data			: ARRAY [1..21] OF ST_HMIData;
+	SBMU4Data			: ARRAY [1..21] OF ST_HMIData;
+	CoolingSystem		: ARRAY [1..5] OF ST_HMIData;
+	CoolingSystemHp1	: ARRAY [1..10] OF ST_HMIData;
+	CoolingSystemHp2	: ARRAY [1..10] OF ST_HMIData;
+	Genset				: ARRAY [1..14] OF ST_HMIData;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

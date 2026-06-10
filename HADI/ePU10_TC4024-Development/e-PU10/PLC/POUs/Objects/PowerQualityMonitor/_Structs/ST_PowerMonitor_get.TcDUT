@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PowerMonitor_get" Id="{903bbf0c-4bb1-484f-abf3-ff4dd29e1c18}">
+    <Declaration><![CDATA[TYPE ST_PowerMonitor_get :
+STRUCT
+	PQMeterReady		: 	BOOL;
+	InputField			:	ST_PowerMonitor_InputField;	
+	OutputField			:	ST_PowerMonitor_OutputField;
+	InternalSupply 		: 	ST_MeasurementFieldData;
+	
+	//Inverter power/energy input & output
+	BESS				:	ST_PowerMonitor_BESS;
+	events				:	ST_PowerMonitor_Events;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

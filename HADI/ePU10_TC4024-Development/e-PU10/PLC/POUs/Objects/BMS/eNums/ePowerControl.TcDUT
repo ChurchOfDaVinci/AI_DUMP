@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ePowerControl" Id="{479fa6da-2fab-4b4f-9eb6-413af4c75dea}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE ePowerControl :
+(
+	Init := 0,
+	Stay := 1,
+	PowerOn := 2,
+	PowerOff := 3
+)word;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

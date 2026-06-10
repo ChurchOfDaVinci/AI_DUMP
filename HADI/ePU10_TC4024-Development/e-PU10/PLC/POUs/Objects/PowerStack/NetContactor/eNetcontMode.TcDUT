@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eNetcontMode" Id="{6466fd48-f991-44c1-a93d-72587edb025b}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eNetcontMode :
+(
+	auto := 0,
+	left := 1,
+	right := 2,
+	none := 3
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

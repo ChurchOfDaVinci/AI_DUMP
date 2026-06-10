@@ -1,0 +1,310 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_HMIButtons" Id="{42c9bdf8-4258-4280-8f44-df3c9de2ef70}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_HMIButtons
+VAR_IN_OUT
+	controlvars				: ST_HMI_control;
+	monitoringvars			: ST_HMI_monitor;
+END_VAR
+VAR_INPUT
+	b_ControlAccess			: BOOL;
+END_VAR
+VAR
+	DemoModeTimer				: TON := (PT := T#3s);
+	b_StopButton		AT %I* : BOOL;
+	b_StopButtonLight	AT %Q* : BOOL;
+	b_Button			AT %I* : ARRAY [1..6] OF BOOL;
+	b_ButtonLight		AT %Q* : ARRAY [1..6] OF BOOL;
+	
+	fbQsetbyStep					: FB_IncrementPowerStep;
+	fbPsetbyStep					: FB_IncrementPowerStep;
+	
+	b_FlashSlow						: BOOL;
+	b_FlashQuick					: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[PulseLampTriggers();
+
+fbPsetbyStep(
+	b_Up := controlvars.HMIonly.b_Pup,
+	b_Down:= controlvars.HMIonly.b_Pdown,
+	b_Reset:= controlvars.HMIonly.b_PReset,
+	r_IncrementStep := 5,
+	r_power	:= controlvars.Operation.system.r_Pset);
+		
+fbQsetbyStep(
+	b_Up := controlvars.HMIonly.b_Qup,
+	b_Down:= controlvars.HMIonly.b_Qdown,
+	b_Reset:= controlvars.HMIonly.b_QReset,
+	r_IncrementStep := 5,
+	r_power	:= controlvars.Operation.system.r_Qset);
+	
+controlvars.control.b_SystemShutdown := StopButton(b_in := b_stopButton AND b_ControlAccess, b_lamp=>b_stopButtonLight);
+
+//LED DEMO TRIGGER
+DemoModeTimer(IN :=  b_Button[4] AND b_Button[3] AND NOT DemoModeTimer.Q);
+IF DemoModeTimer.Q THEN
+	GVL.b_LEDDemoMode := NOT GVL.b_LEDDemoMode;
+END_IF
+
+//Reset
+ResetButton(IN := b_Button[5], variable := controlvars.control.b_Reset, b_lamp =>b_ButtonLight[5]);
+
+//Mute Sounder
+SounderMuteButton(IN := b_Button[6] AND b_ControlAccess, variable := controlvars.Operation.system.b_SounderMute);
+
+//Transportmode
+TransportMode(IN := b_Button[1], b_lamp => b_ButtonLight[1], b_TransportmodeEnable := controlvars.SoftSettings.system.b_EnableTransportMode);
+Monitoringvars.ConditionalFormatting.b_TransportModeActive := b_ButtonLight[1];]]></ST>
+    </Implementation>
+    <Folder Name="TestScripts" Id="{c9256f81-8b41-482e-a213-6ca1a5cdb07d}" />
+    <Method Name="HMIStartEnd" Id="{aa29420c-5204-4e4d-87b8-a121ea2d9ba7}">
+      <Declaration><![CDATA[METHOD HMIStartEnd : BOOL
+VAR_INPUT
+	b_taskKill	: BOOL;
+END_VAR
+
+VAR_INST
+	fbHMIstart : NT_StartProcess;
+	b_hmistart	: BOOL := FALSE;
+	ton_HmiStart: TON;
+	fbTaskKill	: NT_StartProcess;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//HMI autostart on PLC. Only needed when nuc is not installed.
+ton_HMIstart(IN:= b_hmiStart, PT:= T#20S);
+fbHMIstart(
+	NETID		:= '',
+	PATHSTR		:= 'C:\Program Files\Google\Chrome\Application\chrome.exe',
+	DIRNAME		:= 'C:\Program Files\Google\Chrome\Application',
+	COMNDLINE	:= '--chrome-frame  --kiosk https://127.0.0.1:1020',
+	START		:= ton_HMIstart.Q,
+	TMOUT		:= T#5S,
+);
+
+IF fbHMIstart.BUSY THEN
+	b_hmistart := FALSE;
+END_IF
+
+//Exit kiosk mode
+fbTaskKill(
+	NETID		:= '',
+	PATHSTR		:= 'C:\PLCUtility\CloseHMI.bat',
+	DIRNAME		:= 'C:\PLCUtility',
+	COMNDLINE	:= '',
+	START		:= b_taskKill,
+	TMOUT		:= T#5S,
+);
+
+IF fbTaskKill.BUSY THEN
+	b_taskKill := FALSE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PulseLampTriggers" Id="{568c6902-df8f-4ef8-804e-0d4483e3303d}">
+      <Declaration><![CDATA[METHOD PulseLampTriggers : BOOL
+VAR_INPUT
+END_VAR
+VAR_INST
+	ton_FlashPulseQuick					: TON := (PT := T#250MS);
+	ton_FlashPulseSlow					: TON := (PT := T#500MS);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ton_flashPulseQuick(IN:= NOT ton_flashPulseQuick.Q );
+IF ton_FlashPulseQuick.Q THEN
+	b_FlashQuick := NOT b_FlashQuick;
+END_IF
+
+ton_flashPulseSlow(IN:= NOT ton_flashPulseSlow.Q );
+IF ton_FlashPulseSlow.Q THEN
+	b_FlashSlow := NOT b_FlashSlow;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ResetButton" Id="{eeba0919-5c08-457b-8391-d3aa543db6e0}">
+      <Declaration><![CDATA[METHOD ResetButton
+VAR_INPUT
+	IN				: BOOL;
+END_VAR
+
+VAR_IN_OUT
+	variable			: BOOL;
+END_VAR
+
+VAR_INST
+	f_Trig		: F_TRIG;
+END_VAR
+
+VAR_OUTPUT
+	b_lamp			: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[f_Trig(CLK := IN);
+
+IF IN THEN
+	variable := IN;
+END_IF
+
+IF f_Trig.Q THEN
+	variable := FALSE;
+END_IF
+
+b_lamp := GVL.b_EmergencyShutdownActive OR GVL.b_NormalShutdownActive;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SounderMuteButton" Id="{c1e8c784-e9d8-4361-b217-59ec47789804}">
+      <Declaration><![CDATA[METHOD SounderMuteButton
+VAR_INPUT
+	IN				: BOOL;
+END_VAR
+
+VAR_IN_OUT
+	variable			: BOOL;
+END_VAR
+
+VAR_INST
+	f_Trig			: F_TRIG;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[f_Trig(CLK := IN);
+
+IF IN THEN
+	variable := IN;
+END_IF
+
+IF f_Trig.Q THEN
+	variable := FALSE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="StopButton" Id="{83784e09-f1b4-4fe3-ab5e-c83ba0dfd1cb}">
+      <Declaration><![CDATA[METHOD StopButton : BOOL
+VAR_INPUT
+	b_in : BOOL;
+END_VAR
+
+VAR_OUTPUT
+	b_lamp : BOOL;
+END_VAR
+
+VAR_INST
+	ton_ShutdownDelay	: TON := (PT := T#3S);
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Set systemshutdown
+ton_ShutdownDelay(IN := b_IN);
+StopButton := ton_ShutdownDelay.Q;
+
+
+//Set lamp based on mode.
+IF monitoringvars.system.e_SystemState = eSystemstate.Shutdown THEN
+	b_lamp := b_FlashQuick;
+ELSIF monitoringvars.system.e_SystemState <> eSystemstate.off THEN
+	b_lamp := b_FlashSlow AND b_IN;
+END_IF
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TransportMode" Id="{4c5f9b06-7b3b-4824-bb61-e442fe34c28e}">
+      <Declaration><![CDATA[METHOD TransportMode
+VAR_INPUT
+	IN				: BOOL;
+END_VAR
+
+VAR_OUTPUT
+	b_lamp			: BOOL;
+END_VAR
+
+VAR_IN_OUT
+	b_TransportmodeEnable	: Bool;
+END_VAR
+
+VAR_INST
+	r_trigbutton : r_TRIG;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[r_trigbutton(CLK:= IN);
+
+IF r_trigbutton.Q THEN
+	b_transportmodeEnable := NOT b_transportmodeEnable;
+END_IF
+
+IF monitoringvars.System.b_TransportModePending THEN
+	b_lamp := b_FlashSlow;
+ELSE
+	b_lamp := b_transportmodeEnable;
+END_IF
+	
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_HMIButtons">
+      <LineId Id="268" Count="31" />
+      <LineId Id="75" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HMIButtons.HMIStartEnd">
+      <LineId Id="39" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="13" Count="4" />
+      <LineId Id="19" Count="2" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="27" Count="11" />
+      <LineId Id="26" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HMIButtons.PulseLampTriggers">
+      <LineId Id="9" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HMIButtons.ResetButton">
+      <LineId Id="27" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="35" Count="1" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HMIButtons.SounderMuteButton">
+      <LineId Id="18" Count="1" />
+      <LineId Id="29" Count="2" />
+      <LineId Id="33" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HMIButtons.StopButton">
+      <LineId Id="87" Count="0" />
+      <LineId Id="103" Count="1" />
+      <LineId Id="88" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_HMIButtons.TransportMode">
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="19" Count="2" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="22" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

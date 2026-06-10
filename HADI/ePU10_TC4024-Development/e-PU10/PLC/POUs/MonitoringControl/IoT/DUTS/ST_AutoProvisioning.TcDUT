@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_AutoProvisioning" Id="{a73040ef-81ec-4b3b-94af-168bb18347a1}">
+    <Declaration><![CDATA[TYPE ST_AutoProvisioning :
+	STRUCT
+		sType	: STRING;
+		sRealm	: STRING;
+		sError	: STRING;
+	END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

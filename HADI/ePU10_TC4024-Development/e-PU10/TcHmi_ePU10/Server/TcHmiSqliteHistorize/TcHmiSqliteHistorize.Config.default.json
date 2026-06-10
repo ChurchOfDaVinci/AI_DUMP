@@ -1,0 +1,16 @@
+{
+    "commitInterval": "PT3M",
+    "enableBackup": false,
+    "historizedSymbolList": {
+        "PLC.HMI.Historizevars": {
+            "interval": "PT0.01S",
+            "maxEntries": 10000,
+            "recordingEnabled": true,
+            "rowLimit": 10000
+        }
+    },
+    "inMemory": false,
+    "maxBackups": 1,
+    "mode": 4,
+    "vacuumOnStartup": false
+}

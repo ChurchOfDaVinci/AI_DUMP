@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="AcCheck" Id="{dd403a1c-6e52-4e29-9d55-43f2ac623397}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION AcCheck : BOOL
+VAR_INPUT
+	r_Voltage	: REAL;
+	r_Frequency	: REAL;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[AcCheck	:= AcFrequencyCheck(r_Frequency) AND AcVoltageCheck(r_Voltage);]]></ST>
+    </Implementation>
+    <LineIds Name="AcCheck">
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

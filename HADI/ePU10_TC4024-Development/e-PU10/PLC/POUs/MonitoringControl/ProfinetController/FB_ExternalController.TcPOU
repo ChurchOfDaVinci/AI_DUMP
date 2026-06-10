@@ -1,0 +1,2534 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_ExternalController" Id="{880336b7-64c3-43a9-a5ed-44c0d1e5f3f6}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ExternalController
+VAR_INPUT
+	set				: ST_ExtController_Set;
+END_VAR
+VAR_OUTPUT
+	get							: ST_ExtController_get;
+END_VAR
+
+VAR_IN_OUT CONSTANT
+	{ attribute 'TcHmiSymbol.Hide' }
+	monitor								: ST_System_Monitor;
+END_VAR
+
+//HMI controls to be overwritten from get if controller is allowed.
+VAR_IN_OUT
+	st_params							: ST_PNcontroller_params;
+	controlvars							: ST_System_Control;
+END_VAR
+
+VAR
+	ExternalControlMode			:	eExternalControlMode := eExternalControlMode.off;
+	HeartBeatFault				:	Bool;
+END_VAR
+
+VAR
+	Inputs						:	ST_PNInput;
+	Outputs				AT %Q*	:	ST_PNOutput;
+	
+	PNInputs			AT %I*	:	ST_PNInput;
+	MBInputs			AT %I*	:	ST_PNInput;
+	MBInputsV2			AT %I*	:	ST_PNInput; //output can be mapped to the same struct as V1
+	
+	BindControlvars				: FB_BindControlvars;
+	
+	e_ID						: eObject_ID := eObject_ID.PNcontroller;
+	
+	fTrigTestScript				: F_Trig;
+	emptyEventStruct			: ST_ExtController_Events;
+	emptyTestStruct				: ST_PNTest;
+	TestScript					: FB_ExtControllerTest;
+	
+	b_enableByteSwap			: BOOL;
+END_VAR
+
+VAR
+	monitoringvalues			: REFERENCE TO ST_System_Monitor;
+	
+	fbJson         	: FB_JsonSaxWriter;
+  	fbJsonDataType 	: FB_JsonReadWriteDataType;
+  	sJsonDoc2       				: STRING(2000); 
+	rtrig_SwitchToExtControl	:	r_trig;
+	ManualAckState	:	BOOL;
+
+	bTest:bool;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+get.control.b_ActivateSettings := (ExternalControlMode = eExternalControlMode.AdvancedControl);
+
+IF settings.Configuration.e_PNcouplerType <> ePNcouplerType.None  THEN
+	CASE settings.Configuration.e_PNcouplerType OF
+		ePNCouplertype.ModbusTCP:	 	Inputs := MBInputs;
+		ePNCouplerType.ModbusTCPV2: 	Inputs := MBInputsV2;
+		ePNCouplerType.Profinet:		Inputs := PNInputs;
+	END_CASE
+	
+	CheckControlMode();
+	
+	IF CheckCouplerState() or bTest THEN //wait for coupler to be present
+		IF (ExternalControlMode > eExternalControlMode.Readonly) AND NOT get.events.b_HeartbeatFault THEN
+			get.e_ConnectionState := eConnectionState.authorized;
+		ELSIF NOT get.events.b_HeartbeatFault THEN
+			get.e_ConnectionState := eConnectionState.connected;
+		ELSE
+			get.e_ConnectionState := eConnectionState.disconnected;
+		END_IF
+	
+		IF ExternalControlMode > eExternalControlMode.off THEN //only write outputs if monitoring is allowed
+		
+			//always check the heartbeat input, only process the events when Externalcontrolmode > readonly
+			Outputs.General.ui_HeartBeatOut := wordEndian(HeartBeat(ui_HeartBeatInput := Inputs.General.ui_HeatBeat, b_heartbeatfault => HeartBeatFault));
+			get.events.b_HeartbeatFault := SEL(ExternalControlMode > eExternalControlMode.Readonly, FALSE, HeartBeatFault);
+			get.ui_Heartbeat := Inputs.general.ui_HeatBeat;
+		
+			MapGeneralData		(Monitor := monitor, Input := Inputs.General, 			Output := Outputs.General, 				events:= get.events	);
+			MapBatteryData		(Monitor := monitor, Input := Inputs.Battery,			Output := Outputs.Battery			,	events:= get.events	);
+			MapOutputField		(Monitor := monitor,									Output := Outputs.OutputField								);
+			MapInputField		(Monitor := monitor, Input := Inputs.Inputfield, 		Output := Outputs.InputField		, 	events:= get.events	);
+			MapPowerStack		(Monitor := monitor, Input := Inputs.Powerstack,	 	Output := Outputs.Powerstack		, 	events:= get.events	);
+			MapPeakShaveBox		(Monitor := monitor, Input := Inputs.PSB, 				Output := Outputs.PSB				,	events:= get.events	);
+			MapZPT				(Monitor := monitor,									Output := Outputs.ZPT										);
+			MapGeneratorControl	(Monitor := monitor, Input := inputs.GenControl,		Output := Outputs.GenControl		,	events := get.events);
+			MapInputGridControl	(Monitor := monitor, Input := inputs.InputGridControl,	Output := Outputs.InputGridControl	, 	events := get.events);	
+			MapACDCCharger		(monitor := monitor, input := inputs.ACDCCharger, 		output := outputs.ACDCCharger		,	events := get.events);	
+			
+			IF ExternalControlMode > eExternalControlMode.Readonly THEN
+				BindControlVars(AdvancedControl :=  ExternalControlMode = eExternalControlMode.AdvancedControl,
+								SystemControlVars := controlvars, 
+								ExtControlVars := get);
+			END_IF
+		END_IF
+	
+		rtrig_SwitchToExtControl(clk := monitor.controlfb.HardSettings.setup.e_ControlSource = eControlSources.ExternalController);	
+		IF rtrig_SwitchToExtControl.q THEN
+			get.control := controlvars.control;
+			get.HardSettings := controlvars.HardSettings;
+			get.Operation := controlvars.Operation;
+			get.SoftSettings := controlvars.SoftSettings;
+		END_IF
+	END_IF
+ELSE
+	get.events.b_CouplerError := FALSE;
+	get.events.b_HeartbeatFault := FALSE;
+	ExternalControlMode := eExternalControlMode.off;
+END_IF
+
+		
+SetJsonDoc(get.s_OutputJson);
+]]></ST>
+    </Implementation>
+    <Folder Name="DataConversion" Id="{f84a5a0a-5cd0-4efc-ab50-897128f477c5}" />
+    <Folder Name="DataMappingV2" Id="{3da3456d-874b-4a92-883b-bfc0c1fd5d8c}" />
+    <Method Name="BindControlVars" Id="{2c3f9546-f14d-4bb2-bddd-4551c9931d07}">
+      <Declaration><![CDATA[METHOD BindControlVars
+VAR_INPUT
+	advancedControl: BOOL;
+END_VAR
+
+VAR_INST
+	defaults			: ST_Softsettings;
+	ftrig_AdvancedControl : F_trig;
+	rTrig_AdvancedControl : R_Trig;
+	
+	b_defaultsRestored	: BOOL;
+END_VAR
+
+
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ftrig_AdvancedControl(CLK:= advancedcontrol);
+IF ftrig_advancedControl.Q THEN
+	RestoreDefaults(defaults, controlvars.SoftSettings);
+END_IF
+
+//advanced control, all IO coupled
+IF advancedcontrol THEN
+	controlvars.SoftSettings := get.SoftSettings;
+	controlvars.Operation := get.Operation;
+ELSE
+	Storedefaults(defaults, controlvars.SoftSettings);
+	//Basic control, only specific IO coupled
+	controlvars.softsettings.system.b_EcoModeEnable := get.SoftSettings.system.b_EcoModeEnable;
+	Controlvars.operation.system.b_PFsetEnable := get.Operation.system.b_PFsetEnable;
+	Controlvars.operation.system.r_PFset := get.Operation.system.r_PFset;
+	Controlvars.operation.system.r_Pset:= get.Operation.system.r_Pset;
+	Controlvars.operation.system.r_Qset:= get.Operation.system.r_Qset;
+	Controlvars.softsettings.PSB.setpointTimeslot1 := get.softsettings.PSB.setpointTimeslot1;
+END_IF
+
+a_ControlCommands();
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CheckControlMode" Id="{03c93a00-d6b5-411b-9044-14125c81fbb4}">
+      <Declaration><![CDATA[METHOD CheckControlMode : BOOL
+VAR_INPUT
+	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF monitor.controlfb.HardSettings.setup.e_ControlSource = eControlSources.ExternalController THEN
+	IF get.b_AdvancedControl THEN
+		ExternalControlMode := eExternalControlMode.AdvancedControl;
+	ELSE
+		ExternalControlMode := eExternalControlMode.BasicControl;
+	END_IF
+ELSIF st_params.b_MonitoringEnable THEN
+	ExternalControlMode := eExternalControlMode.Readonly;
+ELSE
+	ExternalControlMode := eExternalControlMode.off;
+END_IF
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CheckCouplerState" Id="{0398e5ea-cce2-4f30-8cc3-eaa312c29a53}">
+      <Declaration><![CDATA[METHOD CheckCouplerState : BOOL
+VAR_INPUT
+
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//TBD: Verder uitbereiden
+
+IF Inputs.PNIOBoxState = 0 THEN // = No error
+	CheckCouplerState := TRUE;
+	get.events.b_CouplerError := FALSE;
+ELSE
+	CheckCouplerState := FALSE;
+	get.events.b_CouplerError := TRUE;
+//1 = Profinet device state machine is in boot mode
+//2 = Device not found
+//3 = The stationname is not unique
+//4 = IP could not be set
+//5 = IP conflict
+//6 = DCP set was not successful
+//7 = Watchdog error
+//8 = Datahold error
+//9 = RTC3: Sync mode could not be initiated
+//10 = Profinet controller has a link error
+//11 = The aliasname is not unique
+//12 = The automatic name assignement isn't possible - wrong device type
+//13 = IOC-AR is established but no application ready
+//14 = IOC-AR is established but module difference
+//15 = At least one InputCR is invalid, provider in stop or problemindicator is set
+//16 = At least one OutputCR is invalid, provider in stop or problemindicator is set
+//31 = Only for EtherCAT gateways: WC-State of cyclic EtherCAT frame is 1
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DwordEndian" Id="{0de5615b-90e7-4ec8-b449-146abaf62e54}" FolderPath="DataConversion\">
+      <Declaration><![CDATA[METHOD DwordEndian : DWORD
+VAR_INPUT
+	IN		: DWORD;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF st_params.b_BigEndian THEN
+	DwordEndian := HOST_TO_BE32(IN);
+ELSE
+	DwordEndian := IN;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DwordToReal" Id="{d0d83304-21dd-42f3-8fbd-ac8193855f75}" FolderPath="DataConversion\">
+      <Declaration><![CDATA[METHOD DwordToReal : REAL
+VAR_INPUT
+	InputVar			:	DWORD;
+	b_InputSigned		:	BOOL;
+	Stepsize			:	WORD;
+end_var]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[DwordToReal := 1;
+
+IF b_inputSigned AND InputVar.31 THEN
+	DwordToReal := -1;
+	InputVar.31 := FALSE;
+END_IF
+
+DwordToReal := DwordToReal * DWORD_TO_REAL(InputVar)/Stepsize;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GenGridControllerStateMachine" Id="{f6b4168c-fd03-454e-9c38-abd0594c0ba4}">
+      <Declaration><![CDATA[METHOD GenGridControllerStateMachine : BOOL
+VAR_INPUT
+END_VAR
+
+VAR_INST
+	State		:	UINT;
+	rTrig_Ack	:	R_trig;
+	test		:	BOOL;
+	AckDelay	:	Ton := (pt := T#1S200ms);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[get.Operation.system.b_GenGridModeTrans := FALSE;
+rTrig_Ack(clk := ManualAckState);
+AckDelay();
+//get.Operation.system.b_GenGridModeTrans := Ackdelay.q;
+AckDelay.IN := FALSE;
+
+CASE monitor.system.GenGridController.e_BreakerMode OF
+	eBreakerOperationMode.none:
+		AckDelay.IN := FALSE;
+		//IF monitor.system.GenGridController.b_ModeTransActive THEN
+		//	get.Operation.system.b_GenGridModeTrans := TRUE;
+		//END_IF
+		
+	eBreakerOperationMode.GridFeedthrough:
+		IF get.SoftSettings.setup.e_AcInputType = eAcInputType.Grid THEN
+			IF get.SoftSettings.inputgrid.breaker.AutoConnect THEN	//connect if requested, otherwise hold here
+				IF monitor.system.GenGridController.b_ModeTransActive THEN
+					get.Operation.system.b_GenGridModeTrans := TRUE;
+				END_IF
+			ELSE 
+				IF monitor.system.GenGridController.e_state = eGenGridSTate.Running then
+					get.Operation.system.b_GenGridModeTrans := TRUE;
+				END_IF
+			END_IF		
+		END_IF	
+		IF get.SoftSettings.setup.e_AcInputType = eAcInputType.None THEN //transitioning to none
+			IF (NOT get.SoftSettings.inputgrid.breaker.AutoConnect OR rTrig_ack.q) AND monitor.ACswitchgear.b_InputContactorfb THEN
+				get.Operation.system.b_GenGridModeTrans := TRUE;
+			elsIF NOT monitor.ACswitchgear.b_InputContactorfb AND monitor.system.GenGridController.b_ModeTransActive THEN
+				AckDelay.in := TRUE;
+				get.Operation.system.b_GenGridModeTrans := AckDelay.q;
+			END_IF//get.Operation.system.b_GenGridModeTrans := true;//rTrig_Ack.q;
+		END_IF
+	
+	eBreakerOperationMode.GenIso: //eBreakerOperationMode.GenDroop, 
+		IF get.SoftSettings.setup.e_AcInputType = eAcInputType.None THEN //transitioning to none	
+			IF monitor.ACswitchgear.b_InputContactorfb THEN
+				get.Operation.system.b_GenGridModeTrans := rTrig_Ack.Q;
+			ELSIF monitor.system.GenGridController.b_ModeTransActive THEN
+				AckDelay.in := TRUE;
+				get.Operation.system.b_GenGridModeTrans := AckDelay.q;
+			END_IF//get.Operation.system.b_GenGridModeTrans := true;//rTrig_Ack.q;
+		END_IF
+		
+	eBreakerOperationMode.GenFix:
+		IF get.SoftSettings.setup.e_AcInputType = eAcInputType.None THEN //transitioning to none	
+			IF monitor.ACswitchgear.b_InputContactorfb THEN
+				IF NOT (monitor.system.GenGridController.e_state = eGenGridState.Cooldown OR 
+						monitor.system.GenGridController.e_state = eGenGridState.Running OR
+						monitor.system.GenGridController.e_state = eGenGridState.Warmup) THEN
+					get.Operation.system.b_GenGridModeTrans := true;
+				ELSE	
+					get.Operation.system.b_GenGridModeTrans := rTrig_Ack.Q;
+				end_if
+			ELSIF monitor.system.GenGridController.b_ModeTransActive THEN
+				AckDelay.in := TRUE;
+				get.Operation.system.b_GenGridModeTrans := AckDelay.q;
+			END_IF//get.Operation.system.b_GenGridModeTrans := true;//rTrig_Ack.q;
+		END_IF
+END_CASE
+
+
+
+//get.SoftSettings.inputgenset.b_AutoStartStop := (inputs.General.SecondaryDigOutState = 1 OR inputs.GenControl.ui_StartStopControl = 1);
+
+//IF (inputs.General.SecondaryDigOutState = 2 OR inputs.GenControl.ui_StartStopControl = 2) THEN
+//	IF monitor.system.GenGridController.e_RunCondition <> eruncondition.ManuallyStarted THEN
+//		get.Operation.Genset.b_manualStart := NOT get.Operation.Genset.b_manualStart;
+//	END_IF
+//ELSIF (inputs.General.SecondaryDigOutState <> 2 AND inputs.GenControl.ui_StartStopControl <> 2) AND monitor.system.GenGridController.e_RunCondition = eruncondition.ManuallyStarted THEN
+//		get.Operation.Genset.b_manualStart := NOT get.Operation.Genset.b_manualStart;
+//END_IF
+
+//CASE State OF
+//	0: //none
+//		Ackdelay.IN := FALSE;
+//		CASE get.SoftSettings.setup.e_AcInputType OF
+//			eAcInputType.Grid: //transitioning to grid
+//				State := 1; //switch to gridInit
+//			eAcInputType.Genset: //transitioning to grid
+//				State := 3; //switch to gridInit
+//		END_CASE
+//	1: //gridInit
+//		CASE get.SoftSettings.setup.e_AcInputType OF
+//			eAcInputType.Grid: //transitioning to grid
+//				IF get.SoftSettings.inputgrid.breaker.AutoConnect THEN	//connect if requested, otherwise hold here
+//					IF monitor.system.GenGridController.b_ModeTransActive THEN
+//						get.Operation.system.b_GenGridModeTrans := TRUE;
+//					END_IF
+//					State := 2; //SwitchToGridActive	
+//				END_IF
+				
+//			eACInputType.None: //transitioning to none
+//				AckDelay.IN := (NOT monitor.system.GenGridController.b_active) AND monitor.system.GenGridController.e_State = eGenGridState.Waiting_Mode_Reconnect;
+//				IF AckDelay.q THEN
+//					IF monitor.system.GenGridController.b_ModeTransActive THEN
+//						get.Operation.system.b_GenGridModeTrans := TRUE;
+//					END_IF//get.Operation.system.b_GenGridModeTrans := true;//rTrig_Ack.q;
+//				END_IF
+				
+//				IF monitor.system.GenGridController.e_State = eGenGridState.Init THEN
+//					get.Operation.system.b_GenGridModeTrans := FALSE;
+//					State := 0;
+//				END_IF;
+//		END_CASE
+		
+//	2: //GridModeActive
+		
+//		//get.Operation.system
+//		IF NOT get.SoftSettings.inputgrid.breaker.AutoConnect or rTrig_Ack.q THEN
+//			//IF monitor.system.GenGridController.e_state = eGenGridSTate.Running OR 
+//				//monitor.system.GenGridController.e_state = eGenGridSTate.Synchronization THEN
+//			//	 Ackdelay.IN := TRUE;
+//			//ELSE
+//			//	Ackdelay.IN := FALSE;
+//				get.Operation.system.b_GenGridModeTrans := TRUE;
+//				State := 1;
+//			//END_IF
+//		ELSE
+//			IF NOT monitor.ACswitchgear.b_InputContactorfb THEN
+//				State := 1;
+//			END_IF
+//		END_IF
+		
+//	3:	//GenMode
+////		CASE get.SoftSettings.setup.e_AcInputType OF				
+////			eACInputType.None: //transitioning to none
+////				AckDelay.IN := (NOT monitor.system.GenGridController.b_active) AND monitor.system.GenGridController.e_State = eGenGridState.Waiting_Mode_Reconnect;
+////				IF AckDelay.q THEN
+////					IF monitor.system.GenGridController.b_ModeTransActive THEN
+////						get.Operation.system.b_GenGridModeTrans := TRUE;
+////					END_IF//get.Operation.system.b_GenGridModeTrans := true;//rTrig_Ack.q;
+////				END_IF
+				
+////				IF monitor.system.GenGridController.e_State = eGenGridState.Init THEN
+////					get.Operation.system.b_GenGridModeTrans := FALSE;
+////					State := 0;
+////				END_IF;
+////		END_CASE
+
+//		//IF rTrig_Ack.Q THEN
+//		//	get.Operation.system.b_GenGridModeTrans := TRUE; 
+//		//	State := 1;
+//		//END_IF
+//END_CASE
+
+////CASE WordEndian(Input.InputConnectionType) OF
+////		//0:	remain
+////		1:	get.SoftSettings.setup.e_AcInputType := eAcInputType.None; 
+////		2:	get.SoftSettings.setup.e_AcInputType := eAcInputType.Grid;
+////		3:	get.SoftSettings.setup.e_AcInputType := eAcInputType.Genset; 
+////	END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetDiagnostics" Id="{abb03d67-08c3-4ff4-8a17-79aed3f40f20}">
+      <Declaration><![CDATA[METHOD GetDiagnostics : BOOL
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+
+VAR_OUTPUT
+	b_errorActive	: BOOL;
+	b_warningActive	: BOOL;
+END_VAR
+
+VAR_INST
+	by_errCt	: BYTE;
+	by_warnCt	: BYTE;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	(*Watchdog fault*)	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.b_HeartbeatFault,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 1,
+			e_ObjectID				:= e_id,
+			s_Message				:= 'watchdog fault',
+			e_sev					:= eSeverity.warning,	
+			b_AutoClear			:= TRUE,
+			e_ErrAckAccess		:= eErrAckAccess.Operator,
+			);
+		w_Index := w_Index +1;
+		
+	(*Coupler fault*)	AddError[w_Index](
+			b_ErrorTrig			:= Get.events.b_CouplerError,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 2,
+			e_ObjectID				:= e_id,
+			s_Message				:= concat('External control interface error: ', TO_STRING(Inputs.PNIOBoxState)),
+			t_TriggerTime			:=	T#30S,
+			e_sev					:= eSeverity.info,	
+			b_AutoClear				:= TRUE,
+			e_ErrAckAccess			:= eErrAckAccess.Operator,
+			);
+		w_Index := w_Index +1;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HeartBeat" Id="{6069aafa-591d-4a96-9e74-723dfefb86f8}">
+      <Declaration><![CDATA[METHOD HeartBeat : UINT
+VAR_INPUT
+	ui_HeartBeatInput		:	UINT	:=	0;
+END_VAR
+
+VAR_OUTPUT
+	b_HeartBeatFault		:	BOOL;
+END_VAR
+
+VAR_INST
+	ui_HeartBeatOutput			:	UINT ; 
+	HeartBeatOutputIncTimer		:	TON		:=	(PT := T#500MS);
+	HeartBeatInputCheckTimer	:	TON		:=	(PT := T#1S);
+	ui_StoredInputValue			:	UINT	:= 	0;
+
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+//output value increments every second. Remote party should check if this happens
+HeartBeatOutputIncTimer (in := NOT HeartBeatOutputIncTimer.Q);
+IF HeartBeatOutputIncTimer.Q THEN
+	ui_HeartBeatOutput := ui_HeartBeatOutput +1;
+END_IF
+
+//Input value has to change every second as well.
+//if stored and Current values are equal, start counting.
+HeartBeatInputCheckTimer(in:= (ui_StoredInputValue = ui_HeartBeatInput), PT := TO_TIME(st_params.w_CommTimeOut));
+ui_StoredInputValue := ui_HeartBeatInput;
+b_heartBeatFault := HeartBeatInputCheckTimer.Q;
+
+Heartbeat := ui_HeartBeatOutput;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="IntToReal" Id="{c25e4980-a546-4078-be93-dfc53a58987c}" FolderPath="DataConversion\">
+      <Declaration><![CDATA[METHOD IntToReal : BOOL
+VAR_INPUT
+	in			:	INT;
+	Scale		:	UINT := 10;
+	LimitLow	: 	REAL := -3.402823E+38;
+	LimitHigh	:  	REAL := 3.402823E+38; 
+	IgnoreZero	:	BOOL := FALSE;
+END_VAR
+
+VAR_OUTPUT
+	OutofRange	: BOOL;
+END_VAR
+
+VAR
+	r_value			: 	REAL;
+	test			:	INT;
+	test2			:	real;
+END_VAR
+
+VAR_IN_OUT
+	Out	:	REAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF (NOT IgnoreZero) OR (in <> 0) THEN
+	test := WordEndian(in);
+	test2 := INT_TO_REAL(test);
+	r_value	 := test2/Scale;
+	
+	OutofRange := ValueOutOfRange(r_value, LimitLow, LimitHigh);
+	Out := LIMIT(LimitLow, r_value, LimitHigh);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MapACDCCharger" Id="{e3a3e606-260f-476c-9a54-42f90d7c8ad4}" FolderPath="DataMappingV2\">
+      <Declaration><![CDATA[METHOD MapACDCCharger : BOOL
+VAR_IN_OUT CONSTANT
+	monitor								: ST_System_Monitor;
+END_VAR
+
+VAR_IN_OUT
+	events	: 	ST_ExtController_Events;
+	Input	:	st_PNInput_ACDCCharger;
+	Output	:	st_PNOutput_ACDCCharger;
+END_VAR
+
+VAR_INST
+	rtrig_openInputBreaker	:	r_trig;
+	Rtrig_BreakerToAuto		:	r_trig;
+	ftrig_ackDone			:	f_trig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+
+IF NOT settings.MachineParams.ACDCCharger.b_ACDCChargerFitted THEN
+	output.w_Status := 0;
+ELSE
+	output.w_Status.15	:=	settings.MachineParams.ACDCCharger.b_ACDCChargerFitted;
+	output.w_Status.10	:=	monitor.AcDcCharger.Events.b_BatteryLimitDeratingActive;
+	output.w_Status.9	:=	monitor.AcDcCharger.Events.b_ACUnderVoltageDeratingActive;
+	output.w_Status.8	:=	monitor.AcDcCharger.Events.b_TemperatureDeratingActive;
+	
+	output.w_Status.1	:=	monitor.AcDcCharger.r_DcVoltage > 500;
+	output.w_Status.0	:=	monitor.AcDcCharger.ar_ACvoltage[phases.AVG] > 200;
+	output.w_Status := wordEndian(output.w_Status);
+	
+	
+	//Fill output data
+	Output.w_Warnings.3	:=	monitor.AcDcCharger.ar_ACvoltage[phases.AVG] > 430;
+	Output.w_Warnings.2	:=	monitor.AcDcCharger.e_SystemStatus = eACDCChargerState.running AND
+							monitor.AcDcCharger.ar_ACvoltage[phases.AVG] < 370;
+	Output.w_Warnings.1	:=	monitor.AcDcCharger.Events.b_TemperatureDeratingActive;
+	Output.w_Warnings.0	:=	FALSE;//monitor.AcDcCharger.Events.b_CommunicationFault
+	Output.w_Warnings	:=  WordEndian(Output.w_Warnings);
+	
+	
+	Output.w_Faults.7	:=	FALSE;//monitor.AcDcCharger.Events.DCOverVoltageFault;
+	Output.w_Faults.6	:=	FALSE;//monitor.AcDcCharger.Events.DCUnderVoltageFault;
+	Output.w_Faults.5	:=  FALSE;//monitor.AcDcCharger.Events.DCOverVoltageFault;
+	Output.w_Faults.4	:=  monitor.AcDcCharger.Events.B_ACPhaselossFault;
+	Output.w_Faults.3	:=  monitor.AcDcCharger.Events.B_ACOvervoltage;
+	Output.w_Faults.2	:=	monitor.AcDcCharger.Events.B_ACUndervoltage;
+	Output.w_Faults.1	:=	FALSE; //overtemperature fault
+	Output.w_Faults.0	:=	monitor.AcDcCharger.Events.b_CommunicationFault OR 
+							monitor.AcDcCharger.Events.b_BuscouplerNotFound;
+	Output.w_Faults		:= 	WordEndian(Output.w_Faults);
+	
+	
+	Output.ui_ChargerStatus := WordEndian(monitor.AcDcCharger.e_SystemStatus);
+	
+	output.TotalChargerPower := WordEndian(REAL_TO_UINT(monitor.AcDcCharger.by_NoModulesInstalled * 300));
+	output.AvailableChargePower := WordEndian(REAL_TO_UINT(monitor.AcDcCharger.r_AvailablePower * 10));
+	output.ActivePower	:=	WordEndian(REAL_TO_UINT(monitor.AcDcCharger.ACmeasurements.ar_ActivePower[0]*10));	
+	output.Frequency 	:= wordendian(0);
+	output.VoltageAB	:=	wordendian(REAL_TO_UINT(monitor.AcDcCharger.ar_ACvoltage[1]*10));
+	output.VoltageBC	:=	wordendian(REAL_TO_UINT(monitor.AcDcCharger.ar_ACvoltage[2]*10));	
+	output.VoltageCA	:=	wordendian(REAL_TO_UINT(monitor.AcDcCharger.ar_ACvoltage[3]*10));
+	
+	output.CurrentL1	:= wordendian(REAL_TO_UINT(monitor.acDcCharger.ACmeasurements.ar_Current[1]*10));
+	output.CurrentL2	:= wordendian(REAL_TO_UINT(monitor.acDcCharger.ACmeasurements.ar_Current[2]*10));
+	output.currentL3	:= wordendian(REAL_TO_UINT(monitor.acDcCharger.ACmeasurements.ar_Current[3]*10));
+	
+	output.ui_ACCurrentLimitAct := wordendian(REAL_TO_UINT(get.softsettings.ACDCcharger.r_CurrentSetpoint*10));
+	output.ui_PSetAct 			:=	wordendian(REAL_TO_UINT(get.SoftSettings.ACDCcharger.r_PowerSetpoint*10));
+	output.ui_SocLimitAct		:=	wordendian(REAL_TO_UINT(get.SoftSettings.ACDCcharger.r_SocTarget*10)); 
+	output.ui_MinGridVoltageAct	:=	wordendian(REAL_TO_UINT(get.SoftSettings.ACDCcharger.r_MinACVoltage*10));
+	
+	IF (NOT events.b_HeartbeatFault) AND ExternalControlMode > eExternalControlMode.BasicControl AND monitor.system.GenGridController.e_BreakerMode = eBreakerOperationMode.GridFeedthrough THEN
+		input.w_Control := wordEndian(input.w_Control);
+		get.SoftSettings.ACDCcharger.b_Enable := input.w_Control.0;
+		get.SoftSettings.ACDCcharger.e_ControlType := ePowerControltype.Both;
+		
+		UIntToReal(	in			:= Input.ui_ACCurrentlimit, 
+					scale 		:= 10, 
+					limitlow	:= 0,
+					limithigh	:= 100,//get.HardSettings.inputgrid.r_FeedInCurrentLimitHard,
+					OutOfRange 	=>	,
+					IgnoreZero 	:= FALSE,
+					Out 		:= get.SoftSettings.ACDCcharger.r_CurrentSetpoint);
+		
+		UIntToReal(	in			:= Input.UI_Pset, 
+					scale 		:= 10, 
+					limitlow	:= 0,
+					limithigh	:= monitor.AcDcCharger.by_NoModulesInstalled*30,
+					OutOfRange 	=>	,
+					IgnoreZero 	:= FALSE,
+					Out 		:= get.SoftSettings.ACDCcharger.r_PowerSetpoint);
+	
+		UIntToReal(	in			:= Input.ui_SocMaxLimit, 
+					scale 		:= 10, 
+					limitlow	:= 0,
+					limithigh	:= 100,//get.HardSettings inputgrid.r_SupplyCurrentLimitHard,
+					OutOfRange 	=>	,
+					IgnoreZero 	:= TRUE,
+					Out 		:= get.SoftSettings.ACDCcharger.r_SocTarget);
+	
+		UIntToReal(	in			:= Input.ui_MinGridVoltage, 
+					scale 		:= 10, 
+					limitlow	:= 360,
+					limithigh	:= 440,//get.HardSettings inputgrid.r_SupplyCurrentLimitHard,
+					OutOfRange 	=>	,
+					IgnoreZero 	:= TRUE,
+					Out 		:= get.SoftSettings.ACDCcharger.r_MinACVoltage);
+
+	ELSE
+		get.SoftSettings.ACDCcharger.r_PowerSetpoint := 0;
+	END_IF
+END_IF
+	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MapBatteryData" Id="{456d4098-6961-4f3a-a9cc-4764667e1715}" FolderPath="DataMappingV2\">
+      <Declaration><![CDATA[METHOD MapBatteryData : BOOL
+VAR_IN_OUT CONSTANT
+	monitor								: ST_System_Monitor;
+END_VAR
+
+VAR_IN_OUT
+	events	: 	ST_ExtController_Events;
+	Input	:	ST_PNInput_Battery;
+	Output	:	ST_PNOutput_Battery;
+
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+Output.ui_Status := WordEndian(Monitor.battery.BatteryInfo.e_BMS_Status);
+
+Output.w_Warnings.0 := Monitor.battery.events.b_OVER_TEMP_WARNING;	
+Output.w_Warnings.1 := Monitor.battery.events.b_UNDER_TEMP_WARNING;			
+Output.w_Warnings.2 := Monitor.battery.events.b_OVER_CHARGE_CURRENT_WARNING;	
+Output.w_Warnings.3 := Monitor.battery.events.b_OVER_DISCHARGE_CURRENT_WARNING;
+Output.w_Warnings.4 := Monitor.battery.events.b_OVER_VOLT_WARNING;		
+Output.w_Warnings.5 := Monitor.battery.events.b_UNDER_VOLT_WARNING;		
+Output.w_Warnings.6 := Monitor.battery.events.b_UNDER_SOC_MIN_WARNING;		
+Output.w_Warnings.7 := Monitor.battery.events.b_OVER_SOC_MAX_WARNING;			
+Output.w_Warnings.8 := Monitor.battery.events.b_VOLTAGE_IMBALANCE_WARNING;
+Output.w_Warnings.9 := Monitor.battery.events.b_TEMPERATURE_IMBALANCE_WARNING;
+Output.w_Warnings.10 := Monitor.battery.events.b_CURRENT_IMBALANCE_WARNING;
+Output.w_Warnings.11 := Monitor.battery.events.b_OTHER_WARNING;	
+Output.w_Warnings.12 := Monitor.battery.events.b_CONFIGURATION_WARNING;
+Output.w_Warnings := WordEndian(Output.w_warnings);
+
+Output.w_Faults.0 := Monitor.battery.Events.b_COMMUNICATION_ERROR;			
+Output.w_Faults.1 := Monitor.battery.events.b_OVER_TEMP_ALARM;					
+Output.w_Faults.2 := Monitor.battery.events.b_UNDER_TEMP_ALARM;			
+Output.w_Faults.3 := Monitor.battery.events.b_OVER_CHARGE_CURRENT_ALARM;		
+Output.w_Faults.4 := Monitor.battery.events.b_OVER_DISCHARGE_CURRENT_ALARM;	
+Output.w_Faults.5 := Monitor.battery.events.b_OVER_VOLT_ALARM;						
+Output.w_Faults.6 := Monitor.battery.events.b_UNDER_VOLT_ALARM;					
+Output.w_Faults.7 := Monitor.battery.events.b_UNDER_SOC_MIN_ALARM;				
+Output.w_Faults.8 := Monitor.battery.events.b_OVER_SOC_MAX_ALARM;				
+Output.w_Faults.9 := Monitor.battery.events.b_TEMPERATURE_IMBALANCE_ALARM;	
+Output.w_Faults.10 := Monitor.battery.events.b_CONTACTOR_ERROR;				
+Output.w_Faults.11 := Monitor.battery.events.b_FAN_ERROR;						
+Output.w_Faults.12 := Monitor.battery.events.b_GROUND_FAULT;					
+Output.w_Faults.13 := Monitor.battery.events.b_OPEN_DOOR_ERROR;					
+Output.w_Faults.14 := Monitor.battery.events.b_OTHER_ALARM;								
+Output.w_Faults.15 := Monitor.battery.events.b_CONFIGURATION_ALARM;	
+Output.w_Faults := WordEndian(Output.w_Faults);		
+			
+Output.ui_SOC 							:= RealToUint(	In	:=	monitor.battery.BatteryInfo.r_SOCScaled, 	Scale	:=	10);
+Output.ui_SOH 							:= RealToUint(	In	:=	monitor.battery.BatteryInfo.r_SOH, 	Scale	:=	10);
+Output.ui_DClinkVoltage 				:= RealToUint(	In	:=	monitor.battery.BatteryInfo.r_SystemVoltage, Scale	:=	10);				
+Output.i_DClinkCurrent 					:= RealToint (	In	:=	monitor.battery.BatteryInfo.r_SystemCurrent, Scale	:=	10);
+Output.ui_MaxAllowedDischargeCurrent 	:= RealToUint (	In	:=	monitor.battery.BatteryInfo.r_MaxDischargeCurrentAllowed, Scale	:=	10); 	
+Output.ui_MaxAllowedChargeCurrent 		:= RealToUint (	In	:=	-monitor.battery.BatteryInfo.r_MaxchargeCurrentAllowed,	Scale	:=	10); 		
+Output.i_MinCellTemperature 			:= RealToint (	In	:=	monitor.battery.BatteryInfo.ar_CellTemperature[0] , Scale	:=	10); 	
+Output.i_MaxCellTemperature				:= RealToint (	In	:=	monitor.battery.BatteryInfo.ar_CellTemperature[2], Scale	:=	10); 										                                               
+Output.ui_RemainingChargeEnergy 		:= RealToUint(	In	:=	monitor.battery.BatteryInfo.r_RemainingChargeEnergy, Scale	:=	10);
+Output.ui_RemainingDischargeEnergy 		:= RealToUint(	In	:=	monitor.battery.BatteryInfo.r_RemainingDischargeEnergy, Scale	:=	10);
+Output.ui_CycleCount					:= WordEndian(monitor.battery.BatteryInfo.ui_CycleCount);
+
+//Read regularinputs if allowed
+IF (NOT events.b_HeartbeatFault) AND ExternalControlMode > eExternalControlMode.BasicControl THEN
+	Input.w_Control := WordEndian(input.W_Control);
+	get.Operation.BMS.b_ManualStartHVDC := Input.W_Control.0;
+		
+	UintToReal(	in			:= 	Input.ui_SocMinLimit, 
+				scale 		:= 	10, 
+				limitlow	:=	0, 
+				limithigh	:=	90, 
+				OutOfRange 	=>	events.b_SoCLowLimitOutOfRange,
+				IgnoreZero 	:= 	FALSE,
+				Out 		:= 	get.softsettings.system.r_SocMin);
+
+	UintToReal(	in			:= 	Input.ui_SocMaxLimit, 
+				scale 		:= 	10, 
+				limitlow	:=	10, 
+				limithigh	:=	100, 
+				OutOfRange 	=>	events.b_SoCHighLimitOutOfRange,
+				IgnoreZero 	:= 	TRUE,
+				Out 		:= 	get.softsettings.system.r_SocMax);	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MapGeneralData" Id="{2bf8365a-5150-4fbc-af52-7d699045fdee}" FolderPath="DataMappingV2\">
+      <Declaration><![CDATA[METHOD MapGeneralData : BOOL
+VAR_IN_OUT CONSTANT
+	monitor								: ST_System_Monitor;
+END_VAR
+
+VAR_IN_OUT
+	events	: 	ST_ExtController_Events;
+	Input	:	ST_PNInput_general;
+	Output	:	ST_PNOutput_general;
+END_VAR
+
+VAR
+	SWVersion	:	uSWversion;
+END_VAR
+
+VAR_INST
+	b_PENMissingTrip	:	BOOL;
+	rtrig_disconnectNetcontactor	:	r_trig;
+	ftrig_disconnectNetcontactor	:	f_trig;
+	
+	rtrig_GridToNone	: r_trig;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//First check heartbeat status
+events.b_GridModeValueOutOfRange := FALSE;
+events.b_PowermodeValueOutOfRange:= FALSE;
+
+Output.ui_SystemState		:=	WordEndian(TO_UINT(Monitor.system.e_State));
+	
+Output.w_SystemStatus.0		:= 	Monitor.protections.Insulation.b_Enabled;
+Output.w_SystemStatus.1		:= 	ExternalControlMode > eExternalControlMode.Readonly;
+Output.w_SystemStatus.2		:=	monitor.protections.FireDetection.b_FireAlarm AND NOT monitor.protections.FireDetection.Events.AlarmMuted;
+Output.w_SystemStatus.3		:=	monitor.HartingIO.b_DigitalInput1Active;
+output.w_SystemStatus.4		:=	monitor.HartingIO.b_DigitalInput2Active;
+Output.w_SystemStatus.8		:=	monitor.protections.Insulation.e_EarthingSystemDetected = eEarthingSystems.TN;//Monitor.system.e_EarthingSystem = eEarthingSystems.TN;
+Output.w_SystemStatus.9		:=	monitor.protections.Insulation.e_EarthingSystemDetected = eEarthingSystems.IT;//Monitor.system.e_EarthingSystem = eEarthingSystems.IT;
+Output.w_SystemStatus		:= 	WordEndian(Output.w_SystemStatus);
+	
+Output.w_SystemWarnings.0	:=	Monitor.protections.FireDetection.CODetectors.State = eCOAlarmStatus.WarningLevel1;
+Output.w_SystemWarnings.1	:=	Monitor.protections.FireDetection.CODetectors.State = eCOAlarmStatus.WarningLevel2;
+Output.w_SystemWarnings.2	:=	Monitor.protections.Insulation.b_Warning;
+Output.w_SystemWarnings.3	:=	Monitor.protections.MRCDB.b_prewarning;
+Output.w_SystemWarnings.8	:=	Monitor.protections.FireDetection.Events.SmokeDetFault;
+Output.w_SystemWarnings.9	:=	Monitor.protections.FireDetection.Events.CODetFault;
+Output.w_SystemWarnings.10	:=	NOT Monitor.protections.Surge.b_Type12_OK;
+Output.w_SystemWarnings.11	:=	NOT Monitor.protections.Surge.b_Type3_OK;
+Output.w_SystemWarnings.12	:=	NOT Monitor.enclosure.doors.b_ControlPanelDoorClosed;
+Output.w_SystemWarnings.13	:=	NOT Monitor.enclosure.doors.b_ClientpanelDoorClosed;
+Output.w_SystemWarnings 	:= 	WordEndian(Output.w_SystemWarnings);
+
+Output.w_SystemFaults.0		:=	Monitor.protections.FireDetection.Events.SmokeDetAlarm;
+Output.w_SystemFaults.1		:=	Monitor.protections.FireDetection.Events.CODetAlarm;
+Output.w_SystemFaults.2		:=	NOT Monitor.safety.b_InsulationMonitorOK;
+Output.w_SystemFaults.3		:=	NOT Monitor.safety.b_MRCDBOK;
+Output.w_SystemFaults.4		:=	NOT Monitor.safety.b_EstopChannelAOK OR NOT Monitor.safety.b_EstopChannelBOK;
+Output.w_SystemFaults.5		:=	NOT Monitor.safety.b_SafetyOK;
+
+Output.w_SystemFaults.6		:=	monitor.protections.Insulation.b_EarthingSystemMismatch OR 
+								monitor.protections.Insulation.b_NoEarthingSystemSet OR 
+								monitor.protections.Insulation.b_PENlinkOperatedFault OR 
+								b_PENMissingTrip;
+Output.w_SystemFaults.8		:=	NOT Monitor.safety.b_InverterDoorOK;
+Output.w_SystemFaults 		:= 	WordEndian(Output.w_SystemFaults);								
+
+Output.w_CoolingSystemStatus.0	:=	Monitor.Cooling.CoolingSystemMode = eCoolingSystemState.OFF;
+Output.w_CoolingSystemStatus.1	:=	Monitor.Cooling.CoolingSystemMode = eCoolingSystemState.EnclosureConditioning;
+Output.w_CoolingSystemStatus.2	:=	Monitor.Cooling.CoolingSystemMode = eCoolingSystemState.BatteryConditioning;
+//Output.w_CoolingSystemStatus.3	:=	Monitor.Cooling.CoolingSystemMode = eCoolingSystemState.DeHum;
+Output.w_CoolingSystemStatus.4	:=	(Monitor.Cooling.CoolingSystemMode = eCoolingSystemState.InverterPowerMode) OR
+									(Monitor.Cooling.CoolingSystemMode = eCoolingSystemState.InverterStartup) OR
+									(Monitor.Cooling.CoolingSystemMode = eCoolingSystemState.InverterConditioning);
+Output.w_CoolingSystemStatus.8	:=	Monitor.Cooling.HeatPumpStatus = eHeatPumpState.Active_Cooling;
+Output.w_CoolingSystemStatus.9	:=	Monitor.Cooling.HeatPumpStatus = eHeatPumpState.Active_Heating;
+Output.w_CoolingSystemStatus 	:= WordEndian(Output.w_CoolingSystemStatus);
+
+Output.w_CoolingSystemWarnings.0	:=	Monitor.Cooling.Events.b_SystemOvertemperatureWarning;
+Output.w_CoolingSystemWarnings.1	:=	Monitor.Cooling.Events.b_SystemUndertemperatureWarning;
+Output.w_CoolingSystemWarnings.2	:=	Monitor.Cooling.Events.b_CoolingLoopIdlePressureWarning;
+Output.w_CoolingSystemWarnings.3	:=	Monitor.Cooling.Events.b_HeatPumpError;
+Output.w_CoolingSystemWarnings.4	:=	Monitor.Cooling.Events.b_FancoilLoopValveStuck;
+Output.w_CoolingSystemWarnings.5	:=	Monitor.Cooling.Events.b_CoolingSystemFuseFailure;
+Output.w_CoolingSystemWarnings		:= WordEndian(Output.w_CoolingSystemWarnings);
+	
+Output.w_CoolingSystemFaults.1	:=	Monitor.Cooling.Events.b_BattLoopValveStuck OR Monitor.Cooling.Events.b_InverterLoopValveStuck;
+Output.w_CoolingSystemFaults.2	:=	Monitor.Cooling.Events.b_CoolingLoopIdlePressureError;									
+//Output.w_CoolingSystemFaults.3	:=	Monitor.Cooling.Events.b_HeatpumpError;
+Output.w_CoolingSystemFaults	:= 	WordEndian(Output.w_CoolingSystemFaults);
+		
+Output.w_InternalSupplyStatus.0	:=	Monitor.internalpsu.b_24VdcAvailable;
+Output.w_InternalSupplyStatus.1	:=	Monitor.internalpsu.b_400VACAvailable;
+Output.w_InternalSupplyStatus.2	:=	Monitor.internalpsu.b_HVDCAvailable;
+Output.w_InternalSupplyStatus.3	:=	Monitor.internalpsu.UPS.b_SystemOnBattery;
+Output.w_InternalSupplyStatus.4	:=	Monitor.internalpsu.UPS.b_ChargerActive;
+Output.w_InternalSupplyStatus	:= 	WordEndian(Output.w_InternalSupplyStatus);
+
+Output.w_InternalSupplyWarnings.0 := Monitor.internalpsu.UPS.Events.b_BatteryLowWarning;
+Output.w_InternalSupplyWarnings.1 := Monitor.internalpsu.Events.b_CEEInputFuseTripped;
+Output.w_InternalSupplyWarnings.2 := Monitor.internalpsu.Events.b_ACPSUFault;
+Output.w_InternalSupplyWarnings.3 := Monitor.internalpsu.Events.b_DCPSUFault;
+Output.w_InternalSupplyWarnings	:= 	WordEndian(Output.w_InternalSupplyWarnings);
+
+Output.w_InternalSupplyFaults.0 :=	Monitor.internalpsu.UPS.Events.b_BatteryLowError;
+Output.w_InternalSupplyFaults.1 :=	monitor.internalpsu.Events.b_ACPSUFault AND monitor.internalpsu.Events.b_DCPSUFault;
+Output.w_InternalSupplyFaults.3 :=	Monitor.internalpsu.Events.b_GridInputFuseTripped;
+Output.w_InternalSupplyFaults	:= 	WordEndian(Output.w_InternalSupplyFaults);
+
+IF Monitor.powerstack.e_InverterMode = eInverterModes.Island THEN
+	Output.ui_Gridmode				:= 	WordEndian(TO_UINT(eGridmode.forming)+1);
+	Output.ui_GridFormingSubMode	:= 	WordEndian(TO_UINT(eUgridPowermode.None)+1);
+ELSIF Monitor.powerstack.e_InverterMode = eInverterModes.Afe THEN
+	Output.ui_Gridmode				:= 	WordEndian(TO_UINT(eGridmode.following)+1);
+	Output.ui_GridFormingSubMode	:= 	WordEndian(TO_UINT(eUgridPowermode.auto)+1);
+ELSE
+	Output.ui_Gridmode				:= 	WordEndian(TO_UINT(eGridmode.forming)+1);
+	Output.ui_GridFormingSubMode	:= 	WordEndian(TO_UINT(monitor.system.e_UgridPowermode)+1);
+END_IF
+	
+output.udi_SerialNumber			:=	DwordEndian(STRING_TO_UDINT(settings.Properties.s_SerialNumber));
+
+SWVersion.a4byte_SWVer[3] := settings.Properties.by_SWverMajor;
+SWVersion.a4byte_SWVer[2] := settings.Properties.by_SWverMinor;
+SWVersion.a4byte_SWVer[1] := settings.Properties.by_SWverPatch;
+SWVersion.a4byte_SWVer[0] := settings.Properties.by_SWverBuild;
+
+//To do: Parse version number from config string
+output.dw_SWVersion :=	DWordEndian(SWVersion.UD_SWVer);
+	
+
+//Read basic inputs if heartbeat is healthy
+IF (NOT events.b_HeartbeatFault) THEN
+	Input.W_Control := WordEndian(input.W_Control);
+	//ControlVars.control.b_start := Input.W_Control.0;
+	get.control.b_start 							:= Input.W_Control.0;
+	get.control.b_shutdown 							:= Input.W_Control.2;
+	controlvars.control.b_SystemShutdown			:=	Input.W_Control.3;
+	//get.control.b_SystemShutdown					:= Input.W_Control.3;
+	get.control.b_Reset 							:= Input.W_Control.4;
+	get.control.b_EMstop 							:= Input.W_Control.5;
+	get.SoftSettings.system.b_AutomaticSwitching 	:= Input.W_Control.6;
+	get.SoftSettings.system.b_EnableTransportMode	:= Input.W_Control.7;
+	get.b_AdvancedControl							:= Input.W_Control.9;
+
+	//read other inputs if externalcontrol is active
+	IF ExternalControlMode = eExternalControlMode.AdvancedControl THEN
+		CASE WordEndian(Input.ui_GridMode) OF
+			//0: 	remain
+			1:	get.softsettings.setup.e_Gridmode := eGridMode.auto;
+			2:	get.softsettings.setup.e_Gridmode := eGridMode.following;
+			3:	get.softsettings.setup.e_Gridmode := eGridMode.forming;
+		END_CASE
+		
+		CASE WordEndian(Input.ui_GridFormingSubMode) OF
+			//0: 	remain
+			1:	get.softsettings.system.e_UgridPowerMode := eUgridPowermode.auto;
+			2:	get.softsettings.system.e_UgridPowerMode := eUgridPowermode.DroopZeroStart;
+			3:	get.softsettings.system.e_UgridPowerMode := eUgridPowermode.Droop;
+			4:	get.softsettings.system.e_UgridPowerMode := eUgridPowermode.Isochronous;
+			5:	get.SoftSettings.system.e_UgridPowerMode := eUgridPowermode.None;
+		END_CASE
+	
+		CASE WordEndian(Input.ui_Earthingsystem) OF
+			//0: remain
+			1:	get.HardSettings.system.e_EarthingSystem := eEarthingSystems.TN ; 
+			2:	get.HardSettings.system.e_EarthingSystem := eEarthingSystems.IT ; 
+		END_CASE
+			
+		CASE WordEndian(Input.GridConnectionMode) OF
+			1:	get.SoftSettings.system.e_NetcontactorMode := eNetcontMode.auto; 
+			2:	get.SoftSettings.system.e_NetcontactorMode := eNetcontMode.left;  
+			3:	get.SoftSettings.system.e_NetcontactorMode := eNetcontMode.right; 
+			4:	get.SoftSettings.system.e_NetcontactorMode := eNetcontMode.none; 
+		ELSE
+			get.SoftSettings.system.e_NetcontactorMode := eNetcontMode.auto; 	//Illegal input, return to auto
+			//add diagnostic?
+		END_CASE
+		
+		rtrig_disconnectNetcontactor(clk := (get.SoftSettings.system.e_NetcontactorMode = eNetcontMode.none) AND monitor.powerstack.Netcontactor.b_NetConFb);
+		get.control.b_stop := rtrig_disconnectNetcontactor.q;
+		
+		ftrig_disconnectNetcontactor(clk := (get.SoftSettings.system.e_NetcontactorMode = eNetcontMode.none) AND NOT monitor.powerstack.Netcontactor.b_NetConFb);
+		IF (monitor.powerstack.e_State = eStatusPowerstack.idle OR monitor.powerstack.e_State = eStatusPowerstack.GridCodeStop) THEN
+			get.control.b_start := ftrig_disconnectNetcontactor.Q;
+		END_IF
+		
+		
+		Input.PrimaryDigOutState :=  WordEndian(Input.PrimaryDigOutState);
+		IF Input.PrimaryDigOutState > 2 THEN
+			Settings.MachineParams.HartingIO.PrimaryOutputContactSignal := Input.PrimaryDigOutState-3;
+		ELSE
+			IF Input.PrimaryDigOutState = 2 THEN	Settings.MachineParams.HartingIO.PrimaryOutputContactSignal := eOutputContactSignal.ManualClose; END_IF
+			IF Input.PrimaryDigOutState = 1 THEN	Settings.MachineParams.HartingIO.PrimaryOutputContactSignal := eOutputContactSignal.ManualOpen; END_IF
+		END_IF
+			
+		
+		Input.SecondaryDigOutState :=  WordEndian(Input.SecondaryDigOutState);
+		IF Input.SecondaryDigOutState > 2 THEN
+			Settings.MachineParams.HartingIO.SecondaryOutputContactSignal := Input.SecondaryDigOutState-3;
+		ELSE
+			IF Input.SecondaryDigOutState = 2 THEN	Settings.MachineParams.HartingIO.SecondaryOutputContactSignal := eOutputContactSignal.ManualClose; END_IF
+			IF Input.SecondaryDigOutState = 1 THEN	Settings.MachineParams.HartingIO.SecondaryOutputContactSignal := eOutputContactSignal.ManualOpen; END_IF
+		END_IF
+		
+		IF  WordEndian(Input.PrimaryDigInState) > 0 THEN
+			Settings.MachineParams.HartingIO.PrimaryInputContactSignal := WordEndian(Input.PrimaryDigInState)-1;
+		END_IF
+		
+		IF  WordEndian(Input.SecondaryDigInState) > 0 THEN
+			Settings.MachineParams.HartingIO.SecondaryInputContactSignal := WordEndian(Input.SecondaryDigInState)-1;
+		END_IF
+		
+	END_IF
+	
+
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MapGeneratorControl" Id="{9e579e51-a967-4798-b99f-7ff04731a0c3}" FolderPath="DataMappingV2\">
+      <Declaration><![CDATA[METHOD MapGeneratorControl : BOOL
+VAR_IN_OUT CONSTANT
+	monitor								: ST_System_Monitor;
+END_VAR
+
+VAR_IN_OUT
+	events	: 	ST_ExtController_Events;
+	Input	:	st_PNInput_GenControl;
+	Output	:	ST_PNOutput_GenControl;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	
+//Fill output data
+Output.w_Status.0	:=	(monitor.system.GenGridController.b_extGensetMode OR
+						monitor.system.GenGridController.e_BreakerMode = ebreakeroperationmode.GenIso OR
+						monitor.system.GenGridController.e_BreakerMode = ebreakeroperationmode.GenFix OR
+						monitor.system.GenGridController.e_BreakerMode = ebreakeroperationmode.GenDroop);
+Output.w_Status.1	:= 	Output.w_Status.0 AND (monitor.system.GenGridController.e_state = eGenGridState.Cooldown OR 
+						monitor.system.GenGridController.e_state = eGenGridState.Running OR
+						monitor.system.GenGridController.e_state = eGenGridState.Warmup);
+Output.w_Status		:= WordEndian(Output.w_Status);
+
+Output.w_Warnings.0	:=	monitor.system.GenGridController.events.b_OverFreqTrip;
+Output.w_Warnings.1	:=	monitor.system.GenGridController.events.b_UnderFreqTrip;
+Output.w_Warnings.2	:=	monitor.system.GenGridController.events.b_OverloadTrip;
+Output.w_Warnings.3	:=	monitor.system.GenGridController.events.b_ShutdownTimeOut;
+Output.w_Warnings.4	:=	monitor.system.GenGridController.events.b_StartupFault;
+Output.w_Warnings.5	:=	monitor.system.GenGridController.events.b_WarmupFault;
+Output.w_Warnings.6	:=	monitor.system.GenGridController.events.b_GenDownTrip;
+Output.w_Warnings		:= WordEndian(Output.w_Warnings);
+
+Output.w_Faults		:= WordEndian(Output.w_Faults);
+
+IF (monitor.system.GenGridController.b_extGensetMode OR
+	monitor.system.GenGridController.e_BreakerMode = ebreakeroperationmode.GenIso OR
+	monitor.system.GenGridController.e_BreakerMode = ebreakeroperationmode.GenFix OR
+	monitor.system.GenGridController.e_BreakerMode = ebreakeroperationmode.GenDroop) THEN	
+	
+	CASE monitor.system.GenGridController.e_state OF
+		eGenGridState.Waiting_Trigger:			Output.ui_GeneratorStatus := 1;
+		eGenGridState.Starting:					Output.ui_GeneratorStatus := 2;
+		eGenGridState.Warmup:					Output.ui_GeneratorStatus := 3;
+		eGenGridState.Synchronization:			Output.ui_GeneratorStatus := 4;
+		eGengridState.Running:					Output.ui_GeneratorStatus := 5;
+		eGengridState.stopping:					Output.ui_GeneratorStatus := 6;
+		eGengridState.Cooldown:					Output.ui_GeneratorStatus := 7;
+	END_CASE
+ELSE
+	Output.ui_GeneratorStatus := 0;
+END_IF
+Output.ui_GeneratorStatus := WordEndian(Output.ui_GeneratorStatus);
+
+
+
+//process input data, All inputs require Advancedcontrol
+IF (NOT events.b_HeartbeatFault) AND ExternalControlMode = eExternalControlMode.AdvancedControl THEN
+	input.w_Control := wordEndian(input.w_Control);
+	get.SoftSettings.inputgenset.b_HydridMode 			:= input.w_Control.2;
+	//3 was external genset. Now moved to general
+	get.SoftSettings.inputgenset.b_FreqProtectionEnable	:=	input.w_Control.4;
+	get.SoftSettings.setup.b_ExtGenset					:= Input.w_Control.3;
+				
+	UIntToReal(	in			:= Input.ui_SOCStart, 
+				scale 		:= 10, 
+				limitlow	:= 10,
+				limithigh	:=	get.SoftSettings.inputgenset.setpointTimeslot1.r_SoCStop,
+    			OutOfRange 	=>	,
+				IgnoreZero 	:= TRUE,
+				Out 		:= Get.SoftSettings.inputgenset.setpointTimeslot1.r_SoCStart );
+	
+	UIntToReal(	in			:= Input.ui_SOCStop, 
+				scale 		:= 10, 
+				limitlow	:= Get.SoftSettings.inputgenset.setpointTimeslot1.r_SoCStart,
+				limithigh	:=	100,
+    			OutOfRange 	=>	,
+				IgnoreZero 	:= TRUE,
+				Out 		:= Get.SoftSettings.inputgenset.setpointTimeslot1.r_SoCStop );
+	
+	UIntToReal(	in			:= Input.ui_BattLoadStart, 
+				scale 		:= 10, 
+				limitlow	:= 10,
+				limithigh	:=	get.SoftSettings.inputgenset.setpointTimeslot1.r_BatteryloadStop,
+    			OutOfRange 	=>	,
+				IgnoreZero 	:= TRUE,
+				Out 		:= Get.SoftSettings.inputgenset.setpointTimeslot1.r_BatteryloadStart );
+	
+	UIntToReal(	in			:= Input.ui_BattLoadStop, 
+				scale 		:= 10, 
+				limitlow	:= Get.SoftSettings.inputgenset.setpointTimeslot1.r_BatteryloadStart,
+				limithigh	:=	100,
+    			OutOfRange 	=>	,
+				IgnoreZero 	:= TRUE,
+				Out 		:= Get.SoftSettings.inputgenset.setpointTimeslot1.r_BatteryloadStop );
+	
+	CASE wordendian(input.ui_GenPowerMode) OF
+		1:	get.SoftSettings.inputgenset.Generator.e_GensetMode := eGensetmode.Isochronous;
+		2:	get.SoftSettings.inputgenset.Generator.e_GensetMode := eGensetmode.Droop;
+		3:	get.SoftSettings.inputgenset.Generator.e_GensetMode := eGensetmode.FixedPower;		
+	END_CASE
+	
+	UIntToReal(	in			:= Input.ui_GenRatedPower, 
+				scale 		:= 1, 
+				limitlow	:= 0,
+				limithigh	:=	1000,
+    			OutOfRange 	=>	,
+				IgnoreZero 	:= TRUE,
+				Out 		:= Get.SoftSettings.inputgenset.Generator.r_RatedPower );		
+	
+	UIntToReal(	in			:= Input.ui_GenMaxPowerLevel, 
+				scale 		:= 10, 
+				limitlow	:= get.SoftSettings.inputgenset.Generator.r_PowerloadMin,
+				limithigh	:=	100,
+    			OutOfRange 	=>	,
+				IgnoreZero 	:= TRUE,
+				Out 		:= Get.SoftSettings.inputgenset.Generator.r_powerloadMax );		
+		
+	UIntToReal(	in			:= Input.ui_GenEffPowerLevel, 
+				scale 		:= 10, 
+				limitlow	:= Get.SoftSettings.inputgenset.Generator.r_powerloadMin,
+				limithigh	:= get.SoftSettings.inputgenset.Generator.r_powerloadMax,
+    			OutOfRange 	=>	,
+				IgnoreZero 	:= FALSE,
+				Out 		:= Get.SoftSettings.inputgenset.Generator.r_powerloadEff );			
+		
+	UIntToReal(	in			:= Input.ui_GenMinPowerLevel, 
+				scale 		:= 10, 
+				limitlow	:= 0,
+				limithigh	:= get.SoftSettings.inputgenset.Generator.r_powerloadMax,
+    			OutOfRange 	=>	,
+				IgnoreZero 	:= FALSE,
+				Out 		:= Get.SoftSettings.inputgenset.Generator.r_powerloadMin );		
+				
+	get.SoftSettings.inputgenset.Generator.ui_WarmupTime					:=	wordEndian(Input.ui_GenWarmupTime);
+	get.SoftSettings.inputgenset.Generator.ui_CooldownTime					:=	wordEndian(Input.ui_GenCooldownTime);
+	get.SoftSettings.inputgenset.Generator.r_ramprate						:=	wordEndian(input.ui_IsoPowerRamp)/10;
+	//get.Operation.Genset. //.ManualSetpoint									:=	wordEndian(Input.ui_GenCooldownTime);
+	
+	CASE WordEndian(Input.ui_StartStopControl) OF
+		//0:	remain
+		1:	get.SoftSettings.inputgenset.b_AutoStartStop := TRUE;
+			get.Operation.Genset.b_manualStart := FALSE;
+			
+		2:	get.SoftSettings.inputgenset.b_AutoStartStop := FALSE;
+			get.Operation.Genset.b_manualStart := FALSE;
+			IF monitor.system.GenGridController.e_GensetStartStop = egensetstartstop.Stop THEN
+ 				get.Operation.Genset.b_manualStart := TRUE;
+			END_IF
+						
+		3:	get.SoftSettings.inputgenset.b_AutoStartStop := FALSE;
+			get.Operation.Genset.b_manualStart := FALSE;
+			IF  monitor.system.GenGridController.e_GensetStartStop = egensetstartstop.Start THEN
+				get.Operation.Genset.b_manualStart := TRUE;
+			END_IF
+	END_CASE
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MapInputField" Id="{1356d53c-7b54-4131-bbb5-86338c6b5fb5}" FolderPath="DataMappingV2\">
+      <Declaration><![CDATA[METHOD MapInputField : BOOL
+
+VAR_IN_OUT CONSTANT
+	monitor								: ST_System_Monitor;
+END_VAR
+
+VAR_IN_OUT
+	events	: 	ST_ExtController_Events;
+	Input	:	ST_PNInput_InputField;
+	Output	:	ST_PNOutput_InputField;
+
+END_VAR
+
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Fill output data
+Output.w_Status.0	:=	Monitor.ACswitchgear.b_InputContactorfb;
+Output.w_Status.1	:=	Monitor.ACswitchgear.b_InputMCCBfb;
+Output.w_Status.2	:=	Monitor.ACswitchgear.b_InputSynchronizerfb;
+Output.w_Status.8	:=	get.SoftSettings.setup.e_AcInputType = eACInputtype.None AND monitor.system.GenGridController.b_ModeChanged;
+Output.w_Status.9	:=	get.SoftSettings.setup.e_AcInputType = eACInputtype.Genset AND monitor.system.GenGridController.b_ModeChanged;
+Output.w_Status.10	:=	get.SoftSettings.setup.e_AcInputType = eACInputtype.Grid AND monitor.system.GenGridController.b_ModeChanged;
+Output.w_Status.15	:= 	Monitor.ACswitchgear.b_InputSectionAvailable;
+Output.w_Status		:= WordEndian(Output.w_Status);
+
+//input overload warning toevoegen + heroverweeg indeling
+Output.w_Warnings.0	:=	monitor.system.GenGridController.events.b_RotationFieldFault;
+Output.w_Warnings.1	:=	monitor.system.GenGridController.events.b_CurrentLimitDisconnect;
+Output.w_Warnings.2 :=	monitor.system.GenGridController.events.b_EmstopDisconnect;
+Output.w_Warnings.3 :=	monitor.system.GenGridController.events.b_ShutdownDisconnect;
+Output.w_Warnings.8 :=	monitor.system.GenGridController.events.b_TransToGenFixInhibit;
+Output.w_Warnings.9 :=	monitor.system.GenGridController.events.b_TransToGenDroopInhibit;
+Output.w_Warnings.10 :=	monitor.system.GenGridController.events.b_TransToGenIsoInhibit;
+Output.w_Warnings	:= WordEndian(Output.w_Warnings);
+
+Output.w_Faults.0	:=	monitor.system.GenGridController.events.b_OverloadTrip;
+Output.w_Faults.1	:=	Monitor.powermonitor.events.b_MBCommError OR Monitor.powermonitor.events.b_EL3443Error;
+Output.w_Faults.2	:= 	FALSE; //synchronizer fault. status doesn't exist yet?
+Output.w_Faults.3	:= 	monitor.ACswitchgear.events.b_InputContactorFault;
+Output.w_Faults		:= WordEndian(output.w_Faults);
+
+	//not sure if this is the right variable
+CASE wordendian(monitor.system.GenGridController.e_PowerControlMode) OF
+	ePowerControlMode.None, ePowerControlMode.PeakshaveExt:
+		output.ui_InputConnectionType := 1;
+	ePowerControlMode.PeakshaveInputGrid:
+		output.ui_InputConnectionType := 2;
+	ePowerControlMode.PeakshaveInputGen:
+		output.ui_InputConnectionType := 3;	
+END_CASE
+output.ui_InputConnectionType := wordendian(output.ui_InputConnectionType);
+
+Output.i_ActivePower 			:=	RealToint (	In	:= Monitor.powermonitor.InputField.ar_ActivePower[0], 	Scale	:=	10);
+Output.i_ReactivePower 			:=	RealToint (	In	:= Monitor.powermonitor.InputField.ar_ReactivePower[0], Scale	:=	10);
+Output.i_PowerFactor 			:=	RealToint (	In	:= Monitor.powermonitor.InputField.ar_PowerFactor[0], Scale	:=	100);
+Output.ui_frequency				:=	RealToUint(	In	:= Monitor.powermonitor.InputField.ar_Frequency[0], 	Scale	:=	10);
+Output.ui_VoltageL1N			:=	RealToUint(	In	:= Monitor.powermonitor.InputField.ar_PhaseVoltage[1], Scale	:=	10);
+Output.ui_VoltageL2N			:=	RealToUint(	In	:= Monitor.powermonitor.InputField.ar_PhaseVoltage[2], Scale	:=	10);
+Output.ui_VoltageL3N			:=	RealToUint(	In	:= Monitor.powermonitor.InputField.ar_PhaseVoltage[3], Scale	:=	10);
+Output.ui_VoltageL1L2			:=	RealToUint(	In	:= Monitor.powermonitor.InputField.ar_LineVoltage[1], Scale	:=	10);
+Output.ui_VoltageL2L3			:=	RealToUint(	In	:= Monitor.powermonitor.InputField.ar_LineVoltage[2], Scale	:=	10);
+Output.ui_VoltageL3L1			:=	RealToUint(	In	:= Monitor.powermonitor.InputField.ar_LineVoltage[3], Scale	:=	10);
+Output.ui_CurrentL1				:=	RealToUint(	In	:= Monitor.powermonitor.InputField.ar_Current[1], 	Scale	:=	10);
+Output.ui_CurrentL2				:=	RealToUint(	In	:= Monitor.powermonitor.InputField.ar_Current[2], 	Scale	:=	10);
+Output.ui_CurrentL3				:=	RealToUint(	In	:= Monitor.powermonitor.InputField.ar_Current[3], 	Scale	:=	10);
+Output.ui_CurrentN				:=	RealToUint(	In	:= Monitor.powermonitor.InputField.ar_Current[4], 	Scale	:=	10);
+Output.ui_CurrentLimitField		:=	RealToUint( In	:= Monitor.Protections.OvercurrentProtection.r_TotalinputCurrentLimit, 	scale	:=	1);
+Output.udi_TotalEnergyConsumed	:=	RealToUdint(In	:=	monitor.powermonitor.InputField.r_EnergyConsumed, Scale	:=	10);
+Output.udi_TotalEnergySupplied	:= 	RealToUdint(In	:=	monitor.powermonitor.InputField.r_EnergySupplied, Scale	:=	10);
+
+Output.ui_Current1L1			:=	RealToUint(	In	:= Monitor.powermonitor.InputField.Powerlock[1].ar_Current[1], 	Scale	:=	10);
+Output.ui_Current1L2			:=	RealToUint(	In	:= Monitor.powermonitor.InputField.Powerlock[1].ar_Current[2], 	Scale	:=	10);
+Output.ui_Current1L3			:=	RealToUint(	In	:= Monitor.powermonitor.InputField.Powerlock[1].ar_Current[3], 	Scale	:=	10);
+Output.ui_Current1N				:=	RealToUint(	In	:= Monitor.powermonitor.InputField.Powerlock[1].ar_Current[4], 	Scale	:=	10);
+Output.ui_Current2L1			:=	RealToUint(	In	:= Monitor.powermonitor.InputField.Powerlock[2].ar_Current[1], 	Scale	:=	10);
+Output.ui_Current2L2			:=	RealToUint(	In	:= Monitor.powermonitor.InputField.Powerlock[2].ar_Current[2], 	Scale	:=	10);
+Output.ui_Current2L3			:=	RealToUint(	In	:= Monitor.powermonitor.InputField.Powerlock[2].ar_Current[3], 	Scale	:=	10);
+Output.ui_Current2N				:=	RealToUint(	In	:= Monitor.powermonitor.InputField.Powerlock[2].ar_Current[4], 	Scale	:=	10);
+
+IF (NOT events.b_HeartbeatFault) AND ExternalControlMode > eExternalControlMode.BasicControl THEN
+	Input.w_Control := WordEndian(input.w_Control);
+	ManualAckState := Input.w_Control.0;
+	
+	CASE WordEndian(Input.InputConnectionType) OF
+		//0:	remain
+		1:	get.SoftSettings.setup.e_AcInputType := eAcInputType.None; 
+		2:	get.SoftSettings.setup.e_AcInputType := eAcInputType.Grid;
+		3:	get.SoftSettings.setup.e_AcInputType := eAcInputType.Genset; 
+	END_CASE
+	
+	GenGridControllerStateMachine();
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MapInputGridControl" Id="{f3c3f57b-89ca-43a1-a28f-1291f1ee9d0b}" FolderPath="DataMappingV2\">
+      <Declaration><![CDATA[METHOD MapInputGridControl : BOOL
+VAR_IN_OUT CONSTANT
+	monitor								: ST_System_Monitor;
+END_VAR
+
+VAR_IN_OUT
+	events	: 	ST_ExtController_Events;
+	Input	:	st_PNInput_InputGridControl;
+	Output	:	st_PNOutput_InputGridControl;
+END_VAR
+
+VAR_INST
+	rtrig_openInputBreaker	:	r_trig;
+	Rtrig_BreakerToAuto		:	r_trig;
+	ftrig_ackDone			:	f_trig;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	
+//Fill output data
+Output.w_Status.0	:=	monitor.system.GenGridController.e_BreakerMode = eBreakerOperationMode.GridFeedthrough;
+Output.w_Status		:= WordEndian(Output.w_Status);
+
+Output.w_Warnings.0	:=	monitor.system.GenGridController.events.b_GridLostTrip; //?
+Output.w_Warnings		:= WordEndian(Output.w_Warnings);
+
+Output.w_Faults.0	:=	monitor.system.GenGridController.events.b_SynchronisationFault;
+Output.w_Faults		:= 	WordEndian(Output.w_Faults);
+
+//Output.ui_InputGridStatus := 0;
+IF Output.w_Status.0 THEN	
+	CASE monitor.system.GenGridController.e_state OF
+		eGenGridState.Waiting_For_AC:			Output.ui_InputGridStatus := 1;
+		eGenGridState.Waiting_Mode_Reconnect:	Output.ui_InputGridStatus := 2;
+		eGenGridState.Gridcode_Release_Check:	Output.ui_InputGridStatus := 3;
+		eGenGridState.Synchronization:			Output.ui_InputGridStatus := 4;
+		eGengridState.Running:					Output.ui_InputGridStatus := 5;
+		eGengridState.stopping:					Output.ui_InputGridStatus := 6;
+	END_CASE
+ELSE
+	Output.ui_InputGridStatus := 0;
+END_IF
+Output.ui_InputGridStatus := wordendian(Output.ui_InputGridStatus);
+
+IF (NOT events.b_HeartbeatFault) AND ExternalControlMode > eExternalControlMode.BasicControl AND monitor.system.GenGridController.e_BreakerMode = eBreakerOperationMode.GridFeedthrough THEN
+	input.w_Control := wordEndian(input.w_Control);
+	//get.SoftSettings.inputgrid.breaker.AutoConnect := input.w_Control.0;
+	//get.Operation.inputgrid.b_SyncClose				:= input.w_Control.1;
+	
+	get.SoftSettings.system.b_AMF	 				:= input.w_Control.2;
+	get.SoftSettings.inputgrid.b_GridCodesActive	:= NOT input.w_Control.3;
+	
+	IF input.w_Control.4 THEN
+		get.SoftSettings.inputgrid.PeakshaveMode	:= 	ePeakShaveMode.Singlephase;
+	ELSE
+		get.SoftSettings.inputgrid.PeakshaveMode	:= 	ePeakShaveMode.Multiphase;		
+	END_IF
+	
+	get.SoftSettings.inputgrid.Breaker.EMstopDisconnect		:= 	Input.w_Control.8;	//Maybe unneccessary to write both?
+	get.SoftSettings.inputgrid.Breaker.ShutdownDisconnect	:= 	Input.w_Control.9;
+	get.SoftSettings.inputgrid.Breaker.CurrentLimitDisconnect 	:=	Input.w_Control.10;
+	
+	UIntToReal(	in			:= Input.ui_FeedInCurrentLimit, 
+				scale 		:= 10, 
+				limitlow	:= 0,
+				limithigh	:= 700,//get.HardSettings.inputgrid.r_FeedInCurrentLimitHard,
+    			OutOfRange 	=>	,
+				IgnoreZero 	:= FALSE,
+				Out 		:= get.SoftSettings.inputgrid.setpointTimeslot1.r_FeedInCurrentLimitSoft );		
+
+	UIntToReal(	in			:= Input.ui_SupplyCurrentLimit, 
+				scale 		:= 10, 
+				limitlow	:= 0,
+				limithigh	:= 700,//get.HardSettings inputgrid.r_SupplyCurrentLimitHard,
+    			OutOfRange 	=>	,
+				IgnoreZero 	:= TRUE,
+				Out 		:= get.SoftSettings.inputgrid.setpointTimeslot1.r_SupplyCurrentLimitSoft );		
+
+	get.SoftSettings.inputgrid.breaker.CurrentLimitRetries := UINT_TO_BYTE(wordendian(input.ui_CurrentLimitRetries));	
+
+	CASE wordEndian(input.ui_ContactorControl) OF
+		1: get.SoftSettings.inputgrid.breaker.AutoConnect := TRUE;
+		2: get.SoftSettings.inputgrid.breaker.AutoConnect := FALSE;
+	END_CASE
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MapOutputField" Id="{cc13c1c5-939a-4e89-b242-57d5651ebfdc}" FolderPath="DataMappingV2\">
+      <Declaration><![CDATA[METHOD MapOutputField : BOOL
+
+VAR_IN_OUT CONSTANT
+	monitor								: ST_System_Monitor;
+END_VAR
+
+VAR_IN_OUT
+	Output	:	ST_PNOutput_OutputField;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+//Fill output data
+Output.w_Status.0	:=	Monitor.ACswitchgear.b_OutputMCCBfb;
+Output.w_Status.1	:=	Monitor.ACswitchgear.b_PENlinkfb;
+Output.w_Status.2	:= 	Monitor.powerstack.b_Gridtied;
+Output.w_Status		:= WordEndian(Output.w_Status);
+
+Output.w_Warnings.0	:=	Monitor.ACswitchgear.b_CEEprefuseOK;
+Output.w_Warnings.1	:=	Monitor.ACswitchgear.b_OutputMCCBShuntOK;
+Output.w_Warnings.2	:=	Monitor.powermonitor.events.b_MBCommWarning OR Monitor.powermonitor.events.b_MBTimeoutWarning;
+Output.w_Warnings.3	:=	Monitor.protections.OvercurrentProtection.b_OutputWarning;
+Output.w_Warnings	:= WordEndian(Output.w_Warnings);
+
+Output.w_Faults.0	:=	Monitor.protections.OvercurrentProtection.b_OutputAlarm;
+Output.w_Faults.1	:=	Monitor.powermonitor.events.b_MBCommError;
+Output.w_Faults		:= WordEndian(output.w_Faults);
+
+Output.i_ActivePower 			:=	RealToint (	In	:= Monitor.powermonitor.OutputField.ar_ActivePower[0], 	Scale	:=	10);
+Output.i_ReactivePower 			:=	RealToint (	In	:= Monitor.powermonitor.OutputField.ar_ReactivePower[0], Scale	:=	10);
+Output.i_PowerFactor 			:=	RealToint (	In	:= Monitor.powermonitor.OutputField.ar_PowerFactor[0], Scale	:=	100);
+Output.ui_frequency				:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.ar_Frequency[0] , 	Scale	:=	100);
+Output.ui_VoltageL1N			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.ar_PhaseVoltage[1], Scale:=	10);
+Output.ui_VoltageL2N			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.ar_PhaseVoltage[2], Scale:=	10);
+Output.ui_VoltageL3N			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.ar_PhaseVoltage[3], Scale:=	10);
+Output.ui_VoltageL1L2			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.ar_LineVoltage[1], Scale	:=	10);
+Output.ui_VoltageL2L3			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.ar_LineVoltage[2], Scale	:=	10);
+Output.ui_VoltageL3L1			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.ar_LineVoltage[3], Scale	:=	10);
+Output.ui_CurrentL1				:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.ar_Current[1], 	Scale	:=	10);
+Output.ui_CurrentL2				:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.ar_Current[2], 	Scale	:=	10);
+Output.ui_CurrentL3				:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.ar_Current[3], 	Scale	:=	10);
+Output.ui_CurrentN				:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.ar_Current[4], 	Scale	:=	10);
+Output.ui_CurrentLimitField		:=	RealToUint (In	:= Monitor.Protections.OvercurrentProtection.r_TotalOutputCurrentLimit, 	scale	:=	1);
+Output.udi_TotalEnergyConsumed	:= RealToUdint(	In	:=	monitor.powermonitor.OutputField.r_EnergyConsumed, Scale	:=	10);
+Output.udi_TotalEnergySupplied	:= RealToUdint(	In	:=	monitor.powermonitor.OutputField.r_EnergySupplied, Scale	:=	10);
+
+Output.ui_Current1L1			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.Powerlock[1].ar_Current[1], 	Scale	:=	10);
+Output.ui_Current1L2			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.Powerlock[1].ar_Current[2], 	Scale	:=	10);
+Output.ui_Current1L3			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.Powerlock[1].ar_Current[3], 	Scale	:=	10);
+Output.ui_Current1N				:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.Powerlock[1].ar_Current[4], 	Scale	:=	10);
+Output.ui_Current2L1			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.Powerlock[2].ar_Current[1], 	Scale	:=	10);
+Output.ui_Current2L2			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.Powerlock[2].ar_Current[2], 	Scale	:=	10);
+Output.ui_Current2L3			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.Powerlock[2].ar_Current[3], 	Scale	:=	10);
+Output.ui_Current2N				:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.Powerlock[2].ar_Current[4], 	Scale	:=	10);
+Output.ui_Current3L1			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.Powerlock[3].ar_Current[1], 	Scale	:=	10);
+Output.ui_Current3L2			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.Powerlock[3].ar_Current[2], 	Scale	:=	10);
+Output.ui_Current3L3			:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.Powerlock[3].ar_Current[3], 	Scale	:=	10);
+Output.ui_Current3N				:=	RealToUint(	In	:= Monitor.powermonitor.OutputField.Powerlock[3].ar_Current[4], 	Scale	:=	10);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MapPeakShaveBox" Id="{64b78ff8-d921-459a-b96b-4d0da68281c7}" FolderPath="DataMappingV2\">
+      <Declaration><![CDATA[METHOD MapPeakShaveBox : BOOL
+VAR_IN_OUT CONSTANT
+	monitor								: ST_System_Monitor;
+END_VAR
+
+VAR_IN_OUT
+	events	: 	ST_ExtController_Events;
+	Input	:	ST_PNInput_Peakshavebox;
+	Output	:	ST_PNOutput_Peakshavebox;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	
+Output.w_Status.0	:=	Monitor.peakshavebox.b_buscouplerReady;
+Output.w_Status.1	:= 	Monitor.peakshavebox.b_DataOK;
+Output.w_Status.14	:=	Monitor.peakshavebox.b_active;
+Output.w_Status.15	:= settings.Configuration.b_PeakshaverBoxEnable;//	Monitor.controlfb.softSettings.setup.b_peakshaveboxEnable;
+Output.w_Status		:= WordEndian(Output.w_Status);
+
+Output.w_Warnings.0	:= Monitor.peakshavebox.PowerStatus.b_GeneralWarning;	
+output.w_Warnings.1 := Monitor.peakshavebox.b_SettingsChangePending;
+Output.w_Warnings	:= WordEndian(Output.w_Warnings);
+
+Output.w_Faults.0	:=	Monitor.peakshavebox.PowerStatus.b_GeneralFault 
+						OR Monitor.peakshavebox.PowerStatus.b_OverCurrent
+						OR Monitor.peakshavebox.PowerStatus.b_OverVoltage
+						OR Monitor.peakshavebox.PowerStatus.b_UnderVoltage;
+Output.w_Faults		:= WordEndian(Output.w_Faults);
+
+Output.i_ActivePower 		:=	RealToint (	In	:= 	Monitor.peakshavebox.Powermonitor.ar_ActivePower[0], 	scale := 10);												
+Output.i_ReactivePower 		:=	RealToint (	In	:= 	Monitor.peakshavebox.Powermonitor.ar_ReactivePower[0], scale := 10);
+Output.i_PowerFactor 		:=	RealToint (	In	:= Monitor.peakshavebox.Powermonitor.ar_PowerFactor[0], Scale	:=	100);													
+Output.ui_frequency			:=	RealToUint(	In	:= Monitor.peakshavebox.Powermonitor.ar_Frequency[0], 		Scale	:=	10);
+Output.ui_VoltageL1N		:=	RealToUint(	In	:= Monitor.peakshavebox.Powermonitor.ar_LineVoltage[1], 	Scale	:=	10);
+Output.ui_VoltageL2N		:=	RealToUint(	In	:= Monitor.peakshavebox.Powermonitor.ar_LineVoltage[2], 	Scale	:=	10);
+Output.ui_VoltageL3N		:=	RealToUint(	In	:= Monitor.peakshavebox.Powermonitor.ar_LineVoltage[3], 	Scale	:=	10);
+Output.ui_VoltageL1L2		:=	RealToUint(	In	:= Monitor.peakshavebox.Powermonitor.ar_PhaseVoltage[1], 	Scale	:=	10);
+Output.ui_VoltageL2L3		:=	RealToUint(	In	:= Monitor.peakshavebox.Powermonitor.ar_PhaseVoltage[2], 	Scale	:=	10);
+Output.ui_VoltageL3L1		:=	RealToUint(	In	:= Monitor.peakshavebox.Powermonitor.ar_PhaseVoltage[3], 	Scale	:=	10);
+Output.ui_CurrentL1			:=	RealToUint(	In	:= Monitor.peakshavebox.Powermonitor.ar_Current[1], 		Scale	:=	10);
+Output.ui_CurrentL2			:=	RealToUint(	In	:= Monitor.peakshavebox.Powermonitor.ar_Current[2], 		Scale	:=	10);
+Output.ui_CurrentL3			:=	RealToUint(	In	:= Monitor.peakshavebox.Powermonitor.ar_Current[3], 		Scale	:=	10);
+Output.ui_CurrentN			:=	RealToUint(	In	:= Monitor.peakshavebox.Powermonitor.ar_Current[4], 		Scale	:=	10);
+
+
+IF (NOT events.b_HeartbeatFault) AND ExternalControlMode > eExternalControlMode.BasicControl THEN
+	input.w_Control := wordEndian(input.w_Control);
+	get.SoftSettings.setup.b_PeakshaveBoxEnable := 	input.w_Control.0;
+	get.SoftSettings.PSB.b_ReverseCTDirection	:=	input.w_Control.1;
+
+	IF input.w_Control.2 THEN
+		get.SoftSettings.PSB.PeakshaveMode	:= 	ePeakShaveMode.Singlephase;
+	ELSE
+		get.SoftSettings.PSB.PeakshaveMode	:= 	ePeakShaveMode.Multiphase;		
+	END_IF
+	
+	UIntToReal(	in			:= Input.ui_FeedInCurrentLimit, 
+				scale 		:= 10, 
+				limitlow	:= 0,
+				limithigh	:= st_params.limits.r_PSBCtLimit,
+    			OutOfRange 	=>	events.b_PSBFeedInLimitOutOfRange,
+				IgnoreZero 	:= FALSE,
+				Out 		:= get.SoftSettings.PSB.setpointTimeslot1.r_FeedInCurrentLimitSoft );		
+
+	UIntToReal(	in			:= Input.ui_SupplyCurrentLimit, 
+				scale 		:= 10, 
+				limitlow	:= 0,
+				limithigh	:= st_params.limits.r_PSBCtLimit,
+    			OutOfRange 	=>	events.b_PSBSupplyLimitOutOfRange,
+				IgnoreZero 	:= TRUE,
+				Out 		:= get.SoftSettings.PSB.setpointTimeslot1.r_SupplyCurrentLimitSoft );
+	
+	IF wordEndian(input.ui_VTRatio) > 0 THEN
+		UIntToReal(	in			:= Input.ui_VTRatio, 
+					scale 		:= 100, 
+					limitlow	:= 0,
+					limithigh	:= 655.35,
+					OutOfRange 	=> ,
+					IgnoreZero 	:= TRUE,
+					Out 		:= get.SoftSettings.PSB.r_VTratio );	
+	END_IF
+
+	input.UI_CTRatio := wordEndian(input.UI_CTRatio);
+	IF input.UI_CTRatio > 0 THEN		
+		get.SoftSettings.PSB.ui_CTrange := input.UI_CTRatio;
+	END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MapPowerSTack" Id="{0df971fe-3444-431c-8e45-cf805b09270b}" FolderPath="DataMappingV2\">
+      <Declaration><![CDATA[METHOD MapPowerSTack : BOOL
+VAR_IN_OUT CONSTANT
+	monitor								: ST_System_Monitor;
+END_VAR
+
+VAR_IN_OUT
+	events	: 	ST_ExtController_Events;
+	Input	:	ST_PNInput_powerstack;
+	Output	:	ST_PNOutput_powerstack;
+END_VAR
+
+VAR_INST
+	test	:	Real;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+//Fill output data
+Output.w_Status.0	:=	Monitor.powerstack.Netcontactor.b_NetConFb;
+Output.w_Status.1	:=	Monitor.powerstack.b_ACDetected;
+Output.w_Status.2	:=	Monitor.powerstack.b_DCDetected;
+Output.w_Status.3	:= 	Monitor.powerstack.b_GridTied;
+Output.w_Status.4	:=	Monitor.powerstack.b_InverterRunning;
+Output.w_Status.5	:=	Monitor.powerstack.b_StartedState;
+Output.w_Status.6	:=	Monitor.powerstack.b_ControlEnabled;
+Output.w_Status.7	:= 	Monitor.powerstack.b_EcomodeAvailable;
+Output.w_Status		:= WordEndian(Output.w_Status);
+
+Output.w_Warnings.0	:=	Monitor.powerstack.Events.b_UndervoltageWarning;
+Output.w_Warnings.1	:=	Monitor.powerstack.Events.b_OvervoltageWarning;
+Output.w_Warnings.2	:=	Monitor.powerstack.Events.b_overcurrentWarning;
+Output.w_Warnings.3	:=	Monitor.powerstack.Events.b_TemperatureWarning OR Monitor.powerstack.Events.b_TemperatureDeviationHigh;
+Output.w_Warnings.4	:=	Monitor.powerstack.Events.b_MasterWarning;
+Output.w_Warnings.5	:=	Monitor.powerstack.Events.b_SlaveWarning;
+Output.w_Warnings.6 := 	Monitor.powerstack.Events.b_GridCodeWarning;
+Output.w_Warnings.7 := 	Monitor.powerstack.Netcontactor.events.b_IllegalLeftFieldSelected;
+Output.w_Warnings	:= 	WordEndian(Output.w_Warnings);
+
+Output.w_Faults.0	:=	Monitor.powerstack.Events.b_UnderVoltageFault;
+Output.w_Faults.1	:=	Monitor.powerstack.Events.b_OverVoltageFault;
+Output.w_Faults.2	:=	Monitor.powerstack.Events.b_OvercurrentFault;
+Output.w_Faults.3	:=	Monitor.powerstack.Events.b_TemperatureFault;
+Output.w_Faults.4	:=	Monitor.powerstack.Events.b_MasterFault;
+Output.w_Faults.5	:=	Monitor.powerstack.Events.b_SlaveFault;
+Output.w_Faults.6	:=	Monitor.powerstack.Events.b_NetcontactorFault;
+//Output.w_Faults.7	:=	monitor.powerstack.Events.b_GridCodeWarning;
+Output.w_Faults.8	:=	Monitor.powerstack.Events.b_ShutdownTimeOut OR Monitor.powerstack.Events.b_startupTimeOut;
+Output.w_Faults		:= WordEndian(output.w_Faults);
+
+Output.ui_PowerStackStatus			:=  WordEndian(TO_UINT(Monitor.powerstack.e_State));
+Output.ui_ACCurrent					:=  RealToUint 	(	In	:= Monitor.powerstack.r_AcCurrent, 		Scale	:=	10);
+Output.i_ActivePower				:=  RealToint 	(	In	:= Monitor.powerstack.r_ActivePower, 	Scale	:=	10);
+Output.i_ReactivePower 				:= 	RealToint 	(	In	:= Monitor.powerstack.r_ReactivePower, 	Scale	:=	10);
+Output.ui_Supplyfrequency 			:=  RealToUint	(	In	:= Monitor.powerstack.r_FrequencyD7, 	Scale	:=	100);
+Output.ui_SupplyVoltage				:=  RealToUint 	(	In	:= Monitor.powerstack.r_ACVoltageD7, 	Scale	:=	10);
+Output.i_PsetAct 					:=  RealToint 	(	In	:= get.Operation.system.r_Pset, 		Scale	:=	10);
+Output.i_QsetAct 					:=  RealToint 	(	In	:= get.Operation.system.r_Qset, 		Scale	:=	10);
+Output.i_PFSetAct					:=  RealToUint	( 	In	:= get.Operation.system.r_PFset, 		Scale	:=	10);
+Output.ui_LoadPercentage			:=	RealToUint 	( 	IN 	:= Monitor.powerstack.r_LoadPercent, 	Scale	:=	10);
+Output.ui_RatedCurrent				:=	RealToUint	( 	In	:= Monitor.powerstack.r_RatedCurrent, 	Scale	:=	10);
+Output.ui_RatedPower				:=	RealToUint	( 	In	:= Monitor.powerstack.r_RatedPower, 	Scale	:=	10);
+Output.ui_DischargePowerLimit		:= 	RealToUint	( 	In	:= Monitor.powerstack.r_Pmax, 			Scale	:=	10);
+Output.ui_ChargePowerLimit			:= 	RealToUint	( 	In	:= ABS(Monitor.powerstack.r_Pmin), 		Scale	:=  10);
+Output.ui_ACcurrentLimit			:= 	RealToUint	( 	In	:= Monitor.powerstack.r_ACcurrentLimit, Scale	:=	10);
+Output.ui_ApparentPowerLimit		:= 	RealToUint	( 	In	:= Monitor.powerstack.r_Smax, 			Scale	:=	10);
+Output.ui_ReactivePowerLimit		:=	RealToUint	(	In  := Monitor.powerstack.r_QMax,			Scale 	:=  10);
+
+//process input data
+IF (NOT events.b_HeartbeatFault) THEN
+	Input.w_Control := wordEndian(Input.w_Control);
+	Get.operation.system.b_PFsetEnable 								:=	Input.w_Control.0;	
+	
+	IntToReal(	in			:= Input.i_Pset, 
+				scale 		:= 10, 
+				limitlow	:= -st_params.Limits.r_InverterPowerLimit,
+				limithigh	:=	st_params.limits.r_InverterPowerLimit,
+    			OutOfRange 	=>	events.b_PsetOutOfRange,
+				IgnoreZero 	:= FALSE,
+				Out 		:= Get.Operation.system.r_Pset);
+				
+	IntToReal(	in			:= Input.i_Qset, 
+				scale 		:= 10, 
+				limitlow	:= -st_params.Limits.r_InverterPowerLimit,
+				limithigh	:=	st_params.limits.r_InverterPowerLimit,
+    			OutOfRange 	=>	events.b_QsetOutOfRange,
+				IgnoreZero 	:= FALSE,
+				Out 		:= Get.Operation.system.r_Qset);
+	
+	IntToReal(	in			:= Input.i_PFset, 
+				scale 		:= 100, 
+				limitlow	:= -1,
+				limithigh	:=	1,
+    			OutOfRange 	=>	events.b_PFsetOutOfRange,
+				IgnoreZero 	:= TRUE,
+				Out 		:= Get.Operation.system.r_PFset);
+				
+	IF ExternalControlMode > eExternalControlMode.BasicControl THEN
+			Settings.MachineParams.system.Powercontroller.SocDroop.enable	:=	Input.w_Control.1;
+			Get.SoftSettings.system.b_EcoModeEnable							:= 	Input.w_Control.2;
+	
+			
+		UIntToReal(	in			:= Input.ui_NominalVoltage, 
+					scale 		:= 1, 
+					limitlow	:= st_params.limits.r_NominalVoltageMin,
+					limithigh	:=	st_params.limits.r_NominalVoltageMax,
+					OutOfRange 	=>	events.b_NominalVoltageOutOfRange,
+					IgnoreZero 	:= TRUE,
+					Out 		:= Get.Operation.system.r_NominalVoltage);
+		
+		UIntToReal(	in			:= Input.ui_NominalFrequency, 
+					scale 		:= 100, 
+					limitlow	:= st_params.limits.r_NominalFreqMin,
+					limithigh	:=	st_params.limits.r_NominalFreqMax,
+					OutOfRange 	=>	events.b_NominalFreqOutOfRange,
+					IgnoreZero 	:= TRUE,
+					Out 		:= Get.Operation.system.r_NominalFrequency);
+		
+		UIntToReal(	in			:= Input.ui_NominalFrequency, 
+					scale 		:= 100, 
+					limitlow	:= st_params.limits.r_NominalFreqMin,
+					limithigh	:=	st_params.limits.r_NominalFreqMax,
+					OutOfRange 	=>	events.b_NominalFreqOutOfRange,
+					IgnoreZero 	:= TRUE,
+					Out 		:= Get.Operation.system.r_NominalFrequency);
+				
+		UintToReal(	in			:= Input.ui_FrequencyDroop, 
+					scale 		:= 10, 
+					limitlow	:=	0, 
+					limithigh	:=	st_params.limits.r_DroopMax, 
+					OutOfRange 	=>	events.b_FreqDroopOutOfRange,
+					IgnoreZero 	:= 	FALSE,
+					Out 		:= 	Get.SoftSettings.system.r_FrequencyDroop);
+	
+		UintToReal(	in			:= 	Input.ui_VoltageDroop, 
+					scale 		:= 	10, 
+					limitlow	:=	0, 
+					limithigh	:=	st_params.limits.r_DroopMax, 
+					OutOfRange 	=>	events.b_VoltageDroopOutOfRange,
+					IgnoreZero 	:= 	FALSE,
+					Out 		:= 	Get.SoftSettings.system.r_VoltageDroop);			
+	
+//		UintToReal(	in			:= 	Input.ui_PowerRampRate, 
+//					scale 		:= 	1, 
+//					limitlow	:=	0, 
+//					limithigh	:=	st_params.limits.r_PowerRampLimit, 
+//					OutOfRange 	=>	events.b_VoltageDroopOutOfRange,
+//					IgnoreZero 	:= 	FALSE,
+//					Out			:= ?);				
+		
+				
+					
+		UintToReal(	in			:= 	Input.ui_SOCDroopUpshiftStart, 
+					scale 		:= 	10, 
+					limitlow	:=	Settings.MachineParams.system.Powercontroller.SocDroop.SocMinDroopStart, 
+					limithigh	:=	get.softsettings.system.r_SocMax, 
+					OutOfRange 	=>	events.b_VoltageDroopOutOfRange,
+					IgnoreZero 	:= 	TRUE,
+					Out 		:= 	Settings.MachineParams.system.Powercontroller.SocDroop.SocMaxDroopStart);
+	
+		UintToReal(	in			:= 	Input.ui_SOCDroopDownShiftStart, 
+					scale 		:= 	10, 
+					limitlow	:=	get.softsettings.system.r_SocMin, 
+					limithigh	:=	Settings.MachineParams.system.Powercontroller.SocDroop.SocMaxDroopStart, 
+					OutOfRange 	=>	events.b_VoltageDroopOutOfRange,
+					IgnoreZero 	:= 	TRUE,
+					Out 		:= 	Settings.MachineParams.system.Powercontroller.SocDroop.SocMinDroopStart);	
+			
+
+	
+		CASE input.ui_PowerLimitMode OF
+			//	0:	remain 
+			1:	get.SoftSettings.system.e_UgridPowerLimitingMode := ePLM.FreqShift;
+			2:	get.SoftSettings.system.e_UgridPowerLimitingMode := ePLM.VoltShift;
+			3:	get.SoftSettings.system.e_UgridPowerLimitingMode := ePLM.FreqVoltShift;
+			4:	get.SoftSettings.system.e_UgridPowerLimitingMode := ePLM.Shutdown;
+		END_CASE
+		
+		UintToReal(	in			:= 	Input.ui_ACCurrentLimit, 
+					scale 		:= 	10, 
+					limitlow	:=	0, 
+					limithigh	:=	monitor.powerstack.r_ACcurrentLimitMax, 
+					OutOfRange 	=>	events.b_VoltageDroopOutOfRange,
+					IgnoreZero 	:= 	TRUE,
+					Out 		:= 	get.SoftSettings.system.r_AMax);
+	END_IF
+	
+ELSE
+	//If Heartbeat fails or control is not allowed --> reset Operational values
+	// soft settings may remain.
+	Get.Operation.system.r_Pset	 :=	0;
+	Get.Operation.system.r_Qset	 :=	0;
+	Get.Operation.system.r_PFset :=	1;
+	Get.Operation.system.r_NominalVoltage := 400;
+	get.Operation.system.r_NominalFrequency := 50;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MapZPT" Id="{71509464-62dc-44d8-a035-abfb1271e6de}" FolderPath="DataMappingV2\">
+      <Declaration><![CDATA[METHOD MapZPT : BOOL
+VAR_IN_OUT CONSTANT
+	monitor								: ST_System_Monitor;
+END_VAR
+
+VAR_IN_OUT
+	Output	:	ST_PNOutput_ZPT;
+END_VAR
+
+VAR
+	HighestTemp	:	Real;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+//Fill output data
+
+Output.w_Status.0 	:= 	Monitor.neutraltransformer.b_active;	//not in use
+Output.w_Status 	:= WordEndian(Output.w_Status);
+
+Output.w_Warnings.0	:=	Monitor.neutraltransformer.events.b_OvercurrentWarning;
+Output.w_Warnings.1	:=	Monitor.neutraltransformer.events.b_TemperatureHighPhase[phases.L1] OR 
+						Monitor.neutraltransformer.events.b_TemperatureHighPhase[phases.L2] OR 
+						Monitor.neutraltransformer.events.b_TemperatureHighPhase[phases.L3];
+Output.w_Warnings.2	:=	Monitor.neutraltransformer.events.b_VoltageUnbalanceHigh;
+Output.w_Warnings.3	:=	Monitor.neutraltransformer.events.b_NeutralCurrentHigh;
+Output.w_warnings 	:= WordEndian(Output.w_Warnings);
+
+Output.w_Errors.0	:=	Monitor.neutraltransformer.events.b_OvercurrentAlarm;
+Output.w_Errors.1	:=	Monitor.neutraltransformer.events.b_TemperatureTooHighPhase[phases.L1] OR 
+						Monitor.neutraltransformer.events.b_TemperatureTooHighPhase[phases.L2] OR 
+						Monitor.neutraltransformer.events.b_TemperatureTooHighPhase[phases.L3];
+Output.w_Errors.2	:=	Monitor.neutraltransformer.events.b_VoltageUnbalanceTooHigh;
+Output.w_Errors.3	:=	Monitor.neutraltransformer.events.b_NeutralCurrentTooHigh;
+Output.w_Errors 	:= WordEndian(Output.w_Errors);
+
+Output.ui_RatedPower:=	RealToUint(in:= Monitor.neutraltransformer.r_ratedPower, Scale:=1); //where to find?
+Output.ui_Powerload	:=	RealToUint(in:= Monitor.neutraltransformer.r_Powerload, Scale:=10);
+
+HighestTemp := MAX(Monitor.neutraltransformer.r_TemperaturePhase[0], Monitor.neutraltransformer.r_TemperaturePhase[1], Monitor.neutraltransformer.r_TemperaturePhase[2]);
+Output.i_TransformerTemperature	:=	RealToint(in:=HighestTemp, Scale:=10);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RealToInt" Id="{c6787a96-4e41-436f-acb3-e31c3ff1d0d8}" FolderPath="DataConversion\">
+      <Declaration><![CDATA[METHOD RealToInt : INT
+VAR_INPUT
+	In			:	REAL;
+	Scale		:	UINT := 10;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT IsNaN(IN) THEN
+	RealToInt := WordEndian(REAL_TO_INT(LIMIT(-32768, In*Scale, 32767)));
+END_IF
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RealToUDINT" Id="{486c7cc5-cd43-4ab8-8d93-a683d649ac39}" FolderPath="DataConversion\">
+      <Declaration><![CDATA[METHOD RealToUDINT : UDINT
+VAR_INPUT
+	In		:	REAL;
+	Scale	:	UINT := 10;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT IsNaN(IN) THEN
+	RealToUdint := DwordEndian(REAL_TO_UDINT(LIMIT(0, In*Scale, 16#FFFFFFFF)));
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RealToUint" Id="{abf975ac-db57-4e02-915d-0affb502c30f}" FolderPath="DataConversion\">
+      <Declaration><![CDATA[METHOD RealToUint : UINT
+VAR_INPUT
+	In		:	REAL;
+	Scale	:	UINT := 10;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT IsNaN(IN) THEN
+	RealToUint := WordEndian(REAL_TO_UINT(LIMIT(0, In*Scale, 16#FFFF)));
+END_IF
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetJsonDoc" Id="{7e30477d-4df1-4304-93de-ecf90b11ee13}">
+      <Declaration><![CDATA[METHOD SetJsonDoc : BOOL
+VAR_IN_OUT
+	OutputJson       : STRING(2000);
+END_VAR
+
+
+VAR_INST
+	fbJson         	: FB_JsonSaxWriter;
+  	fbJsonDataType 	: FB_JsonReadWriteDataType;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbJson.ResetDocument();
+fbjson.AddKey('General');
+fbJsonDataType.AddJsonValueFromSymbol(fbJson, 'ST_PNOutput_General', SIZEOF(Outputs.General), ADR(Outputs.General));
+fbjson.AddKey('Battery');
+fbJsonDataType.AddJsonValueFromSymbol(fbJson, 'ST_PNOutput_Battery', SIZEOF(Outputs.Battery), ADR(Outputs.Battery));
+fbjson.AddKey('Outputfield');
+fbJsonDataType.AddJsonValueFromSymbol(fbJson, 'ST_PNOutput_OutputField', SIZEOF(Outputs.OutputField), ADR(Outputs.OutputField));
+fbjson.AddKey('Inputfield');
+fbJsonDataType.AddJsonValueFromSymbol(fbJson, 'ST_PNOutput_InputField', SIZEOF(Outputs.InputField), ADR(Outputs.InputField));
+fbjson.AddKey('Powerstack');
+fbJsonDataType.AddJsonValueFromSymbol(fbJson, 'ST_PNOutput_Powerstack', SIZEOF(Outputs.Powerstack), ADR(Outputs.Powerstack));
+fbjson.AddKey('PSB');
+fbJsonDataType.AddJsonValueFromSymbol(fbJson, 'ST_PNOutput_PeakShaveBox', SIZEOF(Outputs.PSB), ADR(Outputs.PSB));
+fbjson.AddKey('ZPT');
+fbJsonDataType.AddJsonValueFromSymbol(fbJson, 'ST_PNOutput_ZPT', SIZEOF(Outputs.ZPT), ADR(Outputs.ZPT));
+fbjson.AddKey('InputGen');
+fbJsonDataType.AddJsonValueFromSymbol(fbJson, 'ST_PNOutput_Gencontrol', SIZEOF(Outputs.GenControl), ADR(Outputs.GenControl));
+fbjson.AddKey('InputGrid');
+fbJsonDataType.AddJsonValueFromSymbol(fbJson, 'ST_PNOutput_InputGridControl', SIZEOF(Outputs.InputGridControl), ADR(Outputs.InputGridControl));
+fbJson.CopyDocument(OutputJson, SIZEOF(OutputJson));
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UintToByte" Id="{1421d367-dc2a-4870-93c3-d9089d108dc3}" FolderPath="DataConversion\">
+      <Declaration><![CDATA[METHOD UintToByte : BYTE
+VAR_INPUT
+	in			:	UINT;
+	LimitLow	: 	BYTE;
+	LimitHigh	:  	BYTE; 
+END_VAR
+
+VAR_OUTPUT
+	OutofRange		: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[OutofRange := ValueOutOfRange(TO_REAL(in), TO_REAL(LimitLow), TO_REAL(LimitHigh));
+
+UintToByte := TO_BYTE(LIMIT(LimitLow, in, LimitHigh));
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UintToReal" Id="{d4fe46ec-9b14-4a4b-aa45-c4143183bc5b}" FolderPath="DataConversion\">
+      <Declaration><![CDATA[METHOD UintToReal : REAL
+VAR_INPUT
+	in			:	UINT;
+	Scale		:	UINT := 1;
+	LimitLow	: 	REAL := 0;
+	LimitHigh	:  	REAL := 3.402823E+38; 
+	IgnoreZero	:	BOOL := FALSE;
+END_VAR
+
+VAR_OUTPUT
+	OutofRange	: BOOL;
+END_VAR
+
+VAR
+	r_value			: REAL;
+END_VAR
+
+VAR_IN_OUT
+	Out	:	REAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF (NOT IgnoreZero) OR (in <> 0) THEN
+	r_value	 := UINT_TO_REAL(WordEndian(in))/Scale;
+	
+	OutofRange := ValueOutOfRange(r_value, LimitLow, LimitHigh);
+	Out := LIMIT(LimitLow, r_value, LimitHigh);
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="WordEndian" Id="{588bfb4a-75be-4b23-a028-206092985d92}" FolderPath="DataConversion\">
+      <Declaration><![CDATA[METHOD WordEndian : WORD
+VAR_INPUT
+	IN		: WORD;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF st_params.b_BigEndian THEN
+	WordEndian := HOST_TO_BE16(IN);
+ELSE
+	WordEndian := IN;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_ExternalController">
+      <LineId Id="528" Count="0" />
+      <LineId Id="1346" Count="0" />
+      <LineId Id="1443" Count="0" />
+      <LineId Id="1289" Count="0" />
+      <LineId Id="1319" Count="0" />
+      <LineId Id="1569" Count="0" />
+      <LineId Id="1320" Count="0" />
+      <LineId Id="1322" Count="0" />
+      <LineId Id="1321" Count="0" />
+      <LineId Id="1349" Count="1" />
+      <LineId Id="1313" Count="0" />
+      <LineId Id="1295" Count="0" />
+      <LineId Id="1357" Count="5" />
+      <LineId Id="1356" Count="0" />
+      <LineId Id="1363" Count="0" />
+      <LineId Id="1317" Count="0" />
+      <LineId Id="1326" Count="0" />
+      <LineId Id="1376" Count="0" />
+      <LineId Id="1372" Count="0" />
+      <LineId Id="1380" Count="0" />
+      <LineId Id="1370" Count="1" />
+      <LineId Id="1329" Count="7" />
+      <LineId Id="1328" Count="0" />
+      <LineId Id="1505" Count="0" />
+      <LineId Id="1364" Count="2" />
+      <LineId Id="1368" Count="1" />
+      <LineId Id="1367" Count="0" />
+      <LineId Id="1318" Count="0" />
+      <LineId Id="1315" Count="0" />
+      <LineId Id="1337" Count="0" />
+      <LineId Id="1340" Count="4" />
+      <LineId Id="1338" Count="0" />
+      <LineId Id="1298" Count="0" />
+      <LineId Id="1381" Count="3" />
+      <LineId Id="1296" Count="0" />
+      <LineId Id="919" Count="0" />
+      <LineId Id="931" Count="0" />
+      <LineId Id="921" Count="0" />
+      <LineId Id="596" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.BindControlVars">
+      <LineId Id="195" Count="19" />
+      <LineId Id="177" Count="2" />
+      <LineId Id="64" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.CheckControlMode">
+      <LineId Id="16" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="3" />
+      <LineId Id="11" Count="2" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.CheckCouplerState">
+      <LineId Id="31" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="27" Count="1" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="7" Count="16" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.DwordEndian">
+      <LineId Id="15" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.DwordToReal">
+      <LineId Id="13" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.GenGridControllerStateMachine">
+      <LineId Id="9" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="220" Count="1" />
+      <LineId Id="223" Count="0" />
+      <LineId Id="270" Count="0" />
+      <LineId Id="268" Count="1" />
+      <LineId Id="257" Count="0" />
+      <LineId Id="267" Count="0" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="228" Count="4" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="258" Count="0" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="251" Count="2" />
+      <LineId Id="260" Count="0" />
+      <LineId Id="262" Count="2" />
+      <LineId Id="256" Count="0" />
+      <LineId Id="254" Count="0" />
+      <LineId Id="236" Count="0" />
+      <LineId Id="265" Count="1" />
+      <LineId Id="272" Count="0" />
+      <LineId Id="281" Count="1" />
+      <LineId Id="277" Count="3" />
+      <LineId Id="271" Count="0" />
+      <LineId Id="331" Count="1" />
+      <LineId Id="334" Count="1" />
+      <LineId Id="366" Count="1" />
+      <LineId Id="365" Count="0" />
+      <LineId Id="368" Count="1" />
+      <LineId Id="336" Count="0" />
+      <LineId Id="370" Count="0" />
+      <LineId Id="337" Count="0" />
+      <LineId Id="351" Count="0" />
+      <LineId Id="339" Count="1" />
+      <LineId Id="333" Count="0" />
+      <LineId Id="224" Count="0" />
+      <LineId Id="292" Count="3" />
+      <LineId Id="314" Count="0" />
+      <LineId Id="312" Count="0" />
+      <LineId Id="317" Count="1" />
+      <LineId Id="315" Count="1" />
+      <LineId Id="320" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="321" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="67" Count="1" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="76" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="113" Count="1" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="109" Count="1" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="43" Count="1" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="88" Count="1" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="99" Count="1" />
+      <LineId Id="124" Count="1" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="219" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="206" Count="12" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="14" Count="5" />
+      <LineId Id="13" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.GetDiagnostics">
+      <LineId Id="47" Count="9" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="75" Count="5" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="81" Count="3" />
+      <LineId Id="74" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.HeartBeat">
+      <LineId Id="16" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="11" Count="1" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="59" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.IntToReal">
+      <LineId Id="47" Count="1" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="26" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.MapACDCCharger">
+      <LineId Id="90" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="119" Count="2" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="93" Count="1" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="95" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="28" Count="1" />
+      <LineId Id="106" Count="4" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="122" Count="2" />
+      <LineId Id="126" Count="0" />
+      <LineId Id="131" Count="2" />
+      <LineId Id="127" Count="1" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="134" Count="1" />
+      <LineId Id="129" Count="0" />
+      <LineId Id="137" Count="2" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="47" Count="3" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="65" Count="8" />
+      <LineId Id="143" Count="5" />
+      <LineId Id="142" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="74" Count="7" />
+      <LineId Id="151" Count="5" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.MapBatteryData">
+      <LineId Id="209" Count="1" />
+      <LineId Id="360" Count="0" />
+      <LineId Id="219" Count="12" />
+      <LineId Id="275" Count="0" />
+      <LineId Id="232" Count="16" />
+      <LineId Id="276" Count="0" />
+      <LineId Id="249" Count="11" />
+      <LineId Id="288" Count="0" />
+      <LineId Id="348" Count="0" />
+      <LineId Id="264" Count="0" />
+      <LineId Id="317" Count="0" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="331" Count="0" />
+      <LineId Id="334" Count="13" />
+      <LineId Id="332" Count="0" />
+      <LineId Id="54" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.MapGeneralData">
+      <LineId Id="1048" Count="95" />
+      <LineId Id="1247" Count="1" />
+      <LineId Id="1246" Count="0" />
+      <LineId Id="1245" Count="0" />
+      <LineId Id="1146" Count="1" />
+      <LineId Id="1152" Count="88" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.MapGeneratorControl">
+      <LineId Id="144" Count="1" />
+      <LineId Id="349" Count="0" />
+      <LineId Id="548" Count="2" />
+      <LineId Id="148" Count="0" />
+      <LineId Id="535" Count="1" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="267" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="320" Count="0" />
+      <LineId Id="322" Count="1" />
+      <LineId Id="325" Count="2" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="266" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="565" Count="0" />
+      <LineId Id="582" Count="2" />
+      <LineId Id="566" Count="0" />
+      <LineId Id="585" Count="0" />
+      <LineId Id="567" Count="0" />
+      <LineId Id="569" Count="5" />
+      <LineId Id="579" Count="0" />
+      <LineId Id="575" Count="2" />
+      <LineId Id="339" Count="0" />
+      <LineId Id="581" Count="0" />
+      <LineId Id="580" Count="0" />
+      <LineId Id="179" Count="3" />
+      <LineId Id="272" Count="0" />
+      <LineId Id="269" Count="0" />
+      <LineId Id="288" Count="0" />
+      <LineId Id="345" Count="0" />
+      <LineId Id="559" Count="0" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="376" Count="6" />
+      <LineId Id="366" Count="0" />
+      <LineId Id="383" Count="6" />
+      <LineId Id="367" Count="0" />
+      <LineId Id="391" Count="13" />
+      <LineId Id="390" Count="0" />
+      <LineId Id="405" Count="0" />
+      <LineId Id="437" Count="0" />
+      <LineId Id="446" Count="1" />
+      <LineId Id="442" Count="1" />
+      <LineId Id="438" Count="0" />
+      <LineId Id="408" Count="5" />
+      <LineId Id="407" Count="0" />
+      <LineId Id="304" Count="0" />
+      <LineId Id="414" Count="5" />
+      <LineId Id="406" Count="0" />
+      <LineId Id="430" Count="6" />
+      <LineId Id="420" Count="0" />
+      <LineId Id="428" Count="0" />
+      <LineId Id="421" Count="5" />
+      <LineId Id="305" Count="0" />
+      <LineId Id="427" Count="0" />
+      <LineId Id="309" Count="0" />
+      <LineId Id="285" Count="0" />
+      <LineId Id="458" Count="0" />
+      <LineId Id="286" Count="0" />
+      <LineId Id="469" Count="0" />
+      <LineId Id="506" Count="2" />
+      <LineId Id="522" Count="0" />
+      <LineId Id="558" Count="0" />
+      <LineId Id="509" Count="0" />
+      <LineId Id="523" Count="0" />
+      <LineId Id="555" Count="0" />
+      <LineId Id="563" Count="0" />
+      <LineId Id="562" Count="0" />
+      <LineId Id="564" Count="0" />
+      <LineId Id="510" Count="0" />
+      <LineId Id="524" Count="0" />
+      <LineId Id="551" Count="2" />
+      <LineId Id="504" Count="0" />
+      <LineId Id="287" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.MapInputField">
+      <LineId Id="197" Count="4" />
+      <LineId Id="204" Count="0" />
+      <LineId Id="206" Count="0" />
+      <LineId Id="208" Count="1" />
+      <LineId Id="211" Count="16" />
+      <LineId Id="284" Count="7" />
+      <LineId Id="282" Count="0" />
+      <LineId Id="316" Count="0" />
+      <LineId Id="283" Count="0" />
+      <LineId Id="228" Count="28" />
+      <LineId Id="281" Count="0" />
+      <LineId Id="294" Count="0" />
+      <LineId Id="297" Count="4" />
+      <LineId Id="295" Count="1" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="50" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.MapInputGridControl">
+      <LineId Id="144" Count="1" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="267" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="266" Count="0" />
+      <LineId Id="262" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="476" Count="2" />
+      <LineId Id="550" Count="0" />
+      <LineId Id="555" Count="3" />
+      <LineId Id="554" Count="0" />
+      <LineId Id="560" Count="0" />
+      <LineId Id="552" Count="0" />
+      <LineId Id="514" Count="1" />
+      <LineId Id="180" Count="0" />
+      <LineId Id="533" Count="0" />
+      <LineId Id="181" Count="0" />
+      <LineId Id="299" Count="1" />
+      <LineId Id="331" Count="0" />
+      <LineId Id="302" Count="0" />
+      <LineId Id="416" Count="0" />
+      <LineId Id="329" Count="0" />
+      <LineId Id="304" Count="0" />
+      <LineId Id="337" Count="0" />
+      <LineId Id="333" Count="0" />
+      <LineId Id="332" Count="0" />
+      <LineId Id="334" Count="2" />
+      <LineId Id="384" Count="0" />
+      <LineId Id="412" Count="1" />
+      <LineId Id="410" Count="1" />
+      <LineId Id="386" Count="5" />
+      <LineId Id="385" Count="0" />
+      <LineId Id="392" Count="6" />
+      <LineId Id="305" Count="0" />
+      <LineId Id="415" Count="0" />
+      <LineId Id="399" Count="0" />
+      <LineId Id="456" Count="0" />
+      <LineId Id="471" Count="1" />
+      <LineId Id="474" Count="0" />
+      <LineId Id="464" Count="0" />
+      <LineId Id="287" Count="0" />
+      <LineId Id="513" Count="0" />
+      <LineId Id="496" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.MapOutputField">
+      <LineId Id="6" Count="2" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="69" Count="4" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="74" Count="2" />
+      <LineId Id="92" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="37" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="43" Count="3" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="47" Count="1" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="109" Count="0" />
+      <LineId Id="111" Count="2" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="115" Count="2" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.MapPeakShaveBox">
+      <LineId Id="144" Count="0" />
+      <LineId Id="147" Count="0" />
+      <LineId Id="253" Count="0" />
+      <LineId Id="252" Count="0" />
+      <LineId Id="150" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="254" Count="0" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="255" Count="0" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="220" Count="2" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="159" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="166" Count="13" />
+      <LineId Id="181" Count="1" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="315" Count="0" />
+      <LineId Id="271" Count="0" />
+      <LineId Id="314" Count="0" />
+      <LineId Id="310" Count="3" />
+      <LineId Id="283" Count="0" />
+      <LineId Id="309" Count="0" />
+      <LineId Id="286" Count="13" />
+      <LineId Id="268" Count="0" />
+      <LineId Id="329" Count="0" />
+      <LineId Id="284" Count="0" />
+      <LineId Id="301" Count="5" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="330" Count="0" />
+      <LineId Id="327" Count="0" />
+      <LineId Id="326" Count="0" />
+      <LineId Id="307" Count="0" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="328" Count="0" />
+      <LineId Id="87" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.MapPowerSTack">
+      <LineId Id="14" Count="1" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="83" Count="1" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="155" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="183" Count="0" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="87" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="91" Count="0" />
+      <LineId Id="157" Count="2" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="407" Count="0" />
+      <LineId Id="196" Count="0" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="88" Count="0" />
+      <LineId Id="161" Count="4" />
+      <LineId Id="167" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="176" Count="0" />
+      <LineId Id="197" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="35" Count="2" />
+      <LineId Id="39" Count="3" />
+      <LineId Id="44" Count="2" />
+      <LineId Id="185" Count="3" />
+      <LineId Id="30" Count="3" />
+      <LineId Id="198" Count="0" />
+      <LineId Id="99" Count="0" />
+      <LineId Id="445" Count="0" />
+      <LineId Id="422" Count="21" />
+      <LineId Id="199" Count="0" />
+      <LineId Id="444" Count="0" />
+      <LineId Id="257" Count="0" />
+      <LineId Id="419" Count="0" />
+      <LineId Id="421" Count="0" />
+      <LineId Id="420" Count="0" />
+      <LineId Id="283" Count="6" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="254" Count="0" />
+      <LineId Id="293" Count="5" />
+      <LineId Id="292" Count="0" />
+      <LineId Id="290" Count="0" />
+      <LineId Id="301" Count="5" />
+      <LineId Id="300" Count="0" />
+      <LineId Id="299" Count="0" />
+      <LineId Id="307" Count="4" />
+      <LineId Id="314" Count="0" />
+      <LineId Id="313" Count="0" />
+      <LineId Id="316" Count="0" />
+      <LineId Id="323" Count="5" />
+      <LineId Id="315" Count="0" />
+      <LineId Id="411" Count="6" />
+      <LineId Id="312" Count="0" />
+      <LineId Id="408" Count="0" />
+      <LineId Id="418" Count="0" />
+      <LineId Id="410" Count="0" />
+      <LineId Id="330" Count="5" />
+      <LineId Id="329" Count="0" />
+      <LineId Id="337" Count="6" />
+      <LineId Id="336" Count="0" />
+      <LineId Id="344" Count="0" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="234" Count="0" />
+      <LineId Id="236" Count="1" />
+      <LineId Id="239" Count="1" />
+      <LineId Id="238" Count="0" />
+      <LineId Id="356" Count="0" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="379" Count="0" />
+      <LineId Id="383" Count="5" />
+      <LineId Id="382" Count="0" />
+      <LineId Id="393" Count="0" />
+      <LineId Id="446" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="70" Count="1" />
+      <LineId Id="66" Count="2" />
+      <LineId Id="131" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.MapZPT">
+      <LineId Id="10" Count="3" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="41" Count="2" />
+      <LineId Id="47" Count="1" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="49" Count="4" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.RealToInt">
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="21" Count="2" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.RealToUDINT">
+      <LineId Id="11" Count="0" />
+      <LineId Id="13" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.RealToUint">
+      <LineId Id="22" Count="0" />
+      <LineId Id="24" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.SetJsonDoc">
+      <LineId Id="28" Count="4" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="25" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.UintToByte">
+      <LineId Id="60" Count="0" />
+      <LineId Id="74" Count="0" />
+      <LineId Id="61" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.UintToReal">
+      <LineId Id="61" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_ExternalController.WordEndian">
+      <LineId Id="10" Count="3" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

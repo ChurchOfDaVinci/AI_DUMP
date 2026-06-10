@@ -1,0 +1,51 @@
+<div id="StopWarning" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="500" data-tchmi-height="350" data-tchmi-height-mode="Content">
+
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "operate",
+    "group": "Operator",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "Viewer",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "observe",
+    "group": "Operator",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "observe",
+    "group": "Viewer",
+    "permission": "Deny"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(156, 147, 147, 0.5882352)"
+}
+</script>
+<div id="WarningScreen_2" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="300" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/WarningScreen.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="500" data-tchmi-width-unit="px" data-tchmi-height-mode="Content" data-tchmi-controlparameter="%s%PLC.HMI.Controlvars::control::b_stop%/s%" data-tchmi-title="%l%stopwarning%/l%" data-tchmi-description="%l%stopwarninginfo%/l%">
+</div>
+</div>

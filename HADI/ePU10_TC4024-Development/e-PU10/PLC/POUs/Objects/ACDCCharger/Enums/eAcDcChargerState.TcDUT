@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eAcDcChargerState" Id="{24593bc1-9085-41a6-980e-44f760c22c66}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'} 
+
+TYPE eAcDcChargerState :
+(
+	init 		:= 0,
+	off 		:= 1,
+	Standby	 	:= 2,
+	starting 	:= 4,
+	running		:=	5,
+	stopping	:=	6, 
+
+	fault 		:= 7
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

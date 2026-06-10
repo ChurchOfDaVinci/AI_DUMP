@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eLogTypes" Id="{8db96618-bfd9-49a0-bfd3-740e573c33ff}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eLogTypes :
+(
+	TrackCycles := 0,
+	TrackOnTime	:= 1,
+	WriteValue := 2,
+	KeepHighestValue := 3,
+	KeepLowestValue	:= 4
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

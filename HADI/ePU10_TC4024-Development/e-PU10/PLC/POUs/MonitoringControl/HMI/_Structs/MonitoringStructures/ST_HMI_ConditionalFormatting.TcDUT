@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_HMI_ConditionalFormatting" Id="{01cd99ce-f72c-4c5e-8903-c27d93422d84}">
+    <Declaration><![CDATA[TYPE ST_HMI_ConditionalFormatting :
+STRUCT
+	b_ShowPset			: BOOL;
+	b_ShowQset			: BOOL;
+	b_showPFset			: BOOL;
+	b_ShowInputDisconnect: BOOL;
+	b_ShowGenManStartStop: BOOL;
+	b_ShowShowGensetInfo : BOOL;
+	b_EnableTNCheckBox 		: BOOL;
+	b_ShowExtgenset		: BOOL;
+	b_TransportModeActive : BOOL;
+	b_ShowGensetHybridMode: BOOL;
+	b_showPSBData			: BOOL;
+	b_showModetransbutton	: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

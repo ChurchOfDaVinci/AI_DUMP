@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PNInput_GenControl" Id="{3d4e3524-c52d-4bd9-a4a4-9a08e57efa97}">
+    <Declaration><![CDATA[TYPE ST_PNInput_GenControl :
+STRUCT
+	w_Control			:	WORD;
+	ui_SOCStart			:	UINT;
+	ui_SOCStop			:	UINT;
+	ui_BattLoadStart	:	UINT;
+	ui_BattLoadStop		:	UINT;
+	ui_GenPowerMode		:	UINT;
+	ui_GenRatedPower	:	UINT;
+	ui_GenMaxPowerLevel	:	UINT;
+	ui_GenEffPowerLevel	:	UINT;
+	ui_GenMinPowerLevel	:	UINT;
+	ui_GenWarmupTime	:	UINT;
+	ui_GenCooldownTime	:	UINT;
+	ui_IsoPowerRamp		:	UINT;
+	ui_GeneratorSetpoint : 	UINT;
+	ui_StartStopControl	:	uint;	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

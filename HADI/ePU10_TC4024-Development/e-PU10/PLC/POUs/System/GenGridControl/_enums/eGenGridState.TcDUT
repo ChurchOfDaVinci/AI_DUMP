@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eGenGridState" Id="{f03e8e9e-49a7-44fd-991f-77d36a44f424}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+
+TYPE eGenGridState :
+(
+	Init := 0,
+	Idle := 1, 
+	Waiting_Trigger := 2,
+	Starting := 3,
+	Running := 4,
+	Stopping := 5,
+	Warmup := 6,
+	Cooldown := 7,
+	Synchronization := 8,
+	Waiting_Mode_Reconnect := 9,
+	Gridcode_Release_Check := 10,
+	Waiting_For_AC := 11
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

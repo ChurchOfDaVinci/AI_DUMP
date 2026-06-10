@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ePowerOnStatus" Id="{3600dbde-ba8f-42f5-b100-b9528ba043f6}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE ePowerOnStatus :
+(
+	Off := 0,
+	On	:= 1,
+	PowerOn_Fault := 2,
+	PowerOff_Fault := 3
+)UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

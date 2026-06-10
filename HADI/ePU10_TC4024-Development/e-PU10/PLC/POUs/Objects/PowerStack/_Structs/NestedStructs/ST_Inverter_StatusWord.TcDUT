@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Inverter_StatusWord" Id="{9cad5965-59c6-4131-bd4e-817dba6584c9}">
+    <Declaration><![CDATA[TYPE ST_Inverter_StatusWord :
+STRUCT
+	//General Status Word Variables
+		b_ReadyToDCCharge				: BOOL;
+		b_ReadyToOperate				: BOOL;
+		b_Running						: BOOL;
+		b_Fault							: BOOL;
+		b_RunEnabled					: BOOL;
+		b_QuickstopNotActive			: BOOL;
+		b_MCCBControlNotOK				: BOOL;
+		b_Warning						: BOOL;
+		b_DCAtReference					: BOOL;
+		b_DCAboveLimit					: BOOL;
+		b_WatchdogFeedback				: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

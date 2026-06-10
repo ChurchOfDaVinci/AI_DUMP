@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Wago750495_ExtStatusWord" Id="{97c728ec-346f-4690-a381-87c2d20b36db}">
+    <Declaration><![CDATA[TYPE ST_Wago750495_ExtStatusWord :
+STRUCT
+	b_IncreasedMeasErr			: BOOL; //Stat 1 query L1,L2,L3:: increase measurement error of selected phase
+	b_CurrentClipping			: BOOL; //Stat 2 query L1,L2,L3:: current out of measurable range of selected phase
+	b_VoltageClipping			: BOOL; //Stat 3 query L1,L2,L3:: voltage out of measurable range of selected phase
+	b_NoZeroCrossings			: BOOL; //Stat 4 query L1,L2,L3:: Zero Crossings missing of selected phase
+	b_OverCurrent				: BOOL; //Stat 5 query L1,L2,L3:: Overcurrent of selected phase
+	b_OverVoltage				: BOOL; //Stat 6- query L1,L2,L3: OverVoltage of selected phase.
+	b_RotaryField				: BOOL; //Stat 6- query IO: 0:Clockwise, 1: counterclockwise
+	b_UnderVoltage				: BOOL; //Stat 7- query L1,L2,L3: UnderVoltage of selected phase
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

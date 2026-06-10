@@ -1,0 +1,54 @@
+<div id="4-9-StatusDcBus" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width-mode="Value" data-tchmi-height-mode="Value" data-tchmi-right="0" data-tchmi-bottom="0">
+
+<div id="TcHmiGrid_StatusDcBus" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-height-unit="px" data-tchmi-left="10" data-tchmi-left-unit="px" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-bottom="10" data-tchmi-right="10" data-tchmi-width-mode="Value" data-tchmi-height-mode="Value">
+
+<script data-tchmi-target-attribute="data-tchmi-row-options" type="application/json">
+[
+  {
+    "height": 1,
+    "heightMode": "Value",
+    "heightUnit": "factor",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
+[
+  {
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false,
+    "width": 1,
+    "widthMode": "Value",
+    "widthUnit": "factor"
+  },
+  {
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false,
+    "width": 1,
+    "widthMode": "Value",
+    "widthUnit": "factor"
+  }
+]
+</script>
+<div id="Dataview_AcDcCharger" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-datafontsize="%i%DataTableTitleFontSize%/i%" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="1" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-showheaderbar="true" data-tchmi-target-user-control="Contents/Dataview.usercontrol" data-tchmi-titlefontsize="%i%DataTableTitleFontSize%/i%" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-title="%f%ToUpperCase(%l%DCcharger%/l%)%/f%" data-tchmi-dataarray="%s%PLC.HMI.Monitoringvars::arraydata::AcDcChargerData%/s%" data-tchmi-right="10" data-tchmi-bottom="0" data-tchmi-height-mode="Content">
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-filter" type="application/json">
+[]
+</script>
+</div>
+<div id="Dataview_AcDcCharger_21" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-datafontsize="%i%DataTableTitleFontSize%/i%" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="0" data-tchmi-height-unit="px" data-tchmi-left="10" data-tchmi-left-unit="px" data-tchmi-showheaderbar="true" data-tchmi-target-user-control="Contents/Dataview.usercontrol" data-tchmi-titlefontsize="%i%DataTableTitleFontSize%/i%" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-title="%f%ToUpperCase(%l%DCcoupling%/l%)%/f%" data-tchmi-dataarray="%s%PLC.HMI.Monitoringvars::arraydata::DcExtension%/s%" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content">
+
+
+<script data-tchmi-target-attribute="data-tchmi-filter" type="application/json">
+[]
+</script>
+</div>
+</div>
+</div>

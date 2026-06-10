@@ -1,0 +1,148 @@
+<div id="Content1_21" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-creator-viewport-height="1152" data-tchmi-height-mode="Content">
+
+<div id="TcHmiGrid_1257" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="50" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content">
+
+<script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
+[
+  {
+    "width": 1.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  },
+  {
+    "width": 1.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-row-options" type="application/json">
+[
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Value",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+<div id="ParameterList_7" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="0" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="5" data-tchmi-data2="%s%PLC.Settings.MachineParams::Powerstack::i_MaxPowerChangeRate%/s%" data-tchmi-data1="%s%PLC.Settings.MachineParams::Powerstack::r_ReactiveOffset%/s%" data-tchmi-label1="Reactive power offset [kvar]" data-tchmi-label2="Max powerramp rate [%/s}" data-tchmi-label4="Low frequency disconnect [Hz]" data-tchmi-data4="%s%PLC.Settings.MachineParams::Powerstack::r_FreqLowLimit%/s%" data-tchmi-height-mode="Content" data-tchmi-data3="%s%PLC.Settings.MachineParams::Powerstack::r_FreqHighLimit%/s%" data-tchmi-min3="50" data-tchmi-max3="55" data-tchmi-label3="High frequency disconnect [Hz]" data-tchmi-max4="50" data-tchmi-min4="45" data-tchmi-decimals2="0" data-tchmi-decimals3="2" data-tchmi-decimals4="2">
+</div>
+<div id="SwitchList_14" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/SwitchList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-enable3="true" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-data1="%s%PLC.Settings.MachineParams::Powerstack::b_SoftStartEnable%/s%" data-tchmi-label1="Softstart enable" data-tchmi-enable2="true" data-tchmi-enable4="false" data-tchmi-height-mode="Content" data-tchmi-data2="%s%PLC.Settings.MachineParams::Powerstack::b_GridcodesEnabled%/s%" data-tchmi-label2="%l%b_GridcodeEnabled%/l%" data-tchmi-label4="" data-tchmi-label3="Standby run enabled" data-tchmi-data3="%s%PLC.Settings.MachineParams::Powerstack::b_StandbyEnable%/s%" data-tchmi-title=" ">
+</div>
+<div id="ParameterList_8" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="1" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-data1="%s%PLC.Settings.MachineParams::Powerstack::r_DroopMaximum%/s%" data-tchmi-enable4="false" data-tchmi-enable3="true" data-tchmi-enable2="true" data-tchmi-enable1="true" data-tchmi-height-mode="Content" data-tchmi-label1="Droop maximum [%]" data-tchmi-max1="25" data-tchmi-min1="%s%PLC.Settings.MachineParams::Powerstack::r_DroopMinimum%/s%" data-tchmi-label2="Droop minimum [%]" data-tchmi-data2="%s%PLC.Settings.MachineParams::Powerstack::r_DroopMinimum%/s%" data-tchmi-min2="0" data-tchmi-max2="%s%PLC.Settings.MachineParams::Powerstack::r_DroopMaximum%/s%" data-tchmi-label3="Droop island mode [%]" data-tchmi-data3="%s%PLC.Settings.MachineParams::Powerstack::r_DroopIslandMode%/s%" data-tchmi-min3="0" data-tchmi-max3="10" data-tchmi-decimals="2" data-tchmi-showtitle="false" data-tchmi-decimals3="2" data-tchmi-decimals2="2" data-tchmi-decimals1="2">
+</div>
+<div id="ParameterList_CurrentMaster" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="2" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="5" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-data1="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleMaster::r_InverterRatedCurrent%/s%" data-tchmi-enable4="true" data-tchmi-enable3="false" data-tchmi-data2="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleMaster::r_InverterRatedPower%/s%" data-tchmi-label2="Inverter rated power [kW]" data-tchmi-enable2="true" data-tchmi-enable1="true" data-tchmi-height-mode="Content" data-tchmi-left="0" data-tchmi-title="%l%PowerstackMaster%/l%" data-tchmi-label1="Inverter rated current [A]" data-tchmi-label4="AC current limit max" data-tchmi-data4="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleMaster::r_ACCurrentLimitMax%/s%" data-tchmi-decimals="0" data-tchmi-decimals1="0">
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+</div>
+<div id="ParameterList_TemperatureMaster" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="3" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-data1="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleMaster::r_FilterTempWarning%/s%" data-tchmi-enable4="true" data-tchmi-enable3="true" data-tchmi-label2="Filter temperature alarm [°C]" data-tchmi-enable2="true" data-tchmi-enable1="true" data-tchmi-height-mode="Content" data-tchmi-left="0" data-tchmi-data3="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleMaster::r_InverterTempWarning%/s%" data-tchmi-label3="Inverter temperature warning [°C]" data-tchmi-label4="Inverter temperature alarm [°C] " data-tchmi-label1="Filter temperature warning [°C]" data-tchmi-decimals="0" data-tchmi-data2="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleMaster::r_FilterTempAlarm%/s%" data-tchmi-data4="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleMaster::r_InverterTempAlarm%/s%" data-tchmi-showtitle="false" data-tchmi-decimals1="0">
+</div>
+<div id="ParameterList_OtherMaster" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="4" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-data1="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleMaster::r_powerLoadFanOn%/s%" data-tchmi-enable4="true" data-tchmi-enable3="true" data-tchmi-data2="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleMaster::r_tempfanOn%/s%" data-tchmi-enable2="true" data-tchmi-enable1="true" data-tchmi-height-mode="Content" data-tchmi-left="0" data-tchmi-decimals="0" data-tchmi-label2="Fan activation temperature [°C]" data-tchmi-data3="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleMaster::i_DCVramprate%/s%" data-tchmi-label3="DC voltage ref ramprate [%]" data-tchmi-label1="Fan activation load [%]" data-tchmi-data4="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleMaster::i_VoltageOffset%/s%" data-tchmi-label4="Voltage Offset [V]" data-tchmi-max4="40" data-tchmi-min4="-40" data-tchmi-showtitle="false" data-tchmi-decimals1="0">
+</div>
+<div id="SwitchList_OtherMaster1" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="5" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/SwitchList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-enable4="false" data-tchmi-enable3="false" data-tchmi-enable2="true" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-data1="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleMaster::b_FieldBusControlEnable%/s%" data-tchmi-label1="Fieldbus control enable" data-tchmi-label2="Start calibration run" data-tchmi-data2="%s%PLC.Settings.Calibration::Powerstack::Master::b_StartCalibration%/s%">
+</div>
+<div id="SwitchList_16" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="5" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/SwitchList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-enable4="false" data-tchmi-enable3="false" data-tchmi-enable2="true" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-data1="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleSlave::b_FieldBusControlEnable%/s%" data-tchmi-label1="Fieldbus control enable" data-tchmi-show="%s%PLC.Settings.Configuration::b_DoublePowerModule%/s%" data-tchmi-label2="Start calibration run" data-tchmi-data2="%s%PLC.Settings.Calibration::Powerstack::Slave::b_StartCalibration%/s%">
+</div>
+<div id="ParameterList_CurrentSlave" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="2" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="5" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-data1="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleSlave::r_InverterRatedCurrent%/s%" data-tchmi-enable4="true" data-tchmi-enable3="false" data-tchmi-data2="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleSlave::r_InverterRatedPower%/s%" data-tchmi-label2="Inverter rated power [kW]" data-tchmi-enable2="true" data-tchmi-enable1="true" data-tchmi-height-mode="Content" data-tchmi-left="0" data-tchmi-title="%l%PowerstackSlave%/l%" data-tchmi-label1="Inverter rated current [A]" data-tchmi-label4="AC current limit max" data-tchmi-data4="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleSlave::r_ACCurrentLimitMax%/s%" data-tchmi-decimals="0" data-tchmi-show="%s%PLC.Settings.Configuration::b_DoublePowerModule%/s%" data-tchmi-decimals1="0">
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+</div>
+<div id="ParameterList_TemperatureSlave" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="3" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-data1="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleSlave::r_FilterTempWarning%/s%" data-tchmi-enable4="true" data-tchmi-enable3="true" data-tchmi-label2="Filter temperature alarm [°C]" data-tchmi-enable2="true" data-tchmi-enable1="true" data-tchmi-height-mode="Content" data-tchmi-left="0" data-tchmi-data3="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleSlave::r_InverterTempWarning%/s%" data-tchmi-label3="Inverter temperature warning [°C]" data-tchmi-label4="Inverter temperature alarm [°C] " data-tchmi-label1="Filter temperature warning [°C]" data-tchmi-decimals="0" data-tchmi-data2="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleSlave::r_FilterTempAlarm%/s%" data-tchmi-data4="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleSlave::r_InverterTempAlarm%/s%" data-tchmi-show="%s%PLC.Settings.Configuration::b_DoublePowerModule%/s%" data-tchmi-showtitle="false" data-tchmi-decimals1="0">
+</div>
+<div id="ParameterList_OtherSlave" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="4" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-data1="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleSlave::r_powerLoadFanOn%/s%" data-tchmi-enable4="true" data-tchmi-enable3="true" data-tchmi-data2="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleSlave::r_tempfanOn%/s%" data-tchmi-enable2="true" data-tchmi-enable1="true" data-tchmi-height-mode="Content" data-tchmi-left="0" data-tchmi-decimals="0" data-tchmi-label2="Fan activation temperature [°C]" data-tchmi-data3="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleSlave::i_DCVramprate%/s%" data-tchmi-label3="DC voltage ref ramprate [%]" data-tchmi-label1="Fan activation load [%]" data-tchmi-show="%s%PLC.Settings.Configuration::b_DoublePowerModule%/s%" data-tchmi-label4="Voltage Offset [V]" data-tchmi-data4="%s%PLC.Settings.MachineParams::Powerstack::PowermoduleMaster::i_VoltageOffset%/s%" data-tchmi-min4="-40" data-tchmi-max4="40" data-tchmi-showtitle="false" data-tchmi-decimals1="0">
+</div>
+<div id="ParameterList_43" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="1" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-enable4="false" data-tchmi-enable3="true" data-tchmi-enable2="true" data-tchmi-enable1="true" data-tchmi-height-mode="Content" data-tchmi-min1="0" data-tchmi-max1="100" data-tchmi-label2="Limited cooling derating [%]" data-tchmi-data2="%s%PLC.Settings.MachineParams::Powerstack::ui_DeratingLimCooling%/s%" data-tchmi-max2="100" data-tchmi-min2="0" data-tchmi-data3="%s%PLC.Settings.MachineParams::Powerstack::ui_OvercurrentRating%/s%" data-tchmi-label3="Overcurrent rating [%]" data-tchmi-max3="200" data-tchmi-min3="0" data-tchmi-schedulerenable="false" data-tchmi-decimals="0" data-tchmi-label1="Stack derating [%]" data-tchmi-data1="%s%PLC.Settings.MachineParams::Powerstack::ui_DeratingStack%/s%" data-tchmi-showtitle="false" data-tchmi-decimals1="0">
+</div>
+</div>
+<div id="TcHmiTextblock_835" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="1" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-text="POWERSTACK" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-right="0" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="20" data-tchmi-height="50">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(207, 207, 207, 0.5019607)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 10.0,
+  "topRight": 10.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+</div>
+</div>

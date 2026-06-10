@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Wago750495_StatusWord" Id="{65632a30-7b94-482f-a41d-85d93eca07c9}">
+    <Declaration><![CDATA[TYPE ST_Wago750495_StatusWord :
+STRUCT
+	b_ComFb						: BOOL; // 0: process Data, 1: Register Data
+	b_Error						: BOOL; // 0: OK, 1: Error
+	b_Error_IO					: BOOL; // 0: OK, 1: Error
+	b_Error_L3					: BOOL; // 0: OK, 1: Error
+	b_Error_L2					: BOOL; // 0: OK, 1: Error
+	b_Error_L1					: BOOL; // 0: OK, 1: Error
+	e_StatIDfb					: eWago750495_StatDataID;
+	b_Warning					: BOOL; // 0: OK, 1: Transient reaction measured value collection active
+	b_Cal						: BOOL; // 0: Measurement Mode, 1: Calibration Mode
+	b_Over_1					: BOOL; // 0: OK, 1: Out Of Range
+	b_Over_2					: BOOL; // 0: OK, 1: Out Of Range
+	b_Over_3					: BOOL; // 0: OK, 1: Out Of Range
+	b_Over_4					: BOOL; // 0: OK, 1: Out Of Range
+	e_GroupID					: eWago750495_MeasureGroupID;
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

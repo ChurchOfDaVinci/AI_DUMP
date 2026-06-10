@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PowerMonitor_Events" Id="{8b2c4235-68ca-4e14-a681-e6c1ed9bcc63}">
+    <Declaration><![CDATA[TYPE ST_PowerMonitor_Events :
+STRUCT
+	b_MBCommWarning 		: BOOL;
+	b_MBCommError 			: BOOL;
+	b_MBTimeoutWarning 		: BOOL;
+	b_EL3443Warning			: BOOL;
+	b_EL3443Error		: BOOL;
+	b_ACdirectionDataInvalid: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

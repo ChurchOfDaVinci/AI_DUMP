@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Wago750495_Get" Id="{e3bd005d-5b68-4d73-84f5-4b1afaccc692}">
+    <Declaration><![CDATA[TYPE ST_Wago750495_Get :
+STRUCT
+	StatusWord				: ST_Wago750495_StatusWord;
+	ExtStatusWord			: ST_Wago750495_ExtStatusWord;
+	Data					: ST_Wago750495_Data;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,491 @@
+<div id="Overview_1" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="100" data-tchmi-height="100" data-tchmi-width-unit="%" data-tchmi-height-unit="%" data-tchmi-is-enabled="true" data-tchmi-opacity="1" data-tchmi-creator-viewport-width="1360" data-tchmi-creator-viewport-height="768">
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "None"
+}
+</script>
+<div id="TcHmiDiagnosticsTable" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiDatagrid" data-tchmi-height-unit="px" data-tchmi-left="10" data-tchmi-left-unit="px" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-is-enabled="true" data-tchmi-zindex="1" data-tchmi-background-image-horizontal-alignment="Center" data-tchmi-background-image-vertical-alignment="Center" data-tchmi-right="10" data-tchmi-bottom="100" data-tchmi-row-numbers-horizontal-alignment="Center" data-tchmi-row-numbers-vertical-alignment="Center" data-tchmi-row-numbers-start-number="1" data-tchmi-show-row-numbers="true" data-tchmi-row-numbers-resizable="true" data-tchmi-table-border-width="1" data-tchmi-src-data="%s%PLC.ErrorHandling.a_ActiveEvents|BindingMode=TwoWay|BindingEvent=onDataChanged|SubscriptionMode=Change|Interval=1000%/s%" data-tchmi-grid-font-size="%i%DataTableFontSize%/i%">
+
+
+<script data-tchmi-target-attribute="data-tchmi-cell-content-padding" type="application/json">
+{"left":3,"leftUnit":"px","right":3,"rightUnit":"px","top":0,"topUnit":"px","bottom":0,"bottomUnit":"px"}
+</script>
+
+
+
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-src-column" type="application/json">
+[
+  {
+    "name": "b_ErrorActive",
+    "label": "Active",
+    "control": "TextBlock",
+    "width": 25,
+    "widthUnit": "px",
+    "resize": false,
+    "sortable": true,
+    "minWidth": 60,
+    "minWidthUnit": "px",
+    "editable": false,
+    "horizontalAlignment": "Left",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Center",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false,
+    "format": {
+      "objectType": "Function",
+      "active": true,
+      "fn": "TcHmi.Functions.Beckhoff.ToUpperCase",
+      "fnParams": []
+    }
+  },
+  {
+    "name": "w_ID",
+    "label": "ID",
+    "control": "TextBlock",
+    "width": 25,
+    "widthUnit": "px",
+    "resize": false,
+    "sortable": true,
+    "minWidth": 60,
+    "minWidthUnit": "px",
+    "editable": false,
+    "horizontalAlignment": "Left",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Center",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false
+  },
+  {
+    "name": "s_Severity",
+    "label": "Severity",
+    "control": "TextBlock",
+    "width": 1,
+    "widthUnit": "factor",
+    "resize": true,
+    "sortable": true,
+    "minWidth": 125,
+    "minWidthUnit": "px",
+    "editable": false,
+    "horizontalAlignment": "Left",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Center",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false
+  },
+  {
+    "name": "s_DateError",
+    "label": "Date Raised",
+    "control": "TextBlock",
+    "width": 1,
+    "widthUnit": "factor",
+    "resize": true,
+    "sortable": true,
+    "minWidth": 100,
+    "minWidthUnit": "px",
+    "editable": false,
+    "horizontalAlignment": "Left",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Center",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false
+  },
+  {
+    "name": "s_TimeError",
+    "label": "Time Raised",
+    "control": "TextBlock",
+    "width": 1,
+    "widthUnit": "factor",
+    "resize": true,
+    "sortable": true,
+    "minWidth": 100,
+    "minWidthUnit": "px",
+    "editable": false,
+    "horizontalAlignment": "Left",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Center",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false
+  },
+  {
+    "name": "s_TimeCleared",
+    "label": "Time Cleared",
+    "control": "TextBlock",
+    "width": 1,
+    "widthUnit": "factor",
+    "resize": true,
+    "sortable": true,
+    "minWidth": 100,
+    "minWidthUnit": "px",
+    "editable": false,
+    "horizontalAlignment": "Left",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Center",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false
+  },
+  {
+    "name": "s_Message",
+    "label": "Message",
+    "control": "TextBlock",
+    "width": 5,
+    "widthUnit": "factor",
+    "resize": true,
+    "sortable": true,
+    "minWidth": 100,
+    "minWidthUnit": "px",
+    "editable": false,
+    "horizontalAlignment": "Left",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Center",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false
+  },
+  {
+    "name": "b_SMSEnable",
+    "label": "SMS notification",
+    "control": "CheckBox",
+    "width": 20,
+    "widthUnit": "px",
+    "resize": false,
+    "sortable": true,
+    "minWidth": 100,
+    "minWidthUnit": "px",
+    "editable": true,
+    "horizontalAlignment": "Center",
+    "verticalAlignment": "Center",
+    "headerHorizontalAlignment": "Center",
+    "headerVerticalAlignment": "Center",
+    "ignoreEscapeSequences": false,
+    "autoFocusOut": true,
+    "autoSelectText": false,
+    "format": {
+      "objectType": "Function",
+      "active": true,
+      "fn": "TcHmi.Functions.Beckhoff.ToUpperCase",
+      "fnParams": []
+    }
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-filter" type="application/json">
+[
+  {
+    "path": "s_DateError",
+    "comparator": "!=",
+    "value": ""
+  }
+]
+</script>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(76, 75, 75, 0.3921568)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 10.0,
+  "topRight": 10.0,
+  "bottomLeft": 10.0,
+  "bottomRight": 10.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%ctrl%TcHmiToggleButton_ShowAllDiag::ToggleState%/ctrl%",
+    "actions": [
+      {
+        "objectType": "SwitchCase",
+        "active": true,
+        "compare": {
+          "objectType": "Symbol",
+          "valueType": "tchmi:framework#/definitions/ToggleState",
+          "symbolExpression": "%ctrl%TcHmiToggleButton_ShowAllDiag::ToggleState%/ctrl%"
+        },
+        "cases": [
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:framework#/definitions/ToggleState",
+              "value": "Normal"
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiDiagnosticsTable::Filter%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:server#/definitions/filter",
+                  "value": [
+                    {
+                      "path": "s_DateError",
+                      "comparator": "!= [ignore case]",
+                      "value": ""
+                    }
+                  ]
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:framework#/definitions/ToggleState",
+              "value": "Active"
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiDiagnosticsTable::Filter%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:server#/definitions/filter",
+                  "value": [
+                    {
+                      "path": "s_Message",
+                      "comparator": "!= [ignore case]",
+                      "value": ""
+                    }
+                  ]
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "operate",
+    "group": "Administrator",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "operate",
+    "group": "Viewer",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "Operator",
+    "permission": "Deny"
+  }
+]
+</script>
+</div>
+<div id="TcHmiButton" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="40" data-tchmi-left-unit="px" data-tchmi-text="%f%TcHmi.Functions.Beckhoff.ToUpperCase(%l%Reset%/l%)%/f%" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-font-weight="Bold" data-tchmi-bottom="25" data-tchmi-background-image-horizontal-alignment="Center" data-tchmi-background-image-vertical-alignment="Center" data-tchmi-state-symbol="%s%PLC.HMI.Controlvars::control::b_Reset%/s%">
+
+<script data-tchmi-target-attribute="data-tchmi-text-color" type="application/json">
+{
+  "color": "rgba(255, 0, 0, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 5.0,
+  "topRight": 5.0,
+  "bottomLeft": 5.0,
+  "bottomRight": 5.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "observe",
+    "group": "Viewer",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "Viewer",
+    "permission": "Deny"
+  }
+]
+</script>
+</div>
+<div id="TcHmiButton_ClearHistory" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="150" data-tchmi-left-unit="px" data-tchmi-text="%f%TcHmi.Functions.Beckhoff.ToUpperCase(%l%ClearHistory%/l%)%/f%" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-bottom="25" data-tchmi-background-image-horizontal-alignment="Center" data-tchmi-background-image-vertical-alignment="Center" data-tchmi-state-symbol="%s%PLC.HMI.Controlvars::control::b_ClearHistory|Parallel=True%/s%">
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 5.0,
+  "topRight": 5.0,
+  "bottomLeft": 5.0,
+  "bottomRight": 5.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "observe",
+    "group": "Viewer",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "Viewer",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "Operator",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "observe",
+    "group": "Operator",
+    "permission": "Deny"
+  }
+]
+</script>
+</div>
+<div id="TcHmiToggleButton_ShowAllDiag" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiToggleButton" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-text="SHOW ALL" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-right="10" data-tchmi-bottom="25">
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 5.0,
+  "topRight": 5.0,
+  "bottomLeft": 5.0,
+  "bottomRight": 5.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "observe",
+    "group": "Viewer",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "Viewer",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "Operator",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "observe",
+    "group": "Operator",
+    "permission": "Deny"
+  }
+]
+</script>
+</div>
+<div id="TcHmiButton_Soundermute" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="50" data-tchmi-height-unit="px" data-tchmi-left="260" data-tchmi-left-unit="px" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-bottom="25" data-tchmi-background-image-horizontal-alignment="Center" data-tchmi-background-image-vertical-alignment="Center" data-tchmi-state-symbol="%s%PLC.HMI.Controlvars::Operation::system::b_SounderMute%/s%" data-tchmi-text="%f%TcHmi.Functions.Beckhoff.ToUpperCase(%l%SounderMute%/l%)%/f%">
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 5.0,
+  "topRight": 5.0,
+  "bottomLeft": 5.0,
+  "bottomRight": 5.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "observe",
+    "group": "Viewer",
+    "permission": "Deny"
+  },
+  {
+    "accessright": "operate",
+    "group": "Viewer",
+    "permission": "Deny"
+  }
+]
+</script>
+</div>
+</div>

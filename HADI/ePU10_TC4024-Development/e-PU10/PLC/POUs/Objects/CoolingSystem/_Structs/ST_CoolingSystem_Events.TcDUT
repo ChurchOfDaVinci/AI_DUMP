@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_CoolingSystem_Events" Id="{2c7a5c12-1af9-4390-9d60-836f13a36971}">
+    <Declaration><![CDATA[TYPE ST_CoolingSystem_Events :
+STRUCT
+	b_SystemOvertemperatureWarning	:	BOOL;
+	b_SystemUnderTemperatureWarning :	BOOL;
+	
+	//faults
+	b_CoolingSystemFuseFailure		: 	BOOL;
+	b_ACwaterPumpTimeOut			: 	BOOL;	
+	
+	b_InverterLoopValveStuck		: 	BOOL;
+	b_BattLoopValveStuck			: 	BOOL;
+	b_FancoilLoopValveStuck			: 	BOOL;
+
+	b_DCpumpPressureFault			: 	BOOL;
+	b_DCpumpTimeout					:	BOOL;
+	
+	//System pressure dropped below idle minimum pressure. suspect coolant loss.
+	b_CoolingLoopIdlePressureWarning 	: 	BOOL := FALSE;	
+	b_CoolingLoopIdlePressureError 		: 	BOOL := FALSE;	
+	
+	//Systempressure too low during conditioning, possible pump failure or coolant loss.
+	b_InverterCoolingLoopError 		: 	BOOL := FALSE;
+
+	b_HeatpumpWarning				:	BOOL;
+	b_HeatPumpError					: 	BOOL;
+	
+	//Temperature errors
+	b_CoolantTempTooLow				: 	BOOL;
+	b_CoolantTempLow				: 	BOOL;
+	b_CoolantTempTooHigh			: 	BOOL;
+	b_CoolantTempHigh				: 	BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

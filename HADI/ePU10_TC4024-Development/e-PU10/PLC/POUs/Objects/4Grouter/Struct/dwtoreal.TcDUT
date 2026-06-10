@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="dwtoreal" Id="{49e6c458-314a-4c92-acb5-a2dc73d112d4}">
+    <Declaration><![CDATA[TYPE dwtoreal :
+UNION
+	Registers	:	ARRAY[1..2] OF WORD;
+	dwordvalue	:	dword;
+	realvalue	:	REAL;
+END_UNION
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
