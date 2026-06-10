@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Scale" Id="{72ef15d4-ae35-4150-86b0-2711b77e3226}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Scale : REAL
+VAR_INPUT
+	r_in	: REAL;
+	In_min : REAL;
+	In_max : REAL;
+	Out_min: REAL;
+	Out_max: REAL;
+END_VAR
+
+VAR
+	r_Temp			: REAL;
+	r_inLimited		: REAL;
+	r_offset		: REAL;
+	r_ratio			: REAL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF In_Min < In_Max THEN
+	r_inLimited := LIMIT(In_Min, r_in, In_Max);
+ELSE
+	r_inLimited := LIMIT(In_Max, r_in, In_Min);
+END_IF
+
+
+
+//IF In_Min < In_Max THEN
+	r_offset := r_inLimited - In_Min;
+	r_ratio := (Out_Max - Out_Min) / SEL((In_Max - In_Min) =0,(In_Max - In_Min), 1);
+	Scale := Out_Min + r_Offset * r_ratio;
+//END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="Scale">
+      <LineId Id="68" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="80" Count="1" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="19" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="44" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

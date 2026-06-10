@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eStatusPowerModule" Id="{216e0a74-8caf-4855-a9e2-5fc8a4dbfa71}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE eStatusPowerModule :
+(
+	Init					:= 0,	// Not ready to do anything yet
+	off						:= 1, 	// OFF MCCBs OPEN,
+	DcOK					:= 2, 	// Dc voltage above 80%
+	idle					:= 3, 	// MCCB CLOSED, No modulation
+	running					:= 4,	// MCCB CLOSED + Modulation	
+	fault					:= 10,
+	EMStop					:= 11
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

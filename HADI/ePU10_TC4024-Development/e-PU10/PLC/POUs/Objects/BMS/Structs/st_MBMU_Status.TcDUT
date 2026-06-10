@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="st_MBMU_Status" Id="{999f61c7-4f1b-4af3-8bdc-a0cddf206ae8}">
+    <Declaration><![CDATA[TYPE st_MBMU_Status :
+STRUCT
+	GeneralSBMUStatus			:	ARRAY [0..15] OF WORD;
+	MBMUStatus					:	ARRAY [0..15] OF WORD;
+
+	s_MBMU_SWVer				:	STRING(16);
+	s_MBMU_HWVer				:	STRING(16);
+	
+	s_ETH_SWVer					:	STRING(32);
+	r_ETH_HWVer					:	STRING(32);	
+	
+	by_NumberOfSubSystems		:	BYTE;
+	DateTime					:	ARRAY[0..5] OF WORD;
+	b_InsulationSwitchOpen		:	BOOL;
+	
+	BatteryStatus				:	st_MBMU_BatterySummary;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

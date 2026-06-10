@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="PowerMeterConfig" Id="{d5c3e5ba-b3df-4763-80e7-ceec20d414c0}" ParameterList="True">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+	IP_JANITZA: STRING(16) := '192.168.1.41';
+	MBPort_Janitza : UINT := 502;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

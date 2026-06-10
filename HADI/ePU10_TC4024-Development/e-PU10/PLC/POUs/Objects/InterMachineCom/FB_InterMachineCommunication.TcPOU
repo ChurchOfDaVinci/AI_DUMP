@@ -1,0 +1,347 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_InterMachineCommunication" Id="{1e723854-9875-4793-98be-558db3409fa3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_InterMachineCommunication
+VAR_INPUT
+	SlaveConnectionData				: ST_InterMachineCom_SlaveConData;
+
+END_VAR
+
+VAR_IN_OUT CONSTANT
+	monitor							: ST_system_monitor;
+	st_params						: ST_InterMachineCom_Params;
+END_VAR
+
+VAR_IN_OUT
+	control							: ST_system_control;
+END_VAR
+
+VAR_OUTPUT
+	e_state							: eConnectionState;
+END_VAR
+
+VAR
+	InternalBroker					: FB_ConnectMqttBroker;
+	ExternalBroker					: FB_ConnectMQttBroker;
+	
+	bSetParameter					: BOOL;
+	bConnect						: BOOL := TRUE;
+	bIncommingMsg					: BOOL;
+	hrErrorOccurred 				: DINT; //Contains latest error message
+	sTopicRec						: STRING(255);
+	sMessage						: STRING(255);
+	ReinitComParams					: BOOL;
+	
+	
+	bSubscribed						: BOOL;
+	ton_PublishInterval				: TON;
+	sPubTopic						: STRING;
+	sSubTopic						: STRING;
+	
+	stPubDataMaster					: ST_InterMachineCom_Master;
+	stPubDataSlave					: st_InterMachineCom_Slave;
+	stSubDataMaster					: ST_InterMachineCom_Master;
+	stSubDataSlave					: st_InterMachineCom_Slave;
+	
+	
+	fbJson         	: FB_JsonSaxWriter;
+  	fbJsonDataType 	: FB_JsonReadWriteDataType;
+	sJsonDocPub     : STRING(255);
+	bRecJsonOK		: BOOL;
+	
+	
+	sMasterTopic 	: STRING := 'master';
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* 
+Internal broker is used to post local data in the master topic. The unit listens to the slave topics
+
+*)
+
+//Connect brokers
+
+//Generate machinedata for internal master
+InternalBroker(bConnect := TRUE, sHostname := ST_params.InternalBrokerIP);
+InternalBroker.Publish(
+	Interval := st_params.MasterPublishRate, 
+	sTopic := sMasterTopic, 
+	sMessage := StructToJson(TRUE));
+InternalBroker.Subscribe(sTopic := 'slave/epu/#/read');
+
+IF internalbroker.bIncomingMsg THEN
+	JsonToStruct(sMessage := internalbroker.sMessage);
+END_IF
+
+//Generate slave data for the external master
+ExternalBroker(bConnect := SlaveConnectionData.enable, sHostname := SlaveConnectionData.BrokerIP);
+ExternalBroker.Publish(Interval := st_params.SlavePublishRate, 
+		sTopic := CONCAT(CONCAT('epu/slave/',settings.Properties.s_SerialNumber),'/read'),
+		sMessage := StructToJson(FALSE));
+ExternalBroker.Subscribe(sTopic := sMasterTopic);
+
+IF Externalbroker.bIncomingMsg THEN
+	JsonToStruct();
+END_IF
+
+
+
+
+//Publish as master 
+sPubTopic := 'master';
+sSubTopic := 'slave/#';
+//Ton_PublishInterval.PT := st_params.MasterPublishRate;
+//generate json doc
+fbJson.ResetDocument();
+fbJsonDataType.AddJsonValueFromSymbol(fbJson, 'ST_InterMachineCom_Master', SIZEOF(stPubDataMaster), ADR(stPubDataMaster));
+fbJson.EndObject();
+fbJson.CopyDocument(sJsonDocPub, SIZEOF(sJsonDocPub));
+
+IF SlaveConnectionData.enable AND SlaveConnectionData.BrokerIP <> '' THEN
+	sSubTopic := 'master';
+	sPubTopic := CONCAT('slave/', settings.Properties.s_SerialNumber);
+	Ton_PublishInterval.PT := st_params.MasterPublishRate;
+	//generate json doc
+	fbJson.ResetDocument();
+	fbJsonDataType.AddJsonValueFromSymbol(fbJson, 'ST_InterMachineCom_Slave', SIZEOF(stPubDataSlave), ADR(stPubDataSlave));
+	fbJson.EndObject();
+	fbJson.CopyDocument(sJsonDocPub, SIZEOF(sJsonDocPub));
+	
+	//converter receiving message back to structur
+	fbJsonDataType.SetSymbolFromJson(sMessage, 'st_InterMachineCom_Master', SIZEOF(stSubDataMaster), ADR(stSubDataMaster));
+END_IF
+
+// publish
+IF fbMqttClientInternal.bConnected THEN
+    IF NOT bSubscribed THEN
+        bSubscribed := fbMqttClientInternal.Subscribe(sTopic:=sSubTopic, eQoS:=TcIotMqttQos.AtMostOnceDelivery); //sSubTopic
+    END_IF
+    ton_PublishInterval(IN:=TRUE);
+    IF ton_PublishInterval.Q THEN // publish new payload every second
+        ton_PublishInterval(IN:=FALSE);
+			fbMqttClientInternal.Publish(sTopic:=sPubTopic,
+			pPayload := ADR(sJsonDocPub),
+			nPayloadSize := LEN2(ADR(sJsonDocPub)),
+			eQoS := TcIotMqttQos.AtMostOnceDelivery,
+			bRetain:= TRUE,
+			bQueue := FALSE);
+    END_IF
+END_IF
+
+
+IF bIncommingMsg THEN
+	bRecJsonOK := fbJsonDataType.SetSymbolFromJson(sMessage, 'st_InterMachineCom_Slave', SIZEOF(stSubDataSlave), ADR(stSubDataSlave));
+END_IF
+
+Internalbroker.Subscribe();
+
+
+]]></ST>
+    </Implementation>
+    <Method Name="CheckSlaves" Id="{786644ac-be08-48eb-9da4-0f114596e05f}">
+      <Declaration><![CDATA[METHOD CheckSlaves : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetSubData" Id="{c5c4c7fe-393b-4876-810f-eff89519ba47}">
+      <Declaration><![CDATA[METHOD GetSubData : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="JsonToStruct" Id="{0e47fba5-5516-4245-8f2b-3d58c5446e74}">
+      <Declaration><![CDATA[METHOD JsonToStruct : BOOL
+VAR_INPUT
+	MasterMode		: BOOL;
+END_VAR
+
+VAR_IN_OUT
+	sMessage : STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF MasterMode THEN
+	//Get the message from the external broker 'master' subscribtion, format according to ST_IntermachineCom_Master
+ELSE
+	//Get the message from the internal broker '+/slave/#/read' subscriptiom, format according to ST_intermachineCom_Slave
+	(* A json parser need to be constructed such that the combined json struct is formatted in separate st_IntermachineCom_slave structs.
+	
+	Data can come from the epu or hpu and distinquish is made through the topic path: /slave/hpu/#, or /slave/epu/#
+	For example the epu slave path is: /slave/epu/{serialnumber}/read and the ST_intermachineCom_slave struct comes out.
+	A json filter has to be made to iterate along all serial numbers in epu and hpu group. 
+	A method must be created where the data is temporarily stored such that the ACP (available charge power), 
+	ADP (available discharge power) and ARP (available reactive power) can me summed and used for the power setpoint calculation.
+	
+	A separate topic /slave/epu/{serialnumber}/write can be used to control slaves individually with the ST_IntermachineCom_master struct.
+	However, this requires the slave CW heartbeat and SW heartbeat to be updated within heartbeat time limit. When the CW heartbeat stops, 
+	the slave will go to general operation related to the 'master' topic that is broadcasted. 
+	*)
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{7b80ea2f-a7b0-4e47-b512-9a5340aa2860}">
+      <Declaration><![CDATA[METHOD Reset : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF InternalBroker.bRestartConnection AND ExternalBroker.bRestartConnection THEN
+	InternalBroker.bRestartConnection := FALSE;
+	ExternalBroker.bRestartConnection := FALSE;
+	Reset := TRUE;
+ELSE
+	InternalBroker.bRestartConnection := NOT InternalBroker.bRestartConnection;
+	ExternalBroker.bRestartConnection := NOT ExternalBroker.bRestartConnection;
+END_IF
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetPubData" Id="{8234f94e-17ac-4fd7-9044-ab876853f06f}">
+      <Declaration><![CDATA[METHOD SetPubData : BOOL
+VAR_INPUT
+END_VAR
+
+VAR_INST
+	WatchdogPulse	: TON; 
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[WatchdogPulse(IN := NOT watchdogPulse.Q, PT:= st_params.WatchdogPulseRate);
+
+//Internal 'master' data to control slaves
+stPubDataMaster.CW.0 := monitor.powerstack.b_StartedState;
+stPubDataMaster.CW.1 := monitor.powerstack.e_State = eStatusPowerstack.idle;
+stPubDataMaster.CW.2 := monitor.powerstack.e_State = eStatusPowerstack.shutdown;
+stPubDataMaster.CW.3 := GVL.b_EmergencyShutdownActive AND ST_IntermachineCom_params.EMstopCoupling;
+stPubDataMaster.CW.4 := monitor.system.e_State = eSystemState.Reset;
+stPubDataMaster.CW.15 := SEL(watchdogPulse.Q, stPubDataMaster.CW.15, NOT stPubDataMaster.CW.15);
+stPubDataMaster.PS := 0; // TBD based on slaves
+stPubDataMaster.QS := 0; 
+
+//Slave data for external master
+stPubDataSlave.ACP := TO_UINT(ABS(monitor.powerstack.r_Pmin));
+stPubDataSlave.ADP := TO_UINT(ABS(monitor.powerstack.r_PMax));
+stPubDataSlave.AQ := TO_UINT(ABS(monitor.powerstack.r_QMax));
+stPubDataSlave.SW.0 := monitor.system.e_State = eSystemState.StandBy OR monitor.system.e_State = eSystemState.Conditioning;
+stPubDataSlave.SW.1 := monitor.powerstack.b_StartedState;
+stPubDataSlave.SW.2 := monitor.system.e_State = eSystemState.Stopped;
+stPubDataSlave.SW.3 := monitor.system.e_State = eSystemState.Discharging_Only;
+stPubDataSlave.SW.4 := monitor.system.e_State = eSystemState.Charging_Only;
+stPubDataSlave.SW.5 := GVL.b_WarningActive;
+stPubDataSlave.SW.6 := GVL.b_NormalShutdownActive;
+stPubDataSlave.SW.7 := GVL.b_EmergencyShutdownActive;
+stPubDataSlave.SW.15 := stSubDataMaster.CW.15;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="StructToJson" Id="{44c642ab-b08b-4c73-819f-2502dfdf2596}">
+      <Declaration><![CDATA[METHOD StructToJson : STRING
+VAR_INPUT
+	Mastermode		: BOOL; //if false, then slave mode
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[fbJson.ResetDocument();
+
+IF MasterMode THEN
+	fbJsonDataType.AddJsonValueFromSymbol(fbJson, 'ST_InterMachineCom_Master', SIZEOF(stPubDataMaster), ADR(stPubDataMaster));
+ELSE
+	fbJsonDataType.AddJsonValueFromSymbol(fbJson, 'ST_InterMachineCom_Slave', SIZEOF(stPubDataSlave), ADR(stPubDataSlave));
+END_IF
+
+fbJson.EndObject();
+fbJson.CopyDocument(StructToJson, SIZEOF(StructToJson));	]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_InterMachineCommunication">
+      <LineId Id="1454" Count="0" />
+      <LineId Id="1458" Count="0" />
+      <LineId Id="1457" Count="0" />
+      <LineId Id="1456" Count="0" />
+      <LineId Id="1455" Count="0" />
+      <LineId Id="1417" Count="0" />
+      <LineId Id="1453" Count="0" />
+      <LineId Id="1452" Count="0" />
+      <LineId Id="1419" Count="0" />
+      <LineId Id="1425" Count="0" />
+      <LineId Id="1441" Count="2" />
+      <LineId Id="1426" Count="0" />
+      <LineId Id="1429" Count="0" />
+      <LineId Id="1428" Count="0" />
+      <LineId Id="1430" Count="1" />
+      <LineId Id="1451" Count="0" />
+      <LineId Id="1427" Count="0" />
+      <LineId Id="1414" Count="1" />
+      <LineId Id="1440" Count="0" />
+      <LineId Id="1439" Count="0" />
+      <LineId Id="1416" Count="0" />
+      <LineId Id="1447" Count="3" />
+      <LineId Id="1320" Count="0" />
+      <LineId Id="1346" Count="1" />
+      <LineId Id="1351" Count="15" />
+      <LineId Id="1422" Count="2" />
+      <LineId Id="1421" Count="0" />
+      <LineId Id="1371" Count="20" />
+      <LineId Id="1402" Count="2" />
+      <LineId Id="1406" Count="5" />
+      <LineId Id="427" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_InterMachineCommunication.CheckSlaves">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_InterMachineCommunication.GetSubData">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_InterMachineCommunication.JsonToStruct">
+      <LineId Id="5" Count="0" />
+      <LineId Id="14" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="23" Count="4" />
+      <LineId Id="30" Count="1" />
+      <LineId Id="15" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_InterMachineCommunication.Reset">
+      <LineId Id="9" Count="0" />
+      <LineId Id="15" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="19" Count="1" />
+      <LineId Id="12" Count="1" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="6" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_InterMachineCommunication.SetPubData">
+      <LineId Id="45" Count="1" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="1" />
+      <LineId Id="20" Count="0" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="25" Count="2" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="28" Count="10" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="39" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_InterMachineCommunication.StructToJson">
+      <LineId Id="33" Count="8" />
+      <LineId Id="28" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

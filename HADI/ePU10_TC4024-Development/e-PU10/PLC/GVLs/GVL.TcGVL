@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <GVL Name="GVL" Id="{c4454766-3327-481e-b138-91a7351c444c}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	s_SystemTime						: STRING;
+	s_SystemDate						: STRING;
+	dt_SystemDateTime					: DT;
+	b_SystemClockOK						: BOOL;
+	b_SystemReady						: BOOL;
+	b_initCycle							: BOOL := TRUE;
+	b_LEDDemoMode						: BOOL;
+	
+	
+	//error variables
+	b_WarningActive						: BOOL;
+	b_NormalShutdownActive				: BOOL;
+	b_QuickshutdownActive				: BOOL;
+	b_EmergencyShutdownActive			: BOOL;	
+	
+
+END_VAR
+]]></Declaration>
+  </GVL>
+</TcPlcObject>

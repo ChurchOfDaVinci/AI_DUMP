@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_ContactorControl_params" Id="{b6011a69-97bb-4c36-b15e-f59d95f47260}">
+    <Declaration><![CDATA[TYPE ST_ContactorControl_params :
+STRUCT
+	ui_VoltageDevSyncOK			: UINT := 4;
+	ui_DeloadCurrentRelease		: UINT := 20;
+	ui_DeloadTimeOut			: UINT := 60; //s
+	VoltagePID					: st_Powercontrol_PIDparams := (Enable:= TRUE, kp:=0.5, Tv:=0, Tn:=1000, Td:=0, Outerwindow:= 0, Innerwindow := 0, OutputDeadband := 0, InputDeadband := 0.5);
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

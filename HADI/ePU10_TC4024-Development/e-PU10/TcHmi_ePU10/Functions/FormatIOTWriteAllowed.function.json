@@ -1,0 +1,45 @@
+{
+  "function": {
+    "name": "FormatIOTWriteAllowed",
+    "namespace": "TcHmi.Functions.TcHmi_ePU10",
+    "displayName": "FormatIOTWriteAllowed",
+    "description": "Synchronous format function for the datagrid b_IOTWriteAllowed column. Converts a boolean value to 'Read' (false) or 'Read/Write' (true).",
+    "waitMode": "Synchronous",
+    "category": "",
+    "returnValue": {
+      "type": "tchmi:general#/definitions/String"
+    },
+    "visible": true,
+    "injectContextObject": false,
+    "arguments": [
+      {
+        "name": "value",
+        "displayName": "value",
+        "type": "tchmi:general#/definitions/Any",
+        "description": "The boolean b_IOTWriteAllowed value to convert to its label string.",
+        "defaultValue": null,
+        "required": true,
+        "bindable": true,
+        "restParameter": false,
+        "asReference": false,
+        "allowControlAttributeBindingOptions": false
+      }
+    ]
+  },
+  "$schema": "./../../Packages/Beckhoff.TwinCAT.HMI.Framework.12.760.59/runtimes/native1.12-tchmi/Schema/FunctionDescription.Schema.json",
+  "apiVersion": 1,
+  "version": {
+    "full": "0.0.0.0",
+    "major": 0,
+    "minor": 0,
+    "revision": 0,
+    "build": 0
+  },
+  "dependencyFiles": [
+    {
+      "name": "FormatIOTWriteAllowed.js",
+      "type": "JavaScript",
+      "description": ""
+    }
+  ]
+}

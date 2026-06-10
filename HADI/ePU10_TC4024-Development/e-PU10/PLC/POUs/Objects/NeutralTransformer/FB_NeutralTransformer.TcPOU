@@ -1,0 +1,385 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_NeutralTransformer" Id="{b023df63-c1a4-4fb6-a940-65c28ad078ed}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_NeutralTransformer
+VAR_OUTPUT
+	get									: ST_Neutraltransformer_Get;
+END_VAR
+
+VAR_IN_OUT CONSTANT
+	st_params							: ST_Neutraltransformer_params;
+END_VAR
+
+VAR_INPUT
+	b_enable						: BOOL;
+	r_CurrentN						: REAL; //N
+	r_LineVoltage					: REAL;
+	r_VoltageUnbalance				: REAL; //%
+	b_NetcontactorFb				: BOOL;
+END_VAR
+
+VAR					// LOCAL VARIABLES
+	IO								: FB_NeutralTransformer_IO;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF b_enable THEN
+	IO();
+	CheckCurrents(get.events, st_params, r_CurrentN);
+	CheckTemperatures(get.events, st_params, IO.r_TemperaturePhase, get); 
+	CheckVoltages(get.events, st_params, r_VoltageUnbalance, b_netcontactorFB := b_NetcontactorFb);
+END_IF
+
+get.b_active := b_enable;
+
+]]></ST>
+    </Implementation>
+    <Folder Name="Controls" Id="{fca0854b-04c5-428e-b9ea-35640cecfbd9}" />
+    <Method Name="CheckCurrents" Id="{3f332ee6-fb35-4027-ae1d-3d4ee4f4c249}" FolderPath="Controls\">
+      <Declaration><![CDATA[METHOD PROTECTED CheckCurrents
+VAR_IN_OUT
+	events					: ST_Neutraltransformer_events;
+END_VAR
+
+VAR_IN_OUT CONSTANT
+	st_params			: ST_NeutralTransformer_Params;
+	r_CurrentN			: REAL;
+END_VAR
+
+VAR
+	r_ratedCurrent : REAL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[r_ratedCurrent :=	TO_REAL(st_params.ui_ratedpower) * 1000 / 230;
+
+LimitTrigger(
+	r_HighLimit := r_ratedCurrent * st_params.r_OCTripFactor,
+	r_HighWarning := r_ratedCurrent,
+	b_HighEnable := TRUE,
+	r_lowlimit := 0,
+	r_lowWarning := 0,
+	b_lowEnable := FALSE,
+	r_Hysteresis := 10,
+	r_in := r_CurrentN,
+	b_warning => events.b_NeutralCurrentHigh,
+	b_fault => events.b_NeutralCurrentTooHigh
+);
+
+get.events.b_OvercurrentWarning := io.b_ZPTcurrentwarning;
+get.events.b_OvercurrentAlarm := io.b_ZPTcurrentalarm;
+get.r_Powerload := r_CurrentN / r_ratedCurrent * 100;
+get.r_RatedPower := st_params.ui_ratedpower;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CheckTemperatures" Id="{f9ebf4dc-ce36-4c73-92ba-0b7a56721847}" FolderPath="Controls\">
+      <Declaration><![CDATA[METHOD PROTECTED CheckTemperatures
+VAR_IN_OUT
+	events								: ST_NeutralTransformer_events;
+END_VAR
+VAR_IN_OUT CONSTANT
+	st_params							: ST_NeutralTransformer_params;
+	r_tempPhase							: ARRAY [1..3] OF REAL;
+END_VAR
+
+VAR_IN_OUT
+	get									: ST_Neutraltransformer_get;
+END_VAR
+
+VAR 
+	w_Index								: WORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR w_Index:=1 TO 3 DO
+	LimitTrigger(
+		r_HighLimit := st_params.by_TemperatureHighAlarm,
+		r_HighWarning := st_params.by_TemperatureHighWarning,
+		b_HighEnable := TRUE,
+		r_lowlimit := 0,
+		r_lowWarning := 0,
+		b_lowEnable := FALSE,
+		r_Hysteresis := 5,
+		r_in := r_TempPhase[w_Index],
+		b_warning => events.b_TemperatureHighPhase[w_Index],
+		b_fault => events.b_TemperatureHighPhase[w_Index]
+	);
+END_FOR
+
+get.r_TemperaturePhase[phases.L1] := r_tempphase[phases.L1];
+get.r_TemperaturePhase[phases.L2] := r_tempphase[phases.L2];
+get.r_TemperaturePhase[phases.L3] := r_tempphase[phases.L3];
+get.r_TemperaturePhase[phases.AVG] := r_tempphase[phases.L1] + r_tempphase[phases.L2] + r_tempphase[phases.L3] / 3;
+get.r_TemperaturePhase[phases.maximum] := MAX(r_tempphase[phases.L1], r_tempphase[phases.L2], r_tempphase[phases.L3]);
+get.r_TemperaturePhase[phases.minimum] := MIN(r_tempphase[phases.L1], r_tempphase[phases.L2], r_tempphase[phases.L3]);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CheckVoltages" Id="{cdc3517d-7dfd-4107-9864-1e8d5607125c}" FolderPath="Controls\">
+      <Declaration><![CDATA[METHOD PROTECTED CheckVoltages : BOOL
+VAR_IN_OUT
+	events 				: ST_NeutralTransformer_events;
+END_VAR
+
+VAR_IN_OUT CONSTANT
+	st_params				: ST_Neutraltransformer_params;
+	r_voltageUnbalance		: REAL;
+	b_netcontactorFB		: BOOL;
+END_VAR
+
+VAR_INST
+	b_VoltageOK				: BOOL;
+	sr_warning				: SR;
+	sr_Alarm				: SR;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[b_voltageOK		:= r_LineVoltage >= settings.GridParams.r_GridVoltageMin;
+sr_warning(
+	SET1 := r_voltageunbalance >= st_params.by_VoltageUnbalanceWarning AND b_voltageOK, 
+	RESET := r_voltageunbalance <= st_params.by_VoltageUnbalanceWarning - 2 OR NOT b_netcontactorFB, 
+	Q1 => events.b_VoltageUnbalanceHigh
+	);
+
+sr_alarm(
+	SET1:= r_voltageunbalance >=st_params.by_VoltageUnbalanceAlarm AND b_voltageOK,
+	RESET := r_voltageunbalance <= st_params.by_VoltageUnbalanceWarning OR NOT b_netcontactorFB,
+	Q1 => events.b_VoltageUnbalanceTooHigh
+	);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetDiagnostics" Id="{9e0d1160-1fa2-499a-8621-5c96666aee92}">
+      <Declaration><![CDATA[METHOD PUBLIC GetDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*Temp L1 Warning*)		AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_TemperatureHighPhase[phases.L1],
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 1,
+		e_ObjectID				:= eObject_ID.NeutralTransformer,
+		s_Message				:= 'high temperature L1 warning',
+		e_sev					:= eseverity.Warning,
+		b_AutoClear			:= TRUE
+	);
+	w_Index := w_Index +1;
+	
+(*Temp L2 Warning*)		AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_TemperatureHighPhase[phases.L2],
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 2,
+		s_Message				:= 'high temperature L2 warning',
+		e_sev					:= eseverity.Warning,
+		b_AutoClear			:= TRUE,
+	);
+	w_Index := w_Index +1;
+	
+(*Temp L3 Warning*)		AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_TemperatureHighPhase[phases.L3],
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 3,
+		s_Message				:= 'high temperature L3 warning',
+		e_sev					:= eseverity.Warning,
+		b_AutoClear			:= TRUE,
+	);
+	w_Index := w_Index +1;
+	
+(*Temp L1 Alarm*)		AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_TemperatureTooHighPhase[phases.L1],
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 4,
+		s_Message				:= 'high temperature L1 alarm',
+		e_sev					:= eseverity.Normalshutdown,
+		t_TriggerTime		:= INT_TO_TIME(st_params.ui_TemperatureHighTripDelay*1000)
+	);
+	w_Index := w_Index +1;
+	
+(*Temp L2 Alarm*)		AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_TemperatureTooHighPhase[phases.L2],
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 5,
+		s_Message				:= 'high temperature L2 alarm',
+		e_sev					:= eseverity.Normalshutdown,
+		t_TriggerTime		:= INT_TO_TIME(st_params.ui_TemperatureHighTripDelay*1000)
+	);
+	w_Index := w_Index +1;
+	
+(*Temp L3 Alarm*)		AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_TemperatureTooHighPhase[phases.L3],
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 6,
+		s_Message				:= 'high temperature L3 alarm',
+		e_sev					:= eseverity.Normalshutdown,
+		t_TriggerTime		:= INT_TO_TIME(st_params.ui_TemperatureHighTripDelay*1000)
+	);
+	w_Index := w_Index +1;
+	
+(*Volt unbal Alarm*)	AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_VoltageUnbalanceTooHigh,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 7,
+		s_Message				:= 'voltage unbalance fault',
+		e_sev					:= eseverity.Normalshutdown,
+		t_TriggerTime		:= INT_TO_TIME(st_params.ui_VoltageUnbalanceTripDelay*1000)
+	);
+	w_Index := w_Index +1;
+	
+(*Volt unbal Warning*)	AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_VoltageUnbalanceHigh,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 8,
+		s_Message				:= 'voltage unbalance warning',
+		e_sev					:= eseverity.Warning,
+		b_AutoClear			:= TRUE
+	);
+	w_Index := w_Index +1;
+	
+(*OverCurr Alarm*)		AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_NeutralCurrentTooHigh,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 9,
+		s_Message				:= 'Neutral current too high alarm',
+		e_sev					:= eseverity.Normalshutdown,
+		t_TriggerTime		:= T#10s
+	);
+	w_Index := w_Index +1;
+	
+(*Overcurr Warning*)	AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_NeutralCurrentHigh,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 10,
+		s_Message				:= 'Neutral current high warning',
+		e_sev					:= eseverity.Warning,
+		b_AutoClear			:= TRUE
+	);
+	w_Index := w_Index +1;
+	
+(*OverCurr Alarm*)		AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_OvercurrentAlarm,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 11,
+		s_Message				:= 'OCP warning',
+		e_sev					:= eseverity.Normalshutdown,
+		t_TriggerTime		:= T#1S
+	);
+	w_Index := w_Index +1;
+	
+(*Overcurrprotection Warning*)	AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_Overcurrentwarning,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 12,
+		s_Message				:= 'OCP warning',
+		e_sev					:= eseverity.Warning,
+		b_AutoClear			:= TRUE
+	);
+	w_Index := w_Index +1;
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetWearCounters" Id="{631bc2b7-4c7d-4974-b2c0-3cb55d8dccca}">
+      <Declaration><![CDATA[METHOD GetWearCounters : BOOL
+VAR_INST
+	//tof_ZPTOverload			:	tof := (pt := 5m);
+	ZPTOverloadTripCount		:	FB_Varlogger;
+	ZPTTempTripCount			:	FB_Varlogger;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+ZPTOverloadTripCount(		TriggerInput := get.events.b_OvercurrentAlarm OR get.events.b_NeutralCurrentTooHigh, 
+							LogItemGroup :=  eLogItemGroupID.ZPT, 
+							LogItemName := 'ZptOvercurrentTripCnt', 
+							LogType := eLogtypes.TrackCycles);
+
+ZPTTempTripCount(			TriggerInput := get.events.b_TemperatureTooHighPhase[1] or  get.events.b_TemperatureTooHighPhase[2] or  get.events.b_TemperatureTooHighPhase[3], 
+							LogItemGroup :=  eLogItemGroupID.ZPT, 
+							LogItemName := 'ZptTempTripCnt', 
+							LogType := eLogtypes.TrackCycles);	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{5ff60c00-a6fe-4af7-ad06-5b34c0b41ff8}">
+      <Declaration><![CDATA[METHOD Reset : BOOL
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[io.b_ResetOverCurrentProtection := get.events.b_OvercurrentAlarm;
+Reset := NOT get.events.b_OvercurrentAlarm;
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_NeutralTransformer">
+      <LineId Id="188" Count="0" />
+      <LineId Id="191" Count="2" />
+      <LineId Id="189" Count="1" />
+      <LineId Id="187" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="105" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_NeutralTransformer.CheckCurrents">
+      <LineId Id="35" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="55" Count="2" />
+      <LineId Id="66" Count="2" />
+      <LineId Id="59" Count="5" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="120" Count="0" />
+      <LineId Id="133" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_NeutralTransformer.CheckTemperatures">
+      <LineId Id="120" Count="0" />
+      <LineId Id="152" Count="10" />
+      <LineId Id="149" Count="0" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="182" Count="0" />
+      <LineId Id="174" Count="0" />
+      <LineId Id="183" Count="1" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="176" Count="1" />
+      <LineId Id="175" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_NeutralTransformer.CheckVoltages">
+      <LineId Id="111" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="62" Count="3" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="89" Count="3" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="57" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_NeutralTransformer.GetDiagnostics">
+      <LineId Id="17" Count="3" />
+      <LineId Id="230" Count="0" />
+      <LineId Id="21" Count="81" />
+      <LineId Id="213" Count="0" />
+      <LineId Id="104" Count="10" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="186" Count="0" />
+      <LineId Id="188" Count="7" />
+      <LineId Id="187" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="177" Count="7" />
+      <LineId Id="232" Count="0" />
+      <LineId Id="120" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_NeutralTransformer.GetWearCounters">
+      <LineId Id="44" Count="3" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="49" Count="3" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="107" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_NeutralTransformer.Reset">
+      <LineId Id="11" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

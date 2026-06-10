@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PNInput_ParallelOperation" Id="{64bc7339-2efa-47ed-9e96-ac2dbe321ebf}">
+    <Declaration><![CDATA[TYPE ST_PNInput_ParallelOperation :
+STRUCT
+	Controlbits			:	DWORD;
+	//b_DetectSlaves	
+	r_ActivePower		:	DWORD;
+	r_reactivePower		:	DWORD;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

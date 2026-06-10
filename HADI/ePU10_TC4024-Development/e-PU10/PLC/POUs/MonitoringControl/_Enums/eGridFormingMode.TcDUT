@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eGridFormingMode" Id="{f2413005-2c4b-4667-a63e-2281c616af23}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eGridFormingMode:
+(
+	Island := 0,
+	Droop := 1
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

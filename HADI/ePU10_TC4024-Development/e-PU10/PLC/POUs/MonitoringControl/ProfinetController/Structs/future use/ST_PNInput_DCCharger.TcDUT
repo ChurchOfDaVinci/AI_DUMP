@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PNInput_DCCharger" Id="{0ac54584-b3d9-447e-bde0-fa23d72992ba}">
+    <Declaration><![CDATA[TYPE ST_PNInput_DCCharger :
+STRUCT
+	Controlbits	:	DWORD;
+	//b_enable?
+	//b_resetCharger
+	//b_StartCharging
+	Powerlimit	:	DWORD;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

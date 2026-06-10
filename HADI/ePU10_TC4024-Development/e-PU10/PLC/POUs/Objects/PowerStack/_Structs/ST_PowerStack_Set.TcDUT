@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PowerStack_Set" Id="{6c041c9d-41b7-4bd7-8aa4-0fbc7468f3be}">
+    <Declaration><![CDATA[TYPE ST_PowerStack_Set :
+STRUCT
+	//WRITE
+	b_NetcontactorHoldClose			: BOOL; // used when input breaker or external PSB breaker must be controlled instead of netcontactor.
+	b_ExtGridConnected				: BOOL;
+	b_DisableShifting				: BOOL;
+	b_slowLom						: BOOL;
+	b_automaticswitching			: BOOL;
+	b_GridCodeEnable				: BOOL := TRUE;
+	e_InverterMode					: eInverterModes;			//0=AFE, 1= ugrid, 2, island
+	e_PowerMode						: ePowerModes;				//
+	e_NetconClosingRequest			: eNetcontMode;
+	e_PowerLimitingMode				: ePLM;
+	r_VoltageDroop					: REAL;				
+	r_FrequencyDroop				: REAL;
+	r_NominalOutputVoltage			: REAL := 400; //R/W
+	r_NominalOutputFrequency		: REAL := 50; //R/W
+	r_ActivePower					: REAL; //R/W
+	r_ReactivePower					: REAL; //R/W
+	
+	//limits
+	r_Pmax							: REAL;
+	r_Pmin							: REAL;
+	r_ACcurrentLimit				: REAL;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

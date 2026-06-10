@@ -1,0 +1,79 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_StartStop" Id="{65b4c91b-4c72-4d6e-85c2-71b432c8e0de}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_StartStop
+VAR_INPUT
+	enable : BOOL;
+	reset: BOOL;
+	value : REAL;
+	StartValue : REAL;
+	StopValue : REAL;
+	GreaterThan	: BOOL;
+	OffDelay	: TIME;
+	OnDelay		: TIME;	
+END_VAR
+VAR_OUTPUT
+	Q : BOOL;
+END_VAR
+VAR
+	SR_Started : SR;
+	ton_set : TON;
+	ton_reset: TON;
+	ton_minruntime : TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ton_set(PT := Ondelay);
+ton_reset(PT := Ondelay);
+ton_minruntime(PT := OffDelay);
+SR_Started();
+
+IF GreaterThan THEN
+	ton_set.IN:= value >= StartValue AND NOT reset;
+	ton_reset.IN:= value <= StopValue OR reset;
+ELSE
+	ton_set.IN:= value <= StartValue AND NOT reset;
+	ton_reset.IN:= Value >= StopValue OR reset;
+END_IF
+
+ton_minruntime(IN:= sr_started.Q1);
+IF enable THEN
+	SR_Started.SET1 := ton_set.Q;
+	SR_Started.RESET := ton_reset.Q AND ton_minruntime.Q;
+	Q := sr_started.Q1;	
+ELSE
+	SR_Started.SET1 := FALSE;
+	SR_Started.RESET := TRUE;
+	Q := FALSE;
+END_IF
+
+]]></ST>
+    </Implementation>
+    <LineIds Name="FB_StartStop">
+      <LineId Id="51" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="53" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="109" Count="1" />
+      <LineId Id="86" Count="0" />
+      <LineId Id="84" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="107" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

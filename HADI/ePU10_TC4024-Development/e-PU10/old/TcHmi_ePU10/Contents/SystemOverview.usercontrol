@@ -1,0 +1,605 @@
+<div id="SystemOverview" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControl" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="100" data-tchmi-height="100" data-tchmi-width-unit="%" data-tchmi-height-unit="%" data-tchmi-creator-viewport-width="500" data-tchmi-creator-viewport-height="500" data-tchmi-height-mode="Value" data-tchmi-width-mode="Value">
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "SystemOverview.onAttached",
+    "actions": [
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "document.getElementById('Input').style.display = 'None';"
+        ],
+        "injectContextObject": false,
+        "asyncWait": true,
+        "waitMode": "Synchronous"
+      },
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "document.getElementById('DCCoupling').style.display = 'None';"
+        ],
+        "injectContextObject": false,
+        "asyncWait": true,
+        "waitMode": "Synchronous"
+      }
+    ],
+    "displayName": "Default Hide elements"
+  }
+]
+</script>
+<div id="TcHmiHtmlHost_8" data-tchmi-type="TcHmi.Controls.System.TcHmiHtmlHost" data-tchmi-height-unit="%" data-tchmi-left-unit="px" data-tchmi-top-unit="px" data-tchmi-width-unit="%" data-tchmi-scale-mode="ScaleToFill" data-tchmi-height-mode="Value" data-tchmi-width-mode="Value" data-tchmi-left="0" data-tchmi-top="0" data-tchmi-right="0" data-tchmi-bottom="0">
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <style>
+ 
+
+            #batteryContainer {
+                position: relative;
+            }
+
+            #batteryLevel {
+                transition: y 0.5s, height 0.5s, fill 0.5s;
+                fill: url(#batteryGradient);
+            }
+
+            #batteryCap {
+                fill: #666;
+                rx: 5;
+                ry: 5;
+            }
+
+            #batteryFrame {
+                fill: none;
+                stroke: #999;
+                stroke-width: 5;
+            }
+
+            #lightningSvg {
+                display: none;
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                transition: transform 0.5s ease-in-out;
+            }
+
+            @keyframes bounceAnimation {
+                0%, 20%, 50%, 80%, 100% {
+                    transform: translateY(0);
+                }
+
+                40% {
+                    transform: translateY(-10px);
+                }
+
+                60% {
+                    transform: translateY(-5px);
+                }
+            }
+
+            #lightningSvg.bouncing {
+                animation: bounceAnimation 1s infinite;
+            }
+
+            #batteryInputContainer {
+                text-align: center;
+                margin-top: 10px;
+            }
+
+            #batteryInput {
+                background: transparent;
+                border: none;
+                color: #333;
+                font-size: 16px;
+                padding: 5px;
+                width: 60px;
+                text-align: center;
+            }
+
+            #batteryText {
+                fill: #000; /* Text color */
+                font-family: Arial, sans-serif;
+                font-size: 20px;
+                text-anchor: middle;
+                dominant-baseline: middle;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="batteryContainer">
+            <svg id="batterySVG" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%" viewBox="0 0 495 320">
+                <defs>
+                    <linearGradient id="batteryGradient" x1="0%" y1="100%" x2="0%" y2="0%">
+                        <!-- Use JavaScript to generate gradient stops based on battery level -->
+                    </linearGradient>
+                    <style type="text/css" id="flow-animation-in">
+                        .flow-animation-in {
+                            animation: flow-animation-in 0.5s linear;
+                            animation-iteration-count: infinite;
+                        }
+
+                        @keyframes flow-animation-in {
+                            to {
+                                stroke-dashoffset: -16;
+                            }
+                        }
+
+                        <style type="text/css" id="flow-animation-out" > .flow-animation-out {
+                            animation: flow-animation-out 0.5s linear;
+                            animation-iteration-count: infinite;
+                        }
+
+                        @keyframes flow-animation-out {
+                            to {
+                                stroke-dashoffset: 16;
+                            }
+                        }
+                    </style>
+                </defs>
+                <rect id="batteryCap" x="230" y="40" width="30" height="5" rx="5" ry="5"></rect>
+                <rect id="batteryLevel" x="205" y="240" width="80" height="0" rx="10" ry="10"></rect>
+                <rect id="batteryFrame" x="200" y="45" width="90" height="200" rx="15" ry="15"></rect>
+                <text id="batteryText" x="245" y="115">0%</text>
+                <!-- Lightning SVG -->
+                <g id="lightningSvg" class="bouncing">
+                    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="215" y="165" width="60" height="60" viewBox="0 0 69.38 122.88" style="enable-background:new 0 0 69.38 122.88" xml:space="preserve"><style type="text/css">
+                                                                                                                                                                                                                                                               .st0 {
+                                                                                                                                                                                                                                                                   fill: #383838;
+                                                                                                                                                                                                                                                               }
+
+                                                                                                                                                                                                                                                               .st1 {
+                                                                                                                                                                                                                                                                   fill-rule: evenodd;
+                                                                                                                                                                                                                                                                   clip-rule: evenodd;
+                                                                                                                                                                                                                                                                   fill: #FCDB33;
+                                                                                                                                                                                                                                                               }
+
+                                                                                                                                                                                                                                                               .st2 {
+                                                                                                                                                                                                                                                                   fill-rule: evenodd;
+                                                                                                                                                                                                                                                                   clip-rule: evenodd;
+                                                                                                                                                                                                                                                                   fill: #FFFF00;
+                                                                                                                                                                                                                                                               }
+</style><g><path class="st0" d="M21.34,0.41L65.26,0c0.81-0.04,1.64,0.18,2.37,0.66c1.81,1.21,2.3,3.67,1.08,5.48L45.77,40.38h19.45v0.01 c0.88,0,1.77,0.29,2.51,0.9c1.68,1.39,1.93,3.87,0.54,5.56L7,121.44c-1.06,1.29-2.87,1.81-4.51,1.16c-2.03-0.8-3.02-3.1-2.21-5.13 L21.32,64.5L5.55,64.35c-0.45,0.03-0.9-0.01-1.36-0.14c-2.1-0.6-3.32-2.79-2.72-4.89l16.1-56.04l0.01,0 C18.04,1.64,19.54,0.43,21.34,0.41L21.34,0.41z" /><polygon class="st1" points="65.43,3.95 21.37,4.36 5.27,60.4 27.11,60.61 3.95,118.93 65.22,44.34 38.35,44.34 65.43,3.95" /><polygon class="st2" points="33.9,4.52 21.66,4.75 6.23,60.09 27.24,60.57 3.95,118.93 35.21,55.03 16.58,51.85 33.9,4.52" /></g></svg>
+                </g>
+                <g>
+
+                    <g id="cell-ACbusbar"><path d="M 359 31 L 359 251" fill="none" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                    <g id="Input">
+                        <g id="cell-InputOpen"><path d="M 379 61 L 419 41" fill="none" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                        <g id="cell-Input"><path d="M 360 61 L 380 61" fill="none" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                        <g id="cell-InputCon"><path d="M 419 61 L 472.41 61" fill="none" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /><path d="M 483.41 61 L 472.41 64.67 L 472.41 57.33 Z" fill="#444" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="all" /></g>
+                        <g id="cell-InputClosed"><path d="M 379 61 L 420 61" fill="none" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                        <g id="cell-ACInputDetected" display="none" content="&lt;object label=&quot;&quot;/&gt;" data-label=""> <image x="440" y="35" width="14" height="21.64" xlink:href="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcKICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIgogICB4bWxuczpjYz0iaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbnMjIgogICB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiCiAgIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgeG1sbnM6c29kaXBvZGk9Imh0dHA6Ly9zb2RpcG9kaS5zb3VyY2Vmb3JnZS5uZXQvRFREL3NvZGlwb2RpLTAuZHRkIgogICB4bWxuczppbmtzY2FwZT0iaHR0cDovL3d3dy5pbmtzY2FwZS5vcmcvbmFtZXNwYWNlcy9pbmtzY2FwZSIKICAgd2lkdGg9IjExLjU5NiIKICAgaGVpZ2h0PSIxOC4wMDE2NCIKICAgdmlld0JveD0iMCAwIDExLjU5NiAxOC4wMDE2NCIKICAgdmVyc2lvbj0iMS4xIgogICBpZD0ic3ZnMzQ5MzkiCiAgIHNvZGlwb2RpOmRvY25hbWU9IlBvd2VyLnN2ZyIKICAgaW5rc2NhcGU6dmVyc2lvbj0iMC45Mi4zICgyNDA1NTQ2LCAyMDE4LTAzLTExKSI+CiAgPHNvZGlwb2RpOm5hbWVkdmlldwogICAgIHBhZ2Vjb2xvcj0iI2ZmZmZmZiIKICAgICBib3JkZXJjb2xvcj0iIzY2NjY2NiIKICAgICBib3JkZXJvcGFjaXR5PSIxIgogICAgIG9iamVjdHRvbGVyYW5jZT0iMTAiCiAgICAgZ3JpZHRvbGVyYW5jZT0iMTAiCiAgICAgZ3VpZGV0b2xlcmFuY2U9IjEwIgogICAgIGlua3NjYXBlOnBhZ2VvcGFjaXR5PSIwIgogICAgIGlua3NjYXBlOnBhZ2VzaGFkb3c9IjIiCiAgICAgaW5rc2NhcGU6d2luZG93LXdpZHRoPSIxOTIwIgogICAgIGlua3NjYXBlOndpbmRvdy1oZWlnaHQ9IjEwMTciCiAgICAgaWQ9Im5hbWVkdmlldzM0OTQxIgogICAgIHNob3dncmlkPSJmYWxzZSIKICAgICBmaXQtbWFyZ2luLXRvcD0iMCIKICAgICBmaXQtbWFyZ2luLWxlZnQ9IjAiCiAgICAgZml0LW1hcmdpbi1yaWdodD0iMCIKICAgICBmaXQtbWFyZ2luLWJvdHRvbT0iMCIKICAgICBpbmtzY2FwZTp6b29tPSI0OC4xMTExMTEiCiAgICAgaW5rc2NhcGU6Y3g9IjUuNzk4IgogICAgIGlua3NjYXBlOmN5PSI5LjAwMDEyNDMiCiAgICAgaW5rc2NhcGU6d2luZG93LXg9Ii04IgogICAgIGlua3NjYXBlOndpbmRvdy15PSItOCIKICAgICBpbmtzY2FwZTp3aW5kb3ctbWF4aW1pemVkPSIxIgogICAgIGlua3NjYXBlOmN1cnJlbnQtbGF5ZXI9InN2ZzM0OTM5IiAvPgogIDxkZWZzCiAgICAgaWQ9ImRlZnMzNDkzMCI+CiAgICA8cmFkaWFsR3JhZGllbnQKICAgICAgIGlkPSJiZjBlNjIzOC1kN2ExLTQ1YjUtODYxYy04YmJlNTY5NTJlYjEiCiAgICAgICBjeD0iMy4xMTcwMDAxIgogICAgICAgY3k9Ii0xMTYuMTIiCiAgICAgICByPSI5LjAyMjAwMDMiCiAgICAgICBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KDEuMDEzLDAsMCwwLjc4OSw5LjA0NiwxMDAuNjU0NDgpIgogICAgICAgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgogICAgICA8c3RvcAogICAgICAgICBvZmZzZXQ9IjAuMTk2IgogICAgICAgICBzdG9wLWNvbG9yPSIjZmZkNzBmIgogICAgICAgICBpZD0ic3RvcDM0OTIxIiAvPgogICAgICA8c3RvcAogICAgICAgICBvZmZzZXQ9IjAuNDM4IgogICAgICAgICBzdG9wLWNvbG9yPSIjZmZjYjEyIgogICAgICAgICBpZD0ic3RvcDM0OTIzIiAvPgogICAgICA8c3RvcAogICAgICAgICBvZmZzZXQ9IjAuODczIgogICAgICAgICBzdG9wLWNvbG9yPSIjZmVhYzE5IgogICAgICAgICBpZD0ic3RvcDM0OTI1IiAvPgogICAgICA8c3RvcAogICAgICAgICBvZmZzZXQ9IjEiCiAgICAgICAgIHN0b3AtY29sb3I9IiNmZWExMWIiCiAgICAgICAgIGlkPSJzdG9wMzQ5MjciIC8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogIDwvZGVmcz4KICA8dGl0bGUKICAgICBpZD0idGl0bGUzNDkzMiI+TXNQb3J0YWxGeC5iYXNlLmltYWdlcy0zNzwvdGl0bGU+CiAgPGcKICAgICBpZD0iYjYwNzhkNTEtYjEyOS00Y2QwLTlhNGQtZThmZjU1MWQ0NzQ3IgogICAgIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0zLjIwMiwwLjAwMTUxNTIxKSI+CiAgICA8cGF0aAogICAgICAgZD0iTSA4LjA5LDEwLjAxIEggMy40NjQgQSAwLjIzOSwwLjIzOSAwIDAgMSAzLjIwMiw5LjgxIDAuMTc1LDAuMTc1IDAgMCAxIDMuMjI1LDkuNzI1IEwgOC43NzUsMC4xMiBBIDAuMjc0LDAuMjc0IDAgMCAxIDkuMDE0LDAgaCA1LjQ3IEEgMC4yMzgsMC4yMzggMCAwIDEgMTQuNzQ2LDAuMiAwLjE3NywwLjE3NyAwIDAgMSAxNC43LDAuMzE5IEwgOC4xODYsNy44MzQgaCA2LjM1IGEgMC4yMzksMC4yMzkgMCAwIDEgMC4yNjIsMC4yIDAuMTg1LDAuMTg1IDAgMCAxIC0wLjA2NywwLjEzNyBMIDQuMTc1LDE3Ljc4OCBjIC0wLjEsMC4wNTEgLTAuOCwwLjU2MiAtMC40NTgsLTAuMjE0IHYgMCB6IgogICAgICAgaWQ9InBhdGgzNDkzNCIKICAgICAgIGlua3NjYXBlOmNvbm5lY3Rvci1jdXJ2YXR1cmU9IjAiCiAgICAgICBzdHlsZT0iZmlsbDp1cmwoI2JmMGU2MjM4LWQ3YTEtNDViNS04NjFjLThiYmU1Njk1MmViMSkiIC8+CiAgPC9nPgogIDxtZXRhZGF0YQogICAgIGlkPSJtZXRhZGF0YTM0OTM3Ij4KICAgIDxyZGY6UkRGPgogICAgICA8cmRmOmxpPnB1YmxpYzp0cnVlPC9yZGY6bGk+CiAgICAgIDxyZGY6bGk+c2RrOiBNc1BvcnRhbEZ4LkJhc2UuSW1hZ2VzLlBvbHljaHJvbWF0aWMuUG93ZXIoKTwvcmRmOmxpPgogICAgICA8cmRmOmxpPmNhdGVnb3J5OiBHZW5lcmFsPC9yZGY6bGk+CiAgICAgIDxjYzpXb3JrCiAgICAgICAgIHJkZjphYm91dD0iIj4KICAgICAgICA8ZGM6Zm9ybWF0PmltYWdlL3N2Zyt4bWw8L2RjOmZvcm1hdD4KICAgICAgICA8ZGM6dHlwZQogICAgICAgICAgIHJkZjpyZXNvdXJjZT0iaHR0cDovL3B1cmwub3JnL2RjL2RjbWl0eXBlL1N0aWxsSW1hZ2UiIC8+CiAgICAgICAgPGRjOnRpdGxlPk1zUG9ydGFsRnguYmFzZS5pbWFnZXMtMzc8L2RjOnRpdGxlPgogICAgICA8L2NjOldvcms+CiAgICA8L3JkZjpSREY+CiAgPC9tZXRhZGF0YT4KPC9zdmc+Cg==" /> </g>
+                    </g>
+                    <g id="cell-InverterBusbar"><path d="M 292.5 141 L 299 141" fill="none" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+
+                    <g id="DCCoupling">
+                        <g id="cell-DCExtClosed"><path d="M 99 141 L 139 141" fill="none" stroke="#d79b00" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                        <g id="cell-DCCouplingConnection">
+                            <path d="M 25.59 141 L 99 141" fill="none" stroke="#d79b00" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" />
+                            <path d="M 14.59 141 L 25.59 137.33 L 25.59 144.67 Z" fill="#d79b00" stroke="#d79b00" stroke-width="5" stroke-miterlimit="10" pointer-events="all" />
+                        </g>
+                        <g id="cell-DCExtOpen"><path d="M 98 141 L 138 121" fill="none" stroke="#d79b00" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                        <g id="cell-DCCouplingBusbar"><path d="M 138 141 L 197 141" fill="none" stroke="#d79b00" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+
+                    </g>
+                    <g id="cell-OutputClosed"><path d="M 379 222 L 420 222" fill="none" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                    <g id="cell-OutputOpen"><path d="M 379 222 L 419 203" fill="none" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                    <g id="cell-Output"><path d="M 360 222 L 380 222" fill="none" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                    <g id="cell-OutputCon"><path d="M 419 222 L 472.41 222" fill="none" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /><path d="M 483.41 222 L 472.41 225.67 L 472.41 218.33 Z" fill="#444" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="all" /></g>
+
+                    <g id="cell-NetContOpen"><path d="M 298 141 L 338 121" fill="none" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                    <g id="cell-BatteryBusbarCon"><path d="M 339 141 L 359 141" fill="none" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                    <g id="cell-NetContClosed"><path d="M 299 141 L 340 141" fill="none" stroke="#444" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                    <g id="cell-OutputFlow" display="none"> <path stroke-dasharray="5 10" d="M 359 141 L 359 211 Q 359 221 369 221 L 469 221" fill="none" stroke="#c2c2c2" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                    <g id="cell-InputFlow" display="none"><path stroke-dasharray="5 10" d="M 359 141 L 359 71 Q 359 61 369 61 L 469 61" fill="none" stroke="#c2c2c2" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                    <g id="cell-BatteryFlowDC" display="none"><path stroke-dasharray="5 10" d="M 29 141 L 197.5 141" fill="none" stroke="#d6b656" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                    <g id="cell-BatteryFlowAC" display="none"><path stroke-dasharray="5 10" d="M 292.5 141 L 359 141" fill="none" stroke="#c2c2c2" stroke-width="5" stroke-miterlimit="10" pointer-events="stroke" /></g>
+                    <g id="cell-Communication"><path d="M 244 31 L 244 1" fill="none" stroke="#444" stroke-width="2" stroke-miterlimit="10" stroke-dasharray="2 4" pointer-events="stroke" /></g>
+
+                    <g id="cell-ACOutputDetected" display="none" content="&lt;object label=&quot;&quot;/&gt;" data-label="">
+                        <image x="365" y="195" width="14" height="21.64" xlink:href="data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiIHN0YW5kYWxvbmU9Im5vIj8+CjxzdmcKICAgeG1sbnM6ZGM9Imh0dHA6Ly9wdXJsLm9yZy9kYy9lbGVtZW50cy8xLjEvIgogICB4bWxuczpjYz0iaHR0cDovL2NyZWF0aXZlY29tbW9ucy5vcmcvbnMjIgogICB4bWxuczpyZGY9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkvMDIvMjItcmRmLXN5bnRheC1ucyMiCiAgIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciCiAgIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIKICAgeG1sbnM6c29kaXBvZGk9Imh0dHA6Ly9zb2RpcG9kaS5zb3VyY2Vmb3JnZS5uZXQvRFREL3NvZGlwb2RpLTAuZHRkIgogICB4bWxuczppbmtzY2FwZT0iaHR0cDovL3d3dy5pbmtzY2FwZS5vcmcvbmFtZXNwYWNlcy9pbmtzY2FwZSIKICAgd2lkdGg9IjExLjU5NiIKICAgaGVpZ2h0PSIxOC4wMDE2NCIKICAgdmlld0JveD0iMCAwIDExLjU5NiAxOC4wMDE2NCIKICAgdmVyc2lvbj0iMS4xIgogICBpZD0ic3ZnMzQ5MzkiCiAgIHNvZGlwb2RpOmRvY25hbWU9IlBvd2VyLnN2ZyIKICAgaW5rc2NhcGU6dmVyc2lvbj0iMC45Mi4zICgyNDA1NTQ2LCAyMDE4LTAzLTExKSI+CiAgPHNvZGlwb2RpOm5hbWVkdmlldwogICAgIHBhZ2Vjb2xvcj0iI2ZmZmZmZiIKICAgICBib3JkZXJjb2xvcj0iIzY2NjY2NiIKICAgICBib3JkZXJvcGFjaXR5PSIxIgogICAgIG9iamVjdHRvbGVyYW5jZT0iMTAiCiAgICAgZ3JpZHRvbGVyYW5jZT0iMTAiCiAgICAgZ3VpZGV0b2xlcmFuY2U9IjEwIgogICAgIGlua3NjYXBlOnBhZ2VvcGFjaXR5PSIwIgogICAgIGlua3NjYXBlOnBhZ2VzaGFkb3c9IjIiCiAgICAgaW5rc2NhcGU6d2luZG93LXdpZHRoPSIxOTIwIgogICAgIGlua3NjYXBlOndpbmRvdy1oZWlnaHQ9IjEwMTciCiAgICAgaWQ9Im5hbWVkdmlldzM0OTQxIgogICAgIHNob3dncmlkPSJmYWxzZSIKICAgICBmaXQtbWFyZ2luLXRvcD0iMCIKICAgICBmaXQtbWFyZ2luLWxlZnQ9IjAiCiAgICAgZml0LW1hcmdpbi1yaWdodD0iMCIKICAgICBmaXQtbWFyZ2luLWJvdHRvbT0iMCIKICAgICBpbmtzY2FwZTp6b29tPSI0OC4xMTExMTEiCiAgICAgaW5rc2NhcGU6Y3g9IjUuNzk4IgogICAgIGlua3NjYXBlOmN5PSI5LjAwMDEyNDMiCiAgICAgaW5rc2NhcGU6d2luZG93LXg9Ii04IgogICAgIGlua3NjYXBlOndpbmRvdy15PSItOCIKICAgICBpbmtzY2FwZTp3aW5kb3ctbWF4aW1pemVkPSIxIgogICAgIGlua3NjYXBlOmN1cnJlbnQtbGF5ZXI9InN2ZzM0OTM5IiAvPgogIDxkZWZzCiAgICAgaWQ9ImRlZnMzNDkzMCI+CiAgICA8cmFkaWFsR3JhZGllbnQKICAgICAgIGlkPSJiZjBlNjIzOC1kN2ExLTQ1YjUtODYxYy04YmJlNTY5NTJlYjEiCiAgICAgICBjeD0iMy4xMTcwMDAxIgogICAgICAgY3k9Ii0xMTYuMTIiCiAgICAgICByPSI5LjAyMjAwMDMiCiAgICAgICBncmFkaWVudFRyYW5zZm9ybT0ibWF0cml4KDEuMDEzLDAsMCwwLjc4OSw5LjA0NiwxMDAuNjU0NDgpIgogICAgICAgZ3JhZGllbnRVbml0cz0idXNlclNwYWNlT25Vc2UiPgogICAgICA8c3RvcAogICAgICAgICBvZmZzZXQ9IjAuMTk2IgogICAgICAgICBzdG9wLWNvbG9yPSIjZmZkNzBmIgogICAgICAgICBpZD0ic3RvcDM0OTIxIiAvPgogICAgICA8c3RvcAogICAgICAgICBvZmZzZXQ9IjAuNDM4IgogICAgICAgICBzdG9wLWNvbG9yPSIjZmZjYjEyIgogICAgICAgICBpZD0ic3RvcDM0OTIzIiAvPgogICAgICA8c3RvcAogICAgICAgICBvZmZzZXQ9IjAuODczIgogICAgICAgICBzdG9wLWNvbG9yPSIjZmVhYzE5IgogICAgICAgICBpZD0ic3RvcDM0OTI1IiAvPgogICAgICA8c3RvcAogICAgICAgICBvZmZzZXQ9IjEiCiAgICAgICAgIHN0b3AtY29sb3I9IiNmZWExMWIiCiAgICAgICAgIGlkPSJzdG9wMzQ5MjciIC8+CiAgICA8L3JhZGlhbEdyYWRpZW50PgogIDwvZGVmcz4KICA8dGl0bGUKICAgICBpZD0idGl0bGUzNDkzMiI+TXNQb3J0YWxGeC5iYXNlLmltYWdlcy0zNzwvdGl0bGU+CiAgPGcKICAgICBpZD0iYjYwNzhkNTEtYjEyOS00Y2QwLTlhNGQtZThmZjU1MWQ0NzQ3IgogICAgIHRyYW5zZm9ybT0idHJhbnNsYXRlKC0zLjIwMiwwLjAwMTUxNTIxKSI+CiAgICA8cGF0aAogICAgICAgZD0iTSA4LjA5LDEwLjAxIEggMy40NjQgQSAwLjIzOSwwLjIzOSAwIDAgMSAzLjIwMiw5LjgxIDAuMTc1LDAuMTc1IDAgMCAxIDMuMjI1LDkuNzI1IEwgOC43NzUsMC4xMiBBIDAuMjc0LDAuMjc0IDAgMCAxIDkuMDE0LDAgaCA1LjQ3IEEgMC4yMzgsMC4yMzggMCAwIDEgMTQuNzQ2LDAuMiAwLjE3NywwLjE3NyAwIDAgMSAxNC43LDAuMzE5IEwgOC4xODYsNy44MzQgaCA2LjM1IGEgMC4yMzksMC4yMzkgMCAwIDEgMC4yNjIsMC4yIDAuMTg1LDAuMTg1IDAgMCAxIC0wLjA2NywwLjEzNyBMIDQuMTc1LDE3Ljc4OCBjIC0wLjEsMC4wNTEgLTAuOCwwLjU2MiAtMC40NTgsLTAuMjE0IHYgMCB6IgogICAgICAgaWQ9InBhdGgzNDkzNCIKICAgICAgIGlua3NjYXBlOmNvbm5lY3Rvci1jdXJ2YXR1cmU9IjAiCiAgICAgICBzdHlsZT0iZmlsbDp1cmwoI2JmMGU2MjM4LWQ3YTEtNDViNS04NjFjLThiYmU1Njk1MmViMSkiIC8+CiAgPC9nPgogIDxtZXRhZGF0YQogICAgIGlkPSJtZXRhZGF0YTM0OTM3Ij4KICAgIDxyZGY6UkRGPgogICAgICA8cmRmOmxpPnB1YmxpYzp0cnVlPC9yZGY6bGk+CiAgICAgIDxyZGY6bGk+c2RrOiBNc1BvcnRhbEZ4LkJhc2UuSW1hZ2VzLlBvbHljaHJvbWF0aWMuUG93ZXIoKTwvcmRmOmxpPgogICAgICA8cmRmOmxpPmNhdGVnb3J5OiBHZW5lcmFsPC9yZGY6bGk+CiAgICAgIDxjYzpXb3JrCiAgICAgICAgIHJkZjphYm91dD0iIj4KICAgICAgICA8ZGM6Zm9ybWF0PmltYWdlL3N2Zyt4bWw8L2RjOmZvcm1hdD4KICAgICAgICA8ZGM6dHlwZQogICAgICAgICAgIHJkZjpyZXNvdXJjZT0iaHR0cDovL3B1cmwub3JnL2RjL2RjbWl0eXBlL1N0aWxsSW1hZ2UiIC8+CiAgICAgICAgPGRjOnRpdGxlPk1zUG9ydGFsRnguYmFzZS5pbWFnZXMtMzc8L2RjOnRpdGxlPgogICAgICA8L2NjOldvcms+CiAgICA8L3JkZjpSREY+CiAgPC9tZXRhZGF0YT4KPC9zdmc+Cg==" />
+                    </g>
+                </g>
+
+
+            </svg>
+        </div>
+
+    </body>
+</html>
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%s%b_refreshHMIdata%/s%",
+    "actions": [
+      {
+        "objectType": "Comment",
+        "comment": "Contactor states"
+      },
+      {
+        "objectType": "Function",
+        "active": true,
+        "fn": "TcHmi.Functions.TcHmi_ePU10.ToggleSVG",
+        "fnParams": [
+          {
+            "objectType": "Symbol",
+            "valueType": "tchmi:general#/definitions/String",
+            "symbolExpression": "%s%PLC.HMI.Monitoringvars::Switchgear::b_ACOutputState%/s%"
+          },
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/String",
+            "value": "cell-OutputClosed"
+          },
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/String",
+            "value": "cell-OutputOpen"
+          }
+        ],
+        "asyncWait": true
+      },
+      {
+        "objectType": "Function",
+        "active": true,
+        "fn": "TcHmi.Functions.TcHmi_ePU10.ToggleSVG",
+        "fnParams": [
+          {
+            "objectType": "Symbol",
+            "valueType": "tchmi:general#/definitions/BOOL",
+            "symbolExpression": "%s%PLC.HMI.Monitoringvars::Switchgear::b_NetContactorState%/s%"
+          },
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/String",
+            "value": "cell-NetContClosed"
+          },
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/String",
+            "value": "cell-NetContOpen"
+          }
+        ],
+        "asyncWait": true
+      },
+      {
+        "objectType": "Function",
+        "active": true,
+        "fn": "TcHmi.Functions.TcHmi_ePU10.ToggleSVG",
+        "fnParams": [
+          {
+            "objectType": "Symbol",
+            "valueType": "tchmi:general#/definitions/String",
+            "symbolExpression": "%s%PLC.HMI.Monitoringvars::Switchgear::b_ACInputState%/s%"
+          },
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/String",
+            "value": "cell-InputClosed"
+          },
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/String",
+            "value": "cell-InputOpen"
+          }
+        ],
+        "asyncWait": true
+      },
+      {
+        "objectType": "Function",
+        "active": true,
+        "fn": "TcHmi.Functions.TcHmi_ePU10.ToggleSVG",
+        "fnParams": [
+          {
+            "objectType": "Symbol",
+            "valueType": "tchmi:general#/definitions/String",
+            "symbolExpression": "%s%PLC.HMI.Monitoringvars::Switchgear::b_DCCouplingState%/s%"
+          },
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/String",
+            "value": "cell-DCExtClosed"
+          },
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/String",
+            "value": "cell-DCExtOpen"
+          }
+        ],
+        "asyncWait": true
+      },
+      {
+        "objectType": "Function",
+        "active": true,
+        "fn": "TcHmi.Functions.TcHmi_ePU10.ToggleSVG",
+        "fnParams": [
+          {
+            "objectType": "Symbol",
+            "valueType": "tchmi:general#/definitions/String",
+            "symbolExpression": "%s%PLC.HMI.Monitoringvars::Switchgear::b_ACDetectedInput%/s%"
+          },
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/String",
+            "value": "cell-ACInputDetected"
+          },
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/String",
+            "value": ""
+          }
+        ],
+        "asyncWait": true
+      },
+      {
+        "objectType": "Function",
+        "active": true,
+        "fn": "TcHmi.Functions.TcHmi_ePU10.ToggleSVG",
+        "fnParams": [
+          {
+            "objectType": "Symbol",
+            "valueType": "tchmi:general#/definitions/String",
+            "symbolExpression": "%s%PLC.HMI.Monitoringvars::Switchgear::b_ACDetectedBusbar%/s%"
+          },
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/String",
+            "value": "cell-ACOutputDetected"
+          },
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/String",
+            "value": ""
+          }
+        ],
+        "asyncWait": true
+      },
+      {
+        "objectType": "Comment",
+        "comment": "Battery Indicator update script"
+      },
+      {
+        "objectType": "Function",
+        "active": true,
+        "fn": "TcHmi.Functions.TcHmi_ePU10.ToggleSVG",
+        "fnParams": [
+          {
+            "objectType": "Symbol",
+            "valueType": "tchmi:general#/definitions/String",
+            "symbolExpression": "%s%PLC.HMI.Monitoringvars::Switchgear::b_DCDetected%/s%"
+          },
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/String",
+            "value": "lightningSvg"
+          },
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:general#/definitions/String",
+            "value": ""
+          }
+        ],
+        "asyncWait": true
+      },
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "var symbol = new TcHmi.Symbol('%s%PLC.HMI.Monitoringvars::Battery::r_SocScaled%/s%');",
+          "symbol.readEx(function (data) {",
+          "    if (data.error === TcHmi.Errors.NONE) {",
+          "        // Handle result value... ",
+          "        var batteryLevel = parseFloat(data.value).toFixed(1); ",
+          "        ",
+          "        batteryLevel = Math.max(0, Math.min(100, batteryLevel));",
+          "        // Update the battery level display",
+          "  \t\tvar batteryLevelElement = document.getElementById('batteryLevel');",
+          "  \t\tbatteryLevelElement.setAttribute('height', (batteryLevel * 1.9));",
+          "  \t\tbatteryLevelElement.setAttribute('y', 240 - (batteryLevel * 1.9)); // Adjust the y position",
+          "        ",
+          "          // Update the battery color gradient",
+          "  \t\tupdateGradient(batteryLevel);",
+          "  \t\t",
+          "  \t\tvar batteryTextElement = document.getElementById('batteryText');",
+          "\t\tbatteryTextElement.textContent = batteryLevel + '%'",
+          "    } else {",
+          "        // Handle error... ",
+          "    }",
+          "});",
+          "",
+          "    ",
+          "    function updateGradient(level) {",
+          "      var gradient = document.getElementById('batteryGradient');",
+          "      gradient.innerHTML = \"\"; // Clear existing gradient stops",
+          "",
+          "      var stops = [",
+          "        { offset: '0%', color: '#ddd' },",
+          "        { offset: '100%', color: '#333' }",
+          "      ];",
+          "",
+          "      if (level < 20) {",
+          "        stops[1].color = 'red';",
+          "      } else if (level < 50) {",
+          "        stops[1].color = 'orange';",
+          "      } else {",
+          "        stops[1].color = 'green';",
+          "      }",
+          "",
+          "      stops.forEach(function (stop) {",
+          "        var stopElement = document.createElementNS('http://www.w3.org/2000/svg', 'stop');",
+          "        stopElement.setAttribute('offset', stop.offset);",
+          "        stopElement.setAttribute('style', 'stop-color:' + stop.color + ';stop-opacity:1');",
+          "        gradient.appendChild(stopElement);",
+          "      });",
+          "    }"
+        ],
+        "injectContextObject": false,
+        "asyncWait": true,
+        "waitMode": "Synchronous"
+      },
+      {
+        "objectType": "Comment",
+        "comment": "Flow animation"
+      },
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "// Javascript for DC flow animation",
+          "var symbol = new TcHmi.Symbol('%s%PLC.HMI.Monitoringvars::Switchgear::r_DCCouplingCurrent%/s%');",
+          "symbol.readEx(function (data) {",
+          "    if (data.error === TcHmi.Errors.NONE) {",
+          "        // Handle result value... ",
+          "        var value = data.value;",
+          "        //get flow element id",
+          "        var element = document.getElementById('cell-BatteryFlowDC');",
+          "        //update flow direction",
+          "        updateFlow(value, element);\t",
+          "    } else {",
+          "        // Handle error... ",
+          "    }",
+          "});",
+          "",
+          "// Javascript for AC flow animation",
+          "",
+          "var symbol = new TcHmi.Symbol('%s%PLC.HMI.Monitoringvars::Powerstack::r_DcPower%/s%');",
+          "symbol.readEx(function (data) {",
+          "    if (data.error === TcHmi.Errors.NONE) {",
+          "        // Handle result value... ",
+          "        var value = data.value;",
+          "        var element = document.getElementById('cell-BatteryFlowAC');",
+          "        updateFlow(value, element);\t",
+          "    } else {",
+          "        // Handle error... ",
+          "    }",
+          "});",
+          "",
+          "var symbol = new TcHmi.Symbol('%s%PLC.HMI.Monitoringvars::Switchgear::r_ACOutputPower%/s%');",
+          "symbol.readEx(function (data) {",
+          "    if (data.error === TcHmi.Errors.NONE) {",
+          "        // Handle result value... ",
+          "        var value = data.value;",
+          "        var element = document.getElementById('cell-OutputFlow');",
+          "        updateFlow(value, element);\t",
+          "    } else {",
+          "        // Handle error... ",
+          "    }",
+          "});",
+          "",
+          "var symbol = new TcHmi.Symbol('%s%PLC.HMI.Monitoringvars::Switchgear::r_ACInputPower%/s%');",
+          "symbol.readEx(function (data) {",
+          "    if (data.error === TcHmi.Errors.NONE) {",
+          "        // Handle result value... ",
+          "        var value = data.value;",
+          "        var element = document.getElementById('cell-InputFlow');",
+          "        updateFlow(value, element);\t",
+          "    } else {",
+          "        // Handle error... ",
+          "    }",
+          "});",
+          "",
+          "",
+          "",
+          "    function updateFlow(level, element) {",
+          "    \t",
+          "",
+          "      if (level < -10) {",
+          "        element.classList.add('flow-animation-out');",
+          "        element.classList.remove('flow-animation-in');",
+          "        element.style.display = 'block';",
+          "      } else if (level > 10) {",
+          "        element.classList.remove('flow-animation-out');",
+          "        element.classList.add('flow-animation-in');",
+          "        element.style.display = 'block';",
+          "      } else {",
+          "        element.classList.remove('flow-animation-out');",
+          "        element.classList.remove('flow-animation-in');",
+          "        element.style.display = 'none';",
+          "      }",
+          "     }"
+        ],
+        "injectContextObject": false,
+        "asyncWait": true,
+        "waitMode": "Synchronous"
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": false,
+        "symbolExpression": "%s%HMI.Monitoringvars::Powerstack::r_DcCurrent%/s%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:general#/definitions/String",
+          "value": null
+        },
+        "asyncWait": true
+      }
+    ],
+    "displayName": "Update SVG elements"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "observe",
+    "group": "Administrator",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "Engineer",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "Operator",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "Viewer",
+    "permission": "Allow"
+  }
+]
+</script>
+</div>
+
+<script data-tchmi-target-attribute="data-tchmi-access-config" type="application/json">
+[
+  {
+    "accessright": "observe",
+    "group": "Administrator",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "Engineer",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "Operator",
+    "permission": "Allow"
+  },
+  {
+    "accessright": "observe",
+    "group": "Viewer",
+    "permission": "Allow"
+  }
+]
+</script>
+</div>

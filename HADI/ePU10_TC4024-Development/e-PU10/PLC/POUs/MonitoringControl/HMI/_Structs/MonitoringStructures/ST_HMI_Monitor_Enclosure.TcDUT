@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_HMI_Monitor_Enclosure" Id="{cf534e5e-0d50-44f4-9390-9a89af3e0336}">
+    <Declaration><![CDATA[TYPE ST_HMI_Monitor_Enclosure :
+STRUCT
+	//Doors
+	b_DoorClosedClientPanel		: BOOL;
+	b_DoorClosedControlPanel	: BOOL;
+	b_DoorClosedInverter		: BOOL;
+	
+	//climate
+	r_Humidity					: REAL := -255;
+	r_Temperature				: REAL := -255;
+	b_HumidityHigh				: BOOL;
+	b_HumidityTooHigh			: BOOL;
+	b_TemperatureHigh			: BOOL;
+	b_TemperatureTooHigh		: BOOL;
+	b_TemperatureLow			: BOOL;
+	b_TemperatureTooLow			: BOOL;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

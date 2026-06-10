@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ePIDmode" Id="{f3b406ac-20ee-4be7-b7f5-98c4663c4149}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE ePIDmode :
+(
+	None := 0,
+	Q := 1,
+	P := 2,
+	Both := 3
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eWago750495_StatDataID" Id="{1ee128d8-dd3a-4f61-bf1c-81cccca131e6}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eWago750495_StatDataID :
+(
+	Phase1 := 0,
+	Phase2 := 1,
+	Phase3 := 2,
+	IOmodule:= 3
+)USINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,147 @@
+<div id="InputGeneratorContent" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-creator-viewport-width="1360" data-tchmi-is-enabled="true" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-width-mode="Value" data-tchmi-height-mode="Value" data-tchmi-zindex="1" data-tchmi-creator-viewport-height="768" data-tchmi-width="350">
+<div id="TcHmiGrid_InputGridMainSettings_1244" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="0" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-background-image-horizontal-alignment="Center" data-tchmi-background-image-vertical-alignment="Center" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Value">
+<script data-tchmi-target-attribute="data-tchmi-row-options" type="application/json">
+[
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
+[
+  {
+    "width": 1.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+<div id="SwitchList_inputgenset_settings" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/SwitchList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-title="%l%Settings%/l%" data-tchmi-data1="%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::b_AutoStartStop%/s%" data-tchmi-enable1="true" data-tchmi-enable4="false" data-tchmi-label1="%l%b_autostartstop%/l%" data-tchmi-info1="%l%b_autostartstopTooltip%/l%" data-tchmi-enable2="%s%PLC.HMI.Monitoringvars::ConditionalFormatting::b_ShowGensetHybridMode%/s%" data-tchmi-height-mode="Content" data-tchmi-label2="%l%b_gensetHybridOperation%/l%" data-tchmi-data2="%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::b_HydridMode%/s%" data-tchmi-info2="%l%b_gensetHybridOperationTooltip%/l%" data-tchmi-enable3="false" data-tchmi-label3="%l%b_EnableSchedule%/l%">
+
+
+</div>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+<div id="SwitchList_InputGenset_Conditions" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="2" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-title="%l%AutoStartConditions%/l%" data-tchmi-data1="%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::setpointTimeslot1::r_SoCStart%/s%" data-tchmi-label2="%l%by_SocStop%/l%" data-tchmi-data2="%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::setpointTimeslot1::r_SoCStop%/s%" data-tchmi-info2="%l%by_SocStopTooltip%/l%" data-tchmi-enable3="true" data-tchmi-enable4="true" data-tchmi-label3="%l%r_PowerloadStart%/l%" data-tchmi-info3="%l%r_PowerloadStartTooltip%/l%" data-tchmi-data3="%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::setpointTimeslot1::r_BatteryloadStart%/s%" data-tchmi-data4="%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::setpointTimeslot1::r_BatteryloadStop%/s%" data-tchmi-label4="%l%r_PowerloadStop%/l%" data-tchmi-info4="%l%r_PowerloadStopTooltip%/l%" data-tchmi-show="%f%%s%PLC.HMI.Controlvars::HardSettings::inputgenset::b_AutoStartStop%/s%%/f%" data-tchmi-label1="%l%by_SocStart%/l%" data-tchmi-info1="%l%by_SocStartTooltip%/l%" data-tchmi-decimals="0" data-tchmi-data1-2="%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::setpointTimeslot2::r_SoCStart%/s%" data-tchmi-data2-2="%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::setpointTimeslot2::r_SoCStop%/s%" data-tchmi-data3-2="%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::setpointTimeslot2::r_BatteryloadStart%/s%" data-tchmi-data4-2="%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::setpointTimeslot2::r_BatteryloadStop%/s%" data-tchmi-min1="%f%0%/f%" data-tchmi-max1="%f%%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::setpointTimeslot1::r_SoCStop%/s%%/f%" data-tchmi-max2="%f%100%/f%" data-tchmi-min3="%f%%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::setpointTimeslot1::r_BatteryloadStop%/s%%/f%" data-tchmi-max3="100" data-tchmi-max4="%f%%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::setpointTimeslot1::r_BatteryloadStart%/s%%/f%" data-tchmi-min4="0" data-tchmi-min2="%f%%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::setpointTimeslot1::r_SoCStart%/s%%/f%" data-tchmi-enable1="true" data-tchmi-decimals1="0">
+</div>
+<div id="SwitchList_inputGensetVDL" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="3" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/SwitchList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-title="%l%VDLsettings%/l%" data-tchmi-label1="%l%b_reverseCTdirection%/l%" data-tchmi-data1="%s%PLC.HMI.Controlvars::HardSettings::inputgrid::b_ReverseCTDirection%/s%" data-tchmi-enable2="false" data-tchmi-enable3="false" data-tchmi-enable4="false" data-tchmi-visibility="Collapsed">
+</div>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(207, 207, 207, 1)"
+}
+</script>
+<div id="Buttons_gensetControl" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="4" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/Buttons.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-label1="%l%b_gensetManualStart%/l%" data-tchmi-label2="%l%b_SyncCloseContactor%/l%" data-tchmi-label3="%l%b_ForceCloseContactor%/l%" data-tchmi-data1="%s%PLC.HMI.Controlvars::Operation::inputgenset::b_ManualStart%/s%" data-tchmi-data2="%s%PLC.HMI.Controlvars::Operation::inputgenset::b_SyncClose%/s%" data-tchmi-data3="%s%PLC.HMI.Controlvars::Operation::inputgenset::b_ForceClose%/s%" data-tchmi-feedback1="false" data-tchmi-feedback3="false" data-tchmi-feedback2="false" data-tchmi-is-enabled="%f%if (%s%PLC.HMI.Controlvars::HardSettings::inputgenset::b_AutoStartStop%/s%){0}else{1};%/f%">
+</div>
+</div>
+
+
+<div data-tchmi-grid-column-index="0" id="TcHmiButton_GensetParams" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="40" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-grid-row-index="0" data-tchmi-right="10" data-tchmi-text-font-size="16" data-tchmi-bottom="10" data-tchmi-text="%f%TcHmi.Functions.Beckhoff.ToUpperCase(%l%AdvancedSettings%/l%)%/f%" data-tchmi-left="10" data-tchmi-visibility="%f%if(%s%PLC.HMI.Monitoringvars::ConditionalFormatting::b_ShowExtgenset%/s%){'Collapsed'}else{'Visible'}%/f%">
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 5.0,
+  "topRight": 5.0,
+  "bottomLeft": 5.0,
+  "bottomRight": 5.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiButton_GensetParams.onPressed",
+    "actions": [
+      {
+        "objectType": "ActionTemplate",
+        "active": true,
+        "templateName": "PopUpOpen",
+        "fnParams": [
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:framework#/definitions/ContentPath",
+            "value": "Contents/V3/2.OperationControls/2.12 InputGenset_settings.content"
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+</div>

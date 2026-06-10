@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eLogSeverity" Id="{33b99369-f02f-4140-a3e8-3be5a08aa082}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'toString'}
+TYPE eLogSeverity: //EXTENDS eSeverity:
+(
+	Error := 6,
+	Critical := 7
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Softsettings_AcDcCharger" Id="{982a6180-2592-4114-b44b-7b43e0165286}">
+    <Declaration><![CDATA[TYPE ST_Softsettings_AcDcCharger :
+STRUCT
+	b_Enable 			: BOOL;
+	r_CurrentSetpoint	: REAL;
+	r_PowerSetpoint 	: REAL;
+	r_SocTarget			: REAL;
+	r_MinACVoltage		: REAL;
+	e_ControlType		: ePowerControlType := ePowerControlType.Current;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

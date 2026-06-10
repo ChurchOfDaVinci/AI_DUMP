@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_CODetectors" Id="{4e68ee4d-cee5-48ad-9611-61222ca54397}">
+    <Declaration><![CDATA[TYPE ST_CODetectors :
+STRUCT
+	State 			: 	eCOAlarmStatus;
+	b_CoValuesOK	: 	BOOL;
+	Value 			:  	ARRAY[0..3] OF REAL;	//-1 if inoperative. [0]=mean [1]=CO1 [2]=CO2 [3]=max
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

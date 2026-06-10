@@ -1,0 +1,250 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Safety" Id="{571cebd3-2d6d-4c8f-989c-367dd66fd0d2}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM Safety
+	{attribute 'TcContextId':='0'}
+VAR
+	ToSafetyPrg							AT %Q* : ST_Safety_ToSafetyPrg;
+	b_ManualReset								: BOOL;
+	
+	ton_Reset									: Ton := (PT:=T#100MS);
+	
+	PowerModuleDoorSwitch	:	FB_VarLogger;
+	EMstopSwitch			:	FB_VarLogger;	
+	SafetyStopCount			:	FB_VarLogger;
+END_VAR
+
+VAR_INPUT
+	EDMSignals								: ST_Safety_ContactorEDM;
+	b_enable									: BOOL;
+	b_extEmstopTrigger						: BOOL;
+END_VAR
+
+VAR_OUTPUT
+	// FROM Safety (feedbacks)
+	get									AT %I* : ST_Safety_get;	
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF NOT b_enable OR b_manualReset THEN
+	ToSafetyPrg.b_safetyPRGReset := TRUE;
+	ToSafetyPrg.b_ErrorReset := TRUE;
+ELSE
+	ToSafetyPrg.b_safetyPRGReset := FALSE;
+	ToSafetyPrg.b_ErrorReset := FALSE;
+END_IF
+
+//Couple EDM signals
+ToSafetyPrg.contactors.b_NetcontactorEDM := EDMSignals.b_NetcontactorEDM;
+ToSafetyPrg.contactors.b_MccbMasterEDM := EDMSignals.b_MccbMasterEDM;
+ToSafetyPrg.contactors.b_MccbSlaveEDM := EDMSignals.b_MccbSlaveEDM;
+
+// SEND software E-stop to safety prg,so when quickshutdown is given from normal program, safety shutsdown. Also HMI e-stop can activate software e-stop.
+ToSafetyPrg.b_emergencyStopSoftwareOK := NOT(GVL.b_QuickshutdownActive OR b_extEmstopTrigger);
+
+ton_Reset();]]></ST>
+    </Implementation>
+    <Method Name="GetDiagnostics" Id="{886ac592-858c-4397-8391-2d5b1756a7ac}">
+      <Declaration><![CDATA[METHOD PUBLIC GetDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*EmergencyStop ChA*)		AddError[w_Index](
+		b_ErrorTrig			:= NOT(get.b_EStopChannelAOK),
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 1,
+		e_ObjectID				:= eObject_ID.Safety,
+		s_Message				:= 'channel A',
+		b_SMSEnableVDL			:= TRUE,
+		e_sev					:= eseverity.EmergencyShutdown,
+	);
+	w_Index := w_Index +1;
+	
+	(*EmergencyStop ChB*)		AddError[w_Index](
+		b_ErrorTrig			:= NOT(get.b_EStopChannelBOK),
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 2,
+		s_Message				:= 'channel B',
+		e_sev					:= eseverity.EmergencyShutdown,
+	);
+	w_Index := w_Index +1;
+	
+	(*EmergencyStop MRCDB*)		AddError[w_Index](
+		b_ErrorTrig			:= NOT(get.b_MRCDBOK),
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 3,
+		s_Message				:= 'residual current fault detected',
+		e_sev					:= eseverity.EmergencyShutdown,
+		b_SMSEnableVDL		:= TRUE,
+	);
+	w_Index := w_Index +1;
+	
+	(*EmergencyStop Insulation*)AddError[w_Index](
+		b_ErrorTrig			:= NOT(get.b_InsulationMonitorOK),
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 4,
+		s_Message				:= 'insulation fault detected',
+		e_sev					:= eseverity.EmergencyShutdown,
+		b_SMSEnableVDL		:= TRUE,
+	);
+	w_Index := w_Index +1;
+	
+	(*EmergencyStop Inverter Door*) AddError[w_Index](
+		b_ErrorTrig			:= NOT(get.b_InverterDoorOK),
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 5,
+		s_Message				:= 'inverter door opened',
+		e_sev					:= eseverity.EmergencyShutdown,
+		b_SMSEnableVDL		:= TRUE,
+	);
+	w_Index := w_Index +1;
+	
+	(*EmergencyStop ZPT-OCP *) AddError[w_Index](
+		b_ErrorTrig			:= NOT(get.b_ZptOK),
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 6,
+		s_Message				:= 'ZPT overcurrent trip',
+		e_sev					:= eseverity.EmergencyShutdown,
+		b_SMSEnableVDL		:= TRUE,
+	);
+	w_Index := w_Index +1;
+	
+(*EmergencyStop initiated*) AddError[w_Index](
+		b_ErrorTrig			:= NOT(get.b_SafetyOK),
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 10,
+		s_Message				:= 'emergency stop initiated',
+		e_sev					:= eseverity.EmergencyShutdown,
+		b_SMSEnableVDL		:= FALSE,
+	);
+	w_Index := w_Index +1;
+	
+
+	
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetWearCounters" Id="{88737dcf-ca44-47e4-9b02-e76d8d0bf408}">
+      <Declaration><![CDATA[METHOD GetWearCounters : BOOL
+VAR_INPUT
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[PowerModuleDoorSwitch(	TriggerInput := NOT get.b_InverterDoorOK, 
+						LogItemGroup :=  eLogItemGroupID.Safety, 
+						LogItemName := 'InvDoorSwCnt', 
+						LogType := eLogTypes.TrackCycles);
+
+EMstopSwitch(			TriggerInput := NOT (get.b_EstopChannelAOK AND get.b_EstopChannelBOK), 
+						LogItemGroup :=  eLogItemGroupID.Safety, 
+						LogItemName := 'EmStopSwCnt', 
+						LogType := eLogTypes.TrackCycles);
+
+SafetyStopCount(		TriggerInput := get.b_SafetyOK, 
+						LogItemGroup :=  eLogItemGroupID.Safety, 
+						LogItemName := 'SafetyStopCnt', 
+						LogType := eLogTypes.TrackCycles);						
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{7864ef70-2e50-43c1-b185-25e5b2f6de70}">
+      <Declaration><![CDATA[METHOD Reset : BOOL
+VAR_INPUT
+	prgReset: BOOL;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ton_Reset.Q THEN
+	ToSafetyPrg.b_safetyPRGReset := FALSE;
+	ToSafetyPrg.b_ErrorReset := FALSE;
+	ton_Reset.IN := FALSE;
+	Reset := get.b_SafetyOK;
+ELSE
+	ton_Reset.IN :=TRUE;
+	ToSafetyPrg.b_safetyPRGReset := prgReset;
+	ToSafetyPrg.b_ErrorReset := TRUE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="Safety">
+      <LineId Id="200" Count="5" />
+      <LineId Id="189" Count="0" />
+      <LineId Id="260" Count="0" />
+      <LineId Id="256" Count="2" />
+      <LineId Id="267" Count="0" />
+      <LineId Id="259" Count="0" />
+      <LineId Id="191" Count="1" />
+      <LineId Id="195" Count="0" />
+      <LineId Id="34" Count="0" />
+    </LineIds>
+    <LineIds Name="Safety.GetDiagnostics">
+      <LineId Id="22" Count="3" />
+      <LineId Id="125" Count="0" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="171" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="29" Count="0" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="50" Count="0" />
+      <LineId Id="52" Count="6" />
+      <LineId Id="61" Count="1" />
+      <LineId Id="64" Count="5" />
+      <LineId Id="133" Count="0" />
+      <LineId Id="70" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="74" Count="5" />
+      <LineId Id="134" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="83" Count="5" />
+      <LineId Id="135" Count="0" />
+      <LineId Id="89" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="118" Count="0" />
+      <LineId Id="105" Count="5" />
+      <LineId Id="136" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="104" Count="0" />
+      <LineId Id="90" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="91" Count="4" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="Safety.GetWearCounters">
+      <LineId Id="6" Count="2" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="17" Count="3" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="27" Count="3" />
+      <LineId Id="21" Count="0" />
+      <LineId Id="14" Count="1" />
+    </LineIds>
+    <LineIds Name="Safety.Reset">
+      <LineId Id="20" Count="0" />
+      <LineId Id="33" Count="2" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="23" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

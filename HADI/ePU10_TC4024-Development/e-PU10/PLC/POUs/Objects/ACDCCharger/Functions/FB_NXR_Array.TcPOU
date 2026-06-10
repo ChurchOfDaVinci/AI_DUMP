@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_NXR_Array" Id="{fec53db8-daea-4ea9-a1ad-c8d45cf5a6ae}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_NXR_Array
+VAR_INPUT
+    iNumModules 	: INT := 1; // Active modules (1..MAX_MODULES)
+END_VAR
+VAR_IN_OUT
+    Modules 		: ARRAY[1..MAX_MODULES] OF ST_NXR_Module;
+END_VAR
+VAR
+    fbModules 		: ARRAY[1..MAX_MODULES] OF FB_NXR_Module;
+    i          		: INT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// ===== Update all modules =====
+FOR i := 1 TO MIN(iNumModules, MAX_MODULES) DO
+ fbModules[i](IO := Modules[i], uiNodeId := TO_USINT(i));
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="FB_NXR_Array">
+      <LineId Id="75" Count="2" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

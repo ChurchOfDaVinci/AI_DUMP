@@ -1,0 +1,106 @@
+<div id="DCChargerContent" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-creator-viewport-width="1360" data-tchmi-is-enabled="true" data-tchmi-bottom="0" data-tchmi-width-mode="Value" data-tchmi-height-mode="Value" data-tchmi-zindex="1" data-tchmi-creator-viewport-height="768" data-tchmi-width="350">
+
+
+<div id="TcHmiGrid_InputGridMainSettings_1244" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="0" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-background-image-horizontal-alignment="Center" data-tchmi-background-image-vertical-alignment="Center" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Value">
+<script data-tchmi-target-attribute="data-tchmi-row-options" type="application/json">
+[
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
+[
+  {
+    "width": 1.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+<div id="SwitchList_AcDcChargerSetpoints" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/SwitchList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-title="%l%Settings%/l%" data-tchmi-data1="%s%PLC.HMI.Controlvars::SoftSettings::ACDCcharger::b_Enable%/s%" data-tchmi-enable1="true" data-tchmi-enable4="false" data-tchmi-label1="%l%AcDcChargerEnable%/l%" data-tchmi-height-mode="Content" data-tchmi-enable3="false" data-tchmi-enable2="false">
+
+
+</div>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+<div id="ParameterList_AcDcChargerSetpoints" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="2" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-title="%l%Controller_Settings%/l%" data-tchmi-data1="%s%PLC.HMI.Controlvars::SoftSettings::ACDCcharger::r_CurrentSetpoint%/s%" data-tchmi-label2="%l%PowerSetpoint%/l%" data-tchmi-data2="%s%PLC.HMI.Controlvars::SoftSettings::inputgenset::setpointTimeslot1::r_SoCStop%/s%" data-tchmi-enable3="true" data-tchmi-enable4="false" data-tchmi-show="%f%%s%PLC.HMI.Controlvars::HardSettings::inputgenset::b_AutoStartStop%/s%%/f%" data-tchmi-label1="%l%CurrentSetpoint%/l%" data-tchmi-decimals="0" data-tchmi-max3="100" data-tchmi-min4="0" data-tchmi-enable1="true" data-tchmi-decimals1="0" data-tchmi-showscheduleoption="false" data-tchmi-schedulerenable="%i%ScheduleEnable%/i%" data-tchmi-min2="0" data-tchmi-label3="%l%r_SoCTarget%/l%" data-tchmi-data3="%s%PLC.HMI.Controlvars::SoftSettings::ACDCcharger::r_SocTarget%/s%" data-tchmi-info3="%l%r_SoCTargetTooltip%/l%" data-tchmi-min3="0" data-tchmi-decimals3="0" data-tchmi-max1="125" data-tchmi-min1="0" data-tchmi-max2="90">
+</div>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(207, 207, 207, 1)"
+}
+</script>
+<div id="EnumField_AcDcChargerControlType" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="25" data-tchmi-height-unit="px" data-tchmi-left="10" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/EnumField.usercontrol" data-tchmi-top="65" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-height-mode="Value" data-tchmi-text="%l%ControlType%/l%" data-tchmi-enumsymbol="%s%PLC.HMI.Controlvars::SoftSettings::ACDCcharger::e_ControlType%/s%" data-tchmi-right="10">
+</div>
+</div>
+</div>

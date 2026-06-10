@@ -1,0 +1,206 @@
+<div id="4-6-StatusPNControl" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="100" data-tchmi-height-mode="Content" data-tchmi-width-unit="%" data-tchmi-width-mode="Value">
+
+<div id="CombinedDataArrays_PN" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/CombinedDataArrays.usercontrol" data-tchmi-top="30" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-title="%l%PNcontroller%/l%" data-tchmi-dataarray="%s%PLC.HMI.Monitoringvars::arraydata::PNcontrolData%/s%" data-tchmi-header1="General" data-tchmi-header2="%l%Powerstack%/l%" data-tchmi-header3="%l%BatterySystem%/l%" data-tchmi-height-mode="Content" data-tchmi-width-mode="Content" data-tchmi-header4="%l%PSB%/l%" data-tchmi-show5="true" data-tchmi-header5="%l%Input%/l%" data-tchmi-show6="false">
+<script data-tchmi-target-attribute="data-tchmi-filter1" type="application/json">
+[
+  {
+    "path": "s_Type",
+    "comparator": "==",
+    "value": "general"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-filter2" type="application/json">
+[
+  {
+    "path": "s_Type",
+    "comparator": "==",
+    "value": "powerstack"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-filter3" type="application/json">
+[
+  {
+    "path": "s_Type",
+    "comparator": "==",
+    "value": "battery"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-filter4" type="application/json">
+[
+  {
+    "path": "s_Type",
+    "comparator": "==",
+    "value": "PSB"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-filter5" type="application/json">
+[
+  {
+    "path": "s_Type",
+    "comparator": "==",
+    "value": "input"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-filter6" type="application/json">
+[
+  {
+    "path": "s_Type",
+    "comparator": "==",
+    "value": "inputgenset"
+  }
+]
+</script>
+</div>
+<div id="TcHmiTextblock_ExtPNTitle" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-right="0" data-tchmi-text-font-size="%i%HeaderSize%/i%" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text="%f%TcHmi.Functions.Beckhoff.ToUpperCase(%l%PNcontroller%/l%)%/f%" data-tchmi-text-font-weight="Bold">
+</div>
+<div id="TcHmiTextblock_ExtPNActive" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-text="%f%TcHmi.Functions.Beckhoff.ToUpperCase(TcHmi.Functions.TcHmi_ePU10.GetEnumString(%s%PLC.HMI.Monitoringvars::Connections::e_ExtConnectionState%/s%))%/f%" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="%i%DataTableTitleFontSize%/i%" data-tchmi-right="0" data-tchmi-width="150">
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%s%PLC.HMI.Monitoringvars::Connections::e_ActiveController%/s%",
+    "actions": [
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:server#/definitions/PLC.eControlSources-ShowRecursively",
+                  "symbolExpression": "%s%PLC.HMI.Monitoringvars::Connections::e_ActiveController%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:server#/definitions/PLC.eControlSources",
+                  "value": 1
+                },
+                "compareOperator": "==",
+                "logic": null
+              },
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:general#/definitions/String",
+                  "symbolExpression": "%s%PLC.HMI.Monitoringvars::Connections::b_PNControllerOK%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:general#/definitions/BOOL",
+                  "value": "True"
+                },
+                "compareOperator": "==",
+                "logic": "AND"
+              }
+            ],
+            "then": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiTextblock_ExtPNActive::TextColor%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/SolidColor",
+                  "value": {
+                    "color": "rgba(234, 47, 47, 1)"
+                  }
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiTextblock_ExtPNActive::TextColor%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/SolidColor",
+                  "value": null
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiTextblock_IOData" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="30" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-zindex="5" data-tchmi-height-mode="Value" data-tchmi-bottom="0" data-tchmi-right="0" data-tchmi-text="%s%PLC.HMI.Monitoringvars::Connections::s_OutputJson%/s%" data-tchmi-visibility="Collapsed">
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 0.7843137)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "left": 10,
+  "right": 10,
+  "top": 20,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+</div>
+<div id="TcHmiToggleButton" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiToggleButton" data-tchmi-height="30" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-text="Show IO data" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-word-wrap="true">
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiToggleButton.onStatePressed",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiTextblock_IOData::Visibility%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/Visibility",
+          "value": "Visible"
+        },
+        "asyncWait": true
+      }
+    ]
+  },
+  {
+    "event": "TcHmiToggleButton.onStateReleased",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiTextblock_IOData::Visibility%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/Visibility",
+          "value": "Collapsed"
+        },
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+</div>

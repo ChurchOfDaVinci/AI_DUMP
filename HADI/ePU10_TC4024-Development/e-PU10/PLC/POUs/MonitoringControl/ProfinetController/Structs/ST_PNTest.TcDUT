@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PNTest" Id="{1cb61744-c0fd-4bb6-9639-eaa960f27f1b}">
+    <Declaration><![CDATA[TYPE ST_PNTest :
+STRUCT
+	b_CheckMonitoring	: BOOL;
+	b_MonitoringOK		: BOOL;
+	s_MonitoringErr		: STRING;
+	i_Pset				: INT;
+	i_Qset				: INT;
+	w_SetAddress		: WORD;
+	w_SetValue			: WORD;
+	bit_start			: BOOL;
+	bit_stop			: BOOL;
+	bit_Shutdown		: BOOL;
+	bit_SystemShutdown	: BOOL;
+	bit_Reset			: BOOL;
+	bit_EMStop			: BOOL;
+	bit_AdvancedControl	: BOOL;
+	bit_AutoSwitching	: BOOL;
+	bit_Transportmode	: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

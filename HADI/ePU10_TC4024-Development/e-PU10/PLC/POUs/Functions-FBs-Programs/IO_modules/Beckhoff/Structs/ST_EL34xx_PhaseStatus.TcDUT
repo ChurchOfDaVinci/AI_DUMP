@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_EL34xx_PhaseStatus" Id="{3e5c60f0-eaf8-495f-bce6-b3a264052ff9}">
+    <Declaration><![CDATA[TYPE ST_EL34xx_PhaseStatus :
+STRUCT
+	bit_voltageSign				: BIT;
+	bit_Overvoltage				: BIT;
+	bit_Overcurrent           	: BIT;
+	bit_InaccurateVoltage     	: BIT;
+	bit_InaccurateCurrent     	: BIT;
+	bit_VoltageGuardWarning   	: BIT;
+	bit_VoltageGuardError     	: BIT;
+	bit_CurrentGuardWarning   	: BIT;
+	bit_CurrentGuardError     	: BIT;
+	bit_TxPDOToggle           	: BIT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

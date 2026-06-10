@@ -1,0 +1,69 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="fb_Ramp" Id="{27e83af8-7745-455b-a654-fdc16713a9df}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fb_Ramp
+VAR_INPUT
+	SetZero		: BOOL;
+	SetToIN		: BOOL;
+	IN			: REAL;
+	r_ramprate	: REAL;
+	b_Enable	: BOOL;
+END_VAR
+VAR_OUTPUT
+	Q		: REAL;
+END_VAR
+
+VAR
+	r_RampFinal				: REAL;
+	fb_ramp					: FB_CTRL_RAMP_GENERATOR;
+	st_ParamsRamp    		: ST_CTRL_RAMP_GENERATOR_PARAMS;
+	r_inLast				: REAL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF SetZero THEN
+	IN := 0;
+END_IF
+
+IF SETtoIN OR SetZero THEN
+	r_RampFinal	:= r_ramprate * 10000;
+ELSE
+	r_rampFinal := r_ramprate;
+END_IF
+
+st_ParamsRamp.fVeloNeg := r_RampFinal;
+st_ParamsRamp.fVeloPos := r_RampFinal;
+st_ParamsRamp.tCtrlCycleTime := T#1MS;
+st_ParamsRamp.tTaskCycleTime := T#1MS;
+fb_ramp(
+	bEnable:= b_enable,
+	fout => Q,
+	stParams := st_ParamsRamp,
+	fStart:= r_inlast,
+	fTarget:= IN);
+	
+
+IF fb_ramp.bValueReached AND b_enable THEN
+	r_inlast := IN;
+END_IF
+
+IF NOT b_enable THEN
+	Q := IN;
+END_IF
+]]></ST>
+    </Implementation>
+    <LineIds Name="fb_Ramp">
+      <LineId Id="122" Count="0" />
+      <LineId Id="124" Count="1" />
+      <LineId Id="150" Count="1" />
+      <LineId Id="154" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="156" Count="0" />
+      <LineId Id="153" Count="0" />
+      <LineId Id="123" Count="0" />
+      <LineId Id="88" Count="9" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="98" Count="7" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

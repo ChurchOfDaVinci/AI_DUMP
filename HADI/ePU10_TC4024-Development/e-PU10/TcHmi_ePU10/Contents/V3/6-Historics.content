@@ -1,0 +1,53 @@
+<div id="Historics" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-right="0" data-tchmi-bottom="0">
+    <div id="TcHmiHtmlHost_9" data-tchmi-type="TcHmi.Controls.System.TcHmiHtmlHost" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-width-mode="Parent" data-tchmi-height-mode="Parent">
+        <object width="100%" height="100%" type="text/html" data="https://10.4.0.41/insights/"></object>
+    
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiHtmlHost_9.onPressed",
+    "actions": [
+      {
+        "objectType": "JavaScript",
+        "active": true,
+        "sourceLines": [
+          "document.getElementById(\"username\").innerText = \"client\";",
+          "document.getElementById(\"password\").innerText = \"ChangeMe\";"
+        ],
+        "injectContextObject": false,
+        "asyncWait": true,
+        "waitMode": "Synchronous"
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiButton_IoTSettings" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiButton" data-tchmi-height="24" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-text="SETTINGS" data-tchmi-top="20" data-tchmi-top-unit="px" data-tchmi-width="75" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-right="100">
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiButton_IoTSettings.onPressed",
+    "actions": [
+      {
+        "objectType": "ActionTemplate",
+        "active": true,
+        "templateName": "PopUpOpen",
+        "fnParams": [
+          {
+            "objectType": "StaticValue",
+            "valueType": "tchmi:framework#/definitions/ContentPath",
+            "value": "Contents/V3/6.Additional/IoTDataSharingSettings.content"
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+</div>

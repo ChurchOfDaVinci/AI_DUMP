@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_ACswitchgear_params" Id="{9e9d7c16-6d82-4b8b-942d-0ea29abe7e85}">
+    <Declaration><![CDATA[TYPE ST_ACswitchgear_params :
+STRUCT
+	EnableInputContactor	: BOOL;
+	ForceCloseInput			: BOOL;
+	ForceOpenInput			: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

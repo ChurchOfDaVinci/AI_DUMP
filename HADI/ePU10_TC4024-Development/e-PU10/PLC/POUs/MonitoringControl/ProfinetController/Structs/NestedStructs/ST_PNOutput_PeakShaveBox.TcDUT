@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PNOutput_PeakShaveBox" Id="{4662d6a3-8fa5-43c4-b929-17ce1b60f806}">
+    <Declaration><![CDATA[TYPE ST_PNOutput_PeakShaveBox:
+STRUCT
+	w_Status					:	WORD;
+	w_Warnings					:	WORD;
+	w_Faults					:	WORD;
+	i_ActivePower				:	INT;
+	i_ReactivePower				:	INT;
+	i_PowerFactor				:	INT;
+	ui_Frequency				:	UINT;
+	ui_VoltageL1N				:	UINT;
+	ui_VoltageL2N				:	UINT;
+	ui_VoltageL3N				:	UINT;
+	ui_VoltageL1L2				:	UINT;
+	ui_VoltageL2L3				:	UINT;
+	ui_VoltageL3L1				:	UINT;
+	ui_CurrentL1				:	UINT;
+	ui_CurrentL2				:	UINT;
+	ui_CurrentL3				:	UINT;
+	ui_CurrentN					:	UINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

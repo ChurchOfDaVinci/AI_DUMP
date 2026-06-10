@@ -1,0 +1,147 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_CSVWriter" Id="{d8b89d05-81f3-49ac-abdb-5558bfa99bfe}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_CSVWriter
+(* This function block writes comma separated field values to external data buffer *)
+VAR_INPUT
+	eCmd			: E_EnumCmdType := eEnumCmd_First;(* Command type: write first or next field ?*)
+	putValue		: T_MaxString := '';(* New first/next field value as string *)
+	pValue			: DWORD := 0;(* OPTIONAL: Pointer to external buffer containing field value data. *)
+	cbValue			: UDINT := 0;(* OPTIONAL: Byte size of external buffer containing field value data.  *)
+	bCRLF			: BOOL := FALSE;(* TRUE = > Append end of record separator (CR) *)
+	bCR				: BOOL := FALSE;(* TRUE = > Append end of record separator (CR) *)
+	bLF				: BOOL := FALSE;(* TRUE = > Append end of record separator (LF) *)
+	pBuffer  		: PVOID;(* Address ( pointer) of data buffer *)
+	cbBuffer		: UDINT;(* Max. byte size of data buffer *)
+END_VAR
+VAR_OUTPUT
+	bOk 			: BOOL;(* TRUE => Successfull, FALSE => Failed *)
+	cbSize			: UDINT;(* Number fo used data bytes *)
+	cbFree			: UDINT;(* Number of free data bytes *)
+	nFields			: UDINT;(* Number of fields *)
+	nRecords		: UDINT;(* Number of records *)
+	cbWrite			: UDINT;(* Number of successfully written data bytes *)
+END_VAR
+{library private}
+VAR
+	fbReader		: FB_CSVMemBufferReader;
+	temp			: ARRAY[0..300] OF BYTE;(* Temp buffer *)
+	cbTemp			: UDINT := 0;(* Number of data bytes in temp buffer *)
+	cbCopied		: UDINT := 0;(* Number of data bytes copied to the external data buffer *)
+	bNewLine		: BOOL := TRUE;(* TRUE => start with new line *)
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[bOk 		:= FALSE;
+cbWrite 	:= 0;
+(* check external buffer parameter *)
+IF ( pBuffer = 0 ) OR ( cbBuffer = 0 ) THEN
+	RETURN;
+END_IF
+
+(* check pointer and size of binary data *)
+IF ( pValue = 0 ) XOR ( cbValue = 0 ) THEN(* Error: One of the parameter is zero and the other one not *)
+	RETURN;
+ELSE
+	cbTemp := MEMCPY( ADR( temp ), ADR( putValue ), MIN( SIZEOF( temp ) - 2, INT_TO_UDINT( LEN( putValue ) ) ) );(* Copy string input data to temp buffer *)
+	IF ( pValue <> 0 ) THEN
+		IF  ( cbTemp > 0 ) THEN(* Error: Two source inputs: string and buffer are not allowed *)
+			RETURN;
+		END_IF
+
+		(* binary input => check if the data bytes are enclosed in double-quotation marks *)
+		IF cbValue < 2 THEN(* Error: Two double-quotation marks are required! *)
+			RETURN;(* Error: Invalid binary input data format *)
+		END_IF
+
+		IF ( DWORD_TO_BYTE( pValue)	<> DEFAULT_CSV_FIELD_DOUBLE_QUOTE )						
+		OR ( UDINT_TO_BYTE( pValue + cbValue - 1 ) <> DEFAULT_CSV_FIELD_DOUBLE_QUOTE )		
+		THEN(* Error: Invalid binary input data format *)                                   
+			RETURN; 
+		END_IF
+
+		(* Copy binary input data to temp buffer *)
+		cbTemp := MEMCPY( ADR( temp ), pValue, MIN( SIZEOF( temp ) - 2, cbValue ) );
+
+	END_IF
+END_IF
+
+(* Append CRLF (record termination) *)
+temp[ cbTemp ] := DEFAULT_CSV_RECORD_SEP_CR;
+temp[ cbTemp + 1 ] := DEFAULT_CSV_RECORD_SEP_LF;
+cbTemp := cbTemp + 2;
+
+(* Read and check the new field value *)
+fbReader( eCmd := eEnumCmd_First, pBuffer := ADR( temp ), cbBuffer := cbTemp );
+IF NOT fbReader.bOk THEN
+	RETURN;
+END_IF
+
+CASE eCmd OF
+	eEnumCmd_First:(* put first field to the buffer => initialize/reset internal variables *)
+		bNewLine := TRUE;
+		cbSize 		:= 0;
+		cbFree 	:= cbBuffer;
+		nFields 	:= 0;
+		nRecords 	:= 0;
+		MEMSET( pBuffer, 0, cbBuffer );(* reset all buffer data bytes *)
+	eEnumCmd_Next:(* put next field to the buffer *)
+		;(* OK *)
+ELSE(* invalid command *)
+	RETURN;
+END_CASE
+
+(* Check free buffer space *)
+IF ( fbReader.cbValue + SEL( bNewLine, 1, 0 ) + SEL( bCRLF, 0, 2 ) ) > cbFree THEN
+	RETURN;(* buffer overflow *)
+END_IF
+
+(* Write separator (don't write field separator at the beginning of new line) *)
+IF bNewLine THEN
+	bNewLine := FALSE;
+	cbCopied := 0;
+ELSE(* copy field separator *)
+	cbCopied := MEMSET( pBuffer + cbSize, DEFAULT_CSV_FIELD_SEP, 1 );
+END_IF
+
+(* Write field value *)
+IF ( fbReader.cbValue > 0 ) AND ( fbReader.pValue <> 0 ) THEN
+	cbCopied := cbCopied + MEMCPY( pBuffer + cbSize + cbCopied, fbReader.pValue, fbReader.cbValue );
+END_IF
+nFields 	:= nFields + 1;
+
+(* Write record termination (CRLF) *)
+IF bCRLF THEN
+	cbCopied := cbCopied + MEMSET( pBuffer + cbSize + cbCopied, DEFAULT_CSV_RECORD_SEP_CR, 1 );
+	cbCopied := cbCopied + MEMSET( pBuffer + cbSize + cbCopied, DEFAULT_CSV_RECORD_SEP_LF, 1 );
+	nRecords := nRecords + 1;
+	bNewLine := TRUE;
+END_IF
+IF bCR THEN
+	cbCopied := cbCopied + MEMSET( pBuffer + cbSize + cbCopied, DEFAULT_CSV_RECORD_SEP_CR, 1 );
+END_IF
+IF bLF THEN
+	cbCopied := cbCopied + MEMSET( pBuffer + cbSize + cbCopied, DEFAULT_CSV_RECORD_SEP_LF, 1 );
+	nRecords := nRecords + 1;
+	bNewLine := TRUE;
+END_IF
+
+cbSize 		:= cbSize + cbCopied;
+cbFree		:= cbBuffer - cbSize;
+cbWrite	:= cbCopied;
+bOk 		:= TRUE;]]></ST>
+    </Implementation>
+    <LineIds Name="FB_CSVWriter">
+      <LineId Id="38" Count="78" />
+      <LineId Id="127" Count="1" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="132" Count="2" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="144" Count="0" />
+      <LineId Id="146" Count="3" />
+      <LineId Id="123" Count="3" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

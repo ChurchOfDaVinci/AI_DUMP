@@ -1,0 +1,401 @@
+name: Add Issue to Engineering Planning + set fields
+
+on:
+  issues:
+    types: [opened, edited, labeled, unlabeled, assigned, unassigned, milestoned, demilestoned, closed, reopened]
+  schedule:
+    - cron: "0 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  add-and-set:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      issues: write
+
+    env:
+      ORG: VES-organization
+      PROJECT_NUMBER: 23            # <-- vul het projectnummer in uit /orgs/<org>/projects/<nummer>
+      STATUS_FIELD_NAME: Status
+      STATUS_VALUE: Unplanned           # <-- exact zoals je status-optie heet
+      TEAM_FIELD_NAME: Team
+      TEAM_VALUE: "PLC Software Development"  # <-- exact zoals je team-optie/tekst heet
+      PRODUCT_FIELD_NAME: Product
+      PRODUCT_VALUE: e-PU10
+      START_DATE_FIELD_NAME: "Start date"   # <-- field name for start date in both projects
+      END_DATE_FIELD_NAME: "End date"       # <-- field name for end date in both projects
+
+
+    steps:
+      - name: Add to project + set Team/Status
+        env:
+          GH_TOKEN: ${{ secrets.RVPAT}}  # PAT met rechten op org project + issues
+        run: |
+          set -euo pipefail
+
+          # 1) Lees project + fields + opties
+          PROJECT_JSON=$(gh api graphql -f query='
+            query($org:String!, $number:Int!) {
+              organization(login:$org) {
+                projectV2(number:$number) {
+                  id
+                  fields(first: 50) {
+                    nodes {
+                      __typename
+                      ... on ProjectV2Field { id name }
+                      ... on ProjectV2SingleSelectField { id name options { id name } }
+                      ... on ProjectV2IterationField { id name configuration { iterations { id startDate } } }
+                    }
+                  }
+                }
+              }
+            }' -f org="$ORG" -F number="$PROJECT_NUMBER")
+
+          PROJECT_ID=$(echo "$PROJECT_JSON" | jq -r '.data.organization.projectV2.id')
+          if [ -z "$PROJECT_ID" ] || [ "$PROJECT_ID" = "null" ]; then
+            echo "Project not found. Check ORG + PROJECT_NUMBER."
+            exit 1
+          fi
+          echo "PROJECT_ID=$PROJECT_ID"
+
+          field_id () {
+            local name="$1"
+            echo "$PROJECT_JSON" | jq -r --arg n "$name" '
+              .data.organization.projectV2.fields.nodes[]
+              | select(.name==$n)
+              | .id
+            ' | head -n1
+          }
+
+          option_id () {
+            local fieldName="$1"
+            local optionName="$2"
+            echo "$PROJECT_JSON" | jq -r --arg f "$fieldName" --arg o "$optionName" '
+              .data.organization.projectV2.fields.nodes[]
+              | select(.name==$f and (.options!=null))
+              | .options[]
+              | select(.name==$o)
+              | .id
+            ' | head -n1
+          }
+
+          STATUS_FIELD_ID=$(field_id "$STATUS_FIELD_NAME")
+          TEAM_FIELD_ID=$(field_id "$TEAM_FIELD_NAME")
+          PRODUCT_FIELD_ID=$(field_id "$PRODUCT_FIELD_NAME")
+
+          if [ -z "$PRODUCT_FIELD_ID" ] || [ "$PRODUCT_FIELD_ID" = "null" ]; then
+            echo "Product field '$PRODUCT_FIELD_NAME' not found."
+            exit 1
+          fi
+
+          if [ -z "$STATUS_FIELD_ID" ] || [ "$STATUS_FIELD_ID" = "null" ]; then
+            echo "Status field '$STATUS_FIELD_NAME' not found."
+            exit 1
+          fi
+
+          # Function to process a single issue
+          process_issue() {
+            local ISSUE_NODE_ID="$1"
+            local ISSUE_NUMBER="$2"
+            echo "=== Processing Issue #$ISSUE_NUMBER node_id=$ISSUE_NODE_ID ==="
+
+          # 2) Check local project for sync values (Status, dates) — only process issues in open local projects
+          echo "=== Checking for open local project to sync Status/dates ==="
+          ISSUE_PROJECTS_JSON=$(gh api graphql -f query='
+            query($issueId:ID!) {
+              node(id:$issueId) {
+                ... on Issue {
+                  projectItems(first:10) {
+                    nodes {
+                      id
+                      project { id closed }
+                      fieldValues(first:20) {
+                        nodes {
+                          __typename
+                          ... on ProjectV2ItemFieldSingleSelectValue {
+                            name
+                            field { ... on ProjectV2SingleSelectField { name } }
+                          }
+                          ... on ProjectV2ItemFieldDateValue {
+                            date
+                            field { ... on ProjectV2Field { name } }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }' -f issueId="$ISSUE_NODE_ID")
+
+          LOCAL_ITEM_JSON=$(echo "$ISSUE_PROJECTS_JSON" | jq -c --arg engId "$PROJECT_ID" '
+            .data.node.projectItems.nodes[]
+            | select(.project.id != $engId and .project.closed == false)
+          ' | head -n1)
+
+          if [ -z "$LOCAL_ITEM_JSON" ] || [ "$LOCAL_ITEM_JSON" = "null" ]; then
+            echo "No open local project found for issue #$ISSUE_NUMBER; skipping."
+            return 0
+          fi
+
+          echo "Found open local project item."
+
+          LOCAL_STATUS=$(echo "$LOCAL_ITEM_JSON" | jq -r --arg f "$STATUS_FIELD_NAME" '
+            .fieldValues.nodes[]
+            | select(.__typename=="ProjectV2ItemFieldSingleSelectValue" and .field.name==$f)
+            | .name
+          ' | head -n1)
+
+          LOCAL_START_DATE=$(echo "$LOCAL_ITEM_JSON" | jq -r --arg f "$START_DATE_FIELD_NAME" '
+            .fieldValues.nodes[]
+            | select(.__typename=="ProjectV2ItemFieldDateValue" and .field.name==$f)
+            | .date
+          ' | head -n1)
+
+          LOCAL_END_DATE=$(echo "$LOCAL_ITEM_JSON" | jq -r --arg f "$END_DATE_FIELD_NAME" '
+            .fieldValues.nodes[]
+            | select(.__typename=="ProjectV2ItemFieldDateValue" and .field.name==$f)
+            | .date
+          ' | head -n1)
+
+          echo "Local Status: ${LOCAL_STATUS:-<not set>}"
+          echo "Local Start date: ${LOCAL_START_DATE:-<not set>}"
+          echo "Local End date: ${LOCAL_END_DATE:-<not set>}"
+
+          # Skip issues with empty or "Unplanned" status
+          if [ -z "$LOCAL_STATUS" ] || [ "$LOCAL_STATUS" = "null" ] || [ "$LOCAL_STATUS" = "$STATUS_VALUE" ]; then
+            echo "Local status is '${LOCAL_STATUS:-<empty>}'; skipping issue #$ISSUE_NUMBER (not planned)."
+            return 0
+          fi
+
+          # 3) Voeg issue toe aan project (of krijg bestaande item id terug)
+          ADD_JSON=$(gh api graphql -f query='
+            mutation($projectId:ID!, $contentId:ID!) {
+              addProjectV2ItemById(input:{projectId:$projectId, contentId:$contentId}) {
+                item { id }
+              }
+            }' -f projectId="$PROJECT_ID" -f contentId="$ISSUE_NODE_ID")
+
+          ITEM_ID=$(echo "$ADD_JSON" | jq -r '.data.addProjectV2ItemById.item.id')
+          if [ -z "$ITEM_ID" ] || [ "$ITEM_ID" = "null" ]; then
+            echo "Failed to add/find project item id."
+            return 1
+          fi
+          echo "ITEM_ID=$ITEM_ID"
+
+          # Read current field values from engineering project item (for change detection)
+          ENG_ITEM_FIELDS_JSON=$(gh api graphql -f query='
+            query($itemId:ID!) {
+              node(id:$itemId) {
+                ... on ProjectV2Item {
+                  fieldValues(first:50) {
+                    nodes {
+                      __typename
+                      ... on ProjectV2ItemFieldSingleSelectValue {
+                        name
+                        field { ... on ProjectV2SingleSelectField { name } }
+                      }
+                      ... on ProjectV2ItemFieldDateValue {
+                        date
+                        field { ... on ProjectV2Field { name } }
+                      }
+                      ... on ProjectV2ItemFieldTextValue {
+                        text
+                        field { ... on ProjectV2Field { name } }
+                      }
+                    }
+                  }
+                }
+              }
+            }' -f itemId="$ITEM_ID")
+
+          # 4) Zet Status (single select) — only if current value differs from desired
+          # Desired = local project status (if valid option exists), otherwise default STATUS_VALUE
+          DESIRED_STATUS="$STATUS_VALUE"
+          DESIRED_STATUS_OPTION_ID=$(option_id "$STATUS_FIELD_NAME" "$STATUS_VALUE")
+          if [ -z "$DESIRED_STATUS_OPTION_ID" ] || [ "$DESIRED_STATUS_OPTION_ID" = "null" ]; then
+            echo "Status option '$STATUS_VALUE' not found in '$STATUS_FIELD_NAME'."
+            return 1
+          fi
+
+          if [ -n "$LOCAL_STATUS" ] && [ "$LOCAL_STATUS" != "null" ]; then
+            LOCAL_STATUS_OPTION_ID=$(option_id "$STATUS_FIELD_NAME" "$LOCAL_STATUS")
+            if [ -n "$LOCAL_STATUS_OPTION_ID" ] && [ "$LOCAL_STATUS_OPTION_ID" != "null" ]; then
+              DESIRED_STATUS="$LOCAL_STATUS"
+              DESIRED_STATUS_OPTION_ID="$LOCAL_STATUS_OPTION_ID"
+            else
+              echo "Status option '$LOCAL_STATUS' not found in engineering planning project; keeping default '$STATUS_VALUE'."
+            fi
+          fi
+
+          CURRENT_ENG_STATUS=$(echo "$ENG_ITEM_FIELDS_JSON" | jq -r --arg f "$STATUS_FIELD_NAME" '
+            .data.node.fieldValues.nodes[]
+            | select(.__typename=="ProjectV2ItemFieldSingleSelectValue" and .field.name==$f)
+            | .name
+          ' | head -n1)
+
+          if [ "${CURRENT_ENG_STATUS:-}" != "$DESIRED_STATUS" ]; then
+            echo "Setting Status to '$DESIRED_STATUS'..."
+            gh api graphql -f query='
+              mutation($projectId:ID!, $itemId:ID!, $fieldId:ID!, $opt:String!) {
+                updateProjectV2ItemFieldValue(input:{
+                  projectId:$projectId, itemId:$itemId, fieldId:$fieldId,
+                  value:{ singleSelectOptionId:$opt }
+                }) { projectV2Item { id } }
+              }' -f projectId="$PROJECT_ID" -f itemId="$ITEM_ID" -f fieldId="$STATUS_FIELD_ID" -f opt="$DESIRED_STATUS_OPTION_ID"
+          else
+            echo "Status already '$DESIRED_STATUS'; skipping."
+          fi
+
+          # 5) Zet Team (single select als optie bestaat, anders text) — only if different
+          if [ -n "${TEAM_FIELD_ID:-}" ] && [ "$TEAM_FIELD_ID" != "null" ]; then
+            TEAM_OPTION_ID=$(option_id "$TEAM_FIELD_NAME" "$TEAM_VALUE" || true)
+
+            if [ -n "${TEAM_OPTION_ID:-}" ] && [ "$TEAM_OPTION_ID" != "null" ]; then
+              CURRENT_ENG_TEAM=$(echo "$ENG_ITEM_FIELDS_JSON" | jq -r --arg f "$TEAM_FIELD_NAME" '
+                .data.node.fieldValues.nodes[]
+                | select(.__typename=="ProjectV2ItemFieldSingleSelectValue" and .field.name==$f)
+                | .name
+              ' | head -n1)
+              if [ "${CURRENT_ENG_TEAM:-}" != "$TEAM_VALUE" ]; then
+                echo "Setting Team (single-select) to '$TEAM_VALUE'..."
+                gh api graphql -f query='
+                  mutation($projectId:ID!, $itemId:ID!, $fieldId:ID!, $opt:String!) {
+                    updateProjectV2ItemFieldValue(input:{
+                      projectId:$projectId, itemId:$itemId, fieldId:$fieldId,
+                      value:{ singleSelectOptionId:$opt }
+                    }) { projectV2Item { id } }
+                  }' -f projectId="$PROJECT_ID" -f itemId="$ITEM_ID" -f fieldId="$TEAM_FIELD_ID" -f opt="$TEAM_OPTION_ID"
+              else
+                echo "Team already '$TEAM_VALUE'; skipping."
+              fi
+            else
+              CURRENT_ENG_TEAM_TEXT=$(echo "$ENG_ITEM_FIELDS_JSON" | jq -r --arg f "$TEAM_FIELD_NAME" '
+                .data.node.fieldValues.nodes[]
+                | select(.__typename=="ProjectV2ItemFieldTextValue" and .field.name==$f)
+                | .text
+              ' | head -n1)
+              if [ "${CURRENT_ENG_TEAM_TEXT:-}" != "$TEAM_VALUE" ]; then
+                echo "Setting Team (text) to '$TEAM_VALUE'..."
+                gh api graphql -f query='
+                  mutation($projectId:ID!, $itemId:ID!, $fieldId:ID!, $txt:String!) {
+                    updateProjectV2ItemFieldValue(input:{
+                      projectId:$projectId, itemId:$itemId, fieldId:$fieldId,
+                      value:{ text:$txt }
+                    }) { projectV2Item { id } }
+                  }' -f projectId="$PROJECT_ID" -f itemId="$ITEM_ID" -f fieldId="$TEAM_FIELD_ID" -f txt="$TEAM_VALUE"
+              else
+                echo "Team already '$TEAM_VALUE'; skipping."
+              fi
+            fi
+          else
+            echo "Team field '$TEAM_FIELD_NAME' not found; skipping."
+          fi
+
+          # 6) Zet Product (single select als optie bestaat, anders text) — only if different
+          PRODUCT_OPTION_ID=$(option_id "$PRODUCT_FIELD_NAME" "$PRODUCT_VALUE" || true)
+
+          if [ -n "${PRODUCT_OPTION_ID:-}" ] && [ "$PRODUCT_OPTION_ID" != "null" ]; then
+            CURRENT_ENG_PRODUCT=$(echo "$ENG_ITEM_FIELDS_JSON" | jq -r --arg f "$PRODUCT_FIELD_NAME" '
+              .data.node.fieldValues.nodes[]
+              | select(.__typename=="ProjectV2ItemFieldSingleSelectValue" and .field.name==$f)
+              | .name
+            ' | head -n1)
+            if [ "${CURRENT_ENG_PRODUCT:-}" != "$PRODUCT_VALUE" ]; then
+              echo "Setting Product (single-select) to '$PRODUCT_VALUE'..."
+              gh api graphql -f query='
+                mutation($projectId:ID!, $itemId:ID!, $fieldId:ID!, $opt:String!) {
+                  updateProjectV2ItemFieldValue(input:{
+                    projectId:$projectId, itemId:$itemId, fieldId:$fieldId,
+                    value:{ singleSelectOptionId:$opt }
+                  }) { projectV2Item { id } }
+                }' -f projectId="$PROJECT_ID" -f itemId="$ITEM_ID" -f fieldId="$PRODUCT_FIELD_ID" -f opt="$PRODUCT_OPTION_ID"
+            else
+              echo "Product already '$PRODUCT_VALUE'; skipping."
+            fi
+          else
+            CURRENT_ENG_PRODUCT_TEXT=$(echo "$ENG_ITEM_FIELDS_JSON" | jq -r --arg f "$PRODUCT_FIELD_NAME" '
+              .data.node.fieldValues.nodes[]
+              | select(.__typename=="ProjectV2ItemFieldTextValue" and .field.name==$f)
+              | .text
+            ' | head -n1)
+            if [ "${CURRENT_ENG_PRODUCT_TEXT:-}" != "$PRODUCT_VALUE" ]; then
+              echo "Product option '$PRODUCT_VALUE' not found -> trying text value..."
+              gh api graphql -f query='
+                mutation($projectId:ID!, $itemId:ID!, $fieldId:ID!, $txt:String!) {
+                  updateProjectV2ItemFieldValue(input:{
+                    projectId:$projectId, itemId:$itemId, fieldId:$fieldId,
+                    value:{ text:$txt }
+                  }) { projectV2Item { id } }
+                }' -f projectId="$PROJECT_ID" -f itemId="$ITEM_ID" -f fieldId="$PRODUCT_FIELD_ID" -f txt="$PRODUCT_VALUE"
+            else
+              echo "Product already '$PRODUCT_VALUE'; skipping."
+            fi
+          fi
+
+          # 7) Sync Start date and End date from local project (only if different)
+          START_DATE_FIELD_ID=$(field_id "$START_DATE_FIELD_NAME")
+          if [ -n "$LOCAL_START_DATE" ] && [ "$LOCAL_START_DATE" != "null" ] && \
+             [ -n "$START_DATE_FIELD_ID" ] && [ "$START_DATE_FIELD_ID" != "null" ]; then
+            CURRENT_ENG_START=$(echo "$ENG_ITEM_FIELDS_JSON" | jq -r --arg f "$START_DATE_FIELD_NAME" '
+              .data.node.fieldValues.nodes[]
+              | select(.__typename=="ProjectV2ItemFieldDateValue" and .field.name==$f)
+              | .date
+            ' | head -n1)
+            if [ "${CURRENT_ENG_START:-}" != "$LOCAL_START_DATE" ]; then
+              echo "Syncing Start date '$LOCAL_START_DATE'..."
+              gh api graphql -f query='
+                mutation($projectId:ID!, $itemId:ID!, $fieldId:ID!, $date:Date!) {
+                  updateProjectV2ItemFieldValue(input:{
+                    projectId:$projectId, itemId:$itemId, fieldId:$fieldId,
+                    value:{ date:$date }
+                  }) { projectV2Item { id } }
+                }' -f projectId="$PROJECT_ID" -f itemId="$ITEM_ID" -f fieldId="$START_DATE_FIELD_ID" -f date="$LOCAL_START_DATE"
+            else
+              echo "Start date already '$LOCAL_START_DATE'; skipping."
+            fi
+          fi
+
+          END_DATE_FIELD_ID=$(field_id "$END_DATE_FIELD_NAME")
+          if [ -n "$LOCAL_END_DATE" ] && [ "$LOCAL_END_DATE" != "null" ] && \
+             [ -n "$END_DATE_FIELD_ID" ] && [ "$END_DATE_FIELD_ID" != "null" ]; then
+            CURRENT_ENG_END=$(echo "$ENG_ITEM_FIELDS_JSON" | jq -r --arg f "$END_DATE_FIELD_NAME" '
+              .data.node.fieldValues.nodes[]
+              | select(.__typename=="ProjectV2ItemFieldDateValue" and .field.name==$f)
+              | .date
+            ' | head -n1)
+            if [ "${CURRENT_ENG_END:-}" != "$LOCAL_END_DATE" ]; then
+              echo "Syncing End date '$LOCAL_END_DATE'..."
+              gh api graphql -f query='
+                mutation($projectId:ID!, $itemId:ID!, $fieldId:ID!, $date:Date!) {
+                  updateProjectV2ItemFieldValue(input:{
+                    projectId:$projectId, itemId:$itemId, fieldId:$fieldId,
+                    value:{ date:$date }
+                  }) { projectV2Item { id } }
+                }' -f projectId="$PROJECT_ID" -f itemId="$ITEM_ID" -f fieldId="$END_DATE_FIELD_ID" -f date="$LOCAL_END_DATE"
+            else
+              echo "End date already '$LOCAL_END_DATE'; skipping."
+            fi
+          fi
+          }
+
+          # Determine which issues to process
+          EVENT_ISSUE_NODE_ID="${{ github.event.issue.node_id }}"
+          EVENT_ISSUE_NUMBER="${{ github.event.issue.number }}"
+
+          if [ -n "$EVENT_ISSUE_NODE_ID" ]; then
+            process_issue "$EVENT_ISSUE_NODE_ID" "$EVENT_ISSUE_NUMBER"
+          else
+            echo "No issue in event context (schedule/workflow_dispatch trigger)."
+            echo "Fetching all open issues to process..."
+            ISSUES=$(gh issue list --repo "$GITHUB_REPOSITORY" --state open --json number,id --limit 500)
+            COUNT=$(echo "$ISSUES" | jq length)
+            echo "Found $COUNT open issues."
+            for i in $(seq 0 $((COUNT - 1))); do
+              NODE_ID=$(echo "$ISSUES" | jq -r ".[$i].id")
+              NUMBER=$(echo "$ISSUES" | jq -r ".[$i].number")
+              process_issue "$NODE_ID" "$NUMBER" || echo "Failed to process issue #$NUMBER; continuing..."
+            done
+          fi
+

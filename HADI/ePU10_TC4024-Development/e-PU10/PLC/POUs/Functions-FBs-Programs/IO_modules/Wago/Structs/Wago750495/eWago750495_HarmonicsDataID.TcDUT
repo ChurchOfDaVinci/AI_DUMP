@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eWago750495_HarmonicsDataID" Id="{1b325f18-120d-40ad-8e5d-44b2c349faf6}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_String'}
+TYPE eWago750495_HarmonicsDataID :
+(
+	Current_RMS 		:= 001,
+	Voltage_RMS 		:= 002,
+	CurrentTHD			:= 003,
+	VoltageTHD			:= 004
+	
+	//harmonics not declared for now
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

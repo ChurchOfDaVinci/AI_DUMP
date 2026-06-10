@@ -1,0 +1,94 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_RCMonitor" Id="{871ebbe8-281c-42b0-8133-da2ea4f476ad}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_RCMonitor
+VAR_OUTPUT
+	get				: ST_ResidualCurrentMonitor_get;
+END_VAR
+
+VAR CONSTANT
+	w_ID			: WORD := eObject_ID.RCM;
+END_VAR
+
+VAR
+	b_prewarningOK	AT %I* : BOOL;
+	b_PowerOff		AT %Q* : BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[get.b_prewarning := NOT(b_prewarningOK);]]></ST>
+    </Implementation>
+    <Method Name="GetDiagnostics" Id="{b3dc0d05-c058-4ba4-b5d0-08f90337cd93}">
+      <Declaration><![CDATA[METHOD GetDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*OBSOLETE prewarning*)			AddError[w_Index](
+		b_ErrorTrig			:= FALSE,//get.b_prewarning,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 1,
+		e_ObjectID				:= eobject_ID.RCM,
+		s_Message				:= 'RCD prewarning',
+		e_sev					:= eseverity.warning,
+		e_ErrAckAccess		:= eErrAckAccess.General,
+		b_AutoClear 			:= TRUE,
+	);
+	w_Index := w_Index +1;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{fdce21dd-c12a-4650-ada6-2f609cbf92e1}">
+      <Declaration><![CDATA[METHOD Reset : BOOL
+VAR_INPUT
+END_VAR
+
+VAR_INST
+	ton_ResetPower		: Ton := (PT := T#500MS);
+	b_toggle			: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Reset := FALSE;
+ton_ResetPower(IN:= NOT ton_ResetPower.Q);
+
+IF ton_ResetPower.Q THEN
+	b_toggle := NOT b_toggle;
+END_IF
+
+IF get.b_prewarning THEN
+	b_PowerOff := b_toggle;
+ELSE
+	b_PowerOff := FALSE;
+	Reset :=  TRUE;
+END_IF
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_RCMonitor">
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_RCMonitor.GetDiagnostics">
+      <LineId Id="22" Count="3" />
+      <LineId Id="69" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="51" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_RCMonitor.Reset">
+      <LineId Id="31" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="20" Count="6" />
+      <LineId Id="28" Count="2" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

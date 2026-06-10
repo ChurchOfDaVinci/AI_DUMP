@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="st_MBMU_BatterySummary" Id="{d09ed76f-1577-4ecb-87c0-1f6d91cc5e40}">
+    <Declaration><![CDATA[TYPE st_MBMU_BatterySummary :
+STRUCT
+		//general
+	b_BMSHeartBeatOK				:	BOOL;
+	e_BMS_PowerOnStatus				:	ePowerOnStatus;
+	e_BMS_Status					:	eBMS_Status;		
+
+	r_SystemVoltage					:	REAL;
+	r_SystemCurrent					:	REAL;
+	r_SOC							:	REAL;
+	r_SOH							:	REAL := 100;
+	ar_CellVoltage					:	ARRAY[0..2] OF REAL;
+	ar_CellTemperature				:	ARRAY[0..2] OF REAL;
+	r_MaxChargeCurrentAllowed		:	REAL;
+	r_MaxDischargeCurrentAllowed	:	REAL;
+	r_MaxChargePowerAllowed			:	REAL;
+	r_MaxDischargePowerAllowed		:	REAL;
+	r_MaxSystemVoltageAllowed		:	REAL;
+	r_MinSystemVoltageAllowed		:	REAL;
+	
+	r_SystemPower					:	REAL;
+	r_ChargeSOE						:	REAL;
+	r_DischargeSOE					:	REAL;
+	
+	r_RemainingChargeEnergy			:	REAL;
+	r_RemainingDischargeEnergy		:	REAL;
+	
+	r_HistAccChargeEnergy			:	REAL;
+	r_HistAccDischargeEnergy		:	REAL;
+END_STRUCT	
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

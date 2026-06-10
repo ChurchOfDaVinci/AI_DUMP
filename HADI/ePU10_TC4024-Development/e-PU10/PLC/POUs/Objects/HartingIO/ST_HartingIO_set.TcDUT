@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_HartingIO_set" Id="{7d510f51-5bd1-4664-a84d-5af18a4a4b86}">
+    <Declaration><![CDATA[TYPE ST_HartingIO_set :
+STRUCT
+	w_SwitchControlSignals		: 	WORD; // control signals for output contact
+	r_manualAnalogOutput		: 	REAL; // 0 - 100%
+	r_gensetAnalogOutput		: 	REAL; // 0 - 100%
+	r_HpuAnalogOutput			: 	REAL; // 0 - 100%
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

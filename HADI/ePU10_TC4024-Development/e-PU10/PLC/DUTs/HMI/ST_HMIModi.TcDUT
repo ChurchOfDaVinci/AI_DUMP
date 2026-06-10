@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_HMIModi" Id="{167b966b-5efa-4e53-a2e6-63b6c7af4209}">
+    <Declaration><![CDATA[TYPE ST_HMIModi :
+STRUCT
+	s_Type			: STRING(12);
+	s_Name			: STRING(25);
+	s_Info			: STRING(12);
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

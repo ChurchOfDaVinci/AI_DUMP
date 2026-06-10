@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="Between" Id="{9ea815f3-b71d-45b2-a57e-f4c636ed6f62}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION Between : BOOL
+VAR_INPUT
+	in			: REAL;
+	lim1		: REAL;
+	lim2		: REAL;
+END_VAR
+VAR
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF lim1 > lim2 THEN 
+		IF (in <= lim1) AND (in >= lim2) THEN
+			Between:=TRUE;
+		ELSE
+			Between:=FALSE;
+		END_IF
+
+ELSE
+		IF (in >= lim1) AND (in <= lim2) THEN
+			Between:=TRUE;
+		ELSE
+			Between:=FALSE;
+		END_IF	
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="Between">
+      <LineId Id="53" Count="12" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

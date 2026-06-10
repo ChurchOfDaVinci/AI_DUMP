@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="IsNaN" Id="{93707678-1d3c-43be-907f-47bf14dc034d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION IsNaN : BOOL
+VAR_INPUT
+	IN : REAL;
+END_VAR
+VAR
+	tempdword : DWORD;
+	testword : WORD;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[tempdword := PDWORD_TO_DWORD(ADR(In));
+memcpy(ADR(TestWord), ADR(tempdword) +2, 2);
+
+IsNaN := ((TestWord AND 2#0111111110000000) = 2#0111111110000000);]]></ST>
+    </Implementation>
+    <LineIds Name="IsNaN">
+      <LineId Id="8" Count="1" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="7" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

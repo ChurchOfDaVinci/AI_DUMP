@@ -1,0 +1,387 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_NetContactor" Id="{697d2417-6747-426d-8926-e0080060d225}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_NetContactor
+VAR_OUTPUT
+	get								: ST_Netcontactor_get;
+	b_NetcontEDM					: BOOL;
+END_VAR 
+
+VAR_INPUT
+	set								: ST_Netcontactor_set;
+END_VAR
+
+VAR
+	IO								: FB_NetContactor_IO;
+	events							: st_Netcontactor_events;
+	b_reset							: BOOL;
+	ton_ForceCloseDelay				: TON := (PT := T#500MS);
+	fTrigForceCloseReset			: F_TRIG;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[io(b_RotationSelect := SetRotationSwitch(), get:=get, b_NetcontEDM:=b_NetcontEDM);
+get.b_NetConFb := get.b_NetcontRightFb OR get.b_NetcontLeftFb;
+
+//close delay + reset mechanism. Required for AC detection prior to the force being instaniously executed.
+ton_ForceCloseDelay();
+fTrigForceCloseReset(CLK := get.b_NetConFb);
+IF fTrigForceCloseReset.Q THEN
+	ton_ForceCloseDelay.IN := FALSE;
+END_IF
+
+IF get.b_NetConFb AND io.b_ForceCloseCommand THEN
+	get.b_SyncCloseCommand := FALSE;
+END_IF
+
+
+//Converter netcontactor control mode to open/close request
+CheckFeedback(get:= get, b_NetconFbRight := get.b_NetcontRightFb, b_NetConFbLeft := get.b_NetcontLeftFb);]]></ST>
+    </Implementation>
+    <Folder Name="Private" Id="{0e816a5f-857e-47f8-8c9b-c26308654da1}" />
+    <Method Name="CheckFeedback" Id="{367b3866-37e7-46c9-9c14-bd5a93808ccf}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE CheckFeedback : BOOL
+VAR
+	ton_MaxTime					: TON;
+END_VAR
+
+VAR_IN_OUT
+	get							: ST_Netcontactor_get;
+END_VAR
+
+VAR_IN_OUT CONSTANT
+		b_NetConFbLeft				: BOOL;
+		b_NetConFbRight				: BOOL;	
+END_VAR
+
+VAR_INST
+	sr_LeftfbFault				: SR;
+	sr_rightfbFault				: SR;
+	sr_fbTimeout				: SR;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[get.events.b_ContactorLeftFbFault := FALSE;
+get.events.b_ContactorRightFbFault := FALSE;
+
+ton_MaxTime();
+
+//SET Sync or force time-out
+IF get.b_SyncCloseCommand THEN //long evaluation time if sync required
+	ton_MaxTime.IN := TRUE;
+	ton_MaxTime.PT := T#10S;
+ELSIF io.b_ForceCloseCommand THEN  //shorter evaluation time if force required
+	ton_MaxTime.IN := TRUE;
+	ton_MaxTime.PT := T#1S;
+ELSE
+	ton_MaxTime.IN:= FALSE;
+END_IF
+
+//set diagnostics + Feedback signal accordingly
+sr_LeftfbFault(SET1 	:= NOT(b_NetConFbLeft) AND ton_MaxTime.Q AND io.b_RotationSelect,
+			RESET 		:= b_reset,
+			Q1			=> get.events.b_ContactorLeftFbFault); 	
+sr_rightfbFault(SET1 	:= NOT(b_NetConFbRight) AND ton_MaxTime.Q AND NOT io.b_RotationSelect,
+			RESET 		:= b_reset,
+			Q1			=> get.events.b_ContactorLeftFbFault);	
+
+
+			
+sr_FbTimeout(SET1:= ton_MaxTime.Q, RESET :=b_reset, Q1 => get.events.b_ContactorFbTimeout);		
+//Set output to external program
+IF b_NetConFbLeft THEN
+	get.e_NetConState := eNetcontactorstate.LeftClosed;
+ELSIF b_NetConFbRight THEN
+	get.e_NetConState := eNetcontactorstate.RightClosed;
+ELSE
+	get.e_NetConState := eNetcontactorstate.open;
+END_IF
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Close" Id="{7ea608a5-eaa9-4c2a-a56b-118801c48009}">
+      <Declaration><![CDATA[METHOD Close : BOOL;
+VAR_INPUT
+	b_force	: BOOL;
+END_VAR
+
+
+
+VAR_INST
+	tof_ReleaseForce : TOF := (PT := T#0S);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+IF set.e_ClosingRequest <>  eNetcontMode.none THEN
+	IF NOT Settings.Configuration.b_AutomaticACrotation AND set.e_ClosingRequest = eNetcontMode.left THEN //if left is requested without this option, don't close the netcontactor.
+		b_Force := FALSE;
+		get.b_SyncCloseCommand := FALSE;
+		get.events.b_IllegalLeftFieldSelected := TRUE;
+	ELSE
+		get.events.b_IllegalLeftFieldSelected := FALSE;
+		ton_ForceCloseDelay.IN := b_Force;
+		// IF not already closed
+		IF ton_ForceCloseDelay.Q THEN 
+			tof_ReleaseForce(IN := TRUE);						//Enable force in AND..
+			get.b_SyncCloseCommand := FALSE; 		//Avoid sending sync command simultaniously
+		ELSE
+			tof_ReleaseForce(IN := FALSE);
+			get.b_SyncCloseCommand := TRUE;
+		END_IF
+		
+		//To avoid instatanous forcing in when sync should have been done from initial start to grid sync,
+		IF NOT get.b_NetConFb THEN
+			io.b_ForceCloseCommand :=  NOT get.b_SyncCloseCommand;
+		ELSE
+			io.b_ForceCloseCommand := tof_ReleaseForce.Q OR get.b_NetConFb;
+		END_IF
+	END_IF
+END_IF
+
+Close := get.b_NetConFb; // io.b_ForceCloseCommand <> get.b_SyncCloseCommand AND
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetDiagnostics" Id="{f2e879bb-51fe-4bcb-8109-057a5620fdd1}">
+      <Declaration><![CDATA[METHOD GetDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	(*Right fb fault*)		AddError[w_Index](
+					b_ErrorTrig			:= get.events.b_ContactorRightFbFault,
+					out_ST_Error			:= a_ActiveEvents[w_Index],
+					w_ErrorID					:= 1,
+					e_ObjectID				:= eObject_ID.Netcontactor,
+					s_Message				:= 'right feedback fault',
+					e_sev					:= eSeverity.NormalShutdown
+				);
+				w_Index := w_Index +1;
+		
+	(*left fb fault*)		AddError[w_Index](
+					b_ErrorTrig			:= get.events.b_ContactorleftFbFault,
+					out_ST_Error			:= a_ActiveEvents[w_Index],
+					w_ErrorID					:= 2,
+					s_Message				:= 'left feedback fault',
+					e_sev					:= eSeverity.NormalShutdown
+				);
+				w_Index := w_Index +1;
+		
+	(*Phase Rotation fault*)			AddError[w_Index](
+					b_ErrorTrig				:= get.events.b_PhaseRotationFault,
+					out_ST_Error			:= a_ActiveEvents[w_Index],
+					w_ErrorID				:= 3,
+					s_Message				:= 'Phase rotation fault detected',
+					e_sev					:= eSeverity.quickshutdown,
+					b_AutoClear				:= TRUE
+				);
+				w_Index := w_Index +1;
+
+	(*wrong Rotation selected fault*)			AddError[w_Index](
+					b_ErrorTrig				:= get.events.b_IllegalLeftFieldSelected,
+					out_ST_Error			:= a_ActiveEvents[w_Index],
+					w_ErrorID				:= 4,
+					s_Message				:= 'Left rotating field selected while not available',
+					e_sev					:= eSeverity.Warning,
+					b_AutoClear				:= TRUE
+				);
+				w_Index := w_Index +1;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Open" Id="{e2456e34-52d3-4357-8eff-fb0d0fc1dc05}">
+      <Declaration><![CDATA[METHOD Open : BOOL
+
+VAR_INST
+	//ton_delay			: TON := (PT:= T#1S);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//ton_delay(IN:=get.b_NetConFb);
+
+io.b_ForceCloseCommand := FALSE;
+get.b_SyncCloseCommand := FALSE;
+ton_ForceCloseDelay.IN := get.b_NetConFb;
+
+open := NOT get.b_NetConFb;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{28386dca-ee20-42ce-a3f1-39d4cb593e94}">
+      <Declaration><![CDATA[METHOD Reset : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[b_reset := TRUE;
+
+IF NOT get.events.b_ContactorFbTimeout OR NOT get.events.b_ContactorLeftFbFault OR NOT get.events.b_ContactorRightFbFault THEN;
+	b_reset := FALSE;
+	reset := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetEvents" Id="{6831a912-ee7f-4705-b8d2-d199a406b58e}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD SetEvents : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Phase rotation fault
+get.events.b_PhaseRotationFault := set.e_ACRotationState = eACRotationState.Left AND NOT set.b_RotationSwitchEnable;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetRotationSwitch" Id="{02de450e-bece-4653-9032-f8520288f9cb}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE SetRotationSwitch : BOOL
+
+VAR_INST
+	RotationLeft			: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT get.b_NetConFb THEN
+	IF Settings.Configuration.b_AutomaticACrotation THEN //only when option is available.
+		CASE set.e_ACRotationState OF
+			0: //NO ac
+			CASE set.e_ClosingRequest OF
+				eNetcontMode.right: RotationLeft := 0;
+				eNetcontMode.left: RotationLeft := 1;
+				eNetcontMode.auto: RotationLeft := 0;
+			END_CASE
+			1: RotationLeft := 0;
+			-1: RotationLeft := 1;
+		END_CASE
+	ELSE
+			RotationLeft := 0;
+	END_IF
+END_IF
+
+SetRotationSwitch := RotationLeft;]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_NetContactor">
+      <LineId Id="435" Count="1" />
+      <LineId Id="480" Count="0" />
+      <LineId Id="479" Count="0" />
+      <LineId Id="475" Count="0" />
+      <LineId Id="473" Count="0" />
+      <LineId Id="476" Count="2" />
+      <LineId Id="499" Count="0" />
+      <LineId Id="498" Count="0" />
+      <LineId Id="500" Count="1" />
+      <LineId Id="472" Count="0" />
+      <LineId Id="437" Count="1" />
+      <LineId Id="455" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_NetContactor.CheckFeedback">
+      <LineId Id="76" Count="0" />
+      <LineId Id="79" Count="0" />
+      <LineId Id="139" Count="0" />
+      <LineId Id="138" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="60" Count="0" />
+      <LineId Id="137" Count="0" />
+      <LineId Id="141" Count="0" />
+      <LineId Id="65" Count="1" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="142" Count="2" />
+      <LineId Id="146" Count="1" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="49" Count="0" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="106" Count="0" />
+      <LineId Id="169" Count="0" />
+      <LineId Id="94" Count="0" />
+      <LineId Id="98" Count="0" />
+      <LineId Id="101" Count="0" />
+      <LineId Id="103" Count="0" />
+      <LineId Id="110" Count="2" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="96" Count="0" />
+      <LineId Id="73" Count="0" />
+      <LineId Id="72" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_NetContactor.Close">
+      <LineId Id="153" Count="1" />
+      <LineId Id="140" Count="0" />
+      <LineId Id="155" Count="1" />
+      <LineId Id="158" Count="0" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="157" Count="0" />
+      <LineId Id="162" Count="0" />
+      <LineId Id="127" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="57" Count="0" />
+      <LineId Id="43" Count="2" />
+      <LineId Id="82" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="83" Count="0" />
+      <LineId Id="111" Count="3" />
+      <LineId Id="97" Count="0" />
+      <LineId Id="161" Count="0" />
+      <LineId Id="143" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_NetContactor.GetDiagnostics">
+      <LineId Id="21" Count="3" />
+      <LineId Id="66" Count="0" />
+      <LineId Id="25" Count="2" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="30" Count="7" />
+      <LineId Id="39" Count="11" />
+      <LineId Id="74" Count="7" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_NetContactor.Open">
+      <LineId Id="23" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="5" Count="1" />
+      <LineId Id="35" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="17" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_NetContactor.Reset">
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_NetContactor.SetEvents">
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_NetContactor.SetRotationSwitch">
+      <LineId Id="45" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="39" Count="1" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="31" Count="1" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="33" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="50" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

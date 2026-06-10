@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eNetcomState" Id="{d261cc99-f85b-46a4-86a0-807b6fa97a11}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'To_string'}
+TYPE eNetcomState :
+(
+	NotConnected := 0,
+	OK:=1,
+	Warning:=2,
+	Error:=3
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

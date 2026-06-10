@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_GenGridController_Params" Id="{e225ec06-50eb-4f77-98c1-72961e44c6a2}">
+    <Declaration><![CDATA[TYPE ST_GenGridController_Params :
+STRUCT
+	r_SocHysteresis				: REAL := 2; //used for auto start/stop
+	r_PIDLimitRampDefault		: REAL := 50; // default ramp rate when PID limits are changed
+	by_SyncRetries				: BYTE := 5; 
+	by_CurrentLimitMargin		: REAL := 20; // Headroom from the current limit where the trip can be detected. 10 = 10A headroom 
+	CurrentLimitTripDelay		: TIME := T#5S; // 
+	GenIso_InverterMode			: eGenIsoInverterMode := eGenIsoInverterMode.ISO_SLOWDROOP; //inverter mode when operating with genset in iso at input.
+	Contactor					: ST_ContactorControl_params;
+	Genset						: ST_GengridController_ParamsGenset;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

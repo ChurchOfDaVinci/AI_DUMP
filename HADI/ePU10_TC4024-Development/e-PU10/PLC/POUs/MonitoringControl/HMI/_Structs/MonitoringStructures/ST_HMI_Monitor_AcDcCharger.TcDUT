@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_HMI_Monitor_AcDcCharger" Id="{4fd508a2-30dc-4c1c-94dc-380e67802db8}">
+    <Declaration><![CDATA[TYPE ST_HMI_Monitor_AcDcCharger :
+STRUCT
+	state 			: STRING;
+	available 		: BOOL;
+	r_AcCurrentMax	: REAL;
+	r_AcPowerMax	: REAL;
+	r_DcPower 		: REAL;
+	r_AcPower 		: REAL;
+	r_AcCurrent		: REAL;
+	r_AcVoltage		: REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,1035 @@
+<div id="Content1_20" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width-unit="%" data-tchmi-bottom="0" data-tchmi-creator-viewport-width="1360" data-tchmi-creator-viewport-height="640" data-tchmi-right="0" data-tchmi-height-mode="Content">
+
+<div id="TcHmiGrid_98" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content">
+
+<script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
+[
+  {
+    "width": 1.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  },
+  {
+    "width": 6.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  },
+  {
+    "width": 2.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidth": 280.0,
+    "minWidthUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-row-options" type="application/json">
+[
+  {
+    "height": 70.0,
+    "heightUnit": "px",
+    "heightMode": "Value",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 3.0,
+    "heightUnit": "factor",
+    "heightMode": "Value",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "px",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+<div id="TcHmiGrid_100" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="2" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-max-width="800">
+
+<script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
+[
+  {
+    "width": 20.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  },
+  {
+    "width": 250.0,
+    "widthUnit": "px",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidth": 200.0,
+    "minWidthUnit": "px",
+    "overflow": false
+  },
+  {
+    "width": 20.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-cell-options" type="application/json">
+[
+  {
+    "backgroundImageWidthUnit": "px",
+    "backgroundImageHeightUnit": "px",
+    "backgroundImageHorizontalAlignment": "Center",
+    "backgroundImageVerticalAlignment": "Center"
+  }
+]
+</script>
+<div id="InverterDataOverview" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="0" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/Dataview.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-dataarray="%s%PLC.HMI.Monitoringvars::arraydata::PowerstackData|Interval=2000%/s%" data-tchmi-title="INVERTER" data-tchmi-right="0" data-tchmi-height-mode="Content" data-tchmi-showheaderbar="false">
+<script data-tchmi-target-attribute="data-tchmi-filter" type="application/json">
+[
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Active Power"
+  },
+  {
+    "logic": "OR"
+  },
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Voltage"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 0.2941176)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 10.0,
+  "topRight": 10.0,
+  "bottomLeft": 10.0,
+  "bottomRight": 10.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+</div>
+</div>
+<div id="TcHmiGrid_ACMonitoring" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-grid-column-index="2" data-tchmi-grid-row-index="1" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="80" data-tchmi-height-mode="Value" data-tchmi-top="0" data-tchmi-height="%f%%ctrl%SystemOverview_1::RenderedWidth%/ctrl%/(16/9)%/f%">
+
+<script data-tchmi-target-attribute="data-tchmi-row-options" type="application/json">
+[
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Value",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+<div id="OutputDataOverview" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="2" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/Dataview.usercontrol" data-tchmi-top-unit="%" data-tchmi-width-unit="px" data-tchmi-dataarray="%s%PLC.HMI.Monitoringvars::arraydata::ACOutputData|Interval=2000%/s%" data-tchmi-title="OUTPUT" data-tchmi-right="0" data-tchmi-height-mode="Content" data-tchmi-bottom="20" data-tchmi-bottom-unit="px" data-tchmi-showheaderbar="false" data-tchmi-datafontsize="12">
+<script data-tchmi-target-attribute="data-tchmi-filter" type="application/json">
+[
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Active Power"
+  },
+  {
+    "logic": "OR"
+  },
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Reactive Power"
+  },
+  {
+    "logic": "OR"
+  },
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Current"
+  },
+  {
+    "logic": "OR"
+  },
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Line Voltage"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 10.0,
+  "topRight": 10.0,
+  "bottomLeft": 10.0,
+  "bottomRight": 10.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 0.2941176)"
+}
+</script>
+</div>
+<div id="InputDataOverview" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="2" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/Dataview.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-dataarray="%s%PLC.HMI.Monitoringvars::arraydata::ACInputData|Interval=2000%/s%" data-tchmi-title="INPUT" data-tchmi-right="0" data-tchmi-height-mode="Content" data-tchmi-visibility="Hidden" data-tchmi-showheaderbar="false" data-tchmi-datafontsize="12">
+<script data-tchmi-target-attribute="data-tchmi-filter" type="application/json">
+[
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Active Power"
+  },
+  {
+    "logic": "OR"
+  },
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Reactive Power"
+  },
+  {
+    "logic": "OR"
+  },
+  {
+    "path": "s_Type",
+    "comparator": "==",
+    "value": "AC"
+  },
+  {
+    "logic": "AND"
+  },
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Current"
+  },
+  {
+    "logic": "OR"
+  },
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Line Voltage"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 0.2941176)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 10.0,
+  "topRight": 10.0,
+  "bottomLeft": 10.0,
+  "bottomRight": 10.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+</div>
+<div id="StatusIndicator_GenStartStopInfo" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-height="100" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/StatusIndicator.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-height-mode="Content" data-tchmi-grid-row-index="1" data-tchmi-b_fault="false" data-tchmi-b_ok="%f%%s%PLC.HMI.Monitoringvars::GenGridController::e_RunCondition%/s%!=0 &&%s%PLC.HMI.Monitoringvars::GenGridController::e_RunCondition%/s%!=6%/f%" data-tchmi-s_datalabel="%f%%l%StartStopCondition%/l%
+%/f%" data-tchmi-right="0" data-tchmi-left="0" data-tchmi-b_warning="false" data-tchmi-visibility="" data-tchmi-show="%s%PLC.HMI.Monitoringvars::ConditionalFormatting::b_ShowShowGensetInfo%/s%" data-tchmi-bottom="" data-tchmi-s_data="%f%TcHmi.Functions.Beckhoff.FormatString(': {0s} ',TcHmi.Functions.TcHmi_ePU10.GetEnumString(%s%PLC.HMI.Monitoringvars::GenGridController::e_RunCondition%/s%))%/f%">
+</div>
+<div id="StatusIndicator_input" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="0" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/StatusIndicator.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-s_datalabel="%f%GetEnumString(%s%PLC.HMI.Monitoringvars::GenGridController::e_BreakerMode%/s%)%/f%" data-tchmi-b_fault="" data-tchmi-s_data="" data-tchmi-b_warning="%s%PLC.HMI.Monitoringvars::GenGridController::b_ModeChanged%/s%" data-tchmi-b_ok="%f%%s%PLC.HMI.Monitoringvars::GenGridController::b_ModeTransActive%/s%==0%/f%" data-tchmi-show="%s%PLC.Settings.Configuration::b_ACInputConnection%/s%">
+</div>
+</div>
+<div id="TcHmiGrid_105" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="1" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0">
+
+<script data-tchmi-target-attribute="data-tchmi-row-options" type="application/json">
+[
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Value",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+<div id="DcCouplingDataOverview" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="1" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/Dataview.usercontrol" data-tchmi-top="%f%%ctrl%DcCouplingDataOverview::RenderedWidth%/ctrl%%/f%" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-dataarray="%s%PLC.HMI.Monitoringvars::arraydata::PowerstackData|Interval=2000%/s%" data-tchmi-title="DC COUPLING" data-tchmi-right="0" data-tchmi-height-mode="Content" data-tchmi-visibility="Hidden" data-tchmi-showheaderbar="false">
+<script data-tchmi-target-attribute="data-tchmi-filter" type="application/json">
+[
+  {
+    "path": "s_Type",
+    "comparator": "==",
+    "value": "DC"
+  },
+  {
+    "logic": "AND"
+  },
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Current"
+  },
+  {
+    "logic": "OR"
+  },
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Voltage"
+  },
+  {
+    "logic": "OR"
+  },
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Power"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 0.2941176)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 10.0,
+  "topRight": 10.0,
+  "bottomLeft": 10.0,
+  "bottomRight": 10.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+</div>
+</div>
+<div id="TcHmiGrid_107" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="0" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Value" data-tchmi-max-width="820">
+<script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
+[
+  {
+    "width": 20.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  },
+  {
+    "width": 150.0,
+    "widthUnit": "px",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidth": 200.0,
+    "minWidthUnit": "px",
+    "overflow": false
+  },
+  {
+    "width": 20.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-cell-options" type="application/json">
+[
+  {
+    "backgroundImageWidthUnit": "px",
+    "backgroundImageHeightUnit": "px",
+    "backgroundImageHorizontalAlignment": "Center",
+    "backgroundImageVerticalAlignment": "Center"
+  }
+]
+</script>
+<div id="TcHmiGrid_108" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="0" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top-unit="%" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-height-mode="Content" data-tchmi-bottom="0">
+<script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
+[
+  {
+    "width": 1.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-row-options" type="application/json">
+[
+  {
+    "height": 30.0,
+    "heightUnit": "px",
+    "heightMode": "Value",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 30.0,
+    "heightUnit": "px",
+    "heightMode": "Value",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-cell-options" type="application/json">
+[]
+</script>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 5.0,
+  "bottomRight": 5.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+<div data-tchmi-grid-row-index="0" data-tchmi-grid-column-index="1" id="TcHmiTextblock_747" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-text="CONTROL SOURCE" data-tchmi-top="10" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-text-horizontal-alignment="Center" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-text-font-size="16" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-weight="Bold">
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 5.0,
+  "topRight": 5.0,
+  "bottomLeft": 5.0,
+  "bottomRight": 5.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+
+
+
+</div>
+<div id="StatusIndicator_1" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="1" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/StatusIndicator.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Content" data-tchmi-s_datalabel="%f%GetEnumString(%s%PLC.HMI.Controlvars::HardSettings::setup::e_ControlSource%/s%)%/f%" data-tchmi-b_ok="%f%%s%PLC.HMI.Controlvars::HardSettings::setup::e_ControlSource%/s%!= 0;%/f%" data-tchmi-b_fault="false">
+
+
+
+
+</div>
+</div>
+</div>
+<div id="SystemOverview_1" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="1" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/SystemOverview.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-height-mode="Value" data-tchmi-max-width="820">
+</div>
+<div id="TcHmiTextblock_InputState" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="1" data-tchmi-height="26" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-top="20" data-tchmi-top-unit="px" data-tchmi-width="150" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-right="10" data-tchmi-zindex="20" data-tchmi-text="%f%TcHmi.Functions.TcHmi_ePU10.GetEnumString(%s%PLC.HMI.Monitoringvars::GenGridController::e_state%/s%)%/f%" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="%i%DataTableFontSize%/i%" data-tchmi-right-unit="%" data-tchmi-visibility="Collapsed">
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 0.1960784)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 5.0,
+  "topRight": 5.0,
+  "bottomLeft": 5.0,
+  "bottomRight": 5.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "TcHmiTextblock_InputState.onAttached",
+    "actions": [
+      {
+        "objectType": "SwitchCase",
+        "active": true,
+        "compare": {
+          "objectType": "Symbol",
+          "valueType": "tchmi:general#/definitions/BOOL",
+          "symbolExpression": "%s%PLC.Settings.Configuration::b_ACInputConnection%/s%"
+        },
+        "cases": [
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/BOOL",
+              "value": true
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiTextblock_InputState::Visibility%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Visibility",
+                  "value": "Visible"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/BOOL",
+              "value": false
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiTextblock_InputState::Visibility%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Visibility",
+                  "value": "Collapsed"
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiContainer_PSBdata" data-tchmi-type="TcHmi.Controls.System.TcHmiContainer" data-tchmi-grid-column-index="2" data-tchmi-grid-row-index="2" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-height-mode="Content" data-tchmi-visibility="Collapsed" data-tchmi-height="500">
+<div id="TcHmi_Controls_Beckhoff_PSBMonitorImage" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiImage" data-tchmi-grid-column-index="2" data-tchmi-grid-row-index="2" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-src="Images/PSBlineOverview.png" data-tchmi-top-unit="px" data-tchmi-width="100" data-tchmi-width-unit="px" data-tchmi-zindex="20" data-tchmi-right="10" data-tchmi-height-mode="Content" data-tchmi-top="10" data-tchmi-visibility="Visible">
+
+</div>
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%s%PLC.HMI.Monitoringvars::PSB::b_Connected%/s%",
+    "actions": [
+      {
+        "objectType": "SwitchCase",
+        "active": true,
+        "compare": {
+          "objectType": "Symbol",
+          "valueType": "tchmi:general#/definitions/BOOL",
+          "symbolExpression": "%s%PLC.HMI.Monitoringvars::PSB::b_Connected%/s%"
+        },
+        "cases": [
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/BOOL",
+              "value": true
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiContainer_PSBdata::Visibility%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Visibility",
+                  "value": "Visible"
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/BOOL",
+              "value": false
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiContainer_PSBdata::Visibility%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Visibility",
+                  "value": "Collapsed"
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+<div id="PSBdataOverview" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="0" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/Dataview.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-dataarray="%s%PLC.HMI.Monitoringvars::arraydata::PSBdata|Interval=2000%/s%" data-tchmi-title="PEAKSHAVEBOX" data-tchmi-right="80" data-tchmi-height-mode="Content" data-tchmi-showheaderbar="false" data-tchmi-datafontsize="12" data-tchmi-zindex="8" data-tchmi-visibility="Visible">
+<script data-tchmi-target-attribute="data-tchmi-filter" type="application/json">
+[
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Active Power"
+  },
+  {
+    "logic": "OR"
+  },
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Reactive Power"
+  },
+  {
+    "logic": "OR"
+  },
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Current"
+  },
+  {
+    "logic": "OR"
+  },
+  {
+    "path": "s_Name",
+    "comparator": "==",
+    "value": "Line Voltage"
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(0, 0, 0, 0.2941176)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 10.0,
+  "topRight": 10.0,
+  "bottomLeft": 10.0,
+  "bottomRight": 10.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+
+</div>
+<div id="TcHmiIndicatorPSBOK" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiEllipse" data-tchmi-height="20" data-tchmi-height-unit="px" data-tchmi-left="5" data-tchmi-left-unit="px" data-tchmi-top="5" data-tchmi-top-unit="px" data-tchmi-width="20" data-tchmi-width-unit="px" data-tchmi-stroke-thickness="4" data-tchmi-zindex="10">
+
+<script data-tchmi-target-attribute="data-tchmi-fill-color" type="application/json">
+{
+  "color": "rgba(66, 253, 109, 1)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-stroke-color" type="application/json">
+{
+  "color": "rgba(100, 100, 100, 0.5882352)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%s%PLC.HMI.Monitoringvars::PSB%/s%",
+    "actions": [
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctrl%TcHmiIndicatorPSBOK::FillColor%/ctrl%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:framework#/definitions/Color",
+          "value": null
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "SwitchCase",
+        "active": true,
+        "compare": {
+          "objectType": "Symbol",
+          "valueType": "tchmi:general#/definitions/BOOL",
+          "symbolExpression": "%s%PLC.HMI.Monitoringvars::PSB::b_Connected%/s%"
+        },
+        "cases": [
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/BOOL",
+              "value": true
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiIndicatorPSBOK::FillColor%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Color",
+                  "value": {
+                    "color": "rgba(81, 171, 243, 1)"
+                  }
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      },
+      {
+        "objectType": "SwitchCase",
+        "active": true,
+        "compare": {
+          "objectType": "Symbol",
+          "valueType": "tchmi:general#/definitions/BOOL",
+          "symbolExpression": "%s%PLC.HMI.Monitoringvars::PSB::b_Active%/s%"
+        },
+        "cases": [
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/BOOL",
+              "value": true
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%TcHmiIndicatorPSBOK::FillColor%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Color",
+                  "value": {
+                    "color": "rgba(8, 215, 56, 1)"
+                  }
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+
+
+</div>
+<div id="TcHmiHtmlHost_AuxSupply" data-tchmi-type="TcHmi.Controls.System.TcHmiHtmlHost" data-tchmi-height="50" data-tchmi-height-unit="%" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="20" data-tchmi-top-unit="px" data-tchmi-width="30" data-tchmi-width-unit="%" data-tchmi-width-mode="Value">
+    <svg xmlns="http://www.w3.org/2000/svg"
+         xmlns:xlink="http://www.w3.org/1999/xlink"
+         version="1.1"
+         width="100%"
+         height="100%"
+         viewBox="-0.5 -0.5 75 75"
+         content="&lt;mxfile host=&quot;app.diagrams.net&quot; agent=&quot;Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36&quot; version=&quot;24.8.6&quot; scale=&quot;1&quot; border=&quot;0&quot;&gt;&#10;  &lt;diagram name=&quot;Pagina-1&quot; id=&quot;b94KHq9nVJJbCPwdjrab&quot;&gt;&#10;    &lt;mxGraphModel dx=&quot;1434&quot; dy=&quot;738&quot; grid=&quot;1&quot; gridSize=&quot;10&quot; guides=&quot;1&quot; tooltips=&quot;1&quot; connect=&quot;1&quot; arrows=&quot;1&quot; fold=&quot;1&quot; page=&quot;1&quot; pageScale=&quot;1&quot; pageWidth=&quot;827&quot; pageHeight=&quot;1169&quot; math=&quot;0&quot; shadow=&quot;0&quot;&gt;&#10;      &lt;root&gt;&#10;        &lt;mxCell id=&quot;0&quot; /&gt;&#10;        &lt;mxCell id=&quot;1&quot; parent=&quot;0&quot; /&gt;&#10;        &lt;object label=&quot;&quot; id=&quot;2&quot;&gt;&#10;          &lt;mxCell style=&quot;strokeWidth=5;html=1;shape=mxgraph.flowchart.start_2;whiteSpace=wrap;fillColor=#00A22B;strokeColor=#000000;fontColor=#333333;&quot; vertex=&quot;1&quot; parent=&quot;1&quot;&gt;&#10;            &lt;mxGeometry x=&quot;120&quot; y=&quot;330&quot; width=&quot;70&quot; height=&quot;70&quot; as=&quot;geometry&quot; /&gt;&#10;          &lt;/mxCell&gt;&#10;        &lt;/object&gt;&#10;        &lt;mxCell id=&quot;3&quot; value=&quot;&quot; style=&quot;shape=image;html=1;verticalAlign=top;verticalLabelPosition=bottom;labelBackgroundColor=default;imageAspect=0;aspect=fixed;image=https://cdn0.iconfinder.com/data/icons/phosphor-regular-vol-4/256/plug-128.png;imageBackground=none;perimeterSpacing=0;fontColor=default;shadow=0;fillOpacity=100;&quot; vertex=&quot;1&quot; parent=&quot;1&quot;&gt;&#10;          &lt;mxGeometry x=&quot;130&quot; y=&quot;341&quot; width=&quot;50&quot; height=&quot;50&quot; as=&quot;geometry&quot; /&gt;&#10;        &lt;/mxCell&gt;&#10;      &lt;/root&gt;&#10;    &lt;/mxGraphModel&gt;&#10;  &lt;/diagram&gt;&#10;&lt;/mxfile&gt;&#10;">
+        <defs />
+        <g id="auxsupply"
+           content="&lt;object label=&quot;&quot;/&gt;"
+           data-label="">
+            <g>
+                <ellipse id="AuxSupplyEllipse"
+                         cx="37"
+                         cy="37"
+                         rx="35"
+                         ry="35"
+                         fill="none"
+                         stroke="#000000"
+                         stroke-width="5"
+                         pointer-events="all" />
+            </g>
+            <g>
+                <image x="11.5"
+                       y="12.5"
+                       width="50"
+                       height="50"
+                       xlink:href="data:image/png;base64,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"
+                       preserveAspectRatio="none" />
+            </g>
+        </g>
+    </svg>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "%s%PLC.HMI.Monitoringvars::IPSU::b_400VacOK%/s%",
+    "actions": [
+      {
+        "objectType": "JavaScript",
+        "active": false,
+        "sourceLines": [
+          "var symbol = new TcHmi.Symbol('%s%PLC.HMI.Monitoringvars::IPSU::b_400VacOK%/s%');",
+          "symbol.readEx(function (data) {",
+          "    if (data.error === TcHmi.Errors.NONE) {",
+          "        // Handle result value... ",
+          "        var value = data.value;",
+          "        var element = document.getElementById('AuxSupplyEllipse');",
+          "        ",
+          "        if (element) {",
+          "            updateColor(value, element);\t",
+          "        } else {",
+          "            console.error(\"Element not found: AuxSupplyEllipse\");",
+          "        }",
+          "        ",
+          "    } else {",
+          "        // Handle error... ",
+          "        console.error(\"Error reading symbol:\", data.error);",
+          "    }",
+          "});",
+          "",
+          "function updateColor(bool, element) {",
+          "    if (bool) {",
+          "        element.style.fill = '#00A22B';",
+          "    } else {",
+          "        element.style.fill = 'none';",
+          "    }",
+          "}"
+        ],
+        "injectContextObject": true,
+        "asyncWait": true,
+        "waitMode": "Synchronous"
+      },
+      {
+        "objectType": "Condition",
+        "active": true,
+        "parts": [
+          {
+            "if": [
+              {
+                "compare1": {
+                  "objectType": "Symbol",
+                  "valueType": "tchmi:server#/definitions/PLC.e400VSupplySource-ShowRecursively",
+                  "symbolExpression": "%s%PLC.HMI.Monitoringvars::IPSU::e_400VSource%/s%"
+                },
+                "compare2": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:server#/definitions/PLC.e400VSupplySource-ShowRecursively",
+                  "value": 2
+                },
+                "compareOperator": "==",
+                "logic": null
+              }
+            ],
+            "then": [
+              {
+                "objectType": "JavaScript",
+                "active": true,
+                "sourceLines": [
+                  "document.getElementById('AuxSupplyEllipse').style.fill= \"#00a22b\";"
+                ],
+                "injectContextObject": true,
+                "asyncWait": true,
+                "waitMode": "Synchronous"
+              }
+            ]
+          },
+          {
+            "else": [
+              {
+                "objectType": "JavaScript",
+                "active": true,
+                "sourceLines": [
+                  "document.getElementById('AuxSupplyEllipse').style.fill= \"none\";"
+                ],
+                "injectContextObject": true,
+                "asyncWait": true,
+                "waitMode": "Synchronous"
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>
+<div id="TcHmiTextblock_887" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-height="50" data-tchmi-height-unit="%" data-tchmi-left-unit="px" data-tchmi-text="AUX SUPPLY" data-tchmi-top="20" data-tchmi-top-unit="px" data-tchmi-width="70" data-tchmi-width-unit="%" data-tchmi-word-wrap="true" data-tchmi-right="0" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-font-size="%i%DataTableTitleFontSize%/i%" data-tchmi-text-font-weight="Bold">
+</div>
+</div>
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">
+[
+  {
+    "event": "Content1_20.onAttached",
+    "actions": [
+      {
+        "objectType": "Comment",
+        "comment": "First statement is for slowing down to solve all bindings before actual executing commands"
+      },
+      {
+        "objectType": "SwitchCase",
+        "active": true,
+        "compare": {
+          "objectType": "Symbol",
+          "valueType": "tchmi:general#/definitions/BOOL",
+          "symbolExpression": "%s%PLC.Settings.Configuration::b_ACInputConnection%/s%"
+        },
+        "cases": [
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/BOOL",
+              "value": true
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%InputDataOverview::Visibility%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Visibility",
+                  "value": "Visible"
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "JavaScript",
+                "active": true,
+                "sourceLines": [
+                  "document.getElementById('Input').style.display = 'Block';"
+                ],
+                "injectContextObject": false,
+                "asyncWait": true,
+                "waitMode": "Synchronous"
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      },
+      {
+        "objectType": "SwitchCase",
+        "active": true,
+        "compare": {
+          "objectType": "Symbol",
+          "valueType": "tchmi:general#/definitions/BOOL",
+          "symbolExpression": "%s%PLC.Settings.Configuration::b_DCbuscoupling%/s%"
+        },
+        "cases": [
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/BOOL",
+              "value": true
+            },
+            "actions": [
+              {
+                "objectType": "JavaScript",
+                "active": true,
+                "sourceLines": [
+                  "document.getElementById('DCCoupling').style.display = 'Block';"
+                ],
+                "injectContextObject": false,
+                "asyncWait": true,
+                "waitMode": "Synchronous"
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctrl%DcCouplingDataOverview::Visibility%/ctrl%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/Visibility",
+                  "value": "Visible"
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      }
+    ]
+  }
+]
+</script>
+</div>

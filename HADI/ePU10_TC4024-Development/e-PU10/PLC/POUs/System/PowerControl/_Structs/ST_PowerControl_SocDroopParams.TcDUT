@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_PowerControl_SocDroopParams" Id="{03ed2776-4005-4b6f-abaf-f6dce5869e8f}">
+    <Declaration><![CDATA[TYPE ST_PowerControl_SocDroopParams :
+STRUCT
+	enable				: BOOL := TRUE;
+	SocMinDroopStart	: REAL := 20; // at XX%, frequency is shifted linearly down with the actual SOC towards 0%.
+	SocMaxDroopStart	: REAL := 80; // at XX%, frequency is shifted linearly up with the actual SOC towards 100%.
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

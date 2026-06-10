@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="uSWversion" Id="{d7e2c59d-0566-4f40-ae30-5c4ea1656730}">
+    <Declaration><![CDATA[TYPE uSWversion :
+UNION
+	a4byte_SWVer 	: 	ARRAY[0..3] OF BYTE;
+	UD_SWVer		:	UDINT; 
+END_UNION
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

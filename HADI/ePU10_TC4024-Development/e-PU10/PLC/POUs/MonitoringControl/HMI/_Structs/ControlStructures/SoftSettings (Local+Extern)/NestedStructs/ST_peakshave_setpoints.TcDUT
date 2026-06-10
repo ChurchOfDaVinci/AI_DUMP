@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_peakshave_setpoints" Id="{1647dd5b-8377-48b4-9512-2d9098940bff}">
+    <Declaration><![CDATA[TYPE ST_peakshave_setpoints :
+STRUCT
+	r_SocTarget					: REAL;
+	r_IdleChargePower 			: REAL;
+	r_FeedInCurrentLimitSoft	: REAL; // TO GRID
+	r_SupplyCurrentLimitSoft	: REAL; // TO battery + Load
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

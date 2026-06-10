@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_NeutralTransformer_Get" Id="{0e00e226-4289-4ff5-a7be-649bb50bbc09}">
+    <Declaration><![CDATA[TYPE ST_NeutralTransformer_Get :
+STRUCT
+	b_active									: BOOL;
+	r_TemperaturePhase							: ARRAY [0..6] OF REAL;
+	r_Powerload									: REAL;
+	r_ratedPower								: REAL; //kva
+	events										: ST_NeutralTransformer_events;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_OperationVars_Grid" Id="{b3af3c02-c451-4e76-8f68-fe8d6201e230}">
+    <Declaration><![CDATA[TYPE ST_OperationVars_Grid:
+STRUCT
+	b_SyncClose							: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,100 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="ErrorHandling" Id="{9abac5e5-24ea-4121-8054-d4bdb9302633}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM INTERNAL ErrorHandling
+VAR_INPUT
+	e_access					: eErrAckAccess;
+	b_ClearEvents				: BOOL;	
+	AddError					: ARRAY [0..i_maxevents] OF FB_addErrorST;
+END_VAR
+
+VAR	
+	tp_ClearEvents						: TP := (PT := T#1S);
+	a_SMSEventBuffer					: ARRAY [1..10] OF STRING;
+	ton_ErrorMessageOnDelay				: TON := (PT:= T#10S);
+	
+	//Errorhandling
+	w_ErrorIndex				: WORD;
+	w_Totalerrors				: WORD;
+	b_ResetError				: BOOL;
+	(*ENUM*)
+	
+	//Refresh Timer
+	ton_RefreshTimer						: TON := (PT:= T#500MS);
+	b_refreshErrors							: BOOL;
+	b_initCycle								: BOOL := TRUE;
+	{ attribute 'TcHmiSymbol.ShowRecursively'}
+	a_ActiveEvents							: ARRAY [0..i_maxevents	] OF ST_ErrorStruct;
+	
+	
+	r_trigNormalShutdown					: R_TRIG;
+END_VAR
+
+VAR_OUTPUT
+	w_errorword							: WORD;
+	b_QuickShutdownActive				: BOOL;
+	b_NormalShutdownTrigger				: BOOL;
+END_VAR
+
+VAR CONSTANT
+	i_maxevents							: INT := 400;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//Reset variables
+w_ErrorIndex 					:= 0;
+
+//RealtimeClock
+SystemClock();
+
+//clear pulse
+tp_ClearEvents(IN := b_ClearEvents);
+
+//ONdelay
+ton_ErrorMessageOnDelay(IN:= NOT b_InitCycle);
+
+//Refresh signal
+ton_RefreshTimer(IN:= NOT(ton_RefreshTimer.Q));
+b_RefreshErrors := ton_RefreshTimer.Q OR b_InitCycle;
+IF b_RefreshErrors AND ton_ErrorMessageOnDelay.Q THEN
+	GVL.b_WarningActive				:= FALSE;
+	GVL.b_NormalShutdownActive		:= FALSE;
+	GVL.b_QuickshutdownActive		:= FALSE;
+	GVL.b_EmergencyShutdownActive	:= FALSE;	
+
+	Safety.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	Main_Fast.PowerMonitor.GetDiagnostics(AddError, a_ActiveEvents,  w_errorindex);
+	Main_Fast.InternalPowerSupply.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	Main_Fast.NeutralTransformer.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	Main_Fast.HartingIO.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	Main_Fast.PowerStack.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	Main_Fast.Protectionsystems.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	Main_Fast.BMS.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	Main_Fast.Enclosure.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	Main_Fast.Coolingsystem.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	Main_Fast.ACswitchgear.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	Main_Fast.Router.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	controlmanager.PNController.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	Main_Fast.SystemControl.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	Main_Fast.Peakshavebox.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	Main_Fast.GenComm.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	Main_Fast.AcDcCharger.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	controlmanager.IoT.GetDiagnostics(AddError, a_ActiveEvents, w_errorindex);
+	w_Totalerrors := w_errorindex;
+END_IF
+
+//If larger than 0, error is existing
+b_QuickShutdownActive := GVL.b_QuickshutdownActive OR GVL.b_EmergencyShutdownActive;
+r_trigNormalShutdown(CLK := GVL.b_NormalShutdownActive, Q => b_normalShutdownTrigger);
+
+b_initCycle := FALSE;]]></ST>
+    </Implementation>
+    <LineIds Name="ErrorHandling">
+      <LineId Id="872" Count="36" />
+      <LineId Id="993" Count="0" />
+      <LineId Id="954" Count="0" />
+      <LineId Id="909" Count="6" />
+      <LineId Id="474" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

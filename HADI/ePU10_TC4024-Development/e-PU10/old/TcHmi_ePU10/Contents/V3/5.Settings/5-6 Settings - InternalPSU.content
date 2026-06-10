@@ -1,0 +1,95 @@
+<div id="5-5_Settings_-_Config_4" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-creator-viewport-height="864" data-tchmi-creator-viewport-width="768" data-tchmi-right="0" data-tchmi-bottom="0">
+
+<div id="TcHmiGrid_1262" data-tchmi-type="TcHmi.Controls.System.TcHmiGrid" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="50" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0">
+
+<script data-tchmi-target-attribute="data-tchmi-row-options" type="application/json">
+[
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  },
+  {
+    "height": 1.0,
+    "heightUnit": "factor",
+    "heightMode": "Content",
+    "maxHeightUnit": "px",
+    "minHeightUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-column-options" type="application/json">
+[
+  {
+    "width": 1.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  },
+  {
+    "width": 1.0,
+    "widthUnit": "factor",
+    "widthMode": "Value",
+    "maxWidthUnit": "px",
+    "minWidthUnit": "px",
+    "overflow": false
+  }
+]
+</script>
+<div id="ParameterList_28" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="2" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-data1="%s%PLC.Settings.MachineParams::Interpowersupply::usi_UPSBattOKSOC%/s%" data-tchmi-data2="%s%PLC.Settings.MachineParams::Interpowersupply::usi_UPSBattLowinfoSOC%/s%" data-tchmi-label2="SOC low info [%]" data-tchmi-data3="%s%PLC.Settings.MachineParams::Interpowersupply::usi_UPSBattLowwarningSOC%/s%" data-tchmi-label3="SOC low warning [%]" data-tchmi-height-mode="Content" data-tchmi-label1="SOC ok [%]" data-tchmi-title="UPS SETTINGS" data-tchmi-enable4="true" data-tchmi-show="true" data-tchmi-decimals="0" data-tchmi-label4="SOC low alarm [%]" data-tchmi-data4="%s%PLC.Settings.MachineParams::Interpowersupply::usi_UPSBattLowErrorSOC%/s%" data-tchmi-decimals1="0">
+</div>
+<div id="ParameterList_29" data-tchmi-type="TcHmi.Controls.System.TcHmiUserControlHost" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="2" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-target-user-control="Contents/ParameterList.usercontrol" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-data1="%s%PLC.Settings.MachineParams::Interpowersupply::i_ACPSU_StartupDelay%/s%" data-tchmi-data2="%s%PLC.Settings.MachineParams::Interpowersupply::i_DCPSU_StartupDelay%/s%" data-tchmi-label2="DC PSU [ms]" data-tchmi-data3="%s%PLC.Settings.MachineParams::Interpowersupply::i_ACStartupDelay%/s%" data-tchmi-label3="AC supply [ms]" data-tchmi-height-mode="Content" data-tchmi-label1="AC PSU [ms]" data-tchmi-title="Startup delay settings" data-tchmi-enable4="true" data-tchmi-decimals="0" data-tchmi-data4="%s%PLC.Settings.MachineParams::Interpowersupply::i_IntZPTStartupDelay%/s%" data-tchmi-label4="Internal ZPT [ms]" data-tchmi-decimals1="0">
+</div>
+</div>
+<div id="TcHmiTextblock_843" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTextblock" data-tchmi-grid-column-index="1" data-tchmi-grid-row-index="1" data-tchmi-height-unit="px" data-tchmi-left="0" data-tchmi-left-unit="px" data-tchmi-top="0" data-tchmi-top-unit="px" data-tchmi-width-unit="px" data-tchmi-word-wrap="true" data-tchmi-right="0" data-tchmi-text-vertical-alignment="Center" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-font-size="20" data-tchmi-height="50" data-tchmi-text="%f%TcHmi.Functions.Beckhoff.ToUpperCase(%l%IPSU%/l%)%/f%">
+<script data-tchmi-target-attribute="data-tchmi-background-color" type="application/json">
+{
+  "color": "rgba(207, 207, 207, 0.5019607)"
+}
+</script>
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 10.0,
+  "topRight": 10.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+</div>
+</div>

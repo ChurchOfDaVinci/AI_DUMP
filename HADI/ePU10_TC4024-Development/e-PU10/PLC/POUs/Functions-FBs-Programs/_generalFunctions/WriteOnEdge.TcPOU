@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="WriteOnEdge" Id="{a2aa0500-dd72-49c3-8532-1482c4a69391}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK WriteOnEdge
+VAR_INPUT
+	In	: BOOL;
+END_VAR
+
+VAR_IN_OUT
+	out	:	BOOL;
+END_VAR
+
+VAR
+	Ftrig	:	f_trig;
+	Rtrig	:	r_trig;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//this function block writes the input value to the output, but only when the input changes (falling or rising).
+//When no edge detection happens, the output value remains untouched, allowing for parallel input values to 1 output.
+//Pair with R_trig on the input for pulse output on input rising edge.
+
+Ftrig(clk := in);
+Rtrig(clk := in);
+
+IF (Ftrig.Q OR Rtrig.Q) THEN
+	out := in;
+END_IF]]></ST>
+    </Implementation>
+    <LineIds Name="WriteOnEdge">
+      <LineId Id="24" Count="0" />
+      <LineId Id="26" Count="1" />
+      <LineId Id="25" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="17" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="18" Count="1" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,67 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eWago750495_ACDataID" Id="{e6197a31-cc77-4171-a6fc-0ca390148dc9}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_String'}
+TYPE eWago750495_ACDataID :
+(
+	//only RMS and peak values are declared
+	//Voltages
+	VoltageL1N_RMS			:= 4,
+	VoltageL2N_RMS 			:= 5,
+	VoltageL3N_RMS			:= 6,
+	VoltageL1L2_RMS			:= 31,
+	VoltageL2L3_RMS 		:= 32,
+	VoltageL3L1_RMS			:= 33,
+	VoltageL1N_Peak 		:= 91,
+	VoltageL2N_Peak 		:= 92,
+	VoltageL3N_Peak 		:= 93,
+	
+	//Currents
+	CurrentL1_RMS			:= 1,
+	CurrentL2_RMS			:= 2,
+	CurrentL3_RMS			:= 3,
+	CurrentN_RMS			:= 97,
+	CurrentL1_Peak			:= 94,
+	CurrentL2_Peak			:= 95,
+	CurrentL3_Peak			:= 96,
+	                           
+	//Power                    
+	ActivePowerL1			:= 07,
+	ActivePowerL2			:= 08,
+	ActivePowerL3			:= 09,
+	ReactivePowerL1			:= 10,
+	ReactivePowerL2			:= 11,
+	ReactivePowerL3			:= 12,
+	ApparentPowerL1			:= 13,
+	ApparentPowerL2			:= 14,
+	ApparentPowerL3			:= 15,
+	
+	//Energy
+	ActiveEnergyTotal			:= 73,
+	ActiveEnergyImport			:= 74,
+	ActiveEnergyExport			:= 75,
+	ReactiveEnergyTotal			:= 85,
+	ReactiveEnergyInductive		:= 86,
+	AReactiveEnergyCapacitive	:= 87,
+	
+	//Frequency
+	FrequencyL1				:= 16,
+	FrequencyL2				:= 17,
+	FrequencyL3				:= 18,
+	                           
+	//Phase Angle              
+	PhaseAngleL1			:= 19,
+	PhaseAngleL2			:= 20,
+	PhaseAngleL3			:= 21,
+	
+	//PowerFactor
+	PowerFactorL1			:= 25,
+	PowerFactorL2			:= 26,
+	PowerFactorL3			:= 27
+) USINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eWifiStatus" Id="{8a0ff036-f681-4ede-8922-6a18c2b5a275}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+TYPE eWifiStatus :
+(
+	invalid := 0,
+	off := 1,
+	searching := 2,
+	Connected := 3,
+	Starting := 4,
+	Active := 5
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

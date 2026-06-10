@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_SystemTime" Id="{3f3715fe-96e9-4820-bd99-d09c69fbd86f}">
+    <Declaration><![CDATA[TYPE ST_SystemTime :
+STRUCT
+	AutoSyncToGPS	:	BOOL;
+	ManualSync		:	BOOL;
+	ManSyncValue	:	DT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

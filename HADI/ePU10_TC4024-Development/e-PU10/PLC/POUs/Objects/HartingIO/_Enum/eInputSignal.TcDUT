@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eInputSignal" Id="{426d2b47-903a-4004-91ab-ee8d00ebd04e}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+
+TYPE eInputSignal :
+(
+	None 			:= 	0,
+	GenLowFuel 		:= 	1,
+	StopOperation 	:= 	2,
+	EMstop			:=	3
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

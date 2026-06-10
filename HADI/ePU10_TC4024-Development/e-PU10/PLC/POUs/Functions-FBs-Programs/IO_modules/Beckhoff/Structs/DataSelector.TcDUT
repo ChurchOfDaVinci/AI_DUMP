@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="DataSelector" Id="{63792fc6-4f5f-4584-bfe4-c68005034a28}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE DataSelector :
+(
+	_C 		:= 0,
+	_V 		:= 1,
+	_P		:= 2,
+	_Q		:= 3,
+	_S		:= 4,
+	_E		:= 5,
+	_F		:= 6	
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

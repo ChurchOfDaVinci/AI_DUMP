@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Powermodule_additionalMeasurements" Id="{863c3bb2-b48d-45bd-a49f-20945aa55ea2}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Powermodule_additionalMeasurements 
+VAR_IN_OUT
+	get									: ST_PowerModule_Get;
+END_VAR
+
+
+VAR
+	a_EL3208_1					AT %I* : ARRAY[1..8] OF ST_AnalogInputData;
+	a_EL3208_2					AT %I* : ARRAY[1..8] OF ST_AnalogInputData;
+	a_EL3208_3					AT %I* : ARRAY[1..8] OF ST_AnalogInputData;
+	a_EL3208_4					AT %I* : ARRAY[1..8] OF ST_AnalogInputData;
+	r_precision	: REAL := 0.1;
+	i : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[get.AddTemperatures.r_CMchokeInner[1] 		:= a_EL3208_1[1].value * r_precision; 
+get.AddTemperatures.r_CMchokeInner[2] 		:= a_EL3208_1[2].value * r_precision; // L2
+get.AddTemperatures.r_CMchokeInner[3] 		:= a_EL3208_1[3].value * r_precision; // l3
+get.AddTemperatures.r_CMchokeInner[4] 		:= a_EL3208_1[4].value * r_precision; // DC
+get.AddTemperatures.r_GrChokeInner[1] 		:= a_EL3208_1[5].value * r_precision; // L1
+get.AddTemperatures.r_GrChokeInner[2] 		:= a_EL3208_1[6].value * r_precision; // L2
+get.AddTemperatures.r_GrchokeInner[3] 		:= a_EL3208_1[7].value * r_precision; // L3
+get.AddTemperatures.r_ambient 				:= a_EL3208_1[8].value * r_precision; //
+get.AddTemperatures.r_CMchokeOuter[1] 		:= a_EL3208_2[1].value * r_precision; // L1
+get.AddTemperatures.r_CMchokeOuter[2] 		:= a_EL3208_2[2].value * r_precision; // L2
+get.AddTemperatures.r_CMchokeOuter[3] 		:= a_EL3208_2[3].value * r_precision; // L3
+get.AddTemperatures.r_CMchokeOuter[4] 		:= a_EL3208_2[4].value * r_precision; // DC
+get.AddTemperatures.r_GrChokeOuter[1] 		:= a_EL3208_2[5].value * r_precision;	//
+get.AddTemperatures.r_GrChokeOuter[2] 		:= a_EL3208_2[6].value * r_precision; //
+get.AddTemperatures.r_GrChokeOuter[3] 		:= a_EL3208_2[7].value * r_precision; // L3
+get.AddTemperatures.r_FancoilCompartement 	:= a_EL3208_2[8].value * r_precision; //
+get.AddTemperatures.r_ACCapsBottom 			:= a_EL3208_3[1].value * r_precision; // 
+get.AddTemperatures.r_AcCapsTop			 	:= a_EL3208_3[2].value * r_precision; //
+get.AddTemperatures.r_DcCaps			 	:= a_EL3208_3[3].value * r_precision; // 
+get.AddTemperatures.r_ACbusbarOutput		:= a_EL3208_3[4].value * r_precision; //
+get.AddTemperatures.r_ACbusbarCMChoke 		:= a_EL3208_3[5].value * r_precision; // 
+get.AddTemperatures.r_DCbusbarCMChoke 		:= a_EL3208_3[6].value * r_precision; // 
+get.AddTemperatures.r_WaterInletFancoil		:= a_EL3208_4[1].value * r_precision; //
+get.AddTemperatures.r_AirOutletFancoil 		:= a_EL3208_4[2].value * r_precision; //
+get.AddTemperatures.r_WaterOutletFancoil	:= a_EL3208_4[3].value * r_precision; //
+get.AddTemperatures.r_AirInletModule		:= a_EL3208_4[4].value * r_precision; //
+
+FOR i := 1 TO 8 DO
+	IF a_EL3208_1[i].Status.Underrange THEN get.Events.b_PT100Underrange := TRUE; END_IF;
+	IF a_EL3208_1[i].Status.Overrange THEN get.Events.b_PT100Overrange := TRUE; END_IF;
+	IF a_EL3208_1[i].Status.Error THEN get.Events.by_PT100ErrorCount := get.Events.by_PT100ErrorCount +1; END_IF;
+	IF a_EL3208_2[i].Status.Underrange THEN get.Events.b_PT100Underrange := TRUE; END_IF;
+	IF a_EL3208_2[i].Status.Overrange THEN get.Events.b_PT100Overrange := TRUE; END_IF;
+	IF a_EL3208_2[i].Status.Error THEN get.Events.by_PT100ErrorCount := get.Events.by_PT100ErrorCount +1; END_IF;
+END_FOR
+FOR i := 1 TO 6 DO
+	IF a_EL3208_3[i].Status.Underrange THEN get.Events.b_PT100Underrange := TRUE; END_IF;
+	IF a_EL3208_3[i].Status.Overrange THEN get.Events.b_PT100Overrange := TRUE; END_IF;
+	IF a_EL3208_3[i].Status.Error THEN get.Events.by_PT100ErrorCount := get.Events.by_PT100ErrorCount +1; END_IF;
+END_FOR
+FOR i := 1 TO 4 DO
+	IF a_EL3208_4[i].Status.Underrange THEN get.Events.b_PT100Underrange := TRUE; END_IF;
+	IF a_EL3208_4[i].Status.Overrange THEN get.Events.b_PT100Overrange := TRUE; END_IF;
+	IF a_EL3208_4[i].Status.Error THEN get.Events.by_PT100ErrorCount := get.Events.by_PT100ErrorCount +1; END_IF;
+END_FOR]]></ST>
+    </Implementation>
+    <LineIds Name="FB_Powermodule_additionalMeasurements">
+      <LineId Id="9" Count="0" />
+      <LineId Id="21" Count="19" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="67" Count="0" />
+      <LineId Id="42" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="100" Count="3" />
+      <LineId Id="114" Count="0" />
+      <LineId Id="104" Count="1" />
+      <LineId Id="115" Count="0" />
+      <LineId Id="111" Count="0" />
+      <LineId Id="110" Count="0" />
+      <LineId Id="106" Count="1" />
+      <LineId Id="116" Count="0" />
+      <LineId Id="113" Count="0" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="108" Count="1" />
+      <LineId Id="117" Count="0" />
+      <LineId Id="84" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

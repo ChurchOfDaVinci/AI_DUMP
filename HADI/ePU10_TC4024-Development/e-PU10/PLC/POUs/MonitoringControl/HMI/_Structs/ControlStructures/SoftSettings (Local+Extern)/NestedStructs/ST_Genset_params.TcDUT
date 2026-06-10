@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Genset_params" Id="{e430574b-b1d0-4758-8dee-80b2845be739}">
+    <Declaration><![CDATA[TYPE ST_Genset_params :
+STRUCT
+	//Genset
+	e_GensetMode					: eGensetMode;
+	b_GensetLoadshareLine			: BOOL;
+	r_RatedPower					: REAL := 100; // KVA
+	r_powerloadMax					: REAL := 80; //%
+	r_PowerloadMin					: REAL := 10; //%, value below disconnects genset.
+	r_PowerloadEff					: REAL := 60; //% powerload at which genset is the most efficient
+	r_ramprate						: REAL := 1; // % * kva /s
+	ui_CooldownTime					: UINT := 5; //min
+	ui_WarmupTime					: UINT := 1; //min
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

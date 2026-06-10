@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="st_IOT_params" Id="{d02d8590-bfb6-480d-8fb8-c41378cdf80b}">
+    <Declaration><![CDATA[TYPE st_IOT_params :
+STRUCT
+	b_controlEnable			: 	BOOL := FALSE;
+	r_UpdateTimeFast		: 	REAL := 15; //seconds
+	r_UpdateTimeSlow		: 	REAL := 60; //seconds
+	IotCommVersion			: 	eIotCommVersion;
+	DefaultLoggingBudget	:	UINT	:= 100;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,456 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_Datalogger" Id="{d90aac18-5cc1-4567-8e7e-26193cbb13cb}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Datalogger
+VAR_IN_OUT
+	Event			: ST_ErrorStruct;
+END_VAR
+
+VAR_IN_OUT CONSTANT
+	Monitor			: ST_System_Monitor;
+END_VAR
+
+VAR_INPUT
+	sTime								: STRING;
+	sDate								: STRING;
+	udi_ParamMaxAmountOfDataLogStorage	: UDINT;
+	str_ParamDataLogFilePath			: STRING;
+	t_ParamLogtime						: TIME;
+END_VAR
+VAR_OUTPUT
+	b_Error							: BOOL := FALSE;
+	b_FileOpened					: BOOL;
+	str_NewestFile					: STRING;
+	udi_TotalRows					: UDINT := 0;
+	r_FileSize						: REAL; 
+END_VAR
+VAR_IN_OUT
+	udi_PersistAmountOfFiles		: UDINT;
+	udi_PersistMaxAmountOfFiles		: UDINT;
+	a_PersistLogFilesCreated		: ARRAY [0..10000] OF STRING(30);
+	b_PersistFileNotClosed			: BOOL;
+	ui_PersistHFileNotClosed		: UINT;
+END_VAR
+VAR						
+	//FB Open-Write-Close file
+	fileOpen						: FB_FileOpen;
+	fileWrite						: FB_FileWrite;
+	fileClose						: FB_FileClose;
+	fileCloseNotClosed				: FB_FileClose;
+
+	//Buffer	
+	FB_CsvBuffer					: FB_CSVWriter;
+	bufferMemory					: ARRAY[1..Datalogger.BUFFERMEM] OF STRING;	
+	cleardata						: ARRAY[1..Datalogger.BUFFERMEM] OF STRING; 
+	
+	//Data 
+	DataVar							: ARRAY [1..Datalogger.NUMBEROFELEMENTS] OF STRING;
+	filePath						: STRING:='C:\users\Administrator\desktop\datalogging\';				//Filepath, name gets created in prog
+	filePathAmount					: STRING;
+	
+	//Header
+	DataHeader						: ARRAY [1..Datalogger.NUMBEROFCOLUMNS] OF STRING;
+	
+	//Var
+	ton_log							: TON;
+	step							: INT := 0;
+	cntr1							: UDINT := 1;
+	idx								: UDINT := 1;
+	elementcounter					: UDINT := 0;
+	increment						: UDINT := 0;
+	logdelay						: UDINT := 0;
+	
+	//Log data limit
+	idx1								: UDINT;
+	deleteFile							: FB_FileDelete;
+	trig								: R_TRIG;
+	Filesize							: FB_EnumFindFileEntry;
+	b_Readsize							: BOOL;
+END_VAR
+
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//Data limiter **
+//Limint amount of files
+r_FileSize := (DWORD_TO_REAL(Filesize.stFindFile.fileSize.dwLowPart)/1022938);
+
+//Files need to be fully completed (Standard = 15 files) 
+IF udi_PersistAmountOfFiles < 1 THEN
+	udi_PersistMaxAmountOfFiles := 15;
+ELSIF udi_PersistAmountOfFiles >= 1  AND r_FileSize > 0 AND NOT b_PersistFileNotClosed THEN 
+	udi_PersistMaxAmountOfFiles := REAL_TO_UDINT(udi_ParamMaxAmountOfDataLogStorage / (r_FileSize*(1+Datalogger.MARGEDATAUSAGE)));
+END_IF
+
+
+trig(CLK:=b_FileOpened , Q=> );
+
+//Move data up the array
+IF trig.Q THEN
+	FOR idx1:= udi_PersistMaxAmountOfFiles TO 1 BY -1 DO
+		a_PersistLogFilesCreated[idx1]:=a_PersistLogFilesCreated[idx1-1];
+	END_FOR
+a_PersistLogFilesCreated[0]:=str_NewestFile;
+END_IF
+
+//Delete oldest file
+deleteFile(
+	sNetId:= , 
+	sPathName:= a_PersistLogFilesCreated[udi_PersistMaxAmountOfFiles], 
+	ePath:= , 
+	bExecute:= trig.Q, 
+	tTimeout:=, 
+	bBusy=> , 
+	bError=> , 
+	nErrId=> );
+
+//Read file size
+IF b_FileOpened AND udi_PersistAmountOfFiles > 1 THEN
+	b_Readsize := TRUE;
+ELSE 
+	b_Readsize := FALSE;
+END_IF
+	
+Filesize(
+	sNetId:= , 
+	sPathName:= a_PersistLogFilesCreated[1] , 
+	eCmd:= , 
+	bExecute:= b_Readsize, 
+	tTimeout:= , 
+	bBusy=> , 
+	bError=> , 
+	nErrID=> , 
+	bEOE=> , 
+	stFindFile=> );
+
+
+	
+//Data logger**
+ton_log(IN:=NOT ton_log.Q , PT:=t_ParamLogtime , Q=> , ET=> );       
+
+
+filePath := CONCAT(str_ParamDataLogFilePath, CONCAT(sTime , ' DataLogging.csv'));
+
+//FB open - write - close
+fileOpen(
+	sNetId:= , 
+	sPathName:=filePath , 
+	nMode:=FOPEN_MODEWRITE OR FOPEN_MODETEXT , 
+	ePath:=PATH_GENERIC , 
+	tTimeout:=T#3S);
+
+fileWrite(
+	sNetId:= , 
+	hFile:=fileOpen.hFile , 
+	pWriteBuff:=ADR(bufferMemory) , 
+	cbWriteLen:=SIZEOF(bufferMemory) , 
+	tTimeout:=T#3S);	
+		
+fileClose(
+	sNetId:= , 
+	hFile:=fileOpen.hFile , 
+	tTimeout:=T#3S);
+
+
+ 
+//Start delay
+IF 	ton_log.Q AND logdelay <= 2 THEN 
+	logdelay := logdelay + 1;
+END_IF
+
+
+IF logdelay >= 2 THEN 
+	
+//Var loop
+IF ton_log.Q AND NOT b_Error THEN
+	FOR cntr1 := 1 TO Datalogger.NUMBEROFCOLUMNS DO
+		DataVar[elementcounter + cntr1] := a_VariableArray[cntr1];
+	END_FOR
+	elementCounter := elementCounter + Datalogger.NUMBEROFCOLUMNS;
+	udi_TotalRows := udi_TotalRows + 1;
+END_IF	
+
+	
+CASE step OF
+
+//Condition
+0:		IF  NOT b_Error AND NOT b_FileOpened THEN
+			step:= 10;
+		ELSIF  udi_TotalRows >= Datalogger.INCREOFROWS * (increment+1) AND NOT b_Error AND b_FileOpened AND udi_TotalRows <= Datalogger.TOTALNUMBEROFROWS THEN
+			step:= 30;
+		ELSIF udi_TotalRows >= Datalogger.TOTALNUMBEROFROWS AND NOT b_Error THEN
+			step:= 50;
+		ELSIF NOT fileOpen.bError AND NOT fileWrite.bError AND NOT fileClose.bError THEN
+			b_Error := FALSE;
+		ELSE 
+			step:= 0;
+		END_IF
+
+
+//Opening file - check if old file is closed (due random shutdown)
+10:		fileOpen.bExecute:=TRUE;
+	
+		IF fileOpen.bBusy THEN
+			fileOpen.bExecute:=FALSE;
+			step:=11;
+		END_IF
+
+//Waiting for the file to be open
+11: 	IF NOT fileOpen.bBusy AND NOT fileOpen.bError THEN
+			b_FileOpened := TRUE;
+			
+			IF b_PersistFileNotClosed THEN
+				fileCloseNotClosed.bExecute:= TRUE;
+			END_IF
+			//If file not closed due random shutdown 
+			fileCloseNotClosed(
+				sNetId:= , 
+				hFile:=ui_PersistHFileNotClosed , 
+				tTimeout:=T#3S);
+			
+			str_NewestFile := filePath;
+			IF udi_PersistAmountOfFiles < udi_PersistMaxAmountOfFiles THEN
+				udi_PersistAmountOfFiles:= udi_PersistAmountOfFiles+1;
+				ui_PersistHFileNotClosed := fileopen.hFile;
+				fileCloseNotClosed.bExecute:= FALSE;
+				b_PersistFileNotClosed := TRUE;
+			END_IF
+			step:=20;
+		ELSE
+			b_Error:=TRUE;	
+			step:=0;
+		END_IF
+
+//Load buffer with header
+20:		FOR idx:=1 TO Datalogger.NUMBEROFCOLUMNS  DO
+		
+			IF idx=1 THEN
+				FB_CsvBuffer.eCmd:=eEnumCmd_First;
+			ELSE
+				FB_CsvBuffer.eCmd:=eEnumCmd_Next;
+			END_IF
+            
+			IF idx MOD Datalogger.NUMBEROFCOLUMNS=0 AND idx>1 THEN				
+				FB_CsvBuffer.bLF:=TRUE;
+			ELSE
+				FB_CsvBuffer.bLF:=FALSE;
+			END_IF
+						
+			FB_CsvBuffer.putValue:=STRING_TO_CSVFIELD(eventtype.Column[idx].s_header,bQm:=FALSE);
+			
+			
+			FB_CsvBuffer(
+				pBuffer		:= ADR(bufferMemory) , 
+				cbBuffer	:= SIZEOF(bufferMemory) , 
+				bOk=> , 
+				cbSize=> , 
+				cbFree=> , 
+				nFields=> , 
+				nRecords=> , 
+				cbWrite=> );
+
+		END_FOR
+		step:=21;
+		
+//Write header
+21:		fileWrite.bExecute:=TRUE;
+	
+		IF fileWrite.bBusy THEN
+			fileWrite.bExecute:=FALSE;
+			step:=22;
+		END_IF
+		
+22: 	IF NOT fileWrite.bBusy AND NOT fileWrite.bError  THEN
+			step:=0;
+			bufferMemory:=cleardata;
+		ELSE  
+			b_Error:=TRUE;
+			step:=0;
+		END_IF
+
+//Load buffer with data variables
+30:		FOR idx:=1 TO Datalogger.NUMBEROFCOLUMNS * Datalogger.INCREOFROWS  DO
+		
+			IF idx=1 THEN
+				FB_CsvBuffer.eCmd:=eEnumCmd_First;
+			ELSE
+				FB_CsvBuffer.eCmd:=eEnumCmd_Next;
+			END_IF
+            
+			IF idx MOD Datalogger.NUMBEROFCOLUMNS=0 AND idx>1 THEN				
+				FB_CsvBuffer.bLF:=TRUE;
+			ELSE
+				FB_CsvBuffer.bLF:=FALSE;
+			END_IF
+						
+			FB_CsvBuffer.putValue:=STRING_TO_CSVFIELD(DataVar[idx],bQm:=FALSE);
+			
+			
+			FB_CsvBuffer(
+				pBuffer		:= ADR(bufferMemory) , 
+				cbBuffer	:= SIZEOF(bufferMemory) , 
+				bOk=> , 
+				cbSize=> , 
+				cbFree=> , 
+				nFields=> , 
+				nRecords=> , 
+				cbWrite=> );
+
+		END_FOR
+		step:=31;
+
+//Write var data 
+31: 	fileWrite.bExecute:=TRUE;
+	
+		IF fileWrite.bBusy THEN
+			fileWrite.bExecute:=FALSE;
+			elementCounter := 0;
+			step:=32;
+		END_IF
+		
+32: 	IF NOT fileWrite.bBusy AND NOT fileWrite.bError THEN
+			step:=40;
+			bufferMemory:=cleardata;
+		ELSE  
+			b_Error:=TRUE;
+			step:=0;
+		END_IF
+	
+//Totalrows = TOTALNUMBEROFROWS
+40: 	IF udi_TotalRows < Datalogger.TOTALNUMBEROFROWS THEN
+			increment := increment + 1;
+			step:=0;
+		ELSE
+			step:=50;
+		END_IF
+	
+//Closing the file
+50: 	fileClose.bExecute:=TRUE;
+		
+		IF fileClose.bBusy THEN
+			fileClose.bExecute:=FALSE;
+			b_PersistFileNotClosed:= FALSE;
+			step:=51;
+		END_IF
+
+//Waiting for the file to be closed
+51: IF NOT fileClose.bBusy AND NOT fileClose.bError THEN
+			b_FileOpened:= FALSE;
+			increment:= 0;
+			udi_TotalRows:= 0;
+			step:=0;
+		ELSE
+			b_Error:= TRUE;
+			step:=0;
+		END_IF
+
+END_CASE
+
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="EventType" Id="{3ae09133-9e06-43c5-add9-620f58dbe25b}">
+      <Declaration><![CDATA[METHOD EventType : BOOL
+VAR_IN_OUT
+	Event			: ST_ErrorStruct;
+END_VAR
+
+VAR_IN_OUT CONSTANT
+	Monitor			: ST_System_Monitor;
+END_VAR
+
+VAR_OUTPUT
+	Column				: ARRAY [0..Datalogger.NUMBEROFCOLUMNS] OF ST_Datalog_event; 
+END_VAR
+
+VAR
+	s_Time				: STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[s_Time := SEL(event.b_ErrorActive, event.s_TimeError, event.s_TimeCleared);
+
+Column[0].s_header := 'Date';
+Column[0].s_data:= event.s_DateError;
+
+Column[1].s_header := 'Time';
+column[1].s_data := s_Time;
+
+Column[2].s_header := 'ID';
+column[2].s_data := TO_STRING(event.w_ID);
+
+Column[3].s_header := 'Severity';
+column[3].s_data := event.s_Severity;
+
+Column[4].s_header := 'Message';
+column[4].s_data := event.s_Message;
+
+Column[5].s_header := 'System state';
+column[5].s_data := TO_STRING(monitor.system.e_State);
+
+Column[6].s_header := 'Powerstack state';
+column[6].s_data := TO_STRING(monitor.powerstack.e_State);
+
+Column[7].s_header := 'Battery state';
+column[7].s_data := TO_STRING(monitor.battery.BatteryInfo.e_BMS_Status);
+
+Column[8].s_header := 'Cooling state';
+column[8].s_data := TO_STRING(monitor.Cooling.CoolingSystemMode);
+
+Column[9].s_header := 'Internal Supply Source';
+column[9].s_data := TO_STRING(monitor.internalpsu.e_400VSupplySource);
+
+Column[10].s_header := 'Absolute SOC';
+column[10].s_data := TO_STRING(monitor.battery.BatteryInfo.r_SOC);
+
+Column[11].s_header := 'DC power';
+column[11].s_data := TO_STRING(monitor.battery.BatteryInfo.r_SystemPower);
+
+Column[11].s_header := 'AC apparent power';
+column[11].s_data := TO_STRING(monitor.powerstack.r_ApparentPower);]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_Datalogger">
+      <LineId Id="13" Count="1" />
+      <LineId Id="353" Count="0" />
+      <LineId Id="527" Count="0" />
+      <LineId Id="352" Count="0" />
+      <LineId Id="15" Count="4" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="298" Count="37" />
+      <LineId Id="280" Count="0" />
+      <LineId Id="525" Count="0" />
+      <LineId Id="417" Count="0" />
+      <LineId Id="343" Count="1" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="29" Count="21" />
+      <LineId Id="449" Count="0" />
+      <LineId Id="445" Count="0" />
+      <LineId Id="51" Count="28" />
+      <LineId Id="274" Count="0" />
+      <LineId Id="273" Count="0" />
+      <LineId Id="80" Count="5" />
+      <LineId Id="413" Count="0" />
+      <LineId Id="87" Count="6" />
+      <LineId Id="423" Count="0" />
+      <LineId Id="451" Count="0" />
+      <LineId Id="430" Count="0" />
+      <LineId Id="439" Count="0" />
+      <LineId Id="435" Count="0" />
+      <LineId Id="520" Count="3" />
+      <LineId Id="515" Count="0" />
+      <LineId Id="431" Count="0" />
+      <LineId Id="95" Count="2" />
+      <LineId Id="450" Count="0" />
+      <LineId Id="452" Count="0" />
+      <LineId Id="437" Count="0" />
+      <LineId Id="98" Count="114" />
+      <LineId Id="414" Count="0" />
+      <LineId Id="213" Count="15" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_Datalogger.EventType">
+      <LineId Id="6" Count="38" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

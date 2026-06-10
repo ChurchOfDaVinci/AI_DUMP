@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Router_params" Id="{670cbed1-44dc-4e39-9f93-f60eade20940}">
+    <Declaration><![CDATA[TYPE ST_Router_params :
+STRUCT
+	IP_TELTONIKA		: STRING(16) := '192.168.1.1';
+	MBPort_TELTONIKA 	: UINT := 502;
+	T_MBTimeout			: TIME := T#2S;
+	MinimumPhoneNumberLength	:UINT := 10;
+	
+	//temporary setup via stparams until integrated into HMI
+	ManualSettings		:	st_router_set;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

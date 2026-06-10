@@ -1,0 +1,5 @@
+28-07-2025 16:58:06 TcHmi_ePU10: remove definitions
+-----------------------------------------------------------
+PLC.eGridFormingMode-ShowRecursively,
+PLC.eHeatPumpMode-ShowRecursively
+-----------------------------------------------------------

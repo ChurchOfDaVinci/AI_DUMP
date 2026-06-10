@@ -1,0 +1,1721 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <POU Name="FB_PowerModule" Id="{a42b7ccb-ca12-4e75-939b-ec7736ea81fa}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PowerModule
+VAR_IN_OUT CONSTANT
+	st_params							: ST_PowerModule_params;
+	st_calibration						: ST_PowerModule_Calibration;
+END_VAR
+
+
+VAR_INPUT
+	set									: ST_PowerModule_set; //only setteable from intern powerstack function
+	r_batteryDCVoltage					: REAL;
+	b_enable							: BOOL;
+	e_ID								: eObject_ID;
+END_VAR
+
+VAR_OUTPUT
+	{attribute 'TcAnalytics'}
+	get									: ST_PowerModule_get;
+	b_MccbEDM							: BOOL;
+END_VAR	
+
+VAR									
+	Inverter							: FB_PowerModule_Inverter();
+	Buscoupler							: FB_PowerModule_Buscoupler();
+	ton_ResetPulse						: TON := (PT:= T#100MS);
+	
+	r_Prq: REAL;
+	r_Qrq: REAL;
+	pin: REAL;
+	QIN: REAL;
+END_VAR
+
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF b_enable THEN
+	get.b_online := get.ui_buscouplerCommStatus = 0 AND get.ui_InverterCommStatus = 0;
+	
+	//Instantiate function blocks
+	Buscoupler(get:=get, b_MccbEDM := b_MccbEDM, b_D7SyncRq := set.b_D7SyncRequest);
+	Inverter(set := set, get:=get, st_params:=st_params);
+	//defaults
+	Inverter.ControlWord.b_FieldbusControlEnable := st_params.b_FieldBusControlEnable;
+
+	//Control fan contactor.
+	FanControl(st_params := st_params);
+	
+	//Set PowerModule status
+	GetPowerModuleStatus();
+	
+	//Set DroopLimit
+	SetInverterSettings();
+	
+	//Calculate derivatives
+	CalculateDerivativePowerValues();
+	
+	//Parallel Drive
+	SetParallelDrive();
+	
+	//setEvents
+	SetEvents(events := get.Events, st_params:=st_Params);
+	
+	//FILL GET STRUCT
+	GetInverterModes();
+	FillAdditionalGets(get, set);
+	
+	//inverter.ControlWord.b_Reset := FALSE;
+	
+	SetParallelDrive();
+	
+	IF get.StatusWord.b_Fault THEN
+		Shutdown(TRUE);
+	END_IF
+	
+	IF GVL.b_initCycle THEN
+		init();
+	END_IF
+END_IF
+
+r_Prq := CompensationCurve(PIN := pin, QIN := qin, coef := st_calibration.PCoefficients, mode := 0);
+r_Qrq := CompensationCurve(PIN := pin, QIN := qin, coef := st_calibration.QCoefficients, mode := 1);
+
+
+]]></ST>
+    </Implementation>
+    <Folder Name="Private" Id="{4be62864-28d1-4476-8537-b9c9cd92a6c0}" />
+    <Method Name="BaseValueToRef" Id="{2b120fb5-7ad4-425b-835d-ff7a0fcb459b}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD BaseValueToRef : REAL;
+VAR_INPUT
+	IN : REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[BaseValueToRef:= IN / MAX(1, st_params.r_InverterRatedCurrent) * 100;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CalculateDerivativePowerValues" Id="{e9b79040-160b-44bf-b42e-34ec5550e0ac}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE CalculateDerivativePowerValues : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[get.r_ReactivePower	:= get.r_ACVoltageD7 * 1.73 * get.r_ReactiveCurrent / 1000; // kvar
+get.r_ActivePower	:= get.r_ACVoltageSupply* 1.73 * get.r_activeCurrent / 1000;
+get.r_ApparentPower	:= SQRT(MAX(0,EXPT(get.r_ActivePower,2) + EXPT(get.r_ReactivePower,2)));
+get.r_LoadPercent	:= get.r_ACCurrent / MAX(1, st_params.r_InverterRatedCurrent) * 100;
+get.r_DCPower		:= get.r_DCCurrent * get.r_DCVoltage / 1000; // kW
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CheckDCVoltage" Id="{83d8481d-d542-4722-93fb-a950ab9b03d2}">
+      <Declaration><![CDATA[METHOD CheckDCVoltage : BOOL
+
+VAR_INST
+	b_DCprechargeOK				: BOOL; 
+	b_DCVoltageOK				: BOOL;
+	ton_DCOKreleaseTime			: TON := (PT:= T#1S);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[b_DCPrechargeOK := ABS(r_BatteryDCVoltage - get.r_DCVoltage) <=  st_params.ui_DCVoltageDeltaPrechargeOK;
+b_DCVoltageOK := get.r_DCVoltage > st_params.ui_DCvoltageMinPrechargeOK;
+
+ton_DCOKReleaseTime(IN:= b_DCPrechargeOK AND b_DCVoltageOK);
+
+CheckDCVoltage :=ton_DCOKReleaseTime.Q;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CompensationCurve" Id="{bc751060-4b54-4af7-bec9-61ddf2be36d2}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD CompensationCurve : REAL
+VAR_INPUT
+	PIN			: REAL; 
+	QIN			: REAL;
+	mode		: BYTE; // 0 = Pout, 1 = Qout;
+END_VAR
+
+VAR_IN_OUT CONSTANT
+	coef : ST_Powermodule_PowerCurveCoefficients;
+END_VAR
+
+VAR_INST
+	Q1			: REAL;
+	Q2			: REAL;
+	disc 		: REAL;
+	Avalues		: REAL;
+	Bvalues		: REAL;
+	Cvalues		: REAL;
+	depVar		: REAL;
+	indepVar	: REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT coef.enable THEN
+	CompensationCurve := SEL(mode =0, Qin, Pin);
+	RETURN; // Geen reële oplossing
+END_IF
+
+
+IF mode = 0 THEN
+	indepVar := Pin;
+	depVar := Qin;
+
+ELSE
+	indepVar := Qin;
+	depVar := Pin;
+END_IF
+
+Avalues := coef.a;
+BValues := coef.c*depVar + coef.d;
+CValues := coef.b*EXPT(depVar,2)+coef.e*depVar + coef.f - indepVar;
+
+disc := EXPT(BValues,2)-(4*AValues*CValues);
+IF disc < 0 THEN
+	CompensationCurve := indepVar;
+	RETURN; // Geen reële oplossing
+END_IF
+
+// Controleer discriminant
+IF Avalues = 0 THEN
+    // Lineaire oplossing: B * P + C = 0 → P = -C / B
+    IF BValues = 0 THEN
+        RETURN; // onoplosbaar
+    ELSE
+        CompensationCurve := -CValues / BValues;
+        RETURN;
+    END_IF
+END_IF
+
+// Kwadratische oplossing (ABC)
+Q1 := (-BValues + SQRT(disc)) / (2 * Avalues);
+Q2 := (-BValues - SQRT(disc)) / (2 * Avalues);
+CompensationCurve := Q1;
+//// Kies de beste wortel (voorbeeld: dichtsbijzijnde bij indepVar)
+//IF ABS(Q1 - indepVar) < ABS(Q2 - indepVar) THEN
+//    CompensationCurve := Q1;
+//ELSE
+//    CompensationCurve := Q2;
+//END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CoupleDC" Id="{f6b1267e-4b37-4141-b5dd-1f04ceab32d7}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE CoupleDC : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF get.StatusWord.b_ReadyToDCCharge THEN
+	buscoupler.b_DCprechargeContactor := TRUE;
+	buscoupler.b_DCMainContactor := CheckDCvoltage();
+	CoupleDC := get.b_DCcontactorFb;
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DecoupleDC" Id="{80672981-1c50-4852-b65c-7652fd61c115}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE DecoupleDC : BOOL
+
+VAR_INST
+	b_DCmainreleaseConditionOK 	:  BOOL;
+	b_DCprereleaseConditionOK 	:  BOOL;
+	ton_PrechargeReleaseDelay	:  TON := (PT:= T#1S);
+END_VAR
+
+VAR
+	r_DCreleaseCurrent		: REAL := 5;
+	r_DCreleaseVoltage		: REAL := 10;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// Release main contactor first based on current
+b_DCmainreleaseConditionOK := ABS(get.r_DCCurrent) < r_DCreleaseCurrent AND NOT get.StatusWord.b_Running;
+IF b_DCmainreleaseConditionOK THEN
+	buscoupler.b_DCmainContactor := FALSE;
+END_IF
+
+// release precharge based on voltage contactor 
+b_DCprereleaseConditionOK := NOT get.b_DCcontactorFb OR r_batteryDCVoltage < r_DCreleaseVoltage; //NOT get.b_DCcontactorFb (Not for units without precharge, rewire output4 to input 4 of buscoupler.)
+ton_PrechargeReleaseDelay(IN:= b_DCprereleaseConditionOK); //some delay added to be sure
+IF ton_PrechargeReleaseDelay.Q THEN
+	buscoupler.b_DCprechargeContactor := FALSE;
+END_IF 
+
+//Give feedback
+IF b_DCprereleaseConditionOK AND b_DCmainreleaseConditionOK THEN
+	DecoupleDc := NOT buscoupler.b_DCprechargeContactor AND NOT get.b_DCcontactorFb;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FanControl" Id="{d7f433ac-9a45-40cb-a569-72ac94992e76}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE FanControl : BOOL
+VAR_IN_OUT CONSTANT
+	st_params : ST_Powermodule_params;
+END_VAR
+	
+
+
+VAR_INST
+	b_fanOn				: BOOL;
+	tof_FanOffDelay		: TOF := (PT := T#60S);
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF get.r_TemperatureMax > st_params.r_TempFanOn OR get.r_LoadPercent > st_params.r_powerLoadFanOn THEN
+	b_fanOn := TRUE;
+ELSIF get.r_TemperatureMax < st_params.r_TempFanOn - 5 AND get.r_LoadPercent < st_params.r_powerLoadFanOn - 10 THEN
+	b_fanOn := FALSE;
+END_IF
+
+
+tof_FanOffDelay(
+	IN:= b_fanOn);
+	
+buscoupler.b_FanOn := set.b_FanContactor OR tof_FanOffDelay.Q;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FillAdditionalGets" Id="{1853e9dc-cf20-4497-9be4-cf8b77465570}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD FillAdditionalGets : BOOL
+VAR_IN_OUT
+		get : ST_Powermodule_get;
+		set	: ST_Powermodule_set;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[get.r_TemperatureMax := GetMaxTemperature();
+get.r_Pset := set.r_ActivePower;
+get.r_Qset := set.r_ReactivePower;
+get.b_PrechargeContactor := buscoupler.b_DCprechargeContactor;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetDiagnostics" Id="{2f1d3e3d-eacf-4f40-bc7d-70dee9f4b860}">
+      <Declaration><![CDATA[METHOD GetDiagnostics 
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+
+VAR
+	by_errCt	: BYTE;
+	by_warnCt	: BYTE;
+END_VAR
+
+
+VAR_INST
+	b_test: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*POWERMODULE*)
+	//Inverter faults
+	(*OverCurr Fault*)		AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.b_F1OverCurrent,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 1,
+			e_objectID				:= e_ID,
+			s_Message				:= 'overcurrent fault (F1)',
+			e_sev					:= eSeverity.Quickshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*OverVolt Fault*)		AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.b_F2OverVoltage,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 2,
+			s_Message				:= 'DC overvoltage fault (F2)',
+			e_sev					:= eSeverity.Quickshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+	
+	(*UnderVolt Fault*)		AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.b_F9UnderVoltage,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 3,
+			s_Message				:= 'DC undervoltage fault (F9)',
+			e_sev					:= eSeverity.Quickshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+	
+	(*ShortCurr Fault*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_F91ShortCircuit,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 4,
+			s_Message				:= 'short circuit fault (F91)',
+			e_sev					:= eSeverity.Quickshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*Earth Fault*)			AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_F3EarthFault,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 5,
+			s_Message				:= 'earth fault (F3)',
+			e_sev					:= eSeverity.Quickshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*LineSync Fault*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_F10LineSynchFault,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 6,
+			s_Message				:= 'line synchronisation fault (F10)',
+			e_sev					:= eSeverity.Quickshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+	
+	(*Keypad Fault*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_F52KeypadOCCommFault,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 7,
+			s_Message				:= 'keypad communication fault (F52)',
+			e_sev					:= eSeverity.warning,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+	
+	(*Fieldbus Fault*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_F53FieldbusFault,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 8,
+			s_Message				:= 'fieldbus fault (F53)',
+			e_sev					:= eSeverity.Quickshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*Systembus Fault*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_F59SystembusFault,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 9,
+			s_Message				:= 'system bus Fault (F59)',
+			e_sev					:= eSeverity.Quickshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+	
+	(*IOslot Fault*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_F54SlotCommunicationFault,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 10,
+			s_Message				:= 'IO slot communication fault (F54)',
+			e_sev					:= eSeverity.Quickshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*4ma meas Fault*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_F50Meas4mAFault,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 11,
+			s_Message				:= 'measurement 4 mA fault (F50)',
+			e_sev					:= eSeverity.info,
+			b_AutoClear			:= TRUE,
+		);
+		w_Index := w_Index +1;
+		
+	(*Watchdog Fault*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_WatchdogError,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 12,
+			s_Message				:= 'watchdog fault',
+			e_sev					:= eSeverity.Quickshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+	
+	(*Mccb Trip*)			AddError[w_Index](
+			b_ErrorTrig			:= FALSE, //Get.Events.b_MCCBtrip,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 13,
+			s_Message				:= 'MCCB trip',
+			e_sev					:= eSeverity.warning
+		);
+		w_Index := w_Index +1;
+
+	(*Shutdown TimeOut*)			AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.b_ShutdownTimeOut,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 14,
+			s_Message				:= 'shutdown Timeout',
+			e_sev					:= eSeverity.QuickShutdown
+		);
+		w_Index := w_Index +1;
+		
+	(*output phase fault (F11)*)	AddError[w_Index](
+			b_ErrorTrig				:= Get.Events.b_F11OutputPhaseFault,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 15,
+			s_Message				:= 'output phase fault (F11)',
+			e_sev					:= eSeverity.Quickshutdown
+		);
+		w_Index := w_Index +1;
+		
+	(*charge fault (F80)*)			AddError[w_Index](
+			b_ErrorTrig				:= Get.Events.b_F80ChargeFault,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 16,
+			s_Message				:= 'charge fault (F80)',
+			e_sev					:= eSeverity.Quickshutdown
+		);
+		w_Index := w_Index +1;
+		
+		(*charge fault (F80)*)			AddError[w_Index](
+			b_ErrorTrig				:= Get.Events.b_F51ExternalFault,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 17,
+			s_Message				:= 'external fault (F51)',
+			e_sev					:= eSeverity.Quickshutdown
+		);
+		w_Index := w_Index +1;
+		
+		(*IGBT fault (F31)*)		AddError[w_Index](
+			b_ErrorTrig				:= Get.Events.b_F31IGBTFault,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 18,
+			s_Message				:= 'IGBT fault (F31)',
+			e_sev					:= eSeverity.Quickshutdown
+		);
+		w_Index := w_Index +1;
+		
+		(*MCB state fault (F64)*)		AddError[w_Index](
+			b_ErrorTrig				:= Get.Events.b_F64MCBstateFault,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 19,
+			s_Message				:= 'MCB state fault (F64)',
+			e_sev					:= eSeverity.Quickshutdown
+		);
+		w_Index := w_Index +1;
+	
+	//Temperature Faults
+	(*Gridch L1 Alarm*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_CMChokeTemperatureTooHigh[1],
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 20 ,
+			s_Message				:= 'gridchoke L1 temperature too high',
+			e_sev					:= eSeverity.normalshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*Gridch L2 Alarm*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_CMChokeTemperatureTooHigh[2], //phase 2
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 21 ,
+			s_Message				:= 'gridchoke L2 temperature too high',
+			e_sev					:= eSeverity.normalshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*Gridch L3 Alarm*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_CMChokeTemperatureTooHigh[3], //phase 3
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 22 ,
+			s_Message				:= 'gridchoke L3 temperature too high',
+			e_sev					:= eSeverity.normalshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*CMch L1 Alarm*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_GridChokeTemperatureTooHigh[1], //phase 1
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 23 ,
+			s_Message				:= 'CM choke L1 temperature too high',
+			e_sev					:= eSeverity.normalshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*CMch L2 Alarm*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_CMChokeTemperatureTooHigh[2], //phase 2
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 24 ,
+			s_Message				:= 'CM choke L2 temperature too high',
+			e_sev					:= eSeverity.normalshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*CMch L3 Alarm*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_CMChokeTemperatureTooHigh[3], //phase 3
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 25 ,
+			s_Message				:= 'CM choke L3 temperature too high',
+			e_sev					:= eSeverity.normalshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*CMch DC Alarm*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_CMChokeTemperatureTooHigh[4], //DC
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 26 ,
+			s_Message				:= 'CM choke DC temperature too high',
+			e_sev					:= eSeverity.normalshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*Inverter Alarm*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_F14UnitOverTemperature,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 27 ,
+			s_Message				:= 'overtemperature fault (F14)',
+			e_sev					:= eSeverity.Quickshutdown
+		);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;	
+		
+	(*PT100 Fault*)			AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_F56TemperatureFault, //inverter Pt100 measurement
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 28 ,
+			s_Message				:= 'pt100 temperature fault (F56)',
+			e_sev					:= eSeverity.normalshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	
+	//Temperature Warnings
+	(*Gridch L1 Warning*)	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.b_gridChokeTemperatureHigh[1], //phase 1
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 40 ,
+			s_Message				:= 'gridchoke L1 temperature high',
+			e_sev					:= eSeverity.warning,
+			b_AutoClear			:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_warnCt := by_warnCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*Gridch L2 Warning*)	AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_GridchokeTemperatureHigh[2], //phase 2
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 41 ,
+			s_Message				:= 'gridchoke L2 temperature high',
+			e_sev					:= eSeverity.warning,
+			b_AutoClear			:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_warnCt := by_warnCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*Gridch L3 Warning*)	AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_GridChokeTemperatureHigh[3], //phase 3
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 42 ,
+			s_Message				:= 'gridchoke L3 temperature high',
+			e_sev					:= eSeverity.warning,
+			b_AutoClear			:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_warnCt := by_warnCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*CMch L1 Warning*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_CMChokeTemperatureHigh[1], //phase 1
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 43 ,
+			s_Message				:= 'CM choke L1 temperature high',
+			e_sev					:= eSeverity.warning,
+			b_AutoClear			:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_warnCt := by_warnCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*CMch L2 Warning*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_CMChokeTemperatureHigh[2], //phase 2
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 44 ,
+			s_Message				:= 'CM choke L2 temperature high',
+			e_sev					:= eSeverity.warning,
+			b_AutoClear			:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_warnCt := by_warnCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*CMch L3 Warning*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_CMChokeTemperatureHigh[3], //phase 3
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 45 ,
+			s_Message				:= 'CM choke L3 temperature high',
+			e_sev					:= eSeverity.warning,
+			b_AutoClear			:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_warnCt := by_warnCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*CMch DC Warning*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_CMChokeTemperatureHigh[4], //DC
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 46 ,
+			s_Message				:= 'CM choke DC temperature high',
+			e_sev					:= eSeverity.warning,
+			b_AutoClear			:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_warnCt := by_warnCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*Inverter Warning*)	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.b_inverterTemperatureHigh, //inverter
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 47 ,
+			s_Message				:= 'Inverter temperature high',
+			e_sev					:= eSeverity.warning,
+			b_AutoClear			:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_warnCt := by_warnCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*PT100 Range Warning*)	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.b_CMSTemperatureRangeWarning, //inverter Pt100 measurement
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 48 ,
+			s_Message				:= 'CMS pt100 temperature range warning',
+			e_sev					:= eSeverity.warning,
+			b_AutoClear			:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_warnCt := by_warnCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*FanState Warning*)	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.b_FanStateUnknownWarning, //general warning from inverter
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 61 ,
+			s_Message				:= 'fan state warning',
+			e_sev					:= eSeverity.warning,
+			t_triggerTime			:= T#1S,
+			b_AutoClear				:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_warnCt := by_warnCt + 1; END_IF;
+		w_Index := w_Index +1;
+	
+	(*PT100Underrange*)	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.b_PT100Underrange, //general warning from inverter
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 62 ,
+			s_Message				:= 'PT100 underrange warning',
+			e_sev					:= eSeverity.warning,
+			b_AutoClear			:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_warnCt := by_warnCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*PT100Overrange*)	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.b_PT100Underrange, //general warning from inverter
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 63 ,
+			s_Message				:= 'PT100 Overrange warning',
+			e_sev					:= eSeverity.warning,
+			b_AutoClear			:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_warnCt := by_warnCt + 1; END_IF;
+		w_Index := w_Index +1;
+
+	(*PT100 Error*)	AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.by_PT100ErrorCount > 5, //general warning from inverter
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 64 ,
+			s_Message				:= 'more than 5 PT100 errors',
+			e_sev					:= eSeverity.Normalshutdown,
+			b_AutoClear			:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*Buscoupler comm error*)	AddError[w_Index](
+			b_ErrorTrig			:= Get.ui_BuscouplerCommStatus <>0, //general warning from inverter
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 65 ,
+			s_Message				:= 'buscoupler communication error',
+			e_sev					:= eSeverity.Normalshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+	
+	(*Inverter comm error*)	AddError[w_Index](
+			b_ErrorTrig			:= Get.ui_InverterCommStatus <>0 AND Get.ui_InverterCommStatus <15, //general warning from inverter
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 66 ,
+			s_Message				:= 'inverter communication error',
+			e_sev					:= eSeverity.Quickshutdown
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*Inverter temp throttling active*)	AddError[w_Index](
+			b_ErrorTrig			:= get.Events.b_TempThrottlingActive, //general warning from inverter
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 67 ,
+			s_Message				:= 'temperature throttling active',
+			e_sev					:= eSeverity.Warning,
+			b_AutoClear			:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_warnCt := by_warnCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+	(*Inverter current throttling active*)	AddError[w_Index](
+			b_ErrorTrig			:= get.Events.b_CurrThrottlingActive, //general warning from inverter
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 68 ,
+			s_Message				:= 'Current throttling active',
+			e_sev					:= eSeverity.Warning,
+			b_AutoClear			:= TRUE,
+			);
+		IF AddError[w_Index].b_out THEN by_warnCt := by_warnCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+		(*Inverter current throttling active*)	AddError[w_Index](
+			b_ErrorTrig			:= get.StatusWord.b_Fault, //general warning from inverter
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 69,
+			s_Message				:= 'General fault',
+			e_sev					:= eSeverity.Quickshutdown,
+			);
+		IF AddError[w_Index].b_out THEN by_errCt := by_errCt + 1; END_IF;
+		w_Index := w_Index +1;
+		
+		(*UVR fault*)			AddError[w_Index](
+			b_ErrorTrig				:= Get.Events.b_24VdcUVRFault,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 70,
+			s_Message				:= 'UVR 24VDC Fault',
+			e_sev					:= eSeverity.warning,
+			b_AutoClear				:= TRUE,
+		);
+		w_Index := w_Index +1;
+
+			
+
+get.events.b_GeneralFaultFlag := by_errCt <> 0;
+get.events.b_GeneralWarningFlag := by_warnCt <>0;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetInverterModes" Id="{d81a850a-25c1-4f3c-9483-87bd52313c5b}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE GetInverterModes]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF get.UgridStatusWord.b_AFEmodeActive THEN
+	get.e_InverterMode := eInvertermodes.afe;
+ELSIF get.UgridStatusWord.b_IslandModeActive OR get.UgridStatusWord.b_MicrogridModeActive AND get.r_FrequencyDroop <= 0.1 THEN
+	get.e_InverterMode := eInvertermodes.Island;	
+ELSE
+	get.e_InverterMode := eInvertermodes.Microgrid;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetMaxTemperature" Id="{a1e4f906-4640-420c-84ca-155f010e48e2}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE GetMaxTemperature : REAL;
+
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// calculate max
+GetMaxTemperature := MAX(
+						get.r_TemperatureCMChoke[1], 
+						get.r_TemperatureCMChoke[2], 
+						get.r_TemperatureCMChoke[3], 
+						get.r_TemperatureCMChoke[4],
+						get.r_TemperatureGridChoke[1], 
+						get.r_TemperatureGridChoke[2], 
+						get.r_TemperatureGridChoke[3]
+);
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetPowerModuleStatus" Id="{d7999da7-9ef9-4a4c-98e2-5186b30148b6}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE GetPowerModuleStatus : BOOL]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF get.StatusWord.b_Fault OR get.Events.b_GeneralFaultFlag THEN
+	get.e_Status := eStatusPowerModule.fault;
+ELSIF get.StatusWord.b_Running THEN
+	get.e_Status := eStatusPowermodule.running;
+ELSIF get.StatusWord.b_ReadyToOperate THEN
+	get.e_Status := eStatusPowermodule.idle;
+ELSIF get.StatusWord.b_DCAtReference THEN	
+	get.e_Status := eStatusPowermodule.DcOK;
+ELSIF get.StatusWord.b_ReadyToDCCharge THEN
+	get.e_Status := eStatusPowermodule.off;
+ELSE
+	get.e_Status := eStatusPowermodule.Init;
+END_IF
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetTemperatureEvents" Id="{35c96a1b-0afe-4178-a1de-7b941b5c2c12}">
+      <Declaration><![CDATA[METHOD GetTemperatureEvents : BOOL
+VAR_INPUT
+	Warnings	: 	BOOL;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Warnings THEN
+	GetTemperatureEvents := get.Events.b_CMChokeTemperatureHigh[1] 	OR
+			get.Events.b_CMChokeTemperatureHigh[2]		OR
+			get.Events.b_CMChokeTemperatureHigh[3]		OR
+			get.Events.b_CMChokeTemperatureHigh[4] 		OR
+			get.Events.b_GridChokeTemperatureHigh[1]	OR
+			get.Events.b_GridChokeTemperatureHigh[2]	OR
+			get.Events.b_GridChokeTemperatureHigh[3]	OR
+			get.Events.b_inverterTemperatureHigh;
+ELSE
+	GetTemperatureEvents := get.Events.b_CMChokeTemperatureTooHigh[1] 	OR
+			get.Events.b_CMChokeTemperatureTooHigh[2]	OR
+			get.Events.b_CMChokeTemperatureTooHigh[3]	OR
+			get.Events.b_CMChokeTemperatureTooHigh[4]	OR
+			get.Events.b_GridChokeTemperatureTooHigh[1]	OR
+			get.Events.b_GridChokeTemperatureTooHigh[2]	OR
+			get.Events.b_GridChokeTemperatureTooHigh[3]	OR
+			get.Events.b_F56TemperatureFault;
+END_IF
+
+
+			
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Idle" Id="{8d015fbe-2d0a-4a27-abbf-72693d9cf6a0}">
+      <Declaration><![CDATA[METHOD Idle : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Inverter.controlWord.b_ChargeDC := TRUE;
+//inverter.ControlWord.b_run := TRUE;
+
+//Set powermode
+inverter.powermode := ePowermodes.Droop;
+inverter.r_BaseCurrentRef := 0;
+inverter.r_ReactiveCurrentRef := 0;
+SetVoltageFrequency(SetToIn := TRUE, VoltIN := settings.GridParams.r_GridNominalVoltage, FreqIn := settings.GridParams.r_GridNominalFrequency);
+inverter.startMode := FALSE;
+inverter.Island(TRUE);
+Idle := get.StatusWord.b_readytooperate AND NOT get.GridcodeStatusWord.b_GridCodeTripActive;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="init" Id="{cf76f424-9635-468b-b6d4-81f8cfce1a5c}">
+      <Declaration><![CDATA[METHOD init : BOOL
+
+VAR_INST
+	
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[inverter.ControlWord.b_ChargeDC := FALSE;
+inverter.ControlWord.b_run := FALSE;
+inverter.ControlWord.b_Reset := TRUE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{110855c6-4caf-42ad-88b8-66286c4b2542}">
+      <Declaration><![CDATA[METHOD Reset : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ton_ResetPulse(IN:= NOT ton_ResetPulse.Q);
+set.b_QuickstopInactive := TRUE;
+
+Inverter.ControlWord.b_Reset := TRUE;
+buscoupler.b_MCCBChargeSpring := TRUE;
+
+IF NOT (get.events.b_GeneralFaultFlag OR get.StatusWord.b_Fault) THEN
+	Inverter.ControlWord.b_Reset := FALSE;
+	buscoupler.b_MCCBChargeSpring := FALSE;
+END_IF
+
+Reset := get.e_Status <> eStatusPowerModule.fault;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Run" Id="{cbd44e23-f9bb-4d57-8fcc-99d8fc41d5c4}">
+      <Declaration><![CDATA[METHOD Run : BOOL
+VAR_INPUT
+	Powermode			: ePowermodes;
+	InverterMode		: EInvertermodes;
+	InternalPowerSet		: BOOL;
+END_VAR
+
+VAR_INST
+	r_DroopMin			: REAL;
+	r_DroopMax			: REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//Set powermodes
+inverter.Powermode := powermode;
+inverter.startMode := FALSE;
+
+
+// set invertermode
+CASE InverterMode OF
+	eInverterModes.Afe : Inverter.AFE();
+	eInverterModes.Microgrid : Inverter.Microgrid();
+	eInverterModes.Island : Inverter.Island(FALSE);
+END_CASE
+
+SetVoltageFrequency(InternalPowerSet, set.r_NomVoltage, set.r_NomFrequency);
+
+//Set absolute power and current limits of inverter
+IF InternalPowerSet THEN
+	inverter.r_InputActiveCurrentLimit := 100;
+	inverter.r_OutputActiveCurrentLimit := 100;
+	Inverter.Island(TRUE);
+ELSE
+	SetInverterRefs_Limits(get := get, set := set, 
+		r_InputActiveCurrentLimitRef => inverter.r_InputActiveCurrentLimit,
+		r_OutputActiveCurrentLimitRef => inverter.r_OutputActiveCurrentLimit,
+		r_basecurrentref => inverter.r_BaseCurrentRef,
+		r_ReactiveCurrentRef => inverter.r_ReactiveCurrentRef
+	);
+END_IF
+
+inverter.ControlWord.b_run := TRUE;
+run := get.StatusWord.b_Running;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetEvents" Id="{d0c0a999-9eca-43ec-856e-48bb80c84e53}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE SetEvents
+VAR_IN_OUT CONSTANT
+	st_params					: ST_Powermodule_Params;
+END_VAR
+
+
+VAR_IN_OUT
+	events						: ST_Powermodule_events;
+END_VAR
+
+VAR 
+	w_Index										: WORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FOR w_Index:=1 TO 4 DO
+	 LimitTrigger(
+		r_IN := get.r_TemperatureCMChoke[w_Index],
+		b_HighEnable:= TRUE,
+		r_HighLimit:= st_Params.r_FilterTempAlarm,
+		r_HighWarning:= st_params.r_FilterTempWarning,
+		b_LowEnable:= FALSE,
+		r_LowLimit:= 0,
+		r_LowWarning:= 0,
+		r_hysteresis:= 5,
+		b_Warning=> get.Events.b_CMChokeTemperatureHigh[w_Index],
+		b_Fault=> get.Events.b_CMChokeTemperatureTooHigh[w_Index]
+		);
+END_FOR
+
+FOR w_Index:=1 TO 3 DO
+	LimitTrigger(
+		r_IN := get.r_TemperatureCMChoke[w_Index],
+		b_HighEnable:= TRUE,
+		r_HighLimit:= st_params.r_FilterTempAlarm,
+		r_HighWarning:= st_params.r_FilterTempWarning,
+		b_LowEnable:= FALSE,
+		r_LowLimit:= 0,
+		r_LowWarning:= 0,
+		r_hysteresis:= 5,
+		b_Warning=>get.Events.b_GridChokeTemperatureHigh[w_Index],
+		b_Fault=> get.Events.b_GridChokeTemperatureTooHigh[w_Index]
+	);
+END_FOR
+
+// set warning when CMS PT100 gives out of range values. 
+get.Events.b_CMSTemperatureRangeWarning := NOT get.w_TemperatureFaultWord =0;
+
+//Set fan state warning
+get.Events.b_FanStateUnknownWarning := get.b_FanFb AND NOT buscoupler.b_FanOn;
+get.Events.b_24VdcUVRFault := NOT get.b_MccbUvr24VdcOK AND get.b_DCcontactorFb;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetInverterRefs_Limits" Id="{f3ee8422-a69b-4266-b405-ac58a0ba67e6}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE SetInverterRefs_Limits : BOOL
+
+VAR_IN_OUT
+	get 			: ST_Powermodule_get;
+	set				: ST_Powermodule_set;
+END_VAR
+
+VAR_OUTPUT
+	r_InputActiveCurrentLimitRef : REAL;
+	r_OutputActiveCurrentLimitRef : REAL;
+	r_BaseCurrentRef			: REAL;
+	r_ReactiveCurrentRef		: REAL;
+END_VAR
+
+VAR_INST
+	r_PLimitOverhead				: REAL := 1.1;
+	fb_ActiveCurrentMeasMA			: FB_movingAverage := (length := 1000, enable := TRUE);	
+	r_MaxOvercurrentFactor			: REAL;	
+	r_ActivePowerRQ					: REAL;
+	r_ReactivePowerRQ				: REAL;
+	fb_DynamicreactiveRemainMA		: FB_movingAverage := (length := 10, enable := TRUE);
+	r_reactiveMaxCurrent			: REAL;
+	r_ReactiveLimitCorrection		: REAL := 1.20;
+	r_NomVoltage					: REAL := 400;
+	ar_Throttling					: ARRAY [1..20] OF REAL;
+	fb_SmoothThrottling				: FB_CTRL_Moving_Average := (eMode := e_ctrl_mode.eCTRL_MODE_ACTIVE);
+	st_params_SmoothThrottling		: ST_CTRL_MOVING_AVERAGE_PARAMS := (
+		 								tCtrlCycleTime := T#1S,
+										tTaskCycleTime := T#1MS,
+										nSamplesToFilter := 10);
+										
+	 r_InputActiveCurrentLimit		: REAL;
+	 r_outputActiveCurrentLimit		: REAL;
+	 r_baseCurrentSetpoint			: REAL;
+	 r_reactiveCurrentsetpoint		: REAL;
+	 r_VoltAC						: REAL;
+	 r_DynamicCurrentLimit			: REAL;
+	 r_ThrottlingValueFilterTemp	: REAL;
+	 r_ThrottlingValueInverterTemp	: REAL;
+	 r_ThrottlingValueMindex		: REAL;
+	 r_ThrottlingActual				: REAL;
+	 
+	 
+	 ePIDctrl						: E_CTRL_Mode;
+	 //Mindex limiter
+	r_ActReactiveToThrottlingValue	: REAL;
+	fb_PIDMindex					: FB_CTRL_PID_EXT := (emode := e_Ctrl_mode.eCTRL_MODE_ACTIVE);
+	st_Params_PIDMindex				: ST_CTRL_PID_EXT_PARAMS := ( 
+										tTaskCycleTime := T#1MS,
+										tCtrlCycleTime := T#1MS,
+										fKp	:= 0.05,
+										tTn := T#500MS,
+										tTd := T#0S,
+										tTv := T#0MS,
+										fOutMaxLimit := 0,
+										fOutMinLimit := -1,
+										fouterwindow := 0
+										);
+
+
+	//AC current limiter
+	fb_RampCurrentLimit				: FB_RAMP_Dual := (Enable := TRUE, rampDown := 50, rampUp := 20);									
+	fb_PIDCurrentLimit				: FB_CTRL_PID_EXT;
+	st_Params_PIDCurrentLimit		: ST_CTRL_PID_EXT_PARAMS := ( 
+										tTaskCycleTime := T#1MS,
+										tCtrlCycleTime := T#1MS,
+										fKp	:= 0.5,
+										tTn := T#500MS,
+										tTd := T#0MS,
+										tTv := T#0MS,
+										fDeadbandInput := 10
+										);
+										
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ton_ResetPulse.Q AND NOT get.StatusWord.b_Running THEN
+	ePIDctrl := e_Ctrl_mode.eCTRL_MODE_RESET;
+ELSE
+	ePIDctrl := e_Ctrl_mode.eCTRL_MODE_Active;	
+END_IF
+
+r_VoltAC := get.r_ACVoltageSupply;
+fb_ActiveCurrentMeasMA(IN := get.r_ActiveCurrent);
+r_MaxOvercurrentFactor := MIN(st_params.r_ACCurrentLimitMax / MAX(1, st_params.r_InverterRatedCurrent), set.r_overcurrentFactor);
+
+st_params_SmoothThrottling.pWorkArray_ADR := ADR(ar_Throttling);
+st_params_SmoothThrottling.nWorkArray_SIZEOF := SIZEOF(ar_Throttling);
+
+fb_SmoothThrottling(
+	fin := get.r_TemperatureMax,
+	stParams := st_params_SmoothThrottling);
+
+r_ThrottlingValueFilterTemp := scale(
+		r_in:=fb_SmoothThrottling.fOut,
+		 In_min:= st_params.r_FilterTempWarning,
+		 In_max:= st_params.r_FilterTempAlarm,
+		 Out_min:= r_MaxOvercurrentFactor,
+		 Out_max:= st_params.r_ThrottlingMinimum);
+		
+r_ThrottlingValueInverterTemp := scale(
+		r_in:=get.r_TemperatureInverter,
+		 In_min:= st_params.r_InverterTempWarning,
+		 In_max:= st_params.r_InverterTempAlarm,
+		 Out_min:= r_MaxOvercurrentFactor,
+		 Out_max:= st_params.r_ThrottlingMinimum);	
+
+r_ThrottlingActual	:= MIN(r_ThrottlingValueInverterTemp,r_ThrottlingValueFilterTemp);	
+
+//TOTAL AC CURRENT LIMIT
+	st_Params_PIDCurrentLimit.fOutMaxLimit := st_params.r_ACCurrentLimitMax;
+	st_Params_PIDCurrentLimit.fOutMinLimit := st_params.r_ACCurrentLimitMin;
+	fb_RampCurrentLimit(SetToIn := NOT get.StatusWord.b_Running, IN :=  LIMIT(st_params.r_ACcurrentLimitMin, set.r_ACcurrentLimit, st_params.r_InverterRatedCurrent *  r_throttlingActual));
+	fb_PIDCurrentLimit(
+		eMode := ePIDctrl,
+		fSetpointValue := LIMIT(fb_RampCurrentLimit.Q,get.r_ACCurrent, fb_RampCurrentLimit.Q),
+		fActualValue := get.r_ACCurrent,
+		stParams:= st_params_PIDCurrentLimit,
+		fout => r_DynamicCurrentLimit
+		);
+	
+	IF fb_PIDCurrentLimit.bError THEN
+		r_DynamicCurrentLimit := LIMIT(st_params.r_ACcurrentLimitMin, set.r_ACcurrentLimit, st_params.r_InverterRatedCurrent *  r_throttlingActual);
+	END_IF
+	
+	IF st_calibration.b_StartCalibration THEN
+		r_DynamicCurrentLimit := 650;
+	END_IF
+
+//ACTIVE CURRENT LIMIT
+	r_InputActiveCurrentLimit := LIMIT(0 , kWToCurrent(ABS(set.r_Pmin), 400), st_params.r_ACCurrentLimitMax);
+	r_OutputActiveCurrentLimit := LIMIT(0 , kWToCurrent(ABS(set.r_Pmax),  400), st_params.r_ACCurrentLimitMax);
+
+//ACTIVE SETPOINT
+	r_activePowerRQ := CompensationCurve(PIN := set.r_ActivePower, QIN := get.r_ReactivePower, coef := st_calibration.PCoefficients, mode := 0);
+	r_ActivePowerRQ	:= LIMIT(get.r_Pmin, r_ActivePowerRQ, get.r_Pmax);
+
+
+//REACTIVE SETPOINT + MINDEX LIMIT
+st_params_PIDMindex.fDeadBandInput := st_params.r_ModulationIndexLimitHyst;
+	fb_PIDMindex(
+		eMode := ePIDctrl,
+		fsetpointvalue :=  st_params.r_ModulationIndexLimit,
+		fActualValue := get.r_ModulationIndex,
+		stparams := st_Params_PIDMindex
+	);	
+	r_ThrottlingValueMindex := fb_PIDMindex.fout + 1;
+	fb_DynamicreactiveRemainMA(IN := SQRT(MAX(EXPT(r_DynamicCurrentLimit,2) - EXPT(fb_ActiveCurrentMeasMA.Q*r_ReactiveLimitCorrection ,2), 0)) * r_ThrottlingValueMindex);
+	r_ReactivePowerRQ := CompensationCurve(PIN := get.r_activePower, QIN := set.r_ReactivePower, coef := st_calibration.QCoefficients, mode := 1);
+	
+	//to jump to PID value when throttling starts. Otherwise takes quite some time to get there.
+	r_ActReactiveToThrottlingValue := kWToCurrent(r_ActivePowerRQ, get.r_ACVoltageD7) / MAX(1, fb_DynamicreactiveRemainMA.Q);
+	IF get.r_ModulationIndex > MIN(100, st_params.r_ModulationIndexLimit + st_params.r_ModulationIndexLimitHyst) AND r_ThrottlingValueMindex > r_ActReactiveToThrottlingValue THEN
+		fb_PIDMindex.fManSyncValue := r_ActReactiveToThrottlingValue - 1;
+		fb_PIDMindex.bSync := TRUE;
+	ELSE
+		fb_PIDMindex.bSync := FALSE;
+	END_IF
+	
+//power overwrites before it is converted to refs
+	IF st_calibration.b_StartCalibration THEN
+		r_activePowerRQ := st_calibration.r_Pset;
+		r_ReactivePowerRQ	:= st_calibration.r_Qset;
+	END_IF
+
+//To currents
+	r_basecurrentSetpoint := LIMIT(-r_DynamicCurrentLimit, kWToCurrent(r_ActivePowerRQ, r_VoltAC), r_DynamicCurrentLimit);
+	r_reactiveCurrentSetpoint := LIMIT(-fb_DynamicreactiveRemainMA.Q, kWToCurrent(r_ReactivePowerRQ,get.r_ACVoltageD7), fb_DynamicreactiveRemainMA.Q);	
+
+//TO REFS
+	r_InputActiveCurrentLimitRef := BaseValueToRef(r_InputActiveCurrentLimit);
+	r_OutputActiveCurrentLimitRef := BaseValueToRef(r_OutputActiveCurrentLimit);
+	r_baseCurrentRef := BaseValueToRef(r_basecurrentSetpoint);
+	r_ReactivecurrentRef:= BaseValueToRef(r_reactiveCurrentSetpoint);
+
+get.b_LimiterActive := TRUE;
+// set limter state
+IF r_ThrottlingValueMindex < fb_PIDMindex.fManSyncValue THEN
+	get.e_ThrottlingStatus := ePowerModuleThrottlingState.Overvoltage;
+ELSIF r_ThrottlingValueFilterTemp < r_MaxOvercurrentFactor THEN
+	get.e_ThrottlingStatus := ePowerModuleThrottlingState.FilterTemp;
+ELSIF r_ThrottlingValueInverterTemp < r_MaxOvercurrentFactor THEN
+	get.e_ThrottlingStatus := ePowerModuleThrottlingState.InverterTemp;
+ELSE
+	get.b_LimiterActive := FALSE;
+END_IF
+
+
+	
+//set the final value as feedback to the get struct of the powermodule
+	get.r_OverCurrentValue 	:=  r_ThrottlingActual;
+	get.r_Pmin 				:= -CurrentToKw(MIN(get.r_ACcurrentLimit, r_InputActiveCurrentLimit), r_VoltAC) * r_PLimitOverhead;
+	get.r_Pmax 				:= CurrentToKw(MIN(get.r_ACcurrentLimit, r_outputActiveCurrentLimit), r_VoltAC);
+	get.r_ACcurrentLimit	:= MIN(set.r_ACcurrentLimit, r_DynamicCurrentLimit);
+	r_reactiveMaxCurrent 	:= MIN(fb_DynamicreactiveRemainMA.Q, SQRT(MAX(EXPT(get.r_ACcurrentLimit,2) - EXPT(get.r_ActiveCurrent,2), 0)));
+	get.r_Qmax				:=  CurrentToKW(r_reactiveMaxCurrent, r_VoltAC);
+	get.r_Qmin				:= -get.r_Qmax;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetInverterSettings" Id="{6b2cda43-5f42-41e4-9aff-67f9295db7ea}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE SetInverterSettings : BOOL
+
+VAR_INST
+	ton_GridcodeOnDelay	: TON := (PT:= T#500MS);
+	ton_GridcodeOffDelay: TON := (PT:= T#0S);
+	SR_GridCodeActivate	: SR; 
+	
+	FtrigResetDrive		: F_TRIG;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//set actual droop
+inverter.r_BaseRefRampRate		:= set.i_PowerChangeRate;
+
+ton_GridcodeOffDelay(IN := (get.e_InverterMode <> eInvertermodes.Afe AND NOT get.GridcodeStatusWord.b_GridCodeTripActive) OR NOT get.StatusWord.b_Running);
+ton_GridcodeOnDelay(IN:= get.e_InverterMode = eInvertermodes.Afe AND set.b_gridcodeEnable AND get.StatusWord.b_ReadyToOperate);
+//Set gridcodes
+SR_GridCodeActivate(
+	SET1 := ton_GridcodeOnDelay.Q,
+	RESET := ton_GridcodeOffDelay.Q OR NOT set.b_gridcodeEnable OR NOT get.StatusWord.b_ReadyToOperate,
+	);
+
+
+inverter.ControlWord.b_GridCodeEnable:= SR_GridCodeActivate.Q1;
+inverter.controlword.b_ExtGridcodeTrip := set.b_ExtgridCodeTrip;
+
+//reset drive if gridcodes are set off
+FtrigResetDrive(CLK:= inverter.ControlWord.b_GridCodeEnable);
+IF FtrigResetDrive.Q THEN
+	Reset();
+END_IF
+
+IF NOT get.StatusWord.b_Running THEN
+	//Set powermode
+	inverter.Island(TRUE);
+	//Set voltage / frequency
+	//SetVoltageFrequency(TRUE, settings.GridParams.r_GridNominalVoltage, settings.GridParams.r_GridNominalFrequency);	
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetParallelDrive" Id="{515f6b75-056f-440d-be15-5fab4dd82664}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD PRIVATE SetParallelDrive : BOOL]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF Settings.Configuration.b_DoublePowerModule THEN
+	inverter.ControlWord.b_ParallelAFE := TRUE;
+ELSE
+	inverter.ControlWord.b_ParallelAFE:= FALSE;
+END_IF
+
+SetParallelDrive := Settings.Configuration.b_DoublePowerModule;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetVoltageFrequency" Id="{d2ca8923-fabe-415e-bbcb-3e5e102161ea}" FolderPath="Private\">
+      <Declaration><![CDATA[METHOD SetVoltageFrequency : BOOL
+VAR_INPUT
+	SetToIn		: BOOL;
+	VoltIN		: REAL;
+	FreqIN		: REAL;
+END_VAR
+
+VAR_INST
+	//rTrig_SetToIN	: R_TRIG;
+END_VAR
+
+VAR_INST
+	r_FrequencyDroopOffset 	: REAL;
+	r_VoltageDroopOffset 	: REAL;
+	//freqRamp				: FB_ramp := (b_enable := TRUE, r_rampRate := 10);
+	//VoltRamp				: FB_ramp := (b_enable := TRUE, r_rampRate := 10);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//rTrig_SetToIN(CLK := SetToIn);
+//FreqRamp(SetToIn := NOT get.StatusWord.b_Running OR rTrig_SetToIN.Q);
+//VoltRamp(SetToIn := NOT get.StatusWord.b_Running OR rTrig_SetToIN.Q);
+//FreqRamp.IN := FreqIN;	
+//VoltRamp.IN := VoltIN;
+
+// set gridnominal Frequency
+r_FrequencyDroopOffset := FreqIN - settings.GridParams.r_GridNominalFrequency;
+inverter.r_FrequencyDroopOffset := LIMIT(-2, r_FrequencyDroopOffset, 2);
+// set gridnominal voltage
+r_VoltageDroopOffset := VoltIN - settings.GridParams.r_GridNominalVoltage + st_params.i_VoltageOffset;
+inverter.r_VoltageCorrection	:= LIMIT(-40 + st_params.i_VoltageOffset, r_VoltageDroopOffset, 40 + st_params.i_VoltageOffset);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Shutdown" Id="{16e88d59-8ee2-4197-a519-fb96d1af3315}">
+      <Declaration><![CDATA[METHOD Shutdown : BOOL
+VAR_INPUT
+	b_Force		: BOOL := FALSE;
+END_VAR
+
+VAR_INST
+	b_enableForce : BOOL := FALSE;
+	currentMax : REAL;
+	r_DCcurrentAbs : REAL;
+	r_DCcurrent	: REAL;
+END_VAR
+
+VAR
+	r_DCreleaseCurrent		: REAL := 20;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[r_DCcurrentAbs := ABS(get.r_DCCurrent);
+inverter.r_BaseCurrentRef := 0;
+inverter.r_ReactiveCurrentRef := 0;
+
+IF (b_Force OR get.StatusWord.b_Fault) THEN
+	inverter.ControlWord.b_ChargeDC := FALSE;
+	inverter.ControlWord.b_run := FALSE;
+ELSE
+	inverter.ControlWord.b_run := FALSE;
+	inverter.r_OutputActiveCurrentLimit := 10;
+	inverter.r_InputActiveCurrentLimit := 10;
+	IF r_DCcurrentAbs < r_DCreleaseCurrent THEN
+		inverter.ControlWord.b_ChargeDC := FALSE;
+		buscoupler.b_MCCBChargeSpring := TRUE;	
+	END_IF
+END_IF
+
+//minimum shutdown execution time.
+shutdown := NOT inverter.ControlWord.b_ChargeDC AND NOT inverter.ControlWord.b_run AND NOT get.StatusWord.b_Running AND DecoupleDC();
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Start" Id="{85e42802-1b0b-4902-9b56-8a9abd9dcaba}">
+      <Declaration><![CDATA[METHOD Start : BOOL
+
+VAR_INPUT
+	AFESTART : BOOL;
+END_VAR
+
+VAR_INST
+	tp_RunDelay			: TP := (PT:= T#1S);
+	StartupValue		:	BOOL := TRUE;
+	b_RunAlready		: BOOl;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[inverter.r_OutputActiveCurrentLimit := 520;
+inverter.r_InputActiveCurrentLimit := 520; 
+inverter.ControlWord.b_run := FALSE;
+inverter.startMode := TRUE;
+
+IF AFESTART THEN
+	inverter.AFE();
+ELSE
+	inverter.Island(TRUE);
+END_IF
+
+SetVoltageFrequency(TRUE, settings.GridParams.r_GridNominalVoltage, settings.GridParams.r_GridNominalFrequency);
+
+(*STEPS
+first check if DC exists
+if its yet there and checkDCvoltage gives TRUE, inverter can get to run state.
+Ifnot, try precharging (if its in the system).
+
+*)
+IF get.b_MccbUvr24VdcOK THEN
+	inverter.ControlWord.b_ChargeDC := get.StatusWord.b_ReadyToDCCharge;
+	tp_RunDelay(in := CheckDCvoltage() AND NOT tp_RunDelay.Q);
+	b_RunAlready := get.StatusWord.b_running AND get.r_ACVoltageSupply <> 0;
+	inverter.ControlWord.b_run := tp_RunDelay.Q OR b_RunAlready;
+END_IF
+
+
+//Check if we already have DC
+IF CoupleDC() THEN
+	Start := get.StatusWord.b_Running;
+END_IF
+
+
+
+//OLD code, run delay and startup value might be needed -- To be tested
+(*
+
+
+IF CheckDCvoltage(r_BatDcVoltage) THEN
+	inverter.ControlWord.b_ChargeDC := get.StatusWord.b_ReadyToDCCharge;
+	inverter.ControlWord.b_run := tp_RunDelay.Q OR startupValue;
+	StartupValue := FALSE;
+	
+	IF get.StatusWord.b_Running THEN
+		tp_RunDelay(in := FALSE);
+	END_IF
+	Start := get.StatusWord.b_Running;
+END_IF
+*)]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_PowerModule">
+      <LineId Id="2479" Count="0" />
+      <LineId Id="2481" Count="18" />
+      <LineId Id="2502" Count="22" />
+      <LineId Id="2556" Count="1" />
+      <LineId Id="2525" Count="2" />
+      <LineId Id="1563" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.BaseValueToRef">
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.CalculateDerivativePowerValues">
+      <LineId Id="19" Count="4" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.CheckDCVoltage">
+      <LineId Id="29" Count="0" />
+      <LineId Id="33" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="14" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.CompensationCurve">
+      <LineId Id="123" Count="2" />
+      <LineId Id="121" Count="1" />
+      <LineId Id="112" Count="0" />
+      <LineId Id="77" Count="0" />
+      <LineId Id="151" Count="0" />
+      <LineId Id="166" Count="0" />
+      <LineId Id="152" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="85" Count="0" />
+      <LineId Id="168" Count="0" />
+      <LineId Id="80" Count="0" />
+      <LineId Id="162" Count="3" />
+      <LineId Id="160" Count="0" />
+      <LineId Id="78" Count="0" />
+      <LineId Id="153" Count="2" />
+      <LineId Id="63" Count="0" />
+      <LineId Id="87" Count="9" />
+      <LineId Id="99" Count="11" />
+      <LineId Id="86" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.CoupleDC">
+      <LineId Id="5" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="6" Count="0" />
+      <LineId Id="11" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="9" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.DecoupleDC">
+      <LineId Id="36" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="73" Count="1" />
+      <LineId Id="26" Count="0" />
+      <LineId Id="21" Count="1" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="71" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="72" Count="0" />
+      <LineId Id="59" Count="0" />
+      <LineId Id="56" Count="0" />
+      <LineId Id="55" Count="0" />
+      <LineId Id="57" Count="1" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.FanControl">
+      <LineId Id="117" Count="0" />
+      <LineId Id="121" Count="0" />
+      <LineId Id="126" Count="1" />
+      <LineId Id="122" Count="0" />
+      <LineId Id="118" Count="1" />
+      <LineId Id="102" Count="0" />
+      <LineId Id="108" Count="0" />
+      <LineId Id="139" Count="1" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.FillAdditionalGets">
+      <LineId Id="5" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="22" Count="0" />
+      <LineId Id="29" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.GetDiagnostics">
+      <LineId Id="21" Count="5" />
+      <LineId Id="560" Count="0" />
+      <LineId Id="27" Count="95" />
+      <LineId Id="668" Count="7" />
+      <LineId Id="131" Count="19" />
+      <LineId Id="377" Count="7" />
+      <LineId Id="376" Count="0" />
+      <LineId Id="676" Count="0" />
+      <LineId Id="678" Count="6" />
+      <LineId Id="677" Count="0" />
+      <LineId Id="692" Count="0" />
+      <LineId Id="685" Count="6" />
+      <LineId Id="385" Count="0" />
+      <LineId Id="693" Count="0" />
+      <LineId Id="695" Count="6" />
+      <LineId Id="694" Count="0" />
+      <LineId Id="702" Count="0" />
+      <LineId Id="704" Count="6" />
+      <LineId Id="703" Count="0" />
+      <LineId Id="711" Count="0" />
+      <LineId Id="713" Count="6" />
+      <LineId Id="712" Count="0" />
+      <LineId Id="152" Count="198" />
+      <LineId Id="626" Count="0" />
+      <LineId Id="351" Count="3" />
+      <LineId Id="429" Count="0" />
+      <LineId Id="431" Count="8" />
+      <LineId Id="430" Count="0" />
+      <LineId Id="440" Count="0" />
+      <LineId Id="442" Count="8" />
+      <LineId Id="441" Count="0" />
+      <LineId Id="461" Count="0" />
+      <LineId Id="452" Count="8" />
+      <LineId Id="451" Count="0" />
+      <LineId Id="479" Count="0" />
+      <LineId Id="481" Count="5" />
+      <LineId Id="488" Count="1" />
+      <LineId Id="480" Count="0" />
+      <LineId Id="490" Count="0" />
+      <LineId Id="492" Count="7" />
+      <LineId Id="491" Count="0" />
+      <LineId Id="520" Count="0" />
+      <LineId Id="522" Count="5" />
+      <LineId Id="531" Count="0" />
+      <LineId Id="528" Count="2" />
+      <LineId Id="532" Count="0" />
+      <LineId Id="534" Count="8" />
+      <LineId Id="533" Count="0" />
+      <LineId Id="576" Count="0" />
+      <LineId Id="644" Count="7" />
+      <LineId Id="577" Count="0" />
+      <LineId Id="720" Count="0" />
+      <LineId Id="722" Count="5" />
+      <LineId Id="729" Count="0" />
+      <LineId Id="728" Count="0" />
+      <LineId Id="721" Count="0" />
+      <LineId Id="652" Count="0" />
+      <LineId Id="643" Count="0" />
+      <LineId Id="355" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="411" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.GetInverterModes">
+      <LineId Id="31" Count="0" />
+      <LineId Id="38" Count="0" />
+      <LineId Id="34" Count="3" />
+      <LineId Id="33" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.GetMaxTemperature">
+      <LineId Id="55" Count="9" />
+      <LineId Id="54" Count="0" />
+      <LineId Id="35" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.GetPowerModuleStatus">
+      <LineId Id="31" Count="5" />
+      <LineId Id="44" Count="1" />
+      <LineId Id="37" Count="6" />
+      <LineId Id="16" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.GetTemperatureEvents">
+      <LineId Id="29" Count="0" />
+      <LineId Id="33" Count="6" />
+      <LineId Id="31" Count="0" />
+      <LineId Id="40" Count="0" />
+      <LineId Id="42" Count="6" />
+      <LineId Id="41" Count="0" />
+      <LineId Id="32" Count="0" />
+      <LineId Id="30" Count="0" />
+      <LineId Id="16" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.Idle">
+      <LineId Id="32" Count="1" />
+      <LineId Id="43" Count="0" />
+      <LineId Id="36" Count="0" />
+      <LineId Id="44" Count="0" />
+      <LineId Id="29" Count="1" />
+      <LineId Id="48" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="5" Count="0" />
+      <LineId Id="10" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.init">
+      <LineId Id="5" Count="2" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.Reset">
+      <LineId Id="14" Count="0" />
+      <LineId Id="39" Count="0" />
+      <LineId Id="51" Count="0" />
+      <LineId Id="45" Count="1" />
+      <LineId Id="9" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="10" Count="0" />
+      <LineId Id="27" Count="0" />
+      <LineId Id="16" Count="0" />
+      <LineId Id="34" Count="0" />
+      <LineId Id="32" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.Run">
+      <LineId Id="192" Count="1" />
+      <LineId Id="231" Count="0" />
+      <LineId Id="194" Count="14" />
+      <LineId Id="243" Count="0" />
+      <LineId Id="209" Count="10" />
+      <LineId Id="22" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.SetEvents">
+      <LineId Id="213" Count="0" />
+      <LineId Id="288" Count="3" />
+      <LineId Id="308" Count="0" />
+      <LineId Id="292" Count="1" />
+      <LineId Id="314" Count="0" />
+      <LineId Id="310" Count="0" />
+      <LineId Id="312" Count="1" />
+      <LineId Id="311" Count="0" />
+      <LineId Id="228" Count="0" />
+      <LineId Id="357" Count="0" />
+      <LineId Id="230" Count="0" />
+      <LineId Id="316" Count="10" />
+      <LineId Id="315" Count="0" />
+      <LineId Id="245" Count="0" />
+      <LineId Id="342" Count="0" />
+      <LineId Id="249" Count="5" />
+      <LineId Id="94" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.SetInverterRefs_Limits">
+      <LineId Id="3831" Count="120" />
+      <LineId Id="651" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.SetInverterSettings">
+      <LineId Id="186" Count="0" />
+      <LineId Id="202" Count="8" />
+      <LineId Id="242" Count="1" />
+      <LineId Id="212" Count="0" />
+      <LineId Id="46" Count="0" />
+      <LineId Id="246" Count="0" />
+      <LineId Id="240" Count="0" />
+      <LineId Id="247" Count="0" />
+      <LineId Id="241" Count="0" />
+      <LineId Id="248" Count="1" />
+      <LineId Id="221" Count="0" />
+      <LineId Id="220" Count="0" />
+      <LineId Id="226" Count="1" />
+      <LineId Id="229" Count="0" />
+      <LineId Id="225" Count="0" />
+      <LineId Id="223" Count="0" />
+      <LineId Id="232" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.SetParallelDrive">
+      <LineId Id="5" Count="0" />
+      <LineId Id="12" Count="0" />
+      <LineId Id="8" Count="0" />
+      <LineId Id="13" Count="0" />
+      <LineId Id="7" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="14" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.SetVoltageFrequency">
+      <LineId Id="40" Count="0" />
+      <LineId Id="20" Count="2" />
+      <LineId Id="18" Count="1" />
+      <LineId Id="6" Count="5" />
+      <LineId Id="5" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.Shutdown">
+      <LineId Id="54" Count="0" />
+      <LineId Id="146" Count="0" />
+      <LineId Id="145" Count="0" />
+      <LineId Id="64" Count="0" />
+      <LineId Id="15" Count="0" />
+      <LineId Id="52" Count="0" />
+      <LineId Id="62" Count="0" />
+      <LineId Id="24" Count="0" />
+      <LineId Id="93" Count="0" />
+      <LineId Id="65" Count="0" />
+      <LineId Id="81" Count="0" />
+      <LineId Id="66" Count="1" />
+      <LineId Id="105" Count="0" />
+      <LineId Id="68" Count="0" />
+      <LineId Id="18" Count="0" />
+      <LineId Id="47" Count="0" />
+      <LineId Id="28" Count="0" />
+      <LineId Id="130" Count="0" />
+      <LineId Id="162" Count="0" />
+    </LineIds>
+    <LineIds Name="FB_PowerModule.Start">
+      <LineId Id="221" Count="47" />
+      <LineId Id="19" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

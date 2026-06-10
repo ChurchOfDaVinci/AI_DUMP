@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_AGC150_Set" Id="{31ffd89e-e9c8-469f-a60c-b715cdcfcb48}">
+    <Declaration><![CDATA[TYPE ST_AGC150_Set :
+STRUCT
+	IP					:	STRING	:=	'192.168.2.21';
+	DroopEnable			: 	BOOL;
+	GenOn				:	eOnOffState := eOnOffState.none;
+	GenBreakerOn		:	eOnOffState := eOnOffState.none;	
+	MainBreakerON		:	eOnOffState := eOnOffState.none;
+	GenAutoSyncOn		:	eOnOffState := eOnOffState.none;
+	OperationMode		:	eGenOperationMode := eGenOperationMode.Auto;
+	AutoStartStop		:	BOOL;
+	
+	bIslandModeEnable		:	BOOL;
+	bAMFModeEnable			:	BOOL;
+	bPeakshavingEnable		: 	BOOL;
+	bFixedPowerEnable		:	BOOL := TRUE;
+	bMPE					:	BOOL;
+
+	Pset			:	REAL;	//0..100%
+	Qset			:	REAL;	//60..100 = 0.6..1
+	PFset			:	REAL := 1;	//-100..100%
+	FreqRegulator	:	REAL; 	//-100..100 = -10..+10% of nominal
+	VoltRegulator	:	REAL; 	//-100..100 = -10..+10% of nominal
+	U_Fdroopset		: 	REAL := 4; 	//0..100 = 0..+10% of nominal
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

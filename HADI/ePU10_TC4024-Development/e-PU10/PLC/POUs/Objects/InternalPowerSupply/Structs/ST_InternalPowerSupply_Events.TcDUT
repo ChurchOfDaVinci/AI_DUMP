@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_InternalPowerSupply_Events" Id="{fb73265d-0954-4ff5-afa5-138afacc9a88}">
+    <Declaration><![CDATA[TYPE ST_InternalPowerSupply_Events :
+STRUCT
+	b_DCPSUFault				: 	BOOL; //fuse blown or psu_ok signal lost
+	b_ACPSUFault				: 	BOOL;
+	b_GridInputFuseTripped		:	BOOL;
+	b_CEEInputFuseTripped		:	BOOL;
+	b_HVDCShutdownTimeExceeded	:	BOOL;
+	b_UPSLowShutdown			:	BOOL;	//System shutdown event when ups battery drains during operation
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

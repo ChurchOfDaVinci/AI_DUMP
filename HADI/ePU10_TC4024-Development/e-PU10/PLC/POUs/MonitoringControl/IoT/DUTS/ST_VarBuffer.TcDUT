@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_VarBuffer" Id="{c3f9d52e-eac7-460d-a866-e2205ed0dc36}">
+    <Declaration><![CDATA[TYPE ST_VarBuffer :
+STRUCT
+	sValue 	  : STRING(2000);
+	pAdress   : PVOID;
+	diSize	  : DINT;  
+	ClassType : __SYSTEM.TYPE_CLASS;
+	bNumber   : BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

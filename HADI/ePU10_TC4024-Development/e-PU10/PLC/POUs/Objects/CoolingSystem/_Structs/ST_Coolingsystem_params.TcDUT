@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_Coolingsystem_params" Id="{95999b5a-1488-47ae-81a9-6594dcc47b3c}">
+    <Declaration><![CDATA[TYPE ST_Coolingsystem_params :
+STRUCT
+	b_ActivateCooling						: BOOL;
+	b_ActivateHeating						: BOOL;	
+	
+	r_MaxInverterTemperature				: REAL := 50;
+
+	r_MaxCoolantTemperature					: REAL := 40;
+	r_CoolantTempCoolingStart				: REAL := 35;
+	r_CoolantTempHeatingStart				: REAL := 0;
+	r_MinCoolantTemperature					: REAL := -20;
+
+	r_EnclosureIdleTempMin					: REAL := 10.0;
+	r_EnclosureIdleTempMax					: REAL := 40.0;
+	
+	r_BatteryTempMin						: REAL := 15.0;
+	r_BatteryTempHysteresis					: REAL := 5;
+	r_BatteryTempMax						: REAL := 40.0;
+	b_DoubleHeatpump						: BOOL := FALSE;
+	
+	// Minimum base coolant pressure
+	r_MinimumSystemBasePressureWarningLevel	: REAL := 1;
+	r_MinimumSystemBasePressureErrorLevel	: REAL := 0.7;
+	r_PressureHysteresis					: REAL := 0.2;
+	// Minimum cooling system pressure increase with 24V pump running
+	r_StartupPumpMinimumPressure			: REAL	:= 0.1;
+	// minimum cooling system pressure increase with main pump running
+	r_MainPumpMinimumPressure				: REAL	:= 0.2;
+	b_MainPumpFbInstalled					: BOOL := FALSE;
+	
+	//Allowed pressure drop during stable operation, measured against a 5 minutes average pressure
+	AllowedCoolantPressureDrop				:	REAL := 0.25;
+	
+	i_MaximumValveOperatingTime				: INT := 10; //in s
+	
+	i_modbusRetries								: INT := 30;
+	t_ModbusTimeout								:	TIME := T#2S;
+	PrimaryHeatpumpAddr							:	BYTE := 1;
+	HeatpumpType							: 	eSupportedHeatpumps := eSupportedHeatpumps.LgThermaV;
+	LGCoilSettings								:	BYTE := 2#0000_0001;
+	SecondaryHeatpumpAddr						:	BYTE := 2;
+	dw_HeatpumpOperationDelay					: DWORD := 30; // minutes
+	
+	//If the heatpump has run within this timeframe, no preheating is required before operation can start
+	i_SkipHPPreheatingTime						: 	INT		:= 60; //minutes. 
+	r_MinimumCoolantTemperatureForHPHeatingMode	:	REAL	:= 15;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

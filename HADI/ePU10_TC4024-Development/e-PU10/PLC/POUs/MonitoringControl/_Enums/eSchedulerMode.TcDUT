@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="eSchedulerMode" Id="{82faea09-d953-4eef-a719-7a1598cc0ed4}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eSchedulerMode :
+(
+	continous := 0,
+	daily := 1,
+	weekly := 2
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

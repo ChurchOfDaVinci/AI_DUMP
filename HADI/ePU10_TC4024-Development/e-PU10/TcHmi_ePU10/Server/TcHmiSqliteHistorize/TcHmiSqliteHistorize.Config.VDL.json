@@ -1,0 +1,13 @@
+{
+    "enableBackup": true,
+    "historizedSymbolList": {
+        "PLC.HMI.Historizevars": {
+            "interval": "PT0.1S",
+            "maxEntries": 10000,
+            "recordingEnabled": true,
+            "rowLimit": 100000
+        }
+    },
+    "inMemory": false,
+    "maxBackups": 10
+}

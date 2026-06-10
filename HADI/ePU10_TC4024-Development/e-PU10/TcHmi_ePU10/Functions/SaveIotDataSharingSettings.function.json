@@ -1,0 +1,30 @@
+{
+  "function": {
+    "name": "SaveIotDataSharingSettings",
+    "namespace": "TcHmi.Functions.TcHmi_ePU10",
+    "displayName": "SaveIotDataSharingSettings",
+    "description": "Writes all staged indirect-write changes from the IoT data sharing datagrid to the correct PLC symbol paths, working around the framework double-mapping bug in writePreparedValues when server-side paging is active.",
+    "waitMode": "Asynchronous",
+    "category": "",
+    "returnValue": null,
+    "visible": true,
+    "injectContextObject": true,
+    "arguments": []
+  },
+  "$schema": "./../../Packages/Beckhoff.TwinCAT.HMI.Framework.12.760.59/runtimes/native1.12-tchmi/Schema/FunctionDescription.Schema.json",
+  "apiVersion": 1,
+  "version": {
+    "full": "0.0.0.0",
+    "major": 0,
+    "minor": 0,
+    "revision": 0,
+    "build": 0
+  },
+  "dependencyFiles": [
+    {
+      "name": "SaveIotDataSharingSettings.js",
+      "type": "JavaScript",
+      "description": ""
+    }
+  ]
+}

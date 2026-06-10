@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_ProtectionSystems_Params" Id="{b5cb0580-39d7-4160-bf35-6357b189c45e}">
+    <Declaration><![CDATA[TYPE ST_ProtectionSystems_Params :
+STRUCT
+	InsulationMonitor				: ST_InsulationMonitor_params;
+	firedetection					: ST_Firedetection_params;
+	OCP								: ST_Overcurrentprotection_params;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

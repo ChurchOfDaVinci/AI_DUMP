@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="ST_InternalPowerStatus" Id="{705cd412-d8f3-4608-8f5b-99d62393f41c}">
+    <Declaration><![CDATA[TYPE ST_InternalPowerStatus :
+STRUCT
+	b_Status_24VDC		:	BOOL;
+	b_Status_HVDC		:	BOOL;
+	b_Status_400VAC		:	BOOL;
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>
