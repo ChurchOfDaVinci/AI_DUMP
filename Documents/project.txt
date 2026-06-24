@@ -1,0 +1,88 @@
+Project Summary
+Develop a 400A AC/DC charger (battery charger) option for series production in the e-PU10 BESS
+
+Goal / Objective
+A 400A (one power lock set), AC/DC charger battery charger with galvanic isolation between AC/DC to be used for charging the main battery (600-800VDC) of the e-PU10.
+
+It is required that the system is highly reliable > 98% uptime, is easily serviceable (ideally without interruption of the machine) and is liquid cooled. Furthermore a galvanic isolation between AC/DC is mandatory to overcome earthing conflicts between AC supply and microgrid.
+
+The installation should be compliant with IEC 61439, NEN 1010 and whatever is applicable.
+The full product must be ready before November 2026.
+
+Context / Background
+Based on client request a 400A input charger is asked. The following specification are must have:
+
+Galvanic isolation between AC / DC
+400/500A Powerlock set (3P + PE)
+Unidirectional
+Liquid cooled
+DC voltage range 600 - 800 VDC at least. (wider is fine)
+material cost < 20000 euro.
+Industrial control/monitoring protocol: ModbusTCP (favourable), CAN, profinet or Ethercat.
+EU compliant
+Mobile applicable / Vibration resistance.
+Minimum power setteable at least 55 kW / 80A.
+Accepteable inrush behaviour for AC source (C-type circuit breaker) (C80)
+The following specification are recommended:
+
+Multi module setup in power steps of minimal 30kw and maximal 100 kW.
+Serviceable without BESS microgrid interruption
+High reliability > 98% per system
+PFC power supply.
+Minimum power setteable at least 20 kW / 32A.
+Accepteable inrush behaviour for AC source (B-type circuit breaker) (B32)
+e-PU10 Restrications / considerations
+
+Size should not exceed powermodule size.
+Industrial EMC or better (IEC - 61000)
+Total system heat production < 7kW --> Efficiency higher than 97.5%
+System weight less than 500 kg.
+DC Leakeage current is lower than e-PU10 battery precharge power capacity.
+Scope of Work
+TRL2: Define project scope/ key results / technical specification in project document/ Scope changes / risk analysis
+TRL2: Component market research (which suppliers and device are available to what price and what is the quality of documentation)
+TRL3: Conceptual design (which components required and how will it satisfy the project scope) (single line, mechanical description)
+TRL3: Define impact of engineering and cost price, planning
+Material price estimation based on conceptual design
+
+Engineering hours for:
+
+detailed design (Mechanical / Electrical)
+final product (series ready)
+Buildbook / instruction
+CE Documentation (manual, design calculation, operation instructions)
+Software development and integration e-PU10
+Testing and validation
+Coordination and alignments hours (internal and external)
+
+TRL4/5: Execute engineering, topics above.
+TRL6: Testing
+TRL8: Create one-pager for sales
+TRL9: Finalize product and transfer to sales matrix
+Acceptance Criteria
+Solution is CE certified
+Solution is failsafe and reliable (redunancy)
+100% of rated power can continously be used in normal operation conditions (25c).
+Easy maintainable (nice to have: hot swappeable)
+Stated technical specification are valid.
+Dependencies / Linked Issues
+e-PU10V2 development.
+
+Effort Estimate
+High (2 days or more)
+
+Time estimation
+TRL2: 32 hours
+TRL3: 20 hours
+TRL4/5: 40 hours mechanical, 40 hours electrical, 40 hours software, Documentation: 60 hours
+TRL 6: Proto build 40 hours and 16 hours testing
+TRL 8/9: Finalize product, update documentatio, make sales ready. 16 hours
+
+Total (net) : 260 hours.
+Total : 320 hours.
+
+Notes
+Files:
+Project lead: Lennard Rietkerk
+Kickoff date: 23-6-2026
+End date: 2-11-2026,
