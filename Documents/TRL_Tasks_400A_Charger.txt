@@ -1,0 +1,82 @@
+==========================================================================
+e-PU10 400A AC/DC CHARGER - TRL TASK BREAKDOWN
+Project Lead: L. Rietkerk | Kickoff: 23-06-2026 | Target: 02-11-2026
+Total effort: ~320 h gross / 260 h net
+--------------------------------------------------------------------------
+Use this list to create and assign GitHub issues per TRL phase.
+Suggested owner is shown in [brackets]; adjust as needed.
+Roles: PL = Project Lead, EE = Electrical, ME = Mechanical,
+       SW = Software, QC = Safety/Compliance, TV = Test & Validation
+Each TRL phase ends with a formal tollgate review before continuation.
+==========================================================================
+
+
+--------------------------------------------------------------------------
+TRL 2 - SCOPE & MARKET RESEARCH                       Target: Week 3 | 32 h
+--------------------------------------------------------------------------
+[ ] Define project scope and key results in the project document        [PL]
+[ ] Define technical specification (must-have / nice-to-have criteria)   [PL/EE]
+[ ] Perform risk analysis and scope-change analysis                      [PL]
+[ ] Component market research: identify available suppliers and devices  [EE]
+[ ] Compare price, quality and documentation of candidate components     [EE]
+[ ] Tollgate review TRL 2                                                [PL]
+
+
+--------------------------------------------------------------------------
+TRL 3 - CONCEPTUAL DESIGN                             Target: Week 5 | 20 h
+--------------------------------------------------------------------------
+[ ] Select required components and define how they meet the scope        [EE]
+[ ] Create single-line electrical diagram                                [EE]
+[ ] Create mechanical concept description (fit within power module)      [ME]
+[ ] Estimate material price based on conceptual design                   [EE]
+[ ] Estimate engineering impact, cost price and planning                 [PL]
+[ ] Tollgate review TRL 3                                                [PL]
+
+
+--------------------------------------------------------------------------
+TRL 4/5 - DETAILED DESIGN                            Target: Week 12 | 180 h
+--------------------------------------------------------------------------
+[ ] Mechanical detailed design (incl. liquid cooling, envelope, weight)  [ME]   ~40 h
+[ ] Electrical detailed design (incl. galvanic isolation, EMC, inrush)   [EE]   ~40 h
+[ ] e-PU10 software development and integration (ModbusTCP/CAN/etc.)     [SW]   ~40 h
+[ ] CE documentation: manual, design calculations, operating instr.     [QC]   |
+[ ] Build book and assembly instructions                                [ME]   | ~60 h
+[ ] Internal/external coordination and alignment                        [PL]   |
+[ ] Tollgate review TRL 4/5                                              [PL]
+
+
+--------------------------------------------------------------------------
+TRL 6 - PROTOTYPE BUILD & TEST                       Target: Week 16 | 56 h
+--------------------------------------------------------------------------
+[ ] Build prototype charger (proto build)                               [ME/EE] ~40 h
+[ ] Functional testing                                                   [TV]    |
+[ ] Performance validation against must-have criteria                   [TV]    | ~16 h
+[ ] Verify EMC, inrush and thermal behaviour                            [TV/EE] |
+[ ] Tollgate review TRL 6                                                [PL]
+
+
+--------------------------------------------------------------------------
+TRL 8 - SALES READINESS                              Target: Week 18 | 8 h
+--------------------------------------------------------------------------
+[ ] Create sales one-pager                                              [PL]
+[ ] Prepare technical datasheet                                         [EE]
+[ ] Tollgate review TRL 8                                               [PL]
+
+
+--------------------------------------------------------------------------
+TRL 9 - PRODUCT RELEASE                              Target: 02-11-2026 | 8 h
+--------------------------------------------------------------------------
+[ ] Finalize and update all documentation                              [QC/PL]
+[ ] Make product series-ready                                          [EE/ME]
+[ ] Transfer product to the sales matrix                               [PL]
+[ ] Tollgate review TRL 9 (final acceptance)                           [PL]
+
+
+==========================================================================
+RECURRING / GOVERNANCE TASKS (whole project)
+==========================================================================
+[ ] Weekly project update meeting (technical alignment, planning, actions) [PL]
+[ ] Bi-weekly engineering management progress review                       [PL]
+[ ] Continuous task and planning tracking in GitHub                         [PL]
+[ ] Maintain risk register and open-action list                            [PL]
+==========================================================================
