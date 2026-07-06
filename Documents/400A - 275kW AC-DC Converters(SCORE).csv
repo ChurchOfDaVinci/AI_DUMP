@@ -1,0 +1,38 @@
+Manufacturer;Product name;Power;Liquid Cooling;Galvanic isolation;400/500 A AC input ;unidirectional;DC V ouput 600-800;Cost;Comms;EU compliant;Mobile-capable;min set powet 55 kW;fits in power module ;weight less 500 kg;Efficiency >97.5;DC leakage current;EMC industrial;total score;Unkown Specs;min score ;max score
+Mida;U2T-D120B-A;10;10;0;10;0;10;;8;10;5;10;10;10;5;;10;7,3;2,0;6,4;7,7
+;MD100020FEU;10;10;10;10;10;10;;8;10;;10;10;10;5;;10;9,4;3,0;7,6;9,5
+;40 kW old;10;10;10;10;0;10;;8;;;;10;10;6;;5;7,7;5,0;5,3;8,4
+;60 kW old;10;10;;10;10;10;;8;;;;10;10;6;;5;8,6;6,0;5,4;9,1
+Austar;UR100060-LQ;10;10;10;10;10;10;;;;;;10;10;7;;;9,6;7,0;5,4;9,8
+Maxwell;MXR150060BL;10;10;10;10;10;10;;8;;;;10;10;6;;;9,3;6,0;5,8;9,5
+;MXR100040L;10;10;10;10;10;10;;8;;;;10;10;6;;;9,3;6,0;5,8;9,5
+UUGreenPower;UR100040-LQ (EU);10;10;;10;10;10;;8;;;;10;10;7;;;9,3;7,0;5,2;9,6
+Winline;LCR100040A;10;10;10;10;10;10;;8;;;;10;10;4;;10;9,1;5,0;6,3;9,4
+Infypower;LRG1K0100G;10;10;10;10;10;10;;8;10;;;0;10;6;;10;8,4;4,0;6,3;8,8
+;REG1K5125G2;10;0;10;5;10;10;;8;10;;;10;10;7;;10;9,0;4,0;6,8;9,3
+;LRG1K0200G;10;10;10;10;10;10;;8;10;;;10;10;7;;0;8,5;4,0;6,4;8,9
+Advantics;ADB-PC-AC01;10;10;0;10;0;0;;8;10;;;10;10;10;;10;6,8;4,0;5,1;7,6
+;ADB-PC-CH01;10;10;10;10;0;10;;8;10;;;8;10;7;;10;8,3;4,0;6,2;8,7
+;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;
+Manufacturer;Product name;Power > 280 kW;Liquid Cooling;Galvanic isolation;400/500 A AC input ;unidirectional;DC V ouput 600-800;Cost;Comms;EU compliant;Mobile-capable;min set powet 55 kW;dimension < 900*750*1200;weight less 500 kg;Efficiency >97.5;DC leakage current;EMC industrial;NOTE;;;
+Mida;U2T-D120B-A;3*125;YES;NO;260-480;NO;150-1000;?;CAN;CE, TUV;?;20;3* (460*218*84);3*13;96;?;IEC 61851-21-2 Class B;Reseller of Austar?;;;
+;MD100020FEU;7*40;YES;Insulated DC output and AC input;274-487;YES;50-1000;10080;CAN;CE, TUV;?;20;7*(460*218*84);7*13;96;?;IEC 61851-21-2 Class B;;;;
+;40 kW old;7*40;YES;YES;260-480;NO;200-1000;10500;CAN Bus;;;?;7*(300*460*120);7*24;96,5;;Class A;;;;
+;60 kW old;5*60;YES;?;260-530;YES;200-1000;13825;CAN Bus;;;;5*(450*700*84);5*35,5;96,5;;Class A;;;;
+Austar;UR100060-LQ;5*60;YES;EV charger;260-530;YES;150-1000;Requested;CAN Bus;CE, TUV;?;?;5*(400*120*560);5*26;97;?;?;Reseller of mida?;;;
+Maxwell;MXR150060BL;5*60;YES;EV charger;260-530;YES;200-1500;Requested;CAN;CE;?;?;5*(410*500*132);5*47;96,5;?;?;;;;
+;MXR100040L;7*40;YES;EV charger;260-530;YES;50-1000;Requested;CAN Bus;?;?;?;7*(340*470*100);7*28;95,5;?;?;;;;
+UUGreenPower;UR100040-LQ (EU);7*40;YES;?;260-530;YES;150-1000;Requested;CAN;?;Yes (IP65 variant, harsh-environment rated);?;7*(300*120*460);7*28;97;?;?;;;;
+Winline;LCR100040A;7*40;YES;High-Frequency isolated;260-530;YES;50-1000;11620;CAN Bus;CE, CU;?;?;7*(100*340*470);7*28;95,5;?;Class B;;;;
+Infypower;LRG1K0100G;10*30;YES;EV charger;320-530;YES;150-1000;Requested;CAN bus;CE, TUV, cTUVus;?;?;10*(123*300*453);5*30;96,2;?;EN61851-21-2 Class B;also possible to 60 kW;;;
+;REG1K5125G2;6*50;NO;EV charger;380/480;YES;150-1500;Requested;CAN Bus;CE, TUV, cTUVus;?;?;6*(300*416*84);6*20;97;?;EN61851-21-2 Class B;;;;
+;LRG1K0200G;5*62,5;YES;EV charger;380/400/480;YES;200-1000;Requested;CAN Bus;CE, TUV, cTUVus;?;?;5*(300*453*123);5*32,5;97;?;?;;;;
+Advantics;ADB-PC-AC01;3*100;YES;NO;208-480;NO;650-950;Requested;CAN Bus;IEC 62477-1, UL2202, UL1741;?;?;3*(700*400*165);3*43;98,5;?;IEC 61851-1, 61851-23 ED2;;;;
+;ADB-PC-CH01;6*50;YES;converter with isolation;380-480;NO;0-950;Requested;CAN Bus;IEC 62477-1, UL2202, UL1741;?;?;6*(700*440*165);6*30;97;?;EMC class B with an external filter;;;;
+;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;
