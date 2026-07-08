@@ -55,28 +55,10 @@ At-a-glance list of every requirement. Full test details are in Section 4 (Test 
 
 | ID | Requirement | Method | Test stage | Status |
 |---|---|:---:|:---:|:---:|
-| ELEC-001 | Rated AC output power 125 kW | T | TRL 4-5 | |
-| ELEC-002 | Peak power 110% continuous / 120% for 1 min | T | TRL 5 | |
-| ELEC-003 | Usable capacity >= 250 kWh at SOH 99% | T | TRL 5 | |
-| ELEC-004 | DC voltage 832 V nominal (702-936 V range) | T | TRL 4 | |
-| ELEC-005 | AC voltage 400 V (+-15% grid / +-3% island) | T | TRL 4-5 | |
-| ELEC-006 | Grid frequency 50/60 Hz | T | TRL 4 | |
-| ELEC-007 | THD < 3% with linear load | T | TRL 5 | |
-| ELEC-008 | Power factor range -1 to +1 | T | TRL 5 | |
-| ELEC-009 | Round-trip efficiency > 88% | A / T | TRL 5 | |
-| ELEC-010 | Grid response time < 100 ms | T | TRL 4-5 | |
-| FUNC-001 | Grid-following operation | T / D | TRL 4 | |
-| FUNC-002 | Grid-forming (island) operation | T / D | TRL 4-5 | |
-| FUNC-003 | Multi-BESS parallel up to 1 MW | T | TRL 5-6 | |
-| FUNC-004 | Peak shaving / load management | D | TRL 5-6 | |
-| FUNC-005 | PV control and curtailment | D / T | TRL 6 | |
-| FUNC-006 | Generator control (fixed power) | D | TRL 6 | |
-| FUNC-007 | Black start capability | D / T | TRL 6 | |
-| FUNC-008 | Automatic mains failure recovery | D / T | TRL 6 | |
-| FUNC-009 | Microgrid load sharing | T | TRL 5-6 | |
-| FUNC-010 | Redundancy / fail-safe | D | TRL 5-6 | |
-| FUNC-011 | HMI / service portal | D | TRL 6 | |
-| FUNC-012 | Uptime >= 98% | A | TRL 7 | |
+| MECH-004 | Max altitude 2000 m | I / A | TRL 2 (design review) | |
+| SAFE-006 | Battery cell safety (UN38.3 / IEC 62619) | I | TRL 2 / 3 | |
+| SAFE-007 | Power electronics (IEC 62477) | I | TRL 2 / 3 | |
+| COST-001 | Controller material cost < EUR 3500 | A | TRL 2 / 3 | |
 | COMM-001 | Modbus TCP | T | TRL 3 / 5 | |
 | COMM-002 | CAN bus | T | TRL 3 | |
 | COMM-003 | Ethernet | T | TRL 3 | |
@@ -84,19 +66,37 @@ At-a-glance list of every requirement. Full test details are in Section 4 (Test 
 | MECH-001 | Cabinet dimensions 1000x2300x1350 mm | I | TRL 3 (incoming) | |
 | MECH-002 | Cabinet weight <= 2450 kg | I / A | TRL 3 (incoming) | |
 | MECH-003 | IP54 ingress protection | I / T | TRL 3 / 6 | |
-| MECH-004 | Max altitude 2000 m | I / A | TRL 2 (design review) | |
+| THERM-003 | Aerosol fire protection | I / D | TRL 3 / 6 | |
+| ELEC-001 | Rated AC output power 125 kW | T | TRL 4-5 | |
+| ELEC-004 | DC voltage 832 V nominal (702-936 V range) | T | TRL 4 | |
+| ELEC-005 | AC voltage 400 V (+-15% grid / +-3% island) | T | TRL 4-5 | |
+| ELEC-006 | Grid frequency 50/60 Hz | T | TRL 4 | |
+| ELEC-010 | Grid response time < 100 ms | T | TRL 4-5 | |
+| FUNC-001 | Grid-following operation | T / D | TRL 4 | |
+| FUNC-002 | Grid-forming (island) operation | T / D | TRL 4-5 | |
+| ELEC-002 | Peak power 110% continuous / 120% for 1 min | T | TRL 5 | |
+| ELEC-003 | Usable capacity >= 250 kWh at SOH 99% | T | TRL 5 | |
+| ELEC-007 | THD < 3% with linear load | T | TRL 5 | |
+| ELEC-008 | Power factor range -1 to +1 | T | TRL 5 | |
+| ELEC-009 | Round-trip efficiency > 88% | A / T | TRL 5 | |
+| FUNC-003 | Multi-BESS parallel up to 1 MW | T | TRL 5-6 | |
+| FUNC-004 | Peak shaving / load management | D | TRL 5-6 | |
+| FUNC-009 | Microgrid load sharing | T | TRL 5-6 | |
+| FUNC-010 | Redundancy / fail-safe | D | TRL 5-6 | |
 | THERM-001 | Operating temp -20 to +55 C | T / A | TRL 5-6 | |
 | THERM-002 | Noise < 75 dB(A) at 1 m | T | TRL 5-6 | |
-| THERM-003 | Aerosol fire protection | I / D | TRL 3 / 6 | |
-| SAFE-001 | CE marking | I / A | TRL 6 | |
-| SAFE-002 | PGS 37-1 compliance | I / A | TRL 6 | |
 | SAFE-003 | Overcurrent protection | T | TRL 5 | |
 | SAFE-004 | Overvoltage protection | T | TRL 5 | |
-| SAFE-005 | EMC (IEC 61000) | I / T | TRL 6 | |
-| SAFE-006 | Battery cell safety (UN38.3 / IEC 62619) | I | TRL 2 / 3 | |
-| SAFE-007 | Power electronics (IEC 62477) | I | TRL 2 / 3 | |
 | SAFE-008 | Safe state on fault / island | T / D | TRL 5-6 | |
-| COST-001 | Controller material cost < EUR 3500 | A | TRL 2 / 3 | |
+| FUNC-005 | PV control and curtailment | D / T | TRL 6 | |
+| FUNC-006 | Generator control (fixed power) | D | TRL 6 | |
+| FUNC-007 | Black start capability | D / T | TRL 6 | |
+| FUNC-008 | Automatic mains failure recovery | D / T | TRL 6 | |
+| FUNC-011 | HMI / service portal | D | TRL 6 | |
+| SAFE-001 | CE marking | I / A | TRL 6 | |
+| SAFE-002 | PGS 37-1 compliance | I / A | TRL 6 | |
+| SAFE-005 | EMC (IEC 61000) | I / T | TRL 6 | |
+| FUNC-012 | Uptime >= 98% | A | TRL 7 | |
 
 ---
 
@@ -104,319 +104,65 @@ At-a-glance list of every requirement. Full test details are in Section 4 (Test 
 
 One card per requirement. Follow **How to test**, record the **Result**, then mark **Pass** or **Fail**.
 
-### Electrical
+### TRL 2
 
-#### ELEC-001 — Rated AC output power 125 kW
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The system delivers a rated AC output power of 125 kW. |
-| **Source** | System Requirements table; Hardware datasheet |
-| **Verification method** | T |
-| **How to test** | Connect a rated load. Measure AC output power with a power analyser at rated conditions. |
-| **Acceptance criterion (pass condition)** | Measured output power >= 125 kW at 400 V AC, 50 Hz. |
-| **Equipment / tooling** | Power analyser (e.g. Yokogawa WT500), calibrated CT/PT |
-| **Test stage** | TRL 4-5 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### ELEC-002 — Peak power 110% continuous / 120% for 1 min
+#### MECH-004 — Max altitude 2000 m
 
 | Field | Detail |
 |---|---|
-| **Requirement** | The system sustains 110% power continuously and 120% power for 1 minute. |
-| **Source** | System Requirements table |
-| **Verification method** | T |
-| **How to test** | Run at 110% rated power for >= 5 min, then at 120% rated power for exactly 1 min. Log power and temperature. |
-| **Acceptance criterion (pass condition)** | 110% (137.5 kW) sustained without trip/derating; 120% (150 kW) held for 1 min without trip. |
-| **Equipment / tooling** | Power analyser, thermal camera, data logger |
-| **Test stage** | TRL 5 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### ELEC-003 — Usable capacity >= 250 kWh at SOH 99%
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The system provides at least 250 kWh usable energy at 99% state of health. |
-| **Source** | System Requirements table |
-| **Verification method** | T |
-| **How to test** | Fully charge from 0% SOC, then discharge at rated power and measure total energy delivered. |
-| **Acceptance criterion (pass condition)** | Discharged energy >= 250 kWh when battery SOH >= 99%. |
-| **Equipment / tooling** | Power analyser, energy meter, BMS readout |
-| **Test stage** | TRL 5 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### ELEC-004 — DC voltage 832 V nominal (702-936 V range)
-
-| Field | Detail |
-|---|---|
-| **Requirement** | DC bus operates at 832 V nominal within a 702-936 V range. |
+| **Requirement** | The system operates at altitudes up to 2000 m. |
 | **Source** | Hardware datasheet |
-| **Verification method** | T |
-| **How to test** | Monitor DC bus voltage during a full charge/discharge cycle. |
-| **Acceptance criterion (pass condition)** | DC bus voltage stays within 702-936 V throughout; nominal ~832 V. |
-| **Equipment / tooling** | Calibrated DC voltmeter / data logger on DC bus |
-| **Test stage** | TRL 4 |
+| **Verification method** | I / A |
+| **How to test** | Review the manufacturer datasheet and confirm derating tables are acceptable for the installation altitude. |
+| **Acceptance criterion (pass condition)** | Manufacturer specifies operation <= 2000 m; installation site confirmed within limit. |
+| **Equipment / tooling** | Manufacturer datasheet, site survey data |
+| **Test stage** | TRL 2 (design review) |
 | **Result** (fill in during testing) | |
 | **Status** (Pass / Fail) | |
 
-#### ELEC-005 — AC voltage 400 V (+-15% grid / +-3% island)
+#### SAFE-006 — Battery cell safety (UN38.3 / IEC 62619)
 
 | Field | Detail |
 |---|---|
-| **Requirement** | AC output is 400 V, +-15% on-grid and +-3% off-grid (island). |
-| **Source** | Hardware datasheet |
-| **Verification method** | T |
-| **How to test** | Measure AC output voltage in grid-following and grid-forming modes under varying loads. |
-| **Acceptance criterion (pass condition)** | Grid-following: 400 V +-15% (340-460 V); island: 400 V +-3% (388-412 V). |
-| **Equipment / tooling** | True-RMS voltmeter / power analyser |
-| **Test stage** | TRL 4-5 |
+| **Requirement** | LFP cells comply with UN38.3 (transport) and IEC 62619 (stationary storage safety). |
+| **Source** | Hardware datasheet compliance standard |
+| **Verification method** | I |
+| **How to test** | Verify manufacturer UN38.3 and IEC 62619 certificates are available and valid for the LFP 314 Ah cells. |
+| **Acceptance criterion (pass condition)** | Valid UN38.3 and IEC 62619 certificates on file. |
+| **Equipment / tooling** | Manufacturer certificates |
+| **Test stage** | TRL 2 / 3 |
 | **Result** (fill in during testing) | |
 | **Status** (Pass / Fail) | |
 
-#### ELEC-006 — Grid frequency 50/60 Hz
+#### SAFE-007 — Power electronics (IEC 62477)
 
 | Field | Detail |
 |---|---|
-| **Requirement** | The system supports both 50 Hz and 60 Hz grid frequencies. |
-| **Source** | System Requirements table; Hardware datasheet |
-| **Verification method** | T |
-| **How to test** | Switch configuration between 50 Hz and 60 Hz. Verify output frequency in each mode. |
-| **Acceptance criterion (pass condition)** | 50.00 +-0.5 Hz (50 Hz mode); 60.00 +-0.5 Hz (60 Hz mode). |
-| **Equipment / tooling** | Frequency meter / power analyser |
-| **Test stage** | TRL 4 |
+| **Requirement** | The power electronics comply with IEC 62477. |
+| **Source** | Hardware datasheet compliance standard |
+| **Verification method** | I |
+| **How to test** | Verify the manufacturer's IEC 62477 test report is available and valid for the inverter/power electronics. |
+| **Acceptance criterion (pass condition)** | Valid IEC 62477 test report on file. |
+| **Equipment / tooling** | Manufacturer test report |
+| **Test stage** | TRL 2 / 3 |
 | **Result** (fill in during testing) | |
 | **Status** (Pass / Fail) | |
 
-#### ELEC-007 — THD < 3% with linear load
+#### COST-001 — Controller material cost < EUR 3500
 
 | Field | Detail |
 |---|---|
-| **Requirement** | Total harmonic distortion is below 3% with a linear load. |
-| **Source** | System Requirements table; Hardware datasheet |
-| **Verification method** | T |
-| **How to test** | Measure THD of AC output voltage and current at rated load with a linear (resistive) load. |
-| **Acceptance criterion (pass condition)** | THD voltage < 3% and THD current < 3% at rated linear load. |
-| **Equipment / tooling** | Power quality analyser with THD capability |
-| **Test stage** | TRL 5 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### ELEC-008 — Power factor range -1 to +1
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The system operates across the full power factor range -1 to +1 (four-quadrant). |
-| **Source** | Hardware datasheet |
-| **Verification method** | T |
-| **How to test** | Command leading, lagging and unity power factor at rated power. Record P and Q. |
-| **Acceptance criterion (pass condition)** | Power factor controllable across -1.0 to +1.0 without fault. |
-| **Equipment / tooling** | Power analyser with reactive power measurement |
-| **Test stage** | TRL 5 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### ELEC-009 — Round-trip efficiency > 88%
-
-| Field | Detail |
-|---|---|
-| **Requirement** | System round-trip efficiency is greater than 88%. |
-| **Source** | System Requirements table |
-| **Verification method** | A / T |
-| **How to test** | Measure charge energy (E_charge) and discharge energy (E_discharge). Compute efficiency = E_discharge / E_charge x 100%. |
-| **Acceptance criterion (pass condition)** | Calculated round-trip efficiency >= 88%. |
-| **Equipment / tooling** | Energy meters on AC input and output, data logger |
-| **Test stage** | TRL 5 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### ELEC-010 — Grid response time < 100 ms
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The system responds to a power command within 100 ms. |
-| **Source** | System Requirements table |
-| **Verification method** | T |
-| **How to test** | Send a step command (0 -> 100% setpoint) and timestamp the start and end of the power ramp. |
-| **Acceptance criterion (pass condition)** | Time from command to >= 90% of setpoint < 100 ms. |
-| **Equipment / tooling** | Oscilloscope or data logger (>= 1 ms resolution), power analyser |
-| **Test stage** | TRL 4-5 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-### Functional
-
-#### FUNC-001 — Grid-following operation
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The system follows grid voltage/frequency and injects/absorbs P and Q on command. |
-| **Source** | Project scope; Objectives |
-| **Verification method** | T / D |
-| **How to test** | Connect to a simulated or live grid. Command P and Q setpoints and verify tracking. |
-| **Acceptance criterion (pass condition)** | P within +-5% of command; Q within +-5 kVAr; stable for >= 5 min. |
-| **Equipment / tooling** | Power analyser, grid simulator or live grid connection |
-| **Test stage** | TRL 4 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### FUNC-002 — Grid-forming (island) operation
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The system forms its own AC voltage/frequency in island/microgrid mode. |
-| **Source** | Project scope; Objectives |
-| **Verification method** | T / D |
-| **How to test** | Disconnect from the grid (island mode), connect a local load, verify stable voltage/frequency without external reference. |
-| **Acceptance criterion (pass condition)** | Stable island 400 V +-3%, 50 Hz +-0.5 Hz with load steps applied. |
-| **Equipment / tooling** | Power analyser, programmable load bank, oscilloscope |
-| **Test stage** | TRL 4-5 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### FUNC-003 — Multi-BESS parallel up to 1 MW
-
-| Field | Detail |
-|---|---|
-| **Requirement** | Multiple cabinets operate in parallel up to 1 MW total power. |
-| **Source** | System Requirements table; Objectives |
-| **Verification method** | T |
-| **How to test** | Connect >= 2 cabinets in parallel; verify load sharing and combined output up to 1 MW (8 x 125 kW). (Assumption: test with >= 2 units if full 1 MW not available.) |
-| **Acceptance criterion (pass condition)** | Each unit shares load within +-10% of expected share; combined output reaches command without instability. |
-| **Equipment / tooling** | Power analyser per unit, master controller, comms network |
-| **Test stage** | TRL 5-6 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### FUNC-004 — Peak shaving / load management
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The system reduces grid peak demand to a configured setpoint on command. |
-| **Source** | Project scope |
-| **Verification method** | D |
-| **How to test** | Configure a peak-shaving setpoint, apply a step-load above it, verify the system limits grid import. |
-| **Acceptance criterion (pass condition)** | Grid import does not exceed setpoint +-5 kW within 100 ms of load step. |
-| **Equipment / tooling** | Power analyser at grid connection, programmable load |
-| **Test stage** | TRL 5-6 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### FUNC-005 — PV control and curtailment
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The system integrates with a PV source and can curtail PV output. |
-| **Source** | Objectives; Deliverables |
-| **Verification method** | D / T |
-| **How to test** | Connect a PV simulator/array, issue a curtailment command, measure PV power before and after. |
-| **Acceptance criterion (pass condition)** | PV power curtailed to setpoint +-5% within 500 ms of command. |
-| **Equipment / tooling** | PV simulator or array with power measurement, controller interface |
-| **Test stage** | TRL 6 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### FUNC-006 — Generator control (fixed power)
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The system coordinates with a generator at a fixed power setpoint. |
-| **Source** | Objectives; Deliverables |
-| **Verification method** | D |
-| **How to test** | Connect a generator/simulator; verify the system accepts fixed generator power and adjusts BESS to compensate load variation. |
-| **Acceptance criterion (pass condition)** | Generator power within +-5% of setpoint; BESS compensates smoothly without generator trip. |
-| **Equipment / tooling** | Generator or simulator, power analysers, controller |
-| **Test stage** | TRL 6 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### FUNC-007 — Black start capability
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The system can start from zero and energise a dead microgrid. |
-| **Source** | Objectives; Deliverables |
-| **Verification method** | D / T |
-| **How to test** | With grid disconnected and load de-energised, initiate the black-start sequence from the controller. |
-| **Acceptance criterion (pass condition)** | Forms AC (400 V +-3%, 50 Hz +-0.5 Hz) from dead bus and energises load within 60 s. (Assumption: 60 s if no spec given.) |
-| **Equipment / tooling** | Oscilloscope, power analyser, stopwatch/data logger |
-| **Test stage** | TRL 6 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### FUNC-008 — Automatic mains failure recovery
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The system detects grid loss and automatically switches to island mode. |
-| **Source** | Deliverables |
-| **Verification method** | D / T |
-| **How to test** | Simulate a grid outage while in grid-following mode; verify automatic transfer to island/grid-forming mode. |
-| **Acceptance criterion (pass condition)** | Transfer completed without load interruption > 100 ms; stable in island mode. |
-| **Equipment / tooling** | Power analyser, oscilloscope on load side, data logger |
-| **Test stage** | TRL 6 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### FUNC-009 — Microgrid load sharing
-
-| Field | Detail |
-|---|---|
-| **Requirement** | Multiple BESS units share load automatically in a microgrid. |
-| **Source** | Objectives; Deliverables |
-| **Verification method** | T |
-| **How to test** | Run >= 2 units in an island microgrid, apply variable loads, verify automatic load sharing. |
-| **Acceptance criterion (pass condition)** | Load-sharing deviation <= +-10% of each unit's rated power; no instability over a 10-min test. |
-| **Equipment / tooling** | Power analysers per unit, programmable load, controller |
-| **Test stage** | TRL 5-6 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### FUNC-010 — Redundancy / fail-safe
-
-| Field | Detail |
-|---|---|
-| **Requirement** | A single unit failure does not cause complete system shutdown. |
-| **Source** | Objectives; Deliverables |
-| **Verification method** | D |
-| **How to test** | In a multi-BESS setup, force one unit offline (simulate fault); verify remaining units keep supplying load. |
-| **Acceptance criterion (pass condition)** | Remaining units take over load within 5 s; system stays operational; alarms raised correctly. |
-| **Equipment / tooling** | Controller logs, power analysers |
-| **Test stage** | TRL 5-6 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### FUNC-011 — HMI / service portal
-
-| Field | Detail |
-|---|---|
-| **Requirement** | Monitoring and diagnostics are accessible via a web/local interface. |
-| **Source** | Deliverables |
-| **Verification method** | D |
-| **How to test** | Open the service portal/HMI and verify real-time display of SOC, power, voltage, frequency, alarms, and manual setpoints. |
-| **Acceptance criterion (pass condition)** | All parameters visible and updating live; a manual setpoint command reflected on the system within 5 s. |
-| **Equipment / tooling** | PC/tablet with browser/HMI software, network connection |
-| **Test stage** | TRL 6 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### FUNC-012 — Uptime >= 98%
-
-| Field | Detail |
-|---|---|
-| **Requirement** | System uptime is at least 98% in operational deployment. |
-| **Source** | System Requirements table; TRL 7 |
+| **Requirement** | Additional VDL controller hardware material cost is below EUR 3500 per system. |
+| **Source** | Project plan - Cost/Budget section |
 | **Verification method** | A |
-| **How to test** | Record total operating time and unplanned downtime over a pilot period (>= 30 days). Compute uptime = (total - downtime) / total x 100%. |
-| **Acceptance criterion (pass condition)** | Uptime >= 98% over the measurement period. |
-| **Equipment / tooling** | Data logger, controller uptime log, maintenance records |
-| **Test stage** | TRL 7 |
+| **How to test** | Sum the BOM cost of all VDL-added controller hardware (excluding the base Solar East cabinet) and compare to the EUR 3500 target. |
+| **Acceptance criterion (pass condition)** | Total VDL controller BOM cost <= EUR 3500 per system. |
+| **Equipment / tooling** | Bill of Materials, supplier quotations |
+| **Test stage** | TRL 2 / 3 |
 | **Result** (fill in during testing) | |
 | **Status** (Pass / Fail) | |
 
-### Communication
+### TRL 3
 
 #### COMM-001 — Modbus TCP
 
@@ -474,8 +220,6 @@ One card per requirement. Follow **How to test**, record the **Result**, then ma
 | **Result** (fill in during testing) | |
 | **Status** (Pass / Fail) | |
 
-### Mechanical
-
 #### MECH-001 — Cabinet dimensions 1000x2300x1350 mm
 
 | Field | Detail |
@@ -518,21 +262,247 @@ One card per requirement. Follow **How to test**, record the **Result**, then ma
 | **Result** (fill in during testing) | |
 | **Status** (Pass / Fail) | |
 
-#### MECH-004 — Max altitude 2000 m
+#### THERM-003 — Aerosol fire protection
 
 | Field | Detail |
 |---|---|
-| **Requirement** | The system operates at altitudes up to 2000 m. |
+| **Requirement** | The aerosol fire suppression system is installed and functional. |
 | **Source** | Hardware datasheet |
-| **Verification method** | I / A |
-| **How to test** | Review the manufacturer datasheet and confirm derating tables are acceptable for the installation altitude. |
-| **Acceptance criterion (pass condition)** | Manufacturer specifies operation <= 2000 m; installation site confirmed within limit. |
-| **Equipment / tooling** | Manufacturer datasheet, site survey data |
-| **Test stage** | TRL 2 (design review) |
+| **Verification method** | I / D |
+| **How to test** | Inspect aerosol units for correct installation, expiry date and activation wiring; functional-test the activation signal (without triggering aerosol). |
+| **Acceptance criterion (pass condition)** | Units installed per layout; within service life; activation signal test succeeds. |
+| **Equipment / tooling** | Inspection checklist, supplier activation-test procedure |
+| **Test stage** | TRL 3 / 6 |
 | **Result** (fill in during testing) | |
 | **Status** (Pass / Fail) | |
 
-### Thermal & Environmental
+### TRL 4
+
+#### ELEC-001 — Rated AC output power 125 kW
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system delivers a rated AC output power of 125 kW. |
+| **Source** | System Requirements table; Hardware datasheet |
+| **Verification method** | T |
+| **How to test** | Connect a rated load. Measure AC output power with a power analyser at rated conditions. |
+| **Acceptance criterion (pass condition)** | Measured output power >= 125 kW at 400 V AC, 50 Hz. |
+| **Equipment / tooling** | Power analyser (e.g. Yokogawa WT500), calibrated CT/PT |
+| **Test stage** | TRL 4-5 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### ELEC-004 — DC voltage 832 V nominal (702-936 V range)
+
+| Field | Detail |
+|---|---|
+| **Requirement** | DC bus operates at 832 V nominal within a 702-936 V range. |
+| **Source** | Hardware datasheet |
+| **Verification method** | T |
+| **How to test** | Monitor DC bus voltage during a full charge/discharge cycle. |
+| **Acceptance criterion (pass condition)** | DC bus voltage stays within 702-936 V throughout; nominal ~832 V. |
+| **Equipment / tooling** | Calibrated DC voltmeter / data logger on DC bus |
+| **Test stage** | TRL 4 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### ELEC-005 — AC voltage 400 V (+-15% grid / +-3% island)
+
+| Field | Detail |
+|---|---|
+| **Requirement** | AC output is 400 V, +-15% on-grid and +-3% off-grid (island). |
+| **Source** | Hardware datasheet |
+| **Verification method** | T |
+| **How to test** | Measure AC output voltage in grid-following and grid-forming modes under varying loads. |
+| **Acceptance criterion (pass condition)** | Grid-following: 400 V +-15% (340-460 V); island: 400 V +-3% (388-412 V). |
+| **Equipment / tooling** | True-RMS voltmeter / power analyser |
+| **Test stage** | TRL 4-5 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### ELEC-006 — Grid frequency 50/60 Hz
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system supports both 50 Hz and 60 Hz grid frequencies. |
+| **Source** | System Requirements table; Hardware datasheet |
+| **Verification method** | T |
+| **How to test** | Switch configuration between 50 Hz and 60 Hz. Verify output frequency in each mode. |
+| **Acceptance criterion (pass condition)** | 50.00 +-0.5 Hz (50 Hz mode); 60.00 +-0.5 Hz (60 Hz mode). |
+| **Equipment / tooling** | Frequency meter / power analyser |
+| **Test stage** | TRL 4 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### ELEC-010 — Grid response time < 100 ms
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system responds to a power command within 100 ms. |
+| **Source** | System Requirements table |
+| **Verification method** | T |
+| **How to test** | Send a step command (0 -> 100% setpoint) and timestamp the start and end of the power ramp. |
+| **Acceptance criterion (pass condition)** | Time from command to >= 90% of setpoint < 100 ms. |
+| **Equipment / tooling** | Oscilloscope or data logger (>= 1 ms resolution), power analyser |
+| **Test stage** | TRL 4-5 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### FUNC-001 — Grid-following operation
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system follows grid voltage/frequency and injects/absorbs P and Q on command. |
+| **Source** | Project scope; Objectives |
+| **Verification method** | T / D |
+| **How to test** | Connect to a simulated or live grid. Command P and Q setpoints and verify tracking. |
+| **Acceptance criterion (pass condition)** | P within +-5% of command; Q within +-5 kVAr; stable for >= 5 min. |
+| **Equipment / tooling** | Power analyser, grid simulator or live grid connection |
+| **Test stage** | TRL 4 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### FUNC-002 — Grid-forming (island) operation
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system forms its own AC voltage/frequency in island/microgrid mode. |
+| **Source** | Project scope; Objectives |
+| **Verification method** | T / D |
+| **How to test** | Disconnect from the grid (island mode), connect a local load, verify stable voltage/frequency without external reference. |
+| **Acceptance criterion (pass condition)** | Stable island 400 V +-3%, 50 Hz +-0.5 Hz with load steps applied. |
+| **Equipment / tooling** | Power analyser, programmable load bank, oscilloscope |
+| **Test stage** | TRL 4-5 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+### TRL 5
+
+#### ELEC-002 — Peak power 110% continuous / 120% for 1 min
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system sustains 110% power continuously and 120% power for 1 minute. |
+| **Source** | System Requirements table |
+| **Verification method** | T |
+| **How to test** | Run at 110% rated power for >= 5 min, then at 120% rated power for exactly 1 min. Log power and temperature. |
+| **Acceptance criterion (pass condition)** | 110% (137.5 kW) sustained without trip/derating; 120% (150 kW) held for 1 min without trip. |
+| **Equipment / tooling** | Power analyser, thermal camera, data logger |
+| **Test stage** | TRL 5 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### ELEC-003 — Usable capacity >= 250 kWh at SOH 99%
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system provides at least 250 kWh usable energy at 99% state of health. |
+| **Source** | System Requirements table |
+| **Verification method** | T |
+| **How to test** | Fully charge from 0% SOC, then discharge at rated power and measure total energy delivered. |
+| **Acceptance criterion (pass condition)** | Discharged energy >= 250 kWh when battery SOH >= 99%. |
+| **Equipment / tooling** | Power analyser, energy meter, BMS readout |
+| **Test stage** | TRL 5 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### ELEC-007 — THD < 3% with linear load
+
+| Field | Detail |
+|---|---|
+| **Requirement** | Total harmonic distortion is below 3% with a linear load. |
+| **Source** | System Requirements table; Hardware datasheet |
+| **Verification method** | T |
+| **How to test** | Measure THD of AC output voltage and current at rated load with a linear (resistive) load. |
+| **Acceptance criterion (pass condition)** | THD voltage < 3% and THD current < 3% at rated linear load. |
+| **Equipment / tooling** | Power quality analyser with THD capability |
+| **Test stage** | TRL 5 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### ELEC-008 — Power factor range -1 to +1
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system operates across the full power factor range -1 to +1 (four-quadrant). |
+| **Source** | Hardware datasheet |
+| **Verification method** | T |
+| **How to test** | Command leading, lagging and unity power factor at rated power. Record P and Q. |
+| **Acceptance criterion (pass condition)** | Power factor controllable across -1.0 to +1.0 without fault. |
+| **Equipment / tooling** | Power analyser with reactive power measurement |
+| **Test stage** | TRL 5 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### ELEC-009 — Round-trip efficiency > 88%
+
+| Field | Detail |
+|---|---|
+| **Requirement** | System round-trip efficiency is greater than 88%. |
+| **Source** | System Requirements table |
+| **Verification method** | A / T |
+| **How to test** | Measure charge energy (E_charge) and discharge energy (E_discharge). Compute efficiency = E_discharge / E_charge x 100%. |
+| **Acceptance criterion (pass condition)** | Calculated round-trip efficiency >= 88%. |
+| **Equipment / tooling** | Energy meters on AC input and output, data logger |
+| **Test stage** | TRL 5 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### FUNC-003 — Multi-BESS parallel up to 1 MW
+
+| Field | Detail |
+|---|---|
+| **Requirement** | Multiple cabinets operate in parallel up to 1 MW total power. |
+| **Source** | System Requirements table; Objectives |
+| **Verification method** | T |
+| **How to test** | Connect >= 2 cabinets in parallel; verify load sharing and combined output up to 1 MW (8 x 125 kW). (Assumption: test with >= 2 units if full 1 MW not available.) |
+| **Acceptance criterion (pass condition)** | Each unit shares load within +-10% of expected share; combined output reaches command without instability. |
+| **Equipment / tooling** | Power analyser per unit, master controller, comms network |
+| **Test stage** | TRL 5-6 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### FUNC-004 — Peak shaving / load management
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system reduces grid peak demand to a configured setpoint on command. |
+| **Source** | Project scope |
+| **Verification method** | D |
+| **How to test** | Configure a peak-shaving setpoint, apply a step-load above it, verify the system limits grid import. |
+| **Acceptance criterion (pass condition)** | Grid import does not exceed setpoint +-5 kW within 100 ms of load step. |
+| **Equipment / tooling** | Power analyser at grid connection, programmable load |
+| **Test stage** | TRL 5-6 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### FUNC-009 — Microgrid load sharing
+
+| Field | Detail |
+|---|---|
+| **Requirement** | Multiple BESS units share load automatically in a microgrid. |
+| **Source** | Objectives; Deliverables |
+| **Verification method** | T |
+| **How to test** | Run >= 2 units in an island microgrid, apply variable loads, verify automatic load sharing. |
+| **Acceptance criterion (pass condition)** | Load-sharing deviation <= +-10% of each unit's rated power; no instability over a 10-min test. |
+| **Equipment / tooling** | Power analysers per unit, programmable load, controller |
+| **Test stage** | TRL 5-6 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### FUNC-010 — Redundancy / fail-safe
+
+| Field | Detail |
+|---|---|
+| **Requirement** | A single unit failure does not cause complete system shutdown. |
+| **Source** | Objectives; Deliverables |
+| **Verification method** | D |
+| **How to test** | In a multi-BESS setup, force one unit offline (simulate fault); verify remaining units keep supplying load. |
+| **Acceptance criterion (pass condition)** | Remaining units take over load within 5 s; system stays operational; alarms raised correctly. |
+| **Equipment / tooling** | Controller logs, power analysers |
+| **Test stage** | TRL 5-6 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
 
 #### THERM-001 — Operating temp -20 to +55 C
 
@@ -559,50 +529,6 @@ One card per requirement. Follow **How to test**, record the **Result**, then ma
 | **Acceptance criterion (pass condition)** | Maximum measured noise < 75 dB(A) at 1 m under full load. |
 | **Equipment / tooling** | Calibrated sound level meter (Class 1/2 per IEC 61672) |
 | **Test stage** | TRL 5-6 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### THERM-003 — Aerosol fire protection
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The aerosol fire suppression system is installed and functional. |
-| **Source** | Hardware datasheet |
-| **Verification method** | I / D |
-| **How to test** | Inspect aerosol units for correct installation, expiry date and activation wiring; functional-test the activation signal (without triggering aerosol). |
-| **Acceptance criterion (pass condition)** | Units installed per layout; within service life; activation signal test succeeds. |
-| **Equipment / tooling** | Inspection checklist, supplier activation-test procedure |
-| **Test stage** | TRL 3 / 6 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-### Safety & Compliance
-
-#### SAFE-001 — CE marking
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The system complies with applicable EU directives (LVD, EMC, Machinery) for CE marking. |
-| **Source** | Objectives; Deliverables |
-| **Verification method** | I / A |
-| **How to test** | Review the CE technical file; verify all applicable directives are addressed with test reports (notified body or self-declaration). |
-| **Acceptance criterion (pass condition)** | Valid CE Declaration of Conformity issued; technical file complete; all applicable directives addressed. |
-| **Equipment / tooling** | CE technical file, notified body test reports |
-| **Test stage** | TRL 6 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### SAFE-002 — PGS 37-1 compliance
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The system complies with the Dutch PGS 37-1 guideline for stationary battery systems. |
-| **Source** | Objectives; Deliverables |
-| **Verification method** | I / A |
-| **How to test** | Review the PGS 37-1 checklist against the design; verify installation, fire safety, ventilation and electrical-safety paragraphs. |
-| **Acceptance criterion (pass condition)** | PGS 37-1 documentation complete; no open deviations without approved mitigation. |
-| **Equipment / tooling** | PGS 37-1 document, compliance checklist, safety engineer review |
-| **Test stage** | TRL 6 |
 | **Result** (fill in during testing) | |
 | **Status** (Pass / Fail) | |
 
@@ -634,48 +560,6 @@ One card per requirement. Follow **How to test**, record the **Result**, then ma
 | **Result** (fill in during testing) | |
 | **Status** (Pass / Fail) | |
 
-#### SAFE-005 — EMC (IEC 61000)
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The system complies with the IEC 61000 series for EMC emissions and immunity. |
-| **Source** | Hardware datasheet; Project plan (Risk - EMC) |
-| **Verification method** | I / T |
-| **How to test** | Review EMC test reports (IEC 61000-3-2/-3-3 emissions; 61000-4-2..-4-11 immunity). If independent testing is required, use a certified EMC lab. |
-| **Acceptance criterion (pass condition)** | All applicable IEC 61000 parts passed; documented in the CE technical file. |
-| **Equipment / tooling** | EMC test reports from manufacturer or accredited lab |
-| **Test stage** | TRL 6 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### SAFE-006 — Battery cell safety (UN38.3 / IEC 62619)
-
-| Field | Detail |
-|---|---|
-| **Requirement** | LFP cells comply with UN38.3 (transport) and IEC 62619 (stationary storage safety). |
-| **Source** | Hardware datasheet compliance standard |
-| **Verification method** | I |
-| **How to test** | Verify manufacturer UN38.3 and IEC 62619 certificates are available and valid for the LFP 314 Ah cells. |
-| **Acceptance criterion (pass condition)** | Valid UN38.3 and IEC 62619 certificates on file. |
-| **Equipment / tooling** | Manufacturer certificates |
-| **Test stage** | TRL 2 / 3 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
-#### SAFE-007 — Power electronics (IEC 62477)
-
-| Field | Detail |
-|---|---|
-| **Requirement** | The power electronics comply with IEC 62477. |
-| **Source** | Hardware datasheet compliance standard |
-| **Verification method** | I |
-| **How to test** | Verify the manufacturer's IEC 62477 test report is available and valid for the inverter/power electronics. |
-| **Acceptance criterion (pass condition)** | Valid IEC 62477 test report on file. |
-| **Equipment / tooling** | Manufacturer test report |
-| **Test stage** | TRL 2 / 3 |
-| **Result** (fill in during testing) | |
-| **Status** (Pass / Fail) | |
-
 #### SAFE-008 — Safe state on fault / island
 
 | Field | Detail |
@@ -690,19 +574,133 @@ One card per requirement. Follow **How to test**, record the **Result**, then ma
 | **Result** (fill in during testing) | |
 | **Status** (Pass / Fail) | |
 
-### Cost
+### TRL 6
 
-#### COST-001 — Controller material cost < EUR 3500
+#### FUNC-005 — PV control and curtailment
 
 | Field | Detail |
 |---|---|
-| **Requirement** | Additional VDL controller hardware material cost is below EUR 3500 per system. |
-| **Source** | Project plan - Cost/Budget section |
+| **Requirement** | The system integrates with a PV source and can curtail PV output. |
+| **Source** | Objectives; Deliverables |
+| **Verification method** | D / T |
+| **How to test** | Connect a PV simulator/array, issue a curtailment command, measure PV power before and after. |
+| **Acceptance criterion (pass condition)** | PV power curtailed to setpoint +-5% within 500 ms of command. |
+| **Equipment / tooling** | PV simulator or array with power measurement, controller interface |
+| **Test stage** | TRL 6 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### FUNC-006 — Generator control (fixed power)
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system coordinates with a generator at a fixed power setpoint. |
+| **Source** | Objectives; Deliverables |
+| **Verification method** | D |
+| **How to test** | Connect a generator/simulator; verify the system accepts fixed generator power and adjusts BESS to compensate load variation. |
+| **Acceptance criterion (pass condition)** | Generator power within +-5% of setpoint; BESS compensates smoothly without generator trip. |
+| **Equipment / tooling** | Generator or simulator, power analysers, controller |
+| **Test stage** | TRL 6 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### FUNC-007 — Black start capability
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system can start from zero and energise a dead microgrid. |
+| **Source** | Objectives; Deliverables |
+| **Verification method** | D / T |
+| **How to test** | With grid disconnected and load de-energised, initiate the black-start sequence from the controller. |
+| **Acceptance criterion (pass condition)** | Forms AC (400 V +-3%, 50 Hz +-0.5 Hz) from dead bus and energises load within 60 s. (Assumption: 60 s if no spec given.) |
+| **Equipment / tooling** | Oscilloscope, power analyser, stopwatch/data logger |
+| **Test stage** | TRL 6 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### FUNC-008 — Automatic mains failure recovery
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system detects grid loss and automatically switches to island mode. |
+| **Source** | Deliverables |
+| **Verification method** | D / T |
+| **How to test** | Simulate a grid outage while in grid-following mode; verify automatic transfer to island/grid-forming mode. |
+| **Acceptance criterion (pass condition)** | Transfer completed without load interruption > 100 ms; stable in island mode. |
+| **Equipment / tooling** | Power analyser, oscilloscope on load side, data logger |
+| **Test stage** | TRL 6 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### FUNC-011 — HMI / service portal
+
+| Field | Detail |
+|---|---|
+| **Requirement** | Monitoring and diagnostics are accessible via a web/local interface. |
+| **Source** | Deliverables |
+| **Verification method** | D |
+| **How to test** | Open the service portal/HMI and verify real-time display of SOC, power, voltage, frequency, alarms, and manual setpoints. |
+| **Acceptance criterion (pass condition)** | All parameters visible and updating live; a manual setpoint command reflected on the system within 5 s. |
+| **Equipment / tooling** | PC/tablet with browser/HMI software, network connection |
+| **Test stage** | TRL 6 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### SAFE-001 — CE marking
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system complies with applicable EU directives (LVD, EMC, Machinery) for CE marking. |
+| **Source** | Objectives; Deliverables |
+| **Verification method** | I / A |
+| **How to test** | Review the CE technical file; verify all applicable directives are addressed with test reports (notified body or self-declaration). |
+| **Acceptance criterion (pass condition)** | Valid CE Declaration of Conformity issued; technical file complete; all applicable directives addressed. |
+| **Equipment / tooling** | CE technical file, notified body test reports |
+| **Test stage** | TRL 6 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### SAFE-002 — PGS 37-1 compliance
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system complies with the Dutch PGS 37-1 guideline for stationary battery systems. |
+| **Source** | Objectives; Deliverables |
+| **Verification method** | I / A |
+| **How to test** | Review the PGS 37-1 checklist against the design; verify installation, fire safety, ventilation and electrical-safety paragraphs. |
+| **Acceptance criterion (pass condition)** | PGS 37-1 documentation complete; no open deviations without approved mitigation. |
+| **Equipment / tooling** | PGS 37-1 document, compliance checklist, safety engineer review |
+| **Test stage** | TRL 6 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+#### SAFE-005 — EMC (IEC 61000)
+
+| Field | Detail |
+|---|---|
+| **Requirement** | The system complies with the IEC 61000 series for EMC emissions and immunity. |
+| **Source** | Hardware datasheet; Project plan (Risk - EMC) |
+| **Verification method** | I / T |
+| **How to test** | Review EMC test reports (IEC 61000-3-2/-3-3 emissions; 61000-4-2..-4-11 immunity). If independent testing is required, use a certified EMC lab. |
+| **Acceptance criterion (pass condition)** | All applicable IEC 61000 parts passed; documented in the CE technical file. |
+| **Equipment / tooling** | EMC test reports from manufacturer or accredited lab |
+| **Test stage** | TRL 6 |
+| **Result** (fill in during testing) | |
+| **Status** (Pass / Fail) | |
+
+### TRL 7
+
+#### FUNC-012 — Uptime >= 98%
+
+| Field | Detail |
+|---|---|
+| **Requirement** | System uptime is at least 98% in operational deployment. |
+| **Source** | System Requirements table; TRL 7 |
 | **Verification method** | A |
-| **How to test** | Sum the BOM cost of all VDL-added controller hardware (excluding the base Solar East cabinet) and compare to the EUR 3500 target. |
-| **Acceptance criterion (pass condition)** | Total VDL controller BOM cost <= EUR 3500 per system. |
-| **Equipment / tooling** | Bill of Materials, supplier quotations |
-| **Test stage** | TRL 2 / 3 |
+| **How to test** | Record total operating time and unplanned downtime over a pilot period (>= 30 days). Compute uptime = (total - downtime) / total x 100%. |
+| **Acceptance criterion (pass condition)** | Uptime >= 98% over the measurement period. |
+| **Equipment / tooling** | Data logger, controller uptime log, maintenance records |
+| **Test stage** | TRL 7 |
 | **Result** (fill in during testing) | |
 | **Status** (Pass / Fail) | |
 
