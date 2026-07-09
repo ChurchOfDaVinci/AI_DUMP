@@ -6,9 +6,10 @@ Generates 'ACDC charger/400A Charger Measurement Plan.docx' by:
   1. Copying the template (styles, headers/footers, theme, media, numbering) from
      'ACDC charger/e-PU Cabinet V2 Measurement Plan.docx'
   2. Clearing the document body while preserving all style / layout artefacts
-  3. Writing new content (cover, front matter, master register, TRL sections with
-     identical repeated sub-structure and individual test sheets) for the 400A
-     AC/DC charger project.
+  3. Writing new content that mirrors the e-PU Cabinet V2 measurement plan chapter
+     structure (Introduction + How to use, Legend, Verification Cross-Reference
+     Matrix, Test Sheets grouped per TRL, Test Phase Overview, Sign-off) for the
+     400A AC/DC charger project.
 
 Usage
 -----
@@ -1120,26 +1121,8 @@ def _add_cover(doc):
     run = para.add_run("Kickoff: 23-06-2026  |  Target: 02-11-2026")
 
 
-def _add_doc_control(doc):
-    """Document control / revision history table."""
-    doc.add_heading("Document Control", level=1)
-    doc.add_heading("Revision History", level=2)
-    tbl = doc.add_table(rows=1, cols=5)
-    tbl.style = "Table Grid"
-    hdr = tbl.rows[0]
-    for i, h in enumerate(["Rev.", "Date", "Author", "Description", "Status"]):
-        hdr.cells[i].text = h
-    _make_row_header(hdr)
-    row = tbl.add_row()
-    row.cells[0].text = "1.0"
-    row.cells[1].text = date.today().isoformat()
-    row.cells[2].text = "L. Rietkerk"
-    row.cells[3].text = "Initial issue"
-    row.cells[4].text = "Draft"
-
-
 def _add_introduction(doc):
-    """Introduction section."""
+    """Introduction section (mirrors the e-PU Cabinet V2 layout)."""
     doc.add_heading("Introduction", level=1)
     doc.add_paragraph(
         "This document is the Measurement Plan for the 400A AC/DC Charger project "
@@ -1147,28 +1130,29 @@ def _add_introduction(doc):
         "designed for charging the main battery (600–800 VDC) of the e-PU10 BESS."
     )
     doc.add_paragraph(
-        "Purpose: to ensure that every requirement from the project plan is verified during "
-        "the respective TRL test phase, with a clear acceptance criterion, measurement procedure, "
-        "and recorded result."
+        "Purpose: to make sure every requirement from the project plan is verified during "
+        "the test phase, with nothing missed."
     )
     doc.add_paragraph(
-        "This plan is organised by TRL phase. Each TRL section contains:"
+        "This plan follows the standard verification approach (Verification Cross-Reference "
+        "Matrix + test sheets). It is split into two easy-to-use parts:"
     )
     for item in [
-        "An objective statement and entry/exit (tollgate) criteria for the phase.",
-        "A Test Sheet Index — a summary table of all test sheets in this TRL.",
-        "Individual Test Sheets — one per requirement/test, using an identical repeating template.",
+        "Section 3 — Verification Cross-Reference Matrix: a short, at-a-glance list of every "
+        "requirement with its method and status. Use it to see overall progress.",
+        "Section 4 — Test Sheets: one small card per requirement with the exact test steps, "
+        "pass criteria and equipment. Use it while performing each test.",
     ]:
         p = doc.add_paragraph(style="List Paragraph")
         p.add_run(item)
 
     doc.add_heading("How to use this plan", level=2)
     for step in [
-        "Work through the Test Sheets for each TRL phase one requirement at a time.",
-        'For each test sheet, follow the "Procedure" steps, then write the measured value in "Result / Measured value".',
-        'Set "Pass / Fail" based on the stated acceptance criterion.',
-        "Copy the Pass/Fail result back into the Test Sheet Index (Section X.3) and the Master Register (Section 4) to track overall progress.",
-        "Complete the Sign-off table (Section 10) when all sheets for a TRL phase are finished.",
+        "Work through the Test Sheets (Section 4), one requirement at a time.",
+        'For each sheet, follow "How to test", then write the measured value in "Result".',
+        "Set Status to Pass or Fail based on the acceptance criterion.",
+        "Copy the Pass/Fail result back into the matrix (Section 3) to track overall progress.",
+        "Complete the Sign-off (Section 6) when all test sheets for a TRL phase are finished.",
     ]:
         p = doc.add_paragraph(style="List Paragraph")
         p.add_run(step)
@@ -1214,121 +1198,20 @@ def _add_legend(doc):
         row.cells[1].text = meaning
 
 
-def _add_references(doc):
-    """References & applicable standards."""
-    doc.add_heading("References & Applicable Standards", level=1)
-    refs = [
-        ("IEC 61439", "Low-voltage switchgear and controlgear assemblies"),
-        ("NEN 1010", "Safety requirements for low-voltage installations (Netherlands)"),
-        ("IEC 61000-6-2", "EMC — Immunity for industrial environments"),
-        ("IEC 61000-6-4", "EMC — Emission standard for industrial environments"),
-        ("IEC 61000-4-2", "EMC — ESD immunity test"),
-        ("IEC 61000-4-4", "EMC — Electrical fast transient / burst immunity test"),
-        ("IEC 61000-4-5", "EMC — Surge immunity test"),
-        ("IEC 60068-2-6", "Environmental testing — Vibration (sinusoidal)"),
-        ("IEC 60068-2-64", "Environmental testing — Vibration (random)"),
-        ("IEC 60947-2", "Low-voltage switchgear — Circuit breakers"),
-        ("IEC 60898-1", "Circuit breakers for overcurrent protection in household and similar installations"),
-        ("IEC 61557-8", "Electrical safety in low voltage distribution systems — Insulation monitoring devices"),
-        ("ProjectPlan_400A_Charger.docx", "Project plan — source of requirements"),
-        ("TRL_Tasks_400A_Charger.txt", "TRL task breakdown and tollgate criteria"),
-        ("400A - 275kW AC-DC Converters(SCORE).csv", "Component market evaluation matrix"),
-    ]
-    tbl = doc.add_table(rows=1, cols=3)
-    tbl.style = "Table Grid"
-    hdr = tbl.rows[0]
-    for i, h in enumerate(["Reference", "Document / Standard", "Applicability"]):
-        hdr.cells[i].text = h
-    _make_row_header(hdr)
-    for i, (ref, desc) in enumerate(refs):
-        row = tbl.add_row()
-        row.cells[0].text = str(i + 1)
-        row.cells[1].text = ref
-        row.cells[2].text = desc
+def _add_vcrm(doc, trl_data):
+    """Verification Cross-Reference Matrix — at-a-glance list of every requirement.
 
-
-def _add_definitions(doc):
-    """Definitions and abbreviations."""
-    doc.add_heading("Definitions & Abbreviations", level=1)
-    defs = [
-        ("AC/DC", "Alternating Current / Direct Current"),
-        ("BESS", "Battery Energy Storage System"),
-        ("BOM", "Bill of Materials"),
-        ("CE", "Conformité Européenne — European conformity marking"),
-        ("EMC", "Electromagnetic Compatibility"),
-        ("ESD", "Electrostatic Discharge"),
-        ("EFT", "Electrical Fast Transient"),
-        ("e-PU10", "VDL ETS electric Power Unit — 10-module platform"),
-        ("IEC", "International Electrotechnical Commission"),
-        ("LISN", "Line Impedance Stabilisation Network"),
-        ("NEN", "Nederlands Elektrotechnisch Comité standard"),
-        ("PFC", "Power Factor Correction"),
-        ("TRL", "Technology Readiness Level"),
-        ("TS", "Test Sheet (in this document: TS-<TRL>-<seq>)"),
-        ("VDC", "Volts Direct Current"),
-    ]
-    tbl = doc.add_table(rows=1, cols=2)
-    tbl.style = "Table Grid"
-    hdr = tbl.rows[0]
-    hdr.cells[0].text = "Term / Abbreviation"
-    hdr.cells[1].text = "Definition"
-    _make_row_header(hdr)
-    for term, defn in defs:
-        row = tbl.add_row()
-        row.cells[0].text = term
-        row.cells[1].text = defn
-
-
-def _add_system_description(doc):
-    """System-under-test description."""
-    doc.add_heading("System Under Test Description", level=1)
+    Mirrors the e-PU Cabinet V2 matrix: ID | Requirement | Method | Test stage | Status.
+    """
+    doc.add_heading("Verification Cross-Reference Matrix", level=1)
     doc.add_paragraph(
-        "The system under test is the 400A AC/DC Charger — a unidirectional, liquid-cooled "
-        "battery charger with galvanic isolation between AC input and DC output, intended for "
-        "series production in the e-PU10 BESS platform."
+        "At-a-glance list of every requirement. Full test details are in Section 4 "
+        "(Test Sheets). Fill in the Status column as testing progresses."
     )
-
-    doc.add_heading("Key Specifications", level=2)
-    specs = [
-        ("AC Input", "3P+PE, 400/500 A Powerlock connector; 400 V (3-phase)"),
-        ("Input protection", "C-type circuit breaker C80 (must-have); B32 (recommended)"),
-        ("Galvanic isolation", "Mandatory; AC/DC galvanically isolated"),
-        ("DC Output voltage range", "600–800 VDC (minimum); wider range acceptable"),
-        ("Maximum output power", "≥ 275 kW total (multi-module); 100 % rated power continuous at 25 °C"),
-        ("Minimum settable power", "≥ 55 kW / 80 A (must-have); ≥ 20 kW / 32 A (recommended)"),
-        ("Efficiency", "> 97.5 % (e-PU10 restriction: total heat < 7 kW)"),
-        ("Cooling", "Liquid-cooled"),
-        ("Communication", "ModbusTCP (preferred); CAN; Profinet; EtherCAT"),
-        ("Compliance", "IEC 61439, NEN 1010, CE marking, industrial EMC (IEC 61000)"),
-        ("Mechanical", "Fits within e-PU10 power-module envelope; weight < 500 kg"),
-        ("Mobile/vibration", "Suitable for mobile applications and road transport"),
-        ("DC leakage", "< e-PU10 battery precharge current capacity"),
-        ("Reliability", "> 98 % uptime"),
-    ]
-    tbl = doc.add_table(rows=1, cols=2)
+    tbl = doc.add_table(rows=1, cols=5)
     tbl.style = "Table Grid"
     hdr = tbl.rows[0]
-    hdr.cells[0].text = "Parameter"
-    hdr.cells[1].text = "Specification"
-    _make_row_header(hdr)
-    for param, spec in specs:
-        row = tbl.add_row()
-        row.cells[0].text = param
-        row.cells[1].text = spec
-
-
-def _add_master_register(doc, trl_data):
-    """Master test-sheet register — overview of all test sheets across all TRLs."""
-    doc.add_heading("Master Test-Sheet Register", level=1)
-    doc.add_paragraph(
-        "The table below lists all test sheets across all TRL phases. "
-        "Use it to track overall verification progress at a glance. "
-        "Detailed procedures and results are in the TRL sections."
-    )
-    tbl = doc.add_table(rows=1, cols=6)
-    tbl.style = "Table Grid"
-    hdr = tbl.rows[0]
-    for i, h in enumerate(["Test Sheet ID", "Title", "TRL Phase", "Method", "Acceptance Criterion (summary)", "Status"]):
+    for i, h in enumerate(["ID", "Requirement", "Method", "Test stage", "Status"]):
         hdr.cells[i].text = h
     _make_row_header(hdr)
 
@@ -1337,35 +1220,45 @@ def _add_master_register(doc, trl_data):
             row = tbl.add_row()
             row.cells[0].text = sheet.ts_id
             row.cells[1].text = sheet.title
-            row.cells[2].text = f"TRL {trl['number']} — {trl['title']}"
-            row.cells[3].text = sheet.method
-            # Trim acceptance criterion
-            acc_short = sheet.acceptance[:120] + ("…" if len(sheet.acceptance) > 120 else "")
-            row.cells[4].text = acc_short
-            row.cells[5].text = ""  # blank for filling in
+            row.cells[2].text = sheet.method
+            row.cells[3].text = f"TRL {trl['number']}"
+            row.cells[4].text = ""  # blank for filling in
 
 
-def _add_test_sheet(doc, sheet: TestSheet):
-    """Render a single test sheet as a 2-column table (label | value)."""
+def _add_test_sheet(doc, sheet: TestSheet, test_stage: str):
+    """Render a single test sheet as a 2-column table (label | value).
+
+    Uses the identical row structure as the e-PU Cabinet V2 test sheets:
+    Requirement, Source, Verification method, How to test, Acceptance criterion,
+    Equipment / tooling, Test stage, Result, Status.
+    """
     tbl = doc.add_table(rows=0, cols=2)
     tbl.style = "Table Grid"
     # Set column widths roughly 30 / 70
     tbl.columns[0].width = Inches(2.1)
     tbl.columns[1].width = Inches(4.4)
 
+    # Build the "How to test" cell from the setup + numbered procedure steps so
+    # that no procedural detail is lost while keeping the e-PU row layout.
+    how_to_test = sheet.setup.strip()
+    if sheet.procedure_steps:
+        steps = "\n".join(f"{i + 1}. {s}" for i, s in enumerate(sheet.procedure_steps))
+        how_to_test = (how_to_test + "\n" if how_to_test else "") + steps
+
+    acceptance = sheet.acceptance
+    if sheet.measured_qty:
+        acceptance = f"{acceptance}\nMeasured quantity: {sheet.measured_qty}"
+
     rows_data = [
-        ("Test Sheet ID", sheet.ts_id),
-        ("Title", sheet.title),
-        ("Objective", sheet.objective),
-        ("Reference / Standard", sheet.standard),
-        ("Test Equipment\n(incl. calibration)", sheet.equipment),
-        ("Setup / Test Conditions", sheet.setup),
-        ("Procedure", "\n".join(f"{i+1}. {s}" for i, s in enumerate(sheet.procedure_steps))),
-        ("Measured Quantity & Unit", sheet.measured_qty),
-        ("Acceptance Criterion\n(pass/fail threshold)", sheet.acceptance),
-        ("Result / Measured Value", ""),
-        ("Pass / Fail", ""),
-        ("Date & Performed by", ""),
+        ("Requirement", sheet.objective),
+        ("Source", sheet.standard),
+        ("Verification method", sheet.method),
+        ("How to test", how_to_test),
+        ("Acceptance criterion (pass condition)", acceptance),
+        ("Equipment / tooling", sheet.equipment),
+        ("Test stage", test_stage),
+        ("Result (fill in during testing)", ""),
+        ("Status (Pass / Fail)", ""),
     ]
 
     for label, value in rows_data:
@@ -1377,105 +1270,42 @@ def _add_test_sheet(doc, sheet: TestSheet):
     doc.add_paragraph()  # spacing between sheets
 
 
-def _add_trl_section(doc, trl):
-    """Add a complete TRL section: objective, entry/exit, index, sheets."""
-    number = trl["number"]
-    title = trl["title"]
-    sheets = trl["sheets"]
-
-    # TRL main heading
-    doc.add_heading(f"TRL {number} — {title}", level=1)
-
-    # X.1 Objective
-    doc.add_heading(f"TRL {number}.1  Objective of this Phase", level=2)
-    doc.add_paragraph(trl["objective"])
-    doc.add_paragraph(f"Target period: {trl['weeks']}  |  Effort estimate: {trl['effort']}")
-
-    # X.2 Entry / Exit criteria
-    doc.add_heading(f"TRL {number}.2  Entry / Exit (Tollgate) Criteria", level=2)
-    doc.add_paragraph("Entry criteria (prerequisites before this TRL may start):").bold = True
-
-    entry_table = doc.add_table(rows=0, cols=2)
-    entry_table.style = "Table Grid"
-    for i, criterion in enumerate(trl["entry_criteria"]):
-        row = entry_table.add_row()
-        row.cells[0].text = f"E{i+1}"
-        row.cells[1].text = criterion
-
-    doc.add_paragraph()
-    p = doc.add_paragraph("Exit / tollgate criteria (must be met before advancing to next TRL):")
-    p.runs[0].bold = True
-
-    exit_table = doc.add_table(rows=0, cols=3)
-    exit_table.style = "Table Grid"
-    hdr = exit_table.add_row()
-    hdr.cells[0].text = "ID"
-    hdr.cells[1].text = "Criterion"
-    hdr.cells[2].text = "Status"
-    _make_row_header(hdr)
-    for i, criterion in enumerate(trl["exit_criteria"]):
-        row = exit_table.add_row()
-        row.cells[0].text = f"X{i+1}"
-        row.cells[1].text = criterion
-        row.cells[2].text = ""
-
-    # X.3 Test Sheet Index
-    doc.add_heading(f"TRL {number}.3  Test Sheet Index", level=2)
+def _add_test_sheets(doc, trl_data):
+    """Add the Test Sheets chapter: one TRL sub-section per phase (e-PU layout)."""
+    doc.add_heading("Test Sheets", level=1)
     doc.add_paragraph(
-        f"The following test sheets are defined for TRL {number}. "
-        "Detailed procedures are in Section TRL " + number + ".4."
+        'One card per requirement. Follow "How to test", record the "Result", '
+        "then mark Pass or Fail."
     )
-
-    index_tbl = doc.add_table(rows=1, cols=5)
-    index_tbl.style = "Table Grid"
-    hdr = index_tbl.rows[0]
-    for i, h in enumerate(["Test Sheet ID", "Title", "Objective (summary)", "Reference / Standard", "Status"]):
-        hdr.cells[i].text = h
-    _make_row_header(hdr)
-    for sheet in sheets:
-        row = index_tbl.add_row()
-        row.cells[0].text = sheet.ts_id
-        row.cells[1].text = sheet.title
-        # Short objective
-        short_obj = sheet.objective[:80] + ("…" if len(sheet.objective) > 80 else "")
-        row.cells[2].text = short_obj
-        row.cells[3].text = sheet.standard[:60] + ("…" if len(sheet.standard) > 60 else "")
-        row.cells[4].text = ""  # blank
-
-    # X.4 Test Sheets
-    doc.add_heading(f"TRL {number}.4  Test Sheets", level=2)
-    doc.add_paragraph(
-        "Each test sheet below uses the identical template. "
-        "Fill in 'Result / Measured Value', 'Pass / Fail', 'Date' and 'Performed by' during testing."
-    )
-    for sheet in sheets:
-        # Mini heading for the sheet
-        p = doc.add_paragraph()
-        run = p.add_run(f"{sheet.ts_id}  —  {sheet.title}")
-        run.bold = True
-        _add_test_sheet(doc, sheet)
+    for trl in trl_data:
+        doc.add_heading(f"TRL {trl['number']} — {trl['title']}", level=2)
+        test_stage = f"TRL {trl['number']}"
+        for sheet in trl["sheets"]:
+            p = doc.add_paragraph()
+            run = p.add_run(f"{sheet.ts_id}  —  {sheet.title}")
+            run.bold = True
+            _add_test_sheet(doc, sheet, test_stage)
 
 
 def _add_test_phase_overview(doc):
-    """Summary table of TRL phases and what is tested."""
+    """Summary table of TRL phases and what is tested (e-PU Cabinet V2 layout)."""
     doc.add_heading("Test Phase Overview", level=1)
     doc.add_paragraph(
-        "Testing follows the TRL phases from the project plan. "
-        "Each phase ends with a formal tollgate review before continuation."
+        "Testing follows the TRL (Technology Readiness Level) phases from the project plan. "
+        "Each stage builds on the previous one and ends with a formal tollgate review."
     )
     tbl = doc.add_table(rows=1, cols=4)
     tbl.style = "Table Grid"
     hdr = tbl.rows[0]
-    for i, h in enumerate(["TRL Phase", "Target Period", "Effort", "What is tested / verified"]):
+    for i, h in enumerate(["Stage", "TRL", "What is tested", "Requirement IDs"]):
         hdr.cells[i].text = h
     _make_row_header(hdr)
-    for trl in TRL_DATA:
+    for i, trl in enumerate(TRL_DATA):
         row = tbl.add_row()
-        row.cells[0].text = f"TRL {trl['number']} — {trl['title']}"
-        row.cells[1].text = trl["weeks"]
-        row.cells[2].text = trl["effort"]
-        sheet_titles = "; ".join(s.ts_id for s in trl["sheets"])
-        row.cells[3].text = sheet_titles
+        row.cells[0].text = f"{i + 1} — {trl['title']}"
+        row.cells[1].text = f"TRL {trl['number']}"
+        row.cells[2].text = trl["objective"]
+        row.cells[3].text = "; ".join(s.ts_id for s in trl["sheets"])
 
 
 def _add_signoff(doc):
@@ -1523,11 +1353,8 @@ def main():
     for el in to_remove:
         body.remove(el)
 
-    # --- Build new content ---
+    # --- Build new content (mirrors the e-PU Cabinet V2 chapter structure) ---
     _add_cover(doc)
-    doc.add_page_break()
-
-    _add_doc_control(doc)
     doc.add_page_break()
 
     _add_introduction(doc)
@@ -1536,21 +1363,11 @@ def main():
     _add_legend(doc)
     doc.add_page_break()
 
-    _add_references(doc)
+    _add_vcrm(doc, TRL_DATA)
     doc.add_page_break()
 
-    _add_definitions(doc)
+    _add_test_sheets(doc, TRL_DATA)
     doc.add_page_break()
-
-    _add_system_description(doc)
-    doc.add_page_break()
-
-    _add_master_register(doc, TRL_DATA)
-    doc.add_page_break()
-
-    for trl in TRL_DATA:
-        _add_trl_section(doc, trl)
-        doc.add_page_break()
 
     _add_test_phase_overview(doc)
     doc.add_page_break()
