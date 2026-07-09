@@ -171,26 +171,14 @@ TRL_DATA = [
                 standard="Internal project plan; IEC 61439; NEN 1010",
                 equipment="Project plan document; requirements checklist template",
                 setup=(
-                    "Review the project plan document against the must-have list. "
-                    "Perform at desk; no physical equipment required."
+                    "Review ProjectPlan_400A_Charger.docx against the 11 must-have items "
+                    "(galvanic AC/DC isolation; 400/500 A Powerlock 3P+PE; unidirectional; "
+                    "liquid cooling; DC ≥ 600–800 VDC; material cost < €20,000; "
+                    "ModbusTCP/CAN/Profinet/EtherCAT; EU compliant; mobile/vibration-resistant; "
+                    "min. settable power ≥ 55 kW/80 A; inrush acceptable for a C-type C80 breaker). "
+                    "Tick each Present or Missing and log any missing item as a non-conformance."
                 ),
-                procedure_steps=[
-                    "Open ProjectPlan_400A_Charger.docx.",
-                    "Check that each must-have item in the list below has a corresponding entry in the project plan:",
-                    "  a. Galvanic AC/DC isolation",
-                    "  b. 400/500 A Powerlock (3P+PE)",
-                    "  c. Unidirectional operation",
-                    "  d. Liquid cooling",
-                    "  e. DC voltage range ≥ 600–800 VDC",
-                    "  f. Material cost < €20,000",
-                    "  g. Communication: ModbusTCP / CAN / Profinet / EtherCAT",
-                    "  h. EU compliant",
-                    "  i. Mobile / vibration-resistant",
-                    "  j. Min. settable power ≥ 55 kW / 80 A",
-                    "  k. Inrush acceptable for C-type C80 breaker",
-                    "Tick each item as Present / Missing in the result column.",
-                    "Record any missing items as non-conformances.",
-                ],
+                procedure_steps=[],
                 measured_qty="Number of must-have requirements addressed (count / 11)",
                 acceptance="All 11 must-have requirements are present and unambiguously formulated. No missing items.",
                 method="I / A",
@@ -205,21 +193,13 @@ TRL_DATA = [
                 standard="Internal quality criteria; IEC 61439",
                 equipment="Supplier datasheets, test reports, certificates; SCORE evaluation matrix (400A - 275kW AC-DC Converters(SCORE).csv)",
                 setup=(
-                    "Collect datasheets and certificate documents for all candidate modules. "
-                    "Use the SCORE spreadsheet to rate each supplier."
+                    "For each candidate module, use the SCORE spreadsheet to score 0/5/10 the "
+                    "availability of: complete datasheet (power, voltage range, efficiency, "
+                    "dimensions, weight); CE/TÜV certificate or DoC; communication docs "
+                    "(register map / CAN DBC); mechanical drawing or 3D model; and cooling specs "
+                    "(flow rate, pressure drop, inlet temperature). Record the overall score per candidate."
                 ),
-                procedure_steps=[
-                    "List all candidate modules identified in the market survey.",
-                    "For each module, check the availability of:",
-                    "  a. Complete datasheet (power, voltage range, efficiency, dimensions, weight)",
-                    "  b. CE / TUV certificate or declaration of conformity",
-                    "  c. Communication protocol documentation (register map / CAN DBC)",
-                    "  d. Mechanical drawing or 3D model",
-                    "  e. Cooling specifications (flow rate, pressure drop, inlet temperature)",
-                    "Score each criterion 0 (missing) / 5 (partial) / 10 (complete).",
-                    "Calculate overall documentation score per candidate.",
-                    "Record results in SCORE matrix.",
-                ],
+                procedure_steps=[],
                 measured_qty="Documentation completeness score per candidate (0–10 per criterion)",
                 acceptance=(
                     "At least two candidates score ≥ 7.0 overall. "
@@ -236,14 +216,12 @@ TRL_DATA = [
                 ),
                 standard="Internal project specification; IEC 61439; NEN 1010",
                 equipment="SCORE evaluation matrix; supplier datasheets",
-                setup="Cross-reference SCORE evaluation results against the must-have checklist (TS-2-01).",
-                procedure_steps=[
-                    "Take the ranked list of candidates from TS-2-02.",
-                    "For each candidate, verify compliance with each must-have requirement.",
-                    "Mark each requirement Pass (P) / Fail (F) / Unknown (U) per candidate.",
-                    "Identify the top-scoring candidate(s) with ≤ 1 Unknown item.",
-                    "Document any gaps or assumptions for further investigation in TRL 3.",
-                ],
+                setup=(
+                    "Take the ranked candidate list from TS-2-02 and mark each of the 11 must-have "
+                    "requirements Pass/Fail/Unknown per candidate. Identify the top candidate(s) with "
+                    "≤ 1 Unknown item and document any gaps for follow-up in TRL 3."
+                ),
+                procedure_steps=[],
                 measured_qty="Number of must-have requirements met per candidate (count / 11)",
                 acceptance=(
                     "At least one candidate meets all 11 must-have requirements or has at most "
@@ -288,22 +266,14 @@ TRL_DATA = [
                 ),
                 standard="IEC 61439; NEN 1010; internal design standard",
                 equipment="Single-line diagram (CAD/PDF); design review checklist",
-                setup="Print or display the draft single-line diagram for a structured design review.",
-                procedure_steps=[
-                    "Obtain the draft single-line electrical diagram.",
-                    "Verify the following elements are present and correctly connected:",
-                    "  a. AC input: 3P+PE, 400/500 A Powerlock connector",
-                    "  b. AC input protection: circuit breaker rated for C80 (C-type)",
-                    "  c. Galvanic isolation barrier (transformer or equivalent)",
-                    "  d. AC/DC converter module(s)",
-                    "  e. DC output bus: 600–800 VDC range",
-                    "  f. DC output protection (fuse / switch)",
-                    "  g. Liquid-cooling connections",
-                    "  h. Control / communication interface (ModbusTCP / CAN)",
-                    "  i. Earth bonding and protective-earth routing",
-                    "Record any missing elements or design errors.",
-                    "Sign the diagram as reviewed.",
-                ],
+                setup=(
+                    "In a structured design review, confirm the single-line diagram shows all 9 elements "
+                    "correctly connected: AC input (3P+PE, 400/500 A Powerlock); AC protection (C80 C-type "
+                    "breaker); galvanic isolation barrier; AC/DC converter module(s); DC bus (600–800 VDC); "
+                    "DC protection (fuse/switch); liquid-cooling connections; control/comms interface "
+                    "(ModbusTCP/CAN); and PE bonding/routing. Record any missing element or error and sign the diagram."
+                ),
+                procedure_steps=[],
                 measured_qty="Number of required elements present and correctly connected (count / 9)",
                 acceptance="All 9 required elements are present. Zero design errors recorded. Diagram is signed off.",
                 method="I / A",
@@ -318,18 +288,12 @@ TRL_DATA = [
                 standard="e-PU10 restrictions (project plan); IEC 61439",
                 equipment="Calculator / spreadsheet; converter efficiency data from datasheets",
                 setup=(
-                    "Gather efficiency figures from the selected converter module datasheet. "
-                    "Determine system-level losses (converter, cabling, connectors)."
+                    "From the converter datasheet full-load efficiency and estimated cable/connector "
+                    "losses P_cable, compute P_in = P_out/η_converter + P_cable, heat P_heat = P_in − P_out, "
+                    "and system efficiency η_sys = P_out/P_in × 100. Record η_sys and P_heat and compare "
+                    "against η_sys ≥ 97.5 % and P_heat < 7 000 W."
                 ),
-                procedure_steps=[
-                    "Obtain full-load efficiency η_converter from datasheet (at rated output power).",
-                    "Estimate cabling + connector losses: P_cable [W].",
-                    "Calculate total input power: P_in = P_out / (η_converter) + P_cable.",
-                    "Calculate total heat dissipation: P_heat = P_in − P_out [W].",
-                    "Calculate system efficiency: η_sys = P_out / P_in × 100 [%].",
-                    "Record η_sys and P_heat in the result field.",
-                    "Compare against limits: η_sys ≥ 97.5 % and P_heat < 7 000 W.",
-                ],
+                procedure_steps=[],
                 measured_qty="System efficiency η_sys [%]; total heat P_heat [W]",
                 acceptance="η_sys ≥ 97.5 % AND P_heat < 7 000 W at rated output power.",
                 method="A",
@@ -343,15 +307,12 @@ TRL_DATA = [
                 ),
                 standard="e-PU10 restrictions (project plan); mechanical concept drawing",
                 equipment="Mechanical concept sketch / CAD model; tape measure (if physical mock-up exists)",
-                setup="Use the mechanical concept description and component datasheets to estimate total dimensions and weight.",
-                procedure_steps=[
-                    "Obtain mechanical dimensions of the selected converter module(s) from datasheet.",
-                    "Add housing / enclosure dimensions (estimated).",
-                    "Check that overall assembly fits within power-module size envelope (e-PU10 constraint).",
-                    "Sum weights of all components (modules + enclosure + cooling system + cabling).",
-                    "Record total estimated weight [kg].",
-                    "Compare against limit: weight < 500 kg.",
-                ],
+                setup=(
+                    "From the converter datasheet and mechanical concept, add module and enclosure "
+                    "dimensions and confirm the assembly fits the e-PU10 power-module envelope. Sum the "
+                    "weights of modules, enclosure, cooling system and cabling and check total < 500 kg."
+                ),
+                procedure_steps=[],
                 measured_qty="Overall assembly dimensions [mm × mm × mm]; estimated total weight [kg]",
                 acceptance=(
                     "Assembly dimensions fit within e-PU10 power-module size. "
@@ -368,15 +329,12 @@ TRL_DATA = [
                 ),
                 standard="Project plan (cost constraint < €20,000)",
                 equipment="Component quotations / list prices; BOM spreadsheet",
-                setup="Compile a preliminary BOM from the conceptual design and obtain unit prices from TS-2-02 supplier list.",
-                procedure_steps=[
-                    "List all major components: converter module(s), enclosure, cooling components, connectors, cables, protection devices, control hardware.",
-                    "Obtain unit price for each component (quotation or list price).",
-                    "Calculate total BOM cost: Σ (quantity × unit price) [€].",
-                    "Add 15 % contingency for unknown items.",
-                    "Record total estimated material cost [€].",
-                    "Compare against limit: < €20,000.",
-                ],
+                setup=(
+                    "Compile a preliminary BOM (converter module(s), enclosure, cooling components, "
+                    "connectors, cables, protection devices, control hardware) with unit prices from the "
+                    "TS-2-02 supplier list. Sum Σ(qty × unit price), add 15 % contingency, and check total < €20,000."
+                ),
+                procedure_steps=[],
                 measured_qty="Total estimated material cost [€]",
                 acceptance="Total estimated BOM cost (including 15 % contingency) < €20,000.",
                 method="A",
@@ -420,17 +378,12 @@ TRL_DATA = [
                 standard="IEC 61439-1; NEN 1010; converter module datasheet / test report",
                 equipment="Converter datasheet; IEC 61439 standard (design analysis – no physical test required at this TRL)",
                 setup=(
-                    "Review the converter module's isolation test report or certificate. "
-                    "Confirm isolation voltage, creepage and clearance from the datasheet."
+                    "From the converter dielectric-withstand / hi-pot report, confirm the test voltage meets "
+                    "or exceeds the IEC 61439 requirement for the rated working voltage, verify creepage and "
+                    "clearance against IEC 61439 Table F.2, and confirm the datasheet states galvanic isolation. "
+                    "Record test voltage, isolation class, creepage and clearance; if no report exists, flag for the TRL 6 physical test."
                 ),
-                procedure_steps=[
-                    "Obtain the converter module's dielectric withstand / hi-pot test report.",
-                    "Check that the reported test voltage meets or exceeds the IEC 61439 requirement for the rated working voltage.",
-                    "Verify creepage and clearance values against IEC 61439 Table F.2.",
-                    "Confirm that the module is described as 'galvanically isolated' in the datasheet.",
-                    "Record: test voltage [V], isolation class, creepage [mm], clearance [mm].",
-                    "If no test report is available, flag as action item for TRL 6 physical test.",
-                ],
+                procedure_steps=[],
                 measured_qty="Dielectric withstand voltage [V AC or V DC]; isolation class; creepage [mm]; clearance [mm]",
                 acceptance=(
                     "Dielectric withstand ≥ 3 750 V AC (or per IEC 61439 for rated voltage). "
@@ -448,14 +401,12 @@ TRL_DATA = [
                 ),
                 standard="Project specification; converter module datasheet",
                 equipment="Converter datasheet; voltage range specification from project plan",
-                setup="Review datasheet output voltage range specification.",
-                procedure_steps=[
-                    "Obtain the DC output voltage range from the converter module datasheet.",
-                    "Record minimum and maximum DC output voltage [V].",
-                    "Verify minimum ≤ 600 V and maximum ≥ 800 V.",
-                    "Check that the voltage regulation accuracy meets requirements (e.g. ± 1 %).",
-                    "Confirm that the range is achievable via the communication interface (register / command).",
-                ],
+                setup=(
+                    "From the converter datasheet, record the DC output V_min and V_max and confirm "
+                    "V_min ≤ 600 V and V_max ≥ 800 V. Check voltage-regulation accuracy (e.g. ± 1 %) and that "
+                    "the range is settable via the communication interface."
+                ),
+                procedure_steps=[],
                 measured_qty="DC output voltage range: V_min [V DC] and V_max [V DC]",
                 acceptance="V_min ≤ 600 V DC AND V_max ≥ 800 V DC as specified in datasheet.",
                 method="I / A",
@@ -469,14 +420,12 @@ TRL_DATA = [
                 ),
                 standard="Project specification (must-have); converter module communication datasheet",
                 equipment="Converter communication register map / datasheet",
-                setup="Review the communication register map for minimum power / current setpoint resolution.",
-                procedure_steps=[
-                    "Obtain the minimum power / current setpoint value from the datasheet or register map.",
-                    "Record P_min [kW] and I_min [A].",
-                    "Verify P_min ≤ 55 kW and I_min ≤ 80 A (i.e. the charger CAN be set as low as these values).",
-                    "Check setpoint resolution (step size) is ≤ 1 kW or ≤ 1 A.",
-                    "Additionally check if recommended minimum (20 kW / 32 A) is achievable.",
-                ],
+                setup=(
+                    "From the datasheet / register map, record minimum settable P_min [kW] and I_min [A] and "
+                    "confirm P_min ≤ 55 kW and I_min ≤ 80 A with a setpoint resolution ≤ 1 kW/1 A. Also check "
+                    "whether the recommended minimum (20 kW / 32 A) is achievable."
+                ),
+                procedure_steps=[],
                 measured_qty="Minimum settable power P_min [kW]; minimum settable current I_min [A]",
                 acceptance=(
                     "P_min ≤ 55 kW AND I_min ≤ 80 A (must-have met). "
@@ -498,21 +447,12 @@ TRL_DATA = [
                     "Modbus analyser (Modbus Poll or equivalent) — for TRL 6 physical test"
                 ),
                 setup=(
-                    "Review the software architecture document and communication register map. "
-                    "Confirm that the implemented protocol matches a supported option."
+                    "Confirm the implemented protocol is one of ModbusTCP (preferred), CAN, Profinet or "
+                    "EtherCAT, and that the versioned register map / DBC maps all 5 required commands: "
+                    "enable/disable charging; set output power or current; set output voltage; read measured "
+                    "power/current/voltage; and read fault/status word. Verify the map is in the documentation package."
                 ),
-                procedure_steps=[
-                    "Identify the communication protocol implemented in the detailed design.",
-                    "Verify the protocol is one of: ModbusTCP (preferred), CAN, Profinet, EtherCAT.",
-                    "Obtain the complete register map (Modbus) or DBC file (CAN).",
-                    "Check that all required control commands are mapped:",
-                    "  a. Enable / disable charging",
-                    "  b. Set output power [kW] or current [A]",
-                    "  c. Set output voltage [V]",
-                    "  d. Read measured output power, current, voltage",
-                    "  e. Read fault / status word",
-                    "Verify that the register map is versioned and included in the documentation package.",
-                ],
+                procedure_steps=[],
                 measured_qty=(
                     "Protocol type (ModbusTCP / CAN / Profinet / EtherCAT); "
                     "number of required commands mapped (count / 5)"
@@ -533,19 +473,12 @@ TRL_DATA = [
                 standard="IEC 61000-4 series; IEC 61000-6-2 (industrial immunity); IEC 61000-6-4 (industrial emission)",
                 equipment="Detailed electrical drawings; EMC design checklist; converter EMC test report (if available)",
                 setup=(
-                    "Review detailed electrical drawings and the converter module's EMC certificate "
-                    "(if available) against the IEC 61000 industrial EMC class requirements."
+                    "Confirm the converter has an EMC report / CE declaration covering IEC 61000 and record its "
+                    "EMC class, then review the electrical drawings for the 4 EMC measures: input EMC/line filter; "
+                    "cable shielding plan; PE/ground bonding topology; and separation of power from signal cables. "
+                    "Log any gaps as action items."
                 ),
-                procedure_steps=[
-                    "Check that the converter module has an EMC test report or CE declaration covering IEC 61000.",
-                    "Review the electrical drawings for the following EMC design features:",
-                    "  a. Input EMC filter (line filter) is specified",
-                    "  b. Cable shielding plan is documented",
-                    "  c. PE / ground bonding topology is defined",
-                    "  d. Separation of high-current power cables from signal cables is planned",
-                    "Identify any gaps in EMC design and log as action items.",
-                    "Record the EMC class of the converter module from its datasheet/certificate.",
-                ],
+                procedure_steps=[],
                 measured_qty="EMC class of converter (Class A / B); number of EMC design measures implemented (count / 4)",
                 acceptance=(
                     "Converter module EMC class is industrial (IEC 61000-6-2/6-4 or equivalent). "
@@ -567,18 +500,12 @@ TRL_DATA = [
                     "e-PU10 cooling system specification; hydraulic calculation spreadsheet"
                 ),
                 setup=(
-                    "Obtain the converter module cooling requirements from the datasheet. "
-                    "Obtain the e-PU10 cooling system parameters (available flow rate, max pressure drop, inlet temperature)."
+                    "From the converter datasheet record required coolant flow rate, max pressure drop and max "
+                    "inlet temperature, and confirm the e-PU10 cooling system can supply them. Compute heat "
+                    "removal Q = ṁ × c_p × ΔT and verify Q ≥ P_heat from TS-3-02 (< 7 000 W). Check all cooling "
+                    "connections (inlet, outlet, venting) appear on the mechanical drawing."
                 ),
-                procedure_steps=[
-                    "Record required coolant flow rate from converter datasheet [L/min].",
-                    "Record maximum allowable pressure drop [bar].",
-                    "Record maximum inlet coolant temperature [°C].",
-                    "Verify that the e-PU10 cooling system can supply the required flow rate and inlet temperature.",
-                    "Calculate heat removal capacity: Q = ṁ × c_p × ΔT [W], where ΔT = T_out − T_in.",
-                    "Verify Q ≥ P_heat from TS-3-02 (< 7 000 W).",
-                    "Check that all cooling connections (inlet, outlet, venting) are included in the mechanical drawing.",
-                ],
+                procedure_steps=[],
                 measured_qty="Coolant flow rate [L/min]; pressure drop [bar]; inlet temperature [°C]; heat removal capacity Q [W]",
                 acceptance=(
                     "Cooling circuit supplies sufficient flow and temperature to remove ≥ 7 000 W. "
@@ -630,20 +557,12 @@ TRL_DATA = [
                     "temperature probe (calibrated); timer"
                 ),
                 setup=(
-                    "Connect charger to a 3-phase 400 V AC supply via a C80 breaker. "
-                    "Connect DC output to a calibrated electronic load. "
-                    "Ambient temperature shall be 25 °C ± 3 °C (verify with calibrated thermometer). "
-                    "Allow system to stabilise for 10 minutes before test."
+                    "Connect the charger to a 3-phase 400 V AC supply via a C80 breaker and the DC output to a "
+                    "calibrated electronic load set within 600–800 VDC, at 25 °C ± 3 °C ambient; stabilise for 10 min. "
+                    "Command 100 % rated power and run 60 min, recording AC/DC power, DC voltage/current and ambient "
+                    "at 0/15/30/45/60 min while monitoring for any fault, shutdown or thermal de-rating; log final values and alarm codes."
                 ),
-                procedure_steps=[
-                    "Set DC load to rated output voltage (within 600–800 VDC range, as specified).",
-                    "Command charger to 100 % rated power via communication interface.",
-                    "Start timer.",
-                    "Record: AC input power [kW], DC output power [kW], DC output voltage [V], DC output current [A], ambient temperature [°C] at T = 0, 15, 30, 45, 60 min.",
-                    "Monitor for any fault indication, shutdown or thermal de-rating event.",
-                    "After 60 min continuous operation, record final values.",
-                    "Stop charger and record any alarm codes.",
-                ],
+                procedure_steps=[],
                 measured_qty="DC output power [kW]; DC output current [A]; DC output voltage [V]; ambient temperature [°C]; duration without fault [min]",
                 acceptance=(
                     "DC output power ≥ rated power (100 %) for ≥ 60 min without fault, "
@@ -665,18 +584,12 @@ TRL_DATA = [
                     "electronic load bank"
                 ),
                 setup=(
-                    "Same setup as TS-6-01. Both AC and DC power analysers shall be connected "
-                    "simultaneously. Ensure all auxiliary power (fans, controls) is included in the AC measurement."
+                    "Using the TS-6-01 setup with AC and DC power analysers connected simultaneously (auxiliary "
+                    "power included in the AC measurement), record P_AC_in and P_DC_out at steady state and compute "
+                    "η = P_DC_out/P_AC_in × 100 at 100 %, 75 % and 50 % load. At 100 % load also compute "
+                    "P_heat = P_AC_in − P_DC_out."
                 ),
-                procedure_steps=[
-                    "With charger running at 100 % rated load (as per TS-6-01, steady state):",
-                    "Record simultaneous AC input power P_AC_in [W] from AC analyser.",
-                    "Record simultaneous DC output power P_DC_out [W] from DC analyser.",
-                    "Calculate system efficiency: η = P_DC_out / P_AC_in × 100 [%].",
-                    "Repeat measurement at 75 % and 50 % rated load.",
-                    "Record efficiency at each load point.",
-                    "Calculate total heat dissipation: P_heat = P_AC_in − P_DC_out [W] at 100 % load.",
-                ],
+                procedure_steps=[],
                 measured_qty="P_AC_in [W]; P_DC_out [W]; η [%]; P_heat [W]",
                 acceptance=(
                     "η ≥ 97.5 % at 100 % rated load. "
@@ -700,20 +613,12 @@ TRL_DATA = [
                     "B-type 32 A circuit breaker (for recommended test)"
                 ),
                 setup=(
-                    "Install the C80 breaker in the AC supply circuit. "
-                    "Connect current clamps on all three phase conductors. "
-                    "Charger DC output connected to electronic load set to rated voltage (open circuit mode initially). "
-                    "Trigger oscilloscope on voltage rising edge of AC supply switch-on."
+                    "Install the C80 breaker in the AC supply with current clamps on all three phases and the "
+                    "oscilloscope triggered on AC switch-on. Close the breaker from cold and record peak inrush "
+                    "I_peak and duration t_inrush, confirming no trip; repeat 3 times with 5-min cooling intervals. "
+                    "If a B32 breaker is available, repeat for the recommended spec. Record all peaks and trip/no-trip outcomes."
                 ),
-                procedure_steps=[
-                    "With C80 breaker installed and AC supply disconnected from charger:",
-                    "Switch on AC supply (close C80 breaker). Record inrush waveform on all three phases.",
-                    "Measure peak inrush current I_peak [A] and duration t_inrush [ms].",
-                    "Verify C80 breaker did not trip.",
-                    "Repeat test 3 times with 5-minute cooling intervals. Record each result.",
-                    "If B32 breaker is available: install B32 and repeat steps 1–4 for recommended spec.",
-                    "Record all peak values and trip/no-trip outcome.",
-                ],
+                procedure_steps=[],
                 measured_qty="Peak inrush current I_peak [A]; inrush duration t [ms]; breaker trip status (trip / no trip)",
                 acceptance=(
                     "MUST-HAVE: C80 breaker does not trip on any of 3 cold-start attempts. "
@@ -735,18 +640,13 @@ TRL_DATA = [
                     "calibrated inlet/outlet temperature sensors"
                 ),
                 setup=(
-                    "Install thermocouples on: converter module heatsink, inlet coolant, "
-                    "outlet coolant, and ambient. "
-                    "Connect calibrated flow meter in the cooling loop."
+                    "Fit thermocouples on the converter heatsink, coolant inlet/outlet and ambient, and a "
+                    "calibrated flow meter in the cooling loop. Run 100 % rated load for 60 min (same run as TS-6-01), "
+                    "recording T_hs, T_in, T_out, flow Q_cool and T_amb every 10 min. At steady state compute "
+                    "P_removed = ṁ × c_p × (T_out − T_in) with ṁ = Q_cool × ρ_water, and compare T_hs against the "
+                    "module's rated maximum heatsink temperature."
                 ),
-                procedure_steps=[
-                    "Start cooling pump and verify flow rate [L/min].",
-                    "Run charger at 100 % rated load for 60 minutes (same run as TS-6-01).",
-                    "Record every 10 minutes: heatsink temperature T_hs [°C], coolant inlet T_in [°C], coolant outlet T_out [°C], flow rate Q_cool [L/min], ambient T_amb [°C].",
-                    "At steady state (temperature change < 1 °C over last 10 min), record all values.",
-                    "Calculate heat removal: P_removed = ṁ × c_p × (T_out − T_in) [W], where ṁ = Q_cool × ρ_water.",
-                    "Compare T_hs against converter module's maximum rated heatsink temperature.",
-                ],
+                procedure_steps=[],
                 measured_qty="T_hs [°C]; T_in [°C]; T_out [°C]; Q_cool [L/min]; P_removed [W]",
                 acceptance=(
                     "T_hs ≤ converter module rated maximum heatsink temperature. "
@@ -773,19 +673,13 @@ TRL_DATA = [
                     "ESD gun; EFT/burst generator; surge generator"
                 ),
                 setup=(
-                    "Assemble prototype in standard operating configuration. "
-                    "Connect to rated AC supply and rated DC load. "
-                    "Perform tests in an accredited EMC lab or on-site pre-compliance."
+                    "With the prototype in standard operating configuration on rated AC supply and DC load (accredited "
+                    "EMC lab or on-site pre-compliance), run: conducted and radiated emissions per IEC 61000-6-4 / "
+                    "CISPR 11 Class A; ESD per IEC 61000-4-2 (Level 3: 6 kV contact, 8 kV air); EFT/burst per "
+                    "IEC 61000-4-4 (Level 3); and surge per IEC 61000-4-5 (Level 3: 1 kV diff, 2 kV common). "
+                    "Record pass/fail and log any failure with frequency, level and description."
                 ),
-                procedure_steps=[
-                    "Conducted emissions test per IEC 61000-6-4 / CISPR 11 Class A.",
-                    "Radiated emissions test per IEC 61000-6-4 Class A.",
-                    "ESD immunity test per IEC 61000-4-2 (Level 3: 6 kV contact, 8 kV air).",
-                    "Electrical fast transient / burst per IEC 61000-4-4 (Level 3).",
-                    "Surge immunity per IEC 61000-4-5 (Level 3: 1 kV differential, 2 kV common mode).",
-                    "Record pass/fail for each sub-test.",
-                    "Log any failures with frequency, level and description.",
-                ],
+                procedure_steps=[],
                 measured_qty=(
                     "Conducted emission level [dBμV]; radiated emission level [dBμV/m]; "
                     "ESD, EFT, surge immunity results (Pass / Fail)"
@@ -810,21 +704,13 @@ TRL_DATA = [
                     "Torque wrench; visual inspection checklist."
                 ),
                 setup=(
-                    "Mount the charger (or representative assembly) on the vibration test fixture. "
-                    "If no shake table is available, perform a structured visual and documentation review of the converter module vibration rating."
+                    "Option A (shake table): mount the assembly and run IEC 60068-2-64 road-transport profile "
+                    "(5–100 Hz, 0.1 g²/Hz) for 1 hour per axis (X, Y, Z), then inspect for loose fasteners, connector "
+                    "damage and coolant leaks. Option B (no shake table): verify the module datasheet vibration rating "
+                    "meets IEC 60068-2-6/-64 road-transport class and that all fasteners are torqued to spec, connectors "
+                    "latch-secured and cooling hoses strain-relieved. Record the outcome."
                 ),
-                procedure_steps=[
-                    "Option A – Physical vibration test:",
-                    "  Set vibration profile per IEC 60068-2-64 (road transport: 5–100 Hz, 0.1 g²/Hz).",
-                    "  Run for 1 hour per axis (X, Y, Z).",
-                    "  After test: inspect for loose fasteners, connector damage, coolant leaks.",
-                    "Option B – Documentation review (if no shake table):",
-                    "  Verify converter module datasheet vibration rating meets IEC 60068-2-6 / -64 road transport class.",
-                    "  Verify all fasteners are torqued to specification.",
-                    "  Verify all connectors are locked/latch-secured.",
-                    "  Verify cooling hoses have strain-relief clamps.",
-                    "Record outcome of physical test or documentation review.",
-                ],
+                procedure_steps=[],
                 measured_qty="Vibration test level [g or g²/Hz]; inspection result (Pass / Fail); any defects found",
                 acceptance=(
                     "No structural damage, loose fasteners, connector failures or coolant leaks after vibration test. "
@@ -845,17 +731,11 @@ TRL_DATA = [
                     "e-PU10 battery system precharge specification document"
                 ),
                 setup=(
-                    "Charger powered up with DC output disconnected from battery. "
-                    "Measure leakage current from DC+ and DC− rails to chassis/earth."
+                    "With the charger powered (AC connected, DC output open or at rated voltage), measure DC leakage "
+                    "current from the DC+ and DC− buses to chassis ground. Obtain the e-PU10 precharge circuit maximum "
+                    "current rating and compare the measured leakage against it."
                 ),
-                procedure_steps=[
-                    "Power up the charger (AC input connected, DC output open or connected to load at rated voltage).",
-                    "Measure DC leakage current from DC+ bus to chassis ground [mA].",
-                    "Measure DC leakage current from DC− bus to chassis ground [mA].",
-                    "Obtain the e-PU10 precharge circuit maximum current rating from the e-PU10 specification.",
-                    "Compare measured leakage against precharge circuit limit.",
-                    "Record result.",
-                ],
+                procedure_steps=[],
                 measured_qty="DC leakage current I_leak_DC+ [mA]; I_leak_DC− [mA]",
                 acceptance=(
                     "Both I_leak_DC+ and I_leak_DC− < e-PU10 precharge circuit current rating. "
@@ -877,19 +757,12 @@ TRL_DATA = [
                     "AC power supply; DC electronic load"
                 ),
                 setup=(
-                    "Connect charger to rated AC supply and DC electronic load. "
-                    "Program automated cycling: 30 min full load → 5 min 50 % load → repeat. "
-                    "Log all faults, shutdowns and restart events automatically."
+                    "Connect the charger to rated AC supply and DC electronic load and run an automated cycle "
+                    "(30 min full load → 5 min 50 % load, repeated) continuously for ≥ 72 hours, auto-logging every "
+                    "fault (timestamp, code, downtime). Afterwards compute total downtime and "
+                    "uptime % = (72×60 − Σ downtime)/(72×60) × 100 and review the log for recurring faults."
                 ),
-                procedure_steps=[
-                    "Start automated endurance cycle. Record start time.",
-                    "Run continuously for 72 hours (minimum).",
-                    "Log all fault events: timestamp, fault code, duration of downtime.",
-                    "After 72 hours, stop the test and record stop time.",
-                    "Calculate total fault downtime [min].",
-                    "Calculate uptime %: (72 × 60 − Σ downtime_min) / (72 × 60) × 100.",
-                    "Review fault log for recurring patterns.",
-                ],
+                procedure_steps=[],
                 measured_qty="Total test duration [h]; total downtime [min]; uptime [%]",
                 acceptance="Uptime ≥ 98 % over the 72-hour endurance run. No unrecoverable fault.",
                 method="T",
@@ -928,15 +801,13 @@ TRL_DATA = [
                 ),
                 standard="Internal document control; ISO 9001 (document accuracy)",
                 equipment="Technical datasheet draft; TRL 6 test results (TS-6-01 through TS-6-08)",
-                setup="Compare each technical parameter in the datasheet against the corresponding TRL 6 measured result.",
-                procedure_steps=[
-                    "Obtain draft technical datasheet.",
-                    "For each stated parameter, identify the corresponding TRL 6 test sheet result.",
-                    "Check: (a) Rated power [kW]; (b) Efficiency [%]; (c) DC voltage range [V]; (d) Weight [kg]; (e) Dimensions [mm]; (f) Cooling specifications; (g) Communication protocol.",
-                    "Verify that each datasheet figure is ≤ (for max limits) or ≥ (for min limits) the measured value plus tolerance.",
-                    "Mark each parameter as Consistent / Inconsistent.",
-                    "Correct any inconsistencies in the datasheet.",
-                ],
+                setup=(
+                    "For each of the 7 key datasheet parameters — rated power, efficiency, DC voltage range, weight, "
+                    "dimensions, cooling specs and communication protocol — compare the stated figure against the "
+                    "corresponding TRL 6 result (≤ for max limits, ≥ for min limits, plus tolerance), mark "
+                    "Consistent/Inconsistent and correct any inconsistency."
+                ),
+                procedure_steps=[],
                 measured_qty="Number of parameters consistent with test results (count / 7)",
                 acceptance="All 7 key parameters in the datasheet are consistent with measured TRL 6 results. No overstated figures.",
                 method="I / A",
@@ -950,15 +821,12 @@ TRL_DATA = [
                 ),
                 standard="Internal document approval process",
                 equipment="Sales one-pager draft; sign-off sheet",
-                setup="Present the final one-pager to project lead (L. Rietkerk) and a sales representative.",
-                procedure_steps=[
-                    "Distribute draft sales one-pager to project lead and sales representative.",
-                    "Review document for: (a) accuracy of technical specs; (b) USPs clearly stated; (c) compliance claims supported by certificates.",
-                    "Incorporate any review comments.",
-                    "Obtain signed approval from project lead.",
-                    "Obtain signed approval from sales representative.",
-                    "File approved document in project document management system.",
-                ],
+                setup=(
+                    "Present the final one-pager to project lead (L. Rietkerk) and a sales representative, reviewing "
+                    "accuracy of technical specs, clearly stated USPs and compliance claims supported by certificates. "
+                    "Incorporate comments, obtain both signed approvals and file the document in the DMS."
+                ),
+                procedure_steps=[],
                 measured_qty="Number of approvals obtained (count / 2)",
                 acceptance="Both project lead and sales representative have signed the one-pager. All comments resolved.",
                 method="I",
@@ -998,23 +866,15 @@ TRL_DATA = [
                 ),
                 standard="IEC 61439; NEN 1010; CE marking directive; internal document management",
                 equipment="Document management system; document checklist",
-                setup="Retrieve the complete document package from the project folder.",
-                procedure_steps=[
-                    "Check availability and approval status of each required document:",
-                    "  a. Project plan (final version, signed)",
-                    "  b. This Measurement Plan (all test sheets completed and signed)",
-                    "  c. Detailed electrical drawings (released revision)",
-                    "  d. Detailed mechanical drawings (released revision)",
-                    "  e. BOM (final, with part numbers and supplier references)",
-                    "  f. Software documentation (architecture, register map, version)",
-                    "  g. CE Declaration of Conformity",
-                    "  h. IEC 61439 design verification record",
-                    "  i. NEN 1010 compliance record",
-                    "  j. User manual / operating instructions",
-                    "  k. Assembly / build book",
-                    "Mark each document as Complete / Incomplete / Missing.",
-                    "Raise non-conformances for any incomplete or missing items.",
-                ],
+                setup=(
+                    "Check the availability and approval status of the 11 required documents — signed final project "
+                    "plan; this Measurement Plan (all sheets completed and signed); released electrical and mechanical "
+                    "drawings; final BOM (part numbers and suppliers); software docs (architecture, register map, "
+                    "version); CE Declaration of Conformity; IEC 61439 design verification record; NEN 1010 compliance "
+                    "record; user manual; and assembly/build book. Mark each Complete/Incomplete/Missing and raise "
+                    "non-conformances for gaps."
+                ),
+                procedure_steps=[],
                 measured_qty="Number of documents Complete (count / 11)",
                 acceptance="All 11 required documents are Complete, approved and version-controlled. Zero missing items.",
                 method="I",
@@ -1028,15 +888,13 @@ TRL_DATA = [
                 ),
                 standard="Internal series-readiness criteria; IEC 61439",
                 equipment="Series-readiness checklist; assembly instructions; BOM",
-                setup="Review the complete design package against the series-readiness checklist.",
-                procedure_steps=[
-                    "Verify all components in the BOM are commercially available with lead time < 8 weeks.",
-                    "Verify the assembly process can be performed by a trained technician using the build book alone (no expert assistance required).",
-                    "Verify all software can be flashed/configured from the build book procedure.",
-                    "Verify no prototype-specific workarounds remain in the design or build procedure.",
-                    "Verify quality control steps are defined for production.",
-                    "Record any open items.",
-                ],
+                setup=(
+                    "Review the design package against the 5 series-readiness criteria: all BOM components "
+                    "commercially available with lead time < 8 weeks; assembly achievable by a trained technician "
+                    "from the build book alone; software flashable/configurable from the build book; no "
+                    "prototype-specific workarounds remaining; and production quality-control steps defined. Record any open items."
+                ),
+                procedure_steps=[],
                 measured_qty="Number of series-readiness criteria met (count / 5); number of open items",
                 acceptance="All 5 criteria met. Zero open items. Design is cleared for series production.",
                 method="I / A",
@@ -1050,20 +908,13 @@ TRL_DATA = [
                 ),
                 standard="Internal sales and product management process",
                 equipment="Sales matrix template; approved datasheet; pricing information",
-                setup="Enter product into the sales matrix with the project lead and sales stakeholder present.",
-                procedure_steps=[
-                    "Enter product in sales matrix with the following information:",
-                    "  a. Product name: 400A AC/DC Charger for e-PU10",
-                    "  b. Rated power [kW]",
-                    "  c. DC voltage range [V]",
-                    "  d. Efficiency [%]",
-                    "  e. Communication protocol",
-                    "  f. Compliance standards (IEC 61439, NEN 1010, CE)",
-                    "  g. Lead time and price indication",
-                    "Obtain sign-off from project lead (L. Rietkerk).",
-                    "Obtain sign-off from sales representative.",
-                    "Archive the signed transfer document.",
-                ],
+                setup=(
+                    "Enter the product in the sales matrix with all 7 fields — product name (400A AC/DC Charger for "
+                    "e-PU10), rated power, DC voltage range, efficiency, communication protocol, compliance standards "
+                    "(IEC 61439, NEN 1010, CE) and lead time/price indication — then obtain sign-off from project lead "
+                    "(L. Rietkerk) and the sales representative and archive the signed transfer document."
+                ),
+                procedure_steps=[],
                 measured_qty="Number of sales matrix fields completed (count / 7); number of signatures obtained (count / 2)",
                 acceptance="All 7 sales matrix fields are completed. Both signatures obtained. Transfer document archived.",
                 method="I",
@@ -1265,7 +1116,9 @@ def _add_test_sheet(doc, sheet: TestSheet, test_stage: str):
         row = tbl.add_row()
         row.cells[0].text = label
         row.cells[1].text = value
-        _make_label_cell(row.cells[0])
+        # White background, bold label only (no cell shading) — matches the
+        # e-PU Cabinet V2 test-sheet style.
+        _bold_cell(row.cells[0])
 
     doc.add_paragraph()  # spacing between sheets
 
