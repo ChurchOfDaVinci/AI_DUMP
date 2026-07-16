@@ -21,9 +21,10 @@ import re
 from pathlib import Path
 
 from docx import Document
+from docx.enum.text import WD_ALIGN_PARAGRAPH
 from docx.oxml import OxmlElement
 from docx.oxml.ns import qn
-from docx.shared import RGBColor
+from docx.shared import Cm, Pt, RGBColor
 
 # ---------------------------------------------------------------------------
 # Paths
@@ -33,6 +34,15 @@ TEMPLATE = REPO_ROOT / "ACDC charger" / "ProjectPlan_400A_Charger.docx"
 SOURCE_MD = REPO_ROOT / "Documents" / "400A_Charging_System_Client_Specsheet.md"
 OUTPUT = REPO_ROOT / "ACDC charger" / "400A Charging System Client Specsheet.docx"
 FORBIDDEN_TERMS = ("UR100040", "UUGreenPower")
+
+# ---------------------------------------------------------------------------
+# Colour palette (matches the template's theme accent1 = 156082 teal, so the
+# generated document keeps the same colour scheme the client applied by hand)
+# ---------------------------------------------------------------------------
+ACCENT = "156082"          # section-group header shading (theme accent1)
+ACCENT_DARK = "0F4761"     # title / heading text (accent1 darker 25%)
+ROW_STRIPE = "E7EEF2"      # light teal zebra striping for readability
+WHITE = RGBColor(0xFF, 0xFF, 0xFF)
 
 
 # ---------------------------------------------------------------------------
@@ -102,36 +112,103 @@ def _add_hr(doc: Document) -> None:
 
 
 # ---------------------------------------------------------------------------
-# Helper: add a table from headers + rows
+# Low-level cell helpers
 # ---------------------------------------------------------------------------
-def _add_table(doc: Document, headers: list[str], rows: list[list[str]]) -> None:
-    table = doc.add_table(rows=1 + len(rows), cols=len(headers))
+def _shade_cell(cell, fill: str) -> None:
+    """Apply a solid background fill to a table cell."""
+    tc_pr = cell._tc.get_or_add_tcPr()
+    shd = OxmlElement("w:shd")
+    shd.set(qn("w:val"), "clear")
+    shd.set(qn("w:color"), "auto")
+    shd.set(qn("w:fill"), fill)
+    tc_pr.append(shd)
+
+
+def _set_cell_text(cell, text: str, bold: bool = False, italic: bool = False,
+                   color: RGBColor | None = None, size: int | None = None) -> None:
+    """Replace a cell's content with a single styled run."""
+    p = cell.paragraphs[0]
+    p.clear()
+    # Parse inline **bold** / *italic* markers so markdown emphasis survives.
+    parts = re.split(r"(\*\*[^*]+\*\*|\*[^*]+\*)", text)
+    if not any(parts):
+        parts = [text]
+    for part in parts:
+        if part.startswith("**") and part.endswith("**"):
+            run = p.add_run(part[2:-2])
+            run.bold = True
+        elif part.startswith("*") and part.endswith("*"):
+            run = p.add_run(part[1:-1])
+            run.italic = True
+        else:
+            run = p.add_run(part)
+            run.bold = bold
+            run.italic = italic
+        if color is not None:
+            run.font.color.rgb = color
+        if size is not None:
+            run.font.size = Pt(size)
+
+
+def _set_col_widths(table, widths_cm: list[float]) -> None:
+    """Force column widths (Word honours per-cell widths most reliably)."""
+    table.autofit = False
+    table.allow_autofit = False
+    # Fixed layout + explicit grid so Word does not rebalance the columns.
+    tbl_pr = table._tbl.tblPr
+    layout = OxmlElement("w:tblLayout")
+    layout.set(qn("w:type"), "fixed")
+    tbl_pr.append(layout)
+
+    grid = table._tbl.find(qn("w:tblGrid"))
+    if grid is not None:
+        for col, width in zip(grid.findall(qn("w:gridCol")), widths_cm):
+            col.set(qn("w:w"), str(int(width * 567)))  # 1 cm = 567 twips
+
+    for row in table.rows:
+        for cell, width in zip(row.cells, widths_cm):
+            cell.width = Cm(width)
+
+
+# ---------------------------------------------------------------------------
+# Helper: build ONE consolidated specification table for the whole system.
+# Each source section becomes a full-width shaded group header row, followed by
+# its Parameter / Specification rows, giving a single clean datasheet table.
+# ---------------------------------------------------------------------------
+def _add_spec_table(doc: Document, blocks: list[dict]) -> None:
+    table = doc.add_table(rows=0, cols=2)
     table.style = "Table Grid"
+    table.alignment = WD_ALIGN_PARAGRAPH.CENTER
 
-    hdr_cells = table.rows[0].cells
-    for idx, header in enumerate(headers):
-        p = hdr_cells[idx].paragraphs[0]
-        p.clear()
-        p.add_run(header).bold = True
+    # Column header row (Parameter | Specification)
+    head = table.add_row().cells
+    for cell, label in zip(head, ("Parameter", "Specification")):
+        _shade_cell(cell, ACCENT_DARK)
+        _set_cell_text(cell, label, bold=True, color=WHITE)
 
-    for cell in hdr_cells:
-        tc = cell._tc
-        tc_pr = tc.get_or_add_tcPr()
-        shd = OxmlElement("w:shd")
-        shd.set(qn("w:val"), "clear")
-        shd.set(qn("w:color"), "auto")
-        shd.set(qn("w:fill"), "4472C4")
-        tc_pr.append(shd)
-        for para in cell.paragraphs:
-            for run in para.runs:
-                run.font.color.rgb = RGBColor(0xFF, 0xFF, 0xFF)
-                run.bold = True
+    for index, block in enumerate(blocks, start=1):
+        # Full-width group header row for the section.
+        group_cells = table.add_row().cells
+        merged = group_cells[0].merge(group_cells[1])
+        _shade_cell(merged, ACCENT)
+        _set_cell_text(merged, f"{index}.  {block['title']}", bold=True, color=WHITE)
 
-    for r_idx, row in enumerate(rows):
-        row_cells = table.rows[r_idx + 1].cells
-        for c_idx, value in enumerate(row):
-            row_cells[c_idx].text = value
+        # Prose sections (e.g. System Overview) render as a full-width note row.
+        for note in block.get("notes", []):
+            note_cells = table.add_row().cells
+            note_merged = note_cells[0].merge(note_cells[1])
+            _set_cell_text(note_merged, note)
 
+        # Parameter / specification rows with subtle zebra striping.
+        for stripe, (param, spec) in enumerate(block.get("rows", [])):
+            cells = table.add_row().cells
+            _set_cell_text(cells[0], param, bold=True)
+            _set_cell_text(cells[1], spec)
+            if stripe % 2 == 1:
+                _shade_cell(cells[0], ROW_STRIPE)
+                _shade_cell(cells[1], ROW_STRIPE)
+
+    _set_col_widths(table, [6.5, 10.5])
     doc.add_paragraph(style="Normal")
 
 
@@ -232,12 +309,29 @@ def build(template_path: Path, source_md: Path, output_path: Path) -> None:
     doc = Document(str(template_path))
     _clear_body(doc)
 
-    # Title block
-    _add_para(doc, "400 A Liquid-Cooled DC Charging System — Technical Specification Sheet", style="Normal", bold=True)
-    _add_para(doc, "Client-Facing Integrated Product Specification", style="Normal")
-    doc.add_paragraph(style="Normal")
-    _add_para(doc, "Version: 1.0", style="Normal")
-    _add_para(doc, "Date: 2026-07-16", style="Normal")
+    # Title block --------------------------------------------------------
+    title = doc.add_paragraph(style="Normal")
+    title.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    run = title.add_run("400 A Liquid-Cooled DC Charging System")
+    run.bold = True
+    run.font.size = Pt(20)
+    run.font.color.rgb = RGBColor.from_string(ACCENT_DARK)
+
+    subtitle = doc.add_paragraph(style="Normal")
+    subtitle.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    sub_run = subtitle.add_run("Technical Specification Sheet")
+    sub_run.bold = True
+    sub_run.font.size = Pt(14)
+    sub_run.font.color.rgb = RGBColor.from_string(ACCENT)
+
+    meta = doc.add_paragraph(style="Normal")
+    meta.alignment = WD_ALIGN_PARAGRAPH.CENTER
+    meta_run = meta.add_run(
+        "Modular 280 kW integrated DC charging system  ·  Version 1.0  ·  2026-07-16"
+    )
+    meta_run.italic = True
+    meta_run.font.size = Pt(10)
+
     _add_hr(doc)
     doc.add_paragraph(style="Normal")
 
@@ -253,21 +347,27 @@ def build(template_path: Path, source_md: Path, output_path: Path) -> None:
     ]
 
     by_title = {section["title"]: section for section in sections}
+
+    blocks: list[dict] = []
     for heading in expected_headings:
         section = by_title.get(heading)
         if section is None:
             raise ValueError(f"Missing required section in markdown: {heading}")
 
-        doc.add_heading(heading, level=1)
+        block: dict = {"title": heading, "notes": [], "rows": []}
 
-        for paragraph in section["paragraphs"]:
-            _add_para(doc, paragraph, style="Normal")
+        paragraphs = [p for p in section["paragraphs"] if p]
+        if paragraphs:
+            block["notes"].append(" ".join(paragraphs))
 
         table = section["table"]
         if table:
-            _add_table(doc, table["headers"], table["rows"])
-        else:
-            doc.add_paragraph(style="Normal")
+            block["rows"] = [(row[0], row[1]) for row in table["rows"] if len(row) >= 2]
+
+        blocks.append(block)
+
+    # One consolidated specification table for the whole system.
+    _add_spec_table(doc, blocks)
 
     if disclaimer:
         _add_para(doc, disclaimer, style="Normal", italic=True)
