@@ -1,0 +1,126 @@
+2026 Shenzhen UUGreenPower Co., Ltd. All rights reserved. Subject to change without notice.
+
+Efficient Silent Reliable
+ 
+   
+The UR100040-LQ(EU) liquid cooling charging module is designed and manufactured with the world's leading power supply 
+technology and manufacturing technique. The charging module has an ultra-wide voltage range with constant power output. It 
+adopts liquid cooling heat dissipation technology, which greatly improves the heat dissipation efficiency. The liquid cooling 
+charging module has the characteristics of high protection level, high stability, high safety, long service life, high power density, 
+small space occupation, and low operation noise. It has plug-and-pull liquid cooling port and battery back feed protection.
+  
+ 
+ 	
+1 2 3 4
+1
+2
+3
+4
+5
+UU Rectifier
+Maximum Output Voltage（1000V）
+Rated Output Current（40A）
+Liquid Cooling Heat Dissipation
+Europe and American 
+40kW IP65 Liquid Cooling DC Charging Module
+Ultra-wide output voltage range
+LED panel displaying voltage, current, group, protocol, address, manual/automatic 
+mode and fault information
+Supporting CAN bus communication and software grouping control
+Coolant and circuit sepration design,supporting hot swapping, safe and reliable
+IP65 protection level, suitable for various harsh environments
+Industry leading liquid cooling technology solving noise problem permanenly
+Peak efficiency>97%
+Built-in residual voltage discharge circuit
+Standby power consumption<10W
+Supporting OTA remote upgrading
+
+5
+2026 Shenzhen UUGreenPower Co., Ltd. All rights reserved. Subject to change without notice.
+
+
+
+Output voltage
+Voltage stabilized accuracy
+Efficiency
+ 
+
+ ­  
+0.5-133.3A
+≤±0.5%
+≤±1%
+≤±1%
+Peak efficiency>97%
+150VDC ~ 1000VDC Input voltage 260VAC~530VAC
+Input frequency 50Hz/60Hz
+THDi
+Power factor
+<76A
+<5% 
+<10W
+Max. current
+Standby power
+
+-40℃~75℃,derates from 60℃
+-40℃~85℃ 
+≤95% RH, without condensation
+79kPa~110kPa/2000m
+Operating temperature
+Storage temperature
+Humidity
+Pressure/ Altitude
+≈0dB
+300*120*460 (W*H*D/mm) 
+ <28kg
+Acoustic noise
+Cooling
+Dimension
+Weight
+­
+6:4 mixture of ethylene glycol and water
+6L/min~10L/min
+ 1L
+Coolant
+Coolant flow rate
+Coolant capacity
+Inlet pressure < 2bar
+Output current
+Current stabilized accuracy
+Voltage ripple
+Output voltage setting error ≤ ±0.5%
+CAN
+Max. 60
+Indicator lights
+Communication
+HMI LED operating display
+Number of working modules
+Alarm status
+Rated output load PF ≥ 0.99
+Liquid
+    Output Voltage
+Output Voltage 
+Output Power 
+Output Current Input Voltage (VAC) Ambient Temperature
+ ℃
+
+
+20
+
+40
+60 75
+
+
+
+
+20
+
+
+
+40
+260 320  
+ 
+ 530 
+ 40 
+300
+133.3
+1000
