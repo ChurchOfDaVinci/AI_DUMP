@@ -35,6 +35,7 @@ areas = [
     0,
     0.01,
     0.02,
+    0.03,
     0.04,
     0.05,
     0.06,
@@ -50,6 +51,34 @@ data = pd.read_csv("H2_profile.csv")
 
 time = data["Time_s"].to_numpy()
 H2_gen = data["H2_Generation_m3_s"].to_numpy()
+
+
+
+# -------------------------
+# Multi-gas release composition
+# -------------------------
+
+# Total hydrogen volume released over the event [m3]
+V_H2_total = np.sum(H2_gen) * dt
+
+# Additional gases released during thermal runaway [m3]
+# (from UL 9540A module report)
+V_CO2 = 0.07875        # Carbon dioxide  [m3]  (78.75 L)
+V_CO = 0.24640         # Carbon monoxide [m3]  (246.40 L)
+V_HC = 0.26195         # Total hydrocarbons [m3] (261.95 L)
+
+# CO2, CO and HC are assumed to follow exactly the same
+# time-dependent release profile as hydrogen. The total gas
+# generation rate is therefore the hydrogen rate scaled by the
+# ratio of total released gas volume to hydrogen volume.
+gas_factor = (
+    V_H2_total + V_CO2 + V_CO + V_HC
+) / V_H2_total
+
+# Total (all-species) gas generation rate used for the pressure
+# balance. Hydrogen alone (H2_gen) is still used for the
+# explosion concentration assessment.
+total_gen = H2_gen * gas_factor
 
 
 
@@ -113,6 +142,8 @@ for A in areas:
 
         # -------------------------
         # Hydrogen balance
+        # (H2 only: hydrogen is the critical gas for
+        #  explosion risk; CO2/CO/HC are NOT included here)
         # -------------------------
 
         Q_generated = H2_gen[i]
@@ -136,9 +167,11 @@ for A in areas:
         # Pressure balance
         # -------------------------
 
-        # Generated gas
+        # Generated gas (ALL species: H2 + CO2 + CO + HC)
+        # Every released gas contributes to the total number of
+        # gas molecules and therefore to the internal pressure.
         n_generated = (
-            Q_generated*P_atm/(R*T)
+            total_gen[i]*P_atm/(R*T)
         )
 
 
