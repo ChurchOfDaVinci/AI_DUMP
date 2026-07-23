@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eGensetMode" Id="{07709d88-d6c2-4c81-9bb0-3162e7f3fc71}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE eGensetMode :
+(
+	Isochronous := 0,
+	Droop := 1,
+	FixedPower := 2
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,302 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_AGC150" Id="{97665def-bde1-41db-9433-c19c9285cd5b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AGC150
+
+VAR_IN_OUT
+	get				: ST_GENSET_Get;
+END_VAR
+
+VAR_INPUT
+	enable 	: BOOL;
+	set 	: ST_AGC150_set;
+END_VAR
+
+VAR
+	b_changeEndianess	:	BOOL	:=	FALSE;
+	ComOKRelease		:   TON := (PT:= T#5S);
+	MBWriteCoils		:	FB_MBWriteCoils;	// function 15
+	CoilData			:	ARRAY[0..10] OF BYTE;
+	StartCoilWrite		:	BOOL;
+	
+	MBWriteHolding		:	FB_MBWriteRegs;		// function 16
+	HoldingData			:	ARRAY[0..4] OF WORD;
+	StartHoldingWrite	:	BOOL;
+	
+	MBReadInputregs		:	FB_MBReadInputRegs;	//function 4
+	InputRegData		:	ARRAY[0..27] OF WORD;
+	StartInputRegRead	:	BOOL;
+	
+	MBReadInputs		:	FB_MBReadInputs;	//function 2
+	InputData			:	ARRAY[0..2] OF BYTE;
+	StartInputRead		:	BOOL;
+	
+	TransmissionDone	:	F_trig;
+	bError				: BOOL;
+	
+	CommStep	:	UINT	:=	0;
+	
+	tpModbusDelay		: TP := (PT:= T#500MS);
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[tpModbusDelay();
+
+IF NOT enable THEN
+	commstep:= 0;
+ELSIF (enable AND commstep = 0) THEN
+	commstep := 1;
+END_IF
+
+MBWriteCoils(
+	sIPAddr := set.IP,
+	nTCPPort := 502,
+	nUnitID := 1,//16#FF;
+	nMBAddr := 0,//w_MBStartAddress,
+	nQuantity := 50,
+	cbLength := SIZEOF(CoilData),
+	pSrcAddr := ADR(CoilData),
+	bExecute := StartCoilWrite	//	<- werkt dit niet gewoon?
+);
+
+MBWriteHolding(
+	sIPAddr := set.IP,
+	nTCPPort := 502,
+	nUnitID := 1,//16#FF;
+	cbLength := SIZEOF(HoldingData),
+	pSrcAddr := ADR(HoldingData),
+	bExecute := StartHoldingWrite	//	<- werkt dit niet gewoon?
+);
+	
+MBReadInputregs(
+	sIPAddr := set.IP,
+	nTCPPort := 502,
+	nUnitID := 1,//16#FF;
+	nMBAddr := 501,//w_MBStartAddress,
+	nQuantity := 18,
+	cbLength := SIZEOF(InputRegData),
+	pDestaddr := ADR(InputRegData),
+	bExecute := StartInputRegRead	//	<- werkt dit niet gewoon?
+);
+
+MBReadInputs(
+	sIPAddr := set.IP,
+	nTCPPort := 502,
+	nUnitID := 1,//16#FF;
+	nMBAddr := 501,//w_MBStartAddress,
+	nQuantity := 5,
+	cbLength := SIZEOF(InputData),
+	pDestaddr := ADR(InputData),
+	bExecute := StartInputRead	//	<- werkt dit niet gewoon?
+);
+
+
+CASE CommStep OF
+	1: //Start MBWriteCoils
+		CoilData[0].0 := set.GenOn = eOnoffState.Enable;
+		CoilData[0].3 := set.GenOn = eOnoffState.Disable;
+		
+		CoilData[0].1 := set.GenBreakerOn = eOnoffState.Enable;
+		CoilData[0].2 := set.GenBreakerOn = eOnoffState.Disable;
+		
+		CoilData[1].6 := set.GenAutoSyncOn = eOnoffState.Enable;
+		CoilData[1].7 := set.GenAutoSyncOn = eOnoffState.Disable;
+		
+		CoilData[2].0 := set.bIslandModeEnable;
+		CoilData[2].1 := set.bAMFModeEnable;
+		CoilData[2].2 := set.bPeakshavingEnable;	
+		CoilData[2].3 := set.bFixedPowerEnable;	
+		CoilData[2].4 := set.bMPE;
+		
+		CoilData[3].0 := set.MainBreakerON = eOnoffState.Enable;
+		CoilData[3].1 := set.MainBreakerON = eOnoffState.Disable;
+		CoilData[3].2 := set.AutoStartStop;
+		CoilData[3].3 := set.OperationMode = eGenOperationMode.ManualMode;
+		CoilData[3].4 := set.OperationMode = eGenOperationMode.SemiAuto;	
+		CoilData[3].5 := set.OperationMode = eGenOperationMode.Auto;	
+		CoilData[3].6 := set.OperationMode = eGenOperationMode.Test;
+		
+		CoilData[6].0 := set.DroopEnable;
+				
+		StartCoilWrite := TRUE;
+		Commstep := 2;
+		
+	2: //Wait for MBWriteCoils to finish
+		StartCoilWrite := FALSE;
+		bError := FALSE;
+		IF NOT MBWriteCoils.bBusy THEN
+			tpModbusDelay.IN := TRUE;
+			IF NOT tpModbusDelay.Q THEN
+				tpModbusDelay.IN := FALSE;
+				IF NOT MBWriteCoils.bError THEN	
+					Commstep := 3;
+				 	//processdata
+				ELSE
+					//WriteFailed
+					bError := TRUE;
+					Commstep := 3;
+				END_IF
+			END_IF
+		END_IF
+		
+	3: //Start MBWriteHolding
+	 	MBWriteHolding.nMBAddr := 0;
+		MBWriteHolding.nQuantity := 5;
+		HoldingData[0] 	:= wordEndian(LIMIT(0, REAL_TO_UINT(set.Pset),100));
+		HoldingData[1] 	:= wordEndian(LIMIT(60, REAL_TO_UINT(set.PFset),100));
+		HoldingData[2] 	:= wordEndian(LIMIT(-100, REAL_TO_INT(set.Qset),100));
+		HoldingData[3] 	:= wordEndian(LIMIT(-100, REAL_TO_INT(set.FreqRegulator),100));
+		HoldingData[4] 	:= wordEndian(LIMIT(-100, REAL_TO_INT(set.VoltRegulator),100));
+	
+		StartHoldingWrite := TRUE;
+		Commstep := 4;
+		
+	4: //Wait for MBWriteHolding to finish
+		StartHoldingWrite := FALSE;
+		
+		IF NOT MBWriteHolding.bBusy THEN
+			tpModbusDelay.IN := TRUE;
+			IF NOT tpModbusDelay.Q THEN
+				tpModbusDelay.IN := FALSE;
+				IF NOT MBWriteHolding.bError THEN	
+					Commstep := 5;
+				 	//processdata
+				ELSE
+					//WriteFailed
+					bError := TRUE;
+					Commstep := 5;
+				END_IF
+			END_IF
+		END_IF
+		
+	5: //Start MBReadInputregs
+		StartInputRegRead := TRUE;
+		Commstep := 6;
+		
+	6: //Wait for MBReadInputregs to finish
+		StartInputRegRead := FALSE;
+		IF NOT MBReadInputregs.bBusy THEN
+			tpModbusDelay.IN := TRUE;
+			IF NOT tpModbusDelay.Q THEN
+				tpModbusDelay.IN := FALSE;
+				IF NOT MBReadInputregs.bError THEN		
+					get.ar_Linevoltage[phases.L1]	:= WORD_TO_REAL(WordEndian(InputRegData[0]));
+					get.ar_Linevoltage[phases.L2]	:= WORD_TO_REAL(WordEndian(InputRegData[1]));
+					get.ar_Linevoltage[phases.L3]	:= WORD_TO_REAL(WordEndian(InputRegData[2]));
+					get.ar_LineVoltage[phases.AVG]	:= (get.ar_Linevoltage[phases.L1]+ get.ar_Linevoltage[phases.L2] + get.ar_Linevoltage[phases.L3]) / 3;
+					
+					get.ar_Phasevoltage[phases.L1]	:= WORD_TO_REAL(wordendian(InputRegData[3]));
+					get.ar_Phasevoltage[phases.L2]	:= WORD_TO_REAL(wordendian(InputRegData[4]));
+					get.ar_Phasevoltage[phases.L3]	:= WORD_TO_REAL(wordendian(InputRegData[5]));
+					get.ar_PhaseVoltage[phases.AVG]	:= (get.ar_Phasevoltage[phases.L1]+ get.ar_Phasevoltage[phases.L2] + get.ar_Phasevoltage[phases.L3]) / 3;
+							 
+					get.ar_Frequency[phases.L1]		:= WORD_TO_REAL(wordendian(InputRegData[6])) / 100;
+					get.ar_Frequency[phases.L2]		:= WORD_TO_REAL(wordendian(InputRegData[7])) / 100;
+					get.ar_Frequency[phases.L3]		:= WORD_TO_REAL(wordendian(InputRegData[8])) / 100;
+					get.ar_Frequency[phases.AVG]		:= (get.ar_Frequency[phases.L1]+ get.ar_Frequency[phases.L2] + get.ar_Frequency[phases.L3]) / 3;
+							 
+					get.ar_Current[phases.L1]	:= WORD_TO_REAL(wordendian(InputRegData[12]));
+					get.ar_Current[phases.L2]	:= WORD_TO_REAL(wordendian(InputRegData[13]));
+					get.ar_Current[phases.L3]	:= WORD_TO_REAL(wordendian(InputRegData[14]));
+					get.ar_Current[phases.AVG] := (get.ar_Current[phases.L1] + get.ar_Current[phases.L2]  + get.ar_Current[phases.L3]) / 3;
+						   
+					get.ar_ActivePower[phases.L1]	:= WORD_TO_REAL(wordendian(InputRegData[15]));
+					get.ar_ActivePower[phases.L2]	:= WORD_TO_REAL(wordendian(InputRegData[16]));
+					get.ar_ActivePower[phases.L3]	:= WORD_TO_REAL(wordendian(InputRegData[17]));
+					get.ar_ActivePower[phases.AVG]	:= (get.ar_ActivePower[phases.L1] + get.ar_ActivePower[phases.L2]  + get.ar_ActivePower[phases.L3]);
+					
+					Get.ar_ApparentPower[phases.AVG] := (get.ar_Current[phases.L1] * get.ar_PhaseVoltage[1] + get.ar_Current[phases.L2] * get.ar_PhaseVoltage[2] + get.ar_Current[phases.L3] * get.ar_PhaseVoltage[3]) / 1000;
+					Get.ar_ReactivePower[phases.AVG] := ReactivePower(Get.ar_ApparentPower[phases.AVG], get.ar_ActivePower[phases.AVG], 0);  
+					Get.ar_PowerFactor[phases.AVG] := PowerFactor(get.ar_ActivePower[phases.AVG],Get.ar_ApparentPower[phases.AVG], Get.ar_ReactivePower[phases.AVG]);
+					Commstep := 7;
+				ELSE
+					//WriteFailed
+					bError := TRUE;
+					Commstep := 7;
+				END_IF
+			END_IF
+		END_IF		
+		
+	7: //Start MBReadInputs
+		StartInputRead := TRUE;
+		Commstep := 8;
+		
+	8: //Wait for MBReadInputs to finish
+		StartInputRead := FALSE;
+		IF NOT MBReadInputs.bBusy THEN
+			tpModbusDelay.IN := TRUE;
+			IF NOT tpModbusDelay.Q THEN
+				tpModbusDelay.IN := FALSE;
+				IF NOT MBReadInputs.bError THEN
+					get.bGenBreakerClosed 	:= InputData[0].0;  
+					
+					get.bMainBreakerClosed 	:= InputData[0].1;
+					get.bGenRunning 		:= InputData[0].3;
+					get.bGenVoltFreqOK 		:= InputData[0].4;
+					get.bMainsFailure 		:= InputData[0].5;
+					
+					IF InputData[0].6 THEN	get.eActiveGenMode := eGenOperationMode.BlockMode;
+					ELSIF InputData[0].7 THEN	get.eActiveGenMode := eGenOperationMode.ManualMode;
+					ELSIF InputData[1].0 THEN	get.eActiveGenMode := eGenOperationMode.SemiAuto;
+					ELSIF InputData[1].1 THEN	get.eActiveGenMode := eGenOperationMode.Auto;
+					ELSIF InputData[1].2 THEN	get.eActiveGenMode := eGenOperationMode.Test;
+					END_IF
+					
+					get.bIslandModeActive := InputData[1].5;
+					get.bMainsFailure	:=	InputData[1].6;
+					get.bPeakshaveActive := InputData[1].7;
+					get.bFixedPowerActive := InputData[2].0;				
+					Commstep := 9;
+				ELSE
+					//WriteFailed
+					bError := TRUE;
+					Commstep := 9;
+				END_IF
+			END_IF
+		END_IF
+
+	9: //Start MBWriteHolding
+		MBWriteHolding.nMBAddr := 4125;
+		MBWriteHolding.nQuantity := 1;
+		HoldingData[0] 	:= wordEndian(LIMIT(0, REAL_TO_UINT(set.U_Fdroopset * 10), 100));
+
+		StartHoldingWrite := TRUE;
+		Commstep := 10;
+		
+	10: //Wait for MBWriteHolding to finish
+		StartHoldingWrite := FALSE;
+		
+		IF NOT MBWriteHolding.bBusy THEN
+			tpModbusDelay.IN := TRUE;
+			IF NOT tpModbusDelay.Q THEN
+				tpModbusDelay.IN := FALSE;
+				IF NOT MBWriteHolding.bError THEN	
+					Commstep := 1;
+				 	//processdata
+				ELSE
+					//WriteFailed
+					bError := TRUE;
+					Commstep := 1;
+				END_IF
+			END_IF
+		END_IF
+END_CASE
+
+ComOKRelease(IN:= NOT bError AND Commstep <>0, Q => get.CommunicationOK);
+]]></ST>
+    </Implementation>
+    <Method Name="WordEndian" Id="{d2f55a23-eab6-44cc-86bd-b186e9036876}">
+      <Declaration><![CDATA[METHOD WordEndian : WORD
+VAR_INPUT
+	IN		: WORD;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF b_changeEndianess THEN
+	WordEndian := HOST_TO_BE16(IN);
+ELSE
+	WordEndian := IN;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

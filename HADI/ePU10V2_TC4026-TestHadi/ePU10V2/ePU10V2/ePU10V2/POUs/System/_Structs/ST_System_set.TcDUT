@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_System_set" Id="{aec5cafb-5a9b-4287-a2be-9a0fbe0cbddb}">
+    <Declaration><![CDATA[TYPE ST_System_set :
+STRUCT
+	//structurized variables from function blocks\
+	control						: ST_ControlVars;
+	powerstack					: ST_Powerstack_Set;
+	BMS							: ST_BMS_Set;
+	ACSwitchgear				: ST_ACswitchgear_set;
+	Peakshavebox				: ST_PeakshaveBox_set;
+	Protections					: ST_ProtectionSystems_set;
+	Enclosure					: ST_Enclosure_set;
+	HartingIO					: ST_HartingIO_set;
+	GenComm						: ST_Genset_Set;
+	AcDcCharger					: ST_AcDcCharger_set;
+	DCLink						: ST_DCLink_set;
+	b_TransportMode				: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

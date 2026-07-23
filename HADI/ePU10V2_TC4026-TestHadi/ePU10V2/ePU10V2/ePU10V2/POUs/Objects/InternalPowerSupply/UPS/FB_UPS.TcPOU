@@ -1,0 +1,378 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_UPS" Id="{0649dd8d-2931-4480-9942-718e0ae8c687}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_UPS
+VAR_IN_OUT CONSTANT
+	st_params		: ST_InternalPowersupply_params;
+END_VAR
+
+VAR_INPUT
+	b_24V_Available	:	BOOL;
+	r_BMSsoc		: 	REAL;
+	b_EMSTOP		: 	BOOL;		
+END_VAR
+VAR_OUTPUT
+	Get	: ST_UPSGET;
+	b_UPSDemand24VDC	: BOOL;
+END_VAR
+VAR
+	DisableUPS			AT %Q* : BOOL;
+	DisconnectUPSInput	At %Q* : Bool;
+	UPSData				AT %I* : ST_UPSDATA;	
+	InputTimer					: TON := (PT := TIME#1S);
+	
+	SR_SoCLowWarning: SR;
+	RS_SocLowError	: RS;
+
+	
+	TON_MinimumChargeTime	:	TON := (pt := T#1H);
+	
+	r_Hysteresis	: REAL := 5;
+END_VAR
+
+VAR PERSISTENT
+	OriginalBatteryCapacity :	REAL	:=	100;	//Ah
+	//Capacity loss not yet implemented
+	ActualBattCapacity		:	REAL	:=	100;
+	RemainingCapacity 		:	REAL	:=	100;
+
+	LastBatteryCalibrationDate	:	DT;	
+	ui_UPSBatteryHealth			:	Uint;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[get.Events.b_BatteryLowError := FALSE;
+get.Events.b_BatteryLowWarning := FALSE;
+
+//no need to call this FB from the main sequence
+//This FB is controlled via the internal power supply
+ 
+Get.r_BatteryVoltage 	:= TO_REAL(UPSData.ui_BatteryVoltage) / 1000;
+Get.r_InputVoltage		:= TO_REAL(UPSData.ui_InputVoltage) / 1000;
+Get.r_OutputVoltage		:= TO_REAL(UPSData.ui_OutputVoltage) / 1000;
+Get.r_OutputCurrent		:= TO_REAL(UPSData.ui_OutputCurrent) / 1000;
+Get.ui_SOC 				:= GetSOC();
+ 
+RS_SocLowError(
+	SET:= Get.ui_SOC  < st_params.usi_UPSBattLowErrorSOC AND get.b_SystemOnBattery, 
+	RESET1:= Get.ui_SOC  > st_params.usi_UPSBattLowWarningSOC OR get.b_ChargerActive,
+	Q1 => get.Events.b_BatteryLowError
+	);
+	
+SR_SocLowWarning(
+	SET1:= Get.ui_SOC  < st_params.usi_UPSBattLowWarningSOC AND get.b_SystemOnBattery,
+	RESET:= Get.ui_SOC  > st_params.usi_UPSBattLowWarningSOC + r_hysteresis OR get.b_SystemOnDCInput,
+	Q1 => get.Events.b_BatteryLowWarning
+	);
+	
+TON_MinimumChargeTime(in:=get.b_ChargerActive);
+
+////When info message, also request 24VDC	
+//SR_RequestCharging(
+//	SET1:= get.Events.b_BatteryLowInfo,
+//	RESET:= (Get.ui_SOC  = 100),
+//	Q1 => b_UPSDemand24VDC
+//	);
+
+b_UPSDemand24VDC := true; //always require ups charging from now on
+
+//fill get struct
+//if system is charging, disable low battery error. Wait for sufficient r_SOC before disabling the low battery warning
+get.b_ChargerActive := UPSData.udi_StatusFunctions.5;
+get.b_systemonBattery := UPSData.udi_StatusFunctions.2;
+get.b_SystemOnDCInput := UPSData.udi_StatusFunctions.1;
+ 
+IF get.r_BatteryVoltage < 16 THEN
+	get.Events.b_NoBatteryError := TRUE;
+ELSE 
+	get.Events.b_NoBatteryError := FALSE;
+END_IF
+ 
+//UPS input voltage should be OK shortly after IPS 24V coming online. Otherwise there is a problem
+InputTimer(in:= b_24V_Available);
+get.Events.b_InputVoltageWarning := InputTimer.Q AND (Get.r_InputVoltage < 20);
+
+
+get.ui_UPSBatteryHealth := ui_UPSBatteryHealth;
+batterySelftest();]]></ST>
+    </Implementation>
+    <Method Name="BatterySelfTest" Id="{eadac609-3812-4cb9-8d66-5d6ed68af125}">
+      <Declaration><![CDATA[METHOD BatterySelfTest : BOOL
+VAR_INPUT
+END_VAR
+
+VAR
+	r_AverageCurrentDropCount : REAL;
+	dt_NextCalibration	:	DT;
+	UPSBattCalibrationRequired	:	bool;
+END_VAR
+
+var_inst
+	CalibrationStep		:	Uint := 0;
+	ton_500msTimer			:	Ton:= (PT := T#500ms);	
+	
+	r_Vfloat				:	real;
+	r_VInitialDrop			:	real;
+	r_AverageCurrentInitialDrop	:	Real;
+	ui_AverageCurrentDropCount	:	uint;
+	
+	r_Vstart				:	real;
+	r_VEnd					:	real;
+	r_UPSBatteryEnergyLoss	:	real;
+END_VAR
+
+var_inst
+	r_InitialDropResistance	:	real;
+	r_steadyStateDropValue	:	real;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF st_params.t_UPSBattSelfTestInterval > T#0S THEN
+	dt_NextCalibration := LastBatteryCalibrationDate + st_params.t_UPSBattSelfTestInterval;
+END_IF
+
+
+(*BOTH ton_initialdroptimer and b_UPSBatteryCalibrationActive are not declared --> What must be done with it.*)
+//ton_500msTimer(in := not ton_500msTimer.q and b_UPSBatteryCalibrationActive);
+//ton_InitialDropTimer(in := DisconnectUPSInput);
+
+
+case CalibrationStep of
+	
+	0:	//idle, do nothing
+		DisconnectUPSInput := FALSE;
+		if gvl.dt_SystemDateTime > DT_NextCalibration then
+			CalibrationStep := 1;
+		END_IF
+		
+	1:	//calibration requested, wait for circumstances to be correct
+		IF r_BMSsoc > 30 AND get.ui_SOC > 90 AND get.b_SystemOnDCInput AND NOT b_EMSTOP THEN
+			CalibrationStep := 2;
+			get.events.b_UPSBatteryCalibrationActive := true;
+			r_AverageCurrentInitialDrop := 0;
+			ui_AverageCurrentDropCount	:=	0;
+		END_IF
+		
+	2:	// Initialize calibration and perform instant drop test to indicate pack resistance
+		r_Vfloat	:=	get.r_BatteryVoltage;
+		DisconnectUPSInput := true;
+		
+		if ton_500msTimer.Q then
+			r_AverageCurrentInitialDrop := r_AverageCurrentInitialDrop + get.r_OutputCurrent/10;
+			ui_AverageCurrentDropCount := ui_AverageCurrentDropCount + 1;
+			if r_AverageCurrentDropCount = 10 then
+				r_InitialDropResistance := (r_Vfloat-get.r_BatteryVoltage)/max(0.1, r_AverageCurrentInitialDrop);
+				r_UPSBatteryEnergyLoss := 0;
+				r_Vstart := get.r_BatteryVoltage;
+				CalibrationStep := 3;
+			END_IF
+		end_if
+		
+	3: // track steady state energy loss
+		
+		if ton_500msTimer.Q then	
+			r_UPSBatteryEnergyLoss := r_UPSBatteryEnergyLoss + (get.r_OutputCurrent/7200);
+			
+			if r_UPSBatteryEnergyLoss >= OriginalBatteryCapacity * 0.02 then
+				r_steadyStateDropValue := (r_Vstart - get.r_BatteryVoltage) / max(r_UPSBatteryEnergyLoss, 0.01);
+				CalibrationStep := 4;
+			END_IF
+		end_if
+		
+	4: //Calibration done, reset system
+		DisconnectUPSInput := FALSE;
+		get.events.b_UPSBatteryCalibrationActive := false;
+		LastBatteryCalibrationDate := gvl.dt_SystemDateTime;
+		
+		//a equivalent SOH calculation should be created here, based on InitialDropResistance and steadyStateDropValue
+		
+		CalibrationStep := 0;
+END_CASE
+
+
+//stop calibration if voltage drops to far.
+if get.events.b_UPSBatteryCalibrationActive and get.r_BatteryVoltage < 24 then
+	DisconnectUPSInput := FALSE;
+	get.events.b_UPSBatteryCalibrationActive := false;
+	LastBatteryCalibrationDate := gvl.dt_SystemDateTime;
+	ui_UPSBatteryHealth := 1; //1% SOH as we cannot complete calibration
+	CalibrationStep := 0;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetDiagnostics" Id="{a6feb194-122c-4dd9-b6e6-b0e59af9594d}">
+      <Declaration><![CDATA[METHOD GetDiagnostics 
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*UPS*)
+	(*Low battery error*)		AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.b_BatteryLowError,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 1,
+			e_objectID				:=	eObject_ID.UPS,
+			s_Message				:= 'low battery error',
+			e_sev					:= eSeverity.Normalshutdown,
+			t_triggerTime			:= T#30S,
+			);
+		w_Index := w_Index +1;
+	(*low battery warning*)		AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.b_BatteryLowWarning,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 2,
+			s_Message				:= 'low battery warning',
+			e_sev					:= eSeverity.warning,
+			b_AutoClear				:= TRUE,
+			t_triggerTime			:= T#1S,
+			);
+		w_Index := w_Index +1;
+	(*UPS input undervoltage*)		AddError[w_Index](
+			b_ErrorTrig			:= Get.Events.b_InputVoltageWarning,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 3,
+			s_Message				:= 'UPS input undervoltage',
+			e_sev					:= eSeverity.Warning,
+			b_AutoClear				:= TRUE,
+			);
+		w_Index := w_Index +1;
+	(*no UPS battery*)		AddError[w_Index](
+			b_ErrorTrig		:= Get.Events.b_NoBatteryError,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID					:= 4,
+			s_Message				:= 'no battery error',
+			e_sev					:= eSeverity.Warning,
+			t_triggerTime			:= T#5S,
+			);
+		w_Index := w_Index +1;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetSoC" Id="{40d60e2e-6e66-47d7-9dc1-800d5cec11f6}">
+      <Declaration><![CDATA[METHOD GetSoC : USINT
+VAR_INST
+	ton_SOCUpdate			:	TON	:=	(PT := T#500MS);
+	ton_TailCurrentTimer	:	TON;
+	Ton_OverrideSocEmpty	:	ton	:=	(PT := T#1M);
+	Ton_OverrideSocBelowHalfFull	:	ton	:=	(PT := T#1M);
+	Ton_OverrideSocAboveHalfFull	:	ton	:=	(PT := T#1M);
+	
+	fTrig_ChargingDone				:	f_trig;
+
+	CapacityLoss			:	REAL;
+
+	RatedDischargeTime		:	REAL	:=	20; //hours
+	ChargeEfficiency		:	REAL	:=	1;//0.95;
+	PeukertExponent			:	REAL	:=	1.13;
+	TailCurrentRate			:	REAL	:=	0.02;
+	ChargedDetectionTime	:	TIME	:=	T#3M;
+	
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ton_SOCUpdate(in := NOT ton_SOCUpdate.Q);
+
+fTrig_ChargingDone(clk := get.b_ChargerActive);
+IF fTrig_ChargingDone.Q AND get.b_SystemOnDCInput THEN
+	RemainingCapacity := ActualBattCapacity;
+END_IF
+
+	
+	
+IF ton_SOCUpdate.q THEN
+	ton_TailCurrentTimer(in:= 	UPSData.ui_BatteryVoltage >= 28000 AND 
+								UPSData.ui_BatteryChargingCurrent < ((OriginalBatteryCapacity*TailCurrentRate)*1000) AND
+								get.b_ChargerActive
+								, pt:= ChargedDetectionTime);	
+
+	Ton_OverrideSocBelowHalfFull(in:= 	between(UPSData.ui_BatteryVoltage, 23000, 24000) AND get.b_systemonBattery);
+	Ton_OverrideSocEmpty(in:= 			between(UPSData.ui_BatteryVoltage, 15000, 23000) AND get.b_systemonBattery); //added >15v check to prevent SOC override when ups data readout fails
+	Ton_OverrideSocAboveHalfFull(in := 	UPSData.ui_BatteryVoltage > SEL(get.b_ChargerActive, 25000, 26000));
+	//When fully charged, recalibrate AH.
+	IF ton_TailCurrentTimer.Q THEN
+		RemainingCapacity := ActualBattCapacity;
+	END_IF
+	
+	IF Ton_OverrideSocAboveHalfFull.Q THEN
+		 RemainingCapacity := LIMIT(50, RemainingCapacity, ActualBattCapacity); //SOC limited to 50% if voltage <24V
+END_IF
+
+	IF Ton_OverrideSocBelowHalfFull.Q THEN
+		 RemainingCapacity := LIMIT(0, RemainingCapacity, ActualBattCapacity/2); //SOC limited to 50% if voltage <24V
+	END_IF	
+
+	IF Ton_OverrideSocEmpty.Q THEN
+		 RemainingCapacity := 0;
+	END_IF		
+
+//basic lineaire r_SOC berekening voor nu
+	RemainingCapacity := LIMIT(0, RemainingCapacity + (ChargeEfficiency*(TO_REAL(UPSData.ui_BatteryChargingCurrent)/1000)/7200), ActualBattCapacity);
+//Undervoltage recalibration
+		//charging
+	CapacityLoss := 0;
+	IF get.b_systemonBattery AND get.r_OutputCurrent > 0 THEN
+		CapacityLoss := (get.r_OutputCurrent/EXPT(OriginalBatteryCapacity/(get.r_OutputCurrent*RatedDischargeTime), PeukertExponent-1))/7200;
+	END_IF
+	RemainingCapacity := LIMIT(0, RemainingCapacity - CapacityLoss, ActualBattCapacity);
+		//23V is 0%
+	END_IF
+
+GetSoC := TO_USINT((RemainingCapacity/ActualBattCapacity)*100);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetWearCounters" Id="{f052a5ba-404f-4bf1-abe8-cef06ca1f142}">
+      <Declaration><![CDATA[METHOD GetWearCounters : BOOL
+VAR_INST
+	UpsOnBatt				:	FB_Varlogger;
+	UPSBattLow				:	FB_Varlogger;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+UpsOnBatt(				TriggerInput := get.b_SystemOnBattery, 
+						LogItemGroup :=  eLogItemGroupID.InternalPowerSupply, 
+						LogItemName := 'UpsOnBattHrs', 
+						LogType := eLogTypes.TrackOnTime);
+
+UPSBattLow(				TriggerInput := get.Events.b_BatteryLowWarning, 
+						LogItemGroup :=  eLogItemGroupID.InternalPowerSupply, 
+						LogItemName := 'UpsBattLowCnt', 
+						LogType := eLogTypes.TrackCycles);	
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{f0ff1e74-6395-4d1d-9e6a-4c29fb06e50a}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Reset : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Shutdown" Id="{9f021c31-5925-4a6b-8394-2c7981423f21}">
+      <Declaration><![CDATA[METHOD Shutdown : BOOL
+
+
+VAR_INST
+	TP_EnableDelay	: TP := (PT:= T#500MS);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[DisableUPS := TRUE;
+
+//IF DisableUPS = FALSE THEN
+//	TP_EnableDelay(IN:= TRUE);
+//END_IF
+
+//TON_EnableDelay(IN:= NOT DisableUPS);
+//IF TON_DisablePulse.Q THEN
+//	DisableUPS := FALSE;
+//END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

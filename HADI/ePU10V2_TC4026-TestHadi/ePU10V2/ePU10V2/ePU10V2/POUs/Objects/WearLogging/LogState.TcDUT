@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="LogState" Id="{c438621b-a17c-46e2-87d4-d0a3ac974ef5}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE LogState :
+(
+	Init 			:= 0,
+	Loading_file 	:= 1,
+	Idle			:= 3,
+	SavingLogData	:= 4,
+	
+	FileNotFound	:= 99
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

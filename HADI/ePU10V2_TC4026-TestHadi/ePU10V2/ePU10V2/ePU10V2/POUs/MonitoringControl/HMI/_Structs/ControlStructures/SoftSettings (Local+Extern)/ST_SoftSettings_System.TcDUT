@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_SoftSettings_System" Id="{c2e2b8f1-305f-40ac-96f8-a8db294f3dd4}">
+    <Declaration><![CDATA[TYPE ST_SoftSettings_System :
+STRUCT
+	//modi
+	b_EnableSchedule					: BOOL;
+	b_EnableTransportMode				: BOOL; //To allow starting up inverter in stand-by to power climate systems.
+	b_EcoModeEnable						: BOOL := FALSE;
+	e_UgridPowerMode					: eUgridPowerMode := eUgridPowerMode.auto;
+	e_NetcontactorMode					: eNetcontMode := eNetcontMode.auto;
+	e_UgridPowerLimitingMode			: ePLM;
+	//switchgear control
+	b_AutomaticSwitching				: BOOL := TRUE;
+	b_AMF								: BOOL := TRUE; //automatic mains failure restart
+
+	//Droop Settings
+	r_FrequencyDroop					: REAL := 1;
+	r_VoltageDroop						: REAL := 1;
+
+	//Battery
+	r_SocMin							: REAL := 0; //system dethrottle and eventually shutdown
+	r_SocMax							: REAL := 100; //system dethrottle and eventually shutdown
+	
+	//limits
+	r_PDischargeLimit					: REAL := 320; 
+	r_PChargeLimit						: REAL := 320;
+	r_AMax								: REAL := 520; //Ampere			
+
+	//strings
+	s_SystemName						: STRING(18);
+	s_SMSnumber							: STRING(18);
+	
+	//scheduler
+	ScheduleTimeSlot1					: ST_ScheduleTimeSlot;
+	ScheduleTimeSlot2					: ST_ScheduleTimeSlot;
+	
+	//other
+	by_LEDbrightness					: BYTE := 100;
+					
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

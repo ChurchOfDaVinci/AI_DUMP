@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eEventLogCategory" Id="{60ca1dc6-fa72-4c6b-b4f7-b1f53430cc58}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eEventLogCategory :
+(
+	Generic := 0,
+	ReleaseTrigger := 1,
+	SFCstep := 2,
+	OperationMode := 3
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

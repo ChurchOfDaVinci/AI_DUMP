@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_HMI_Monitor_Battery" Id="{87608daa-4b2b-4bf8-8b5a-d6fe89eaf5d5}">
+    <Declaration><![CDATA[TYPE ST_HMI_Monitor_Battery :
+STRUCT
+	e_status			: eBMS_Status;
+	r_SocScaled			: REAL := 10; 
+	r_SoCReal			: REAL;
+	r_CellVoltageMax	: REAL;
+	r_CellVoltageMin	: REAL;
+	r_CellTempMax		: REAL;
+	r_CellTempMin		: REAL;
+	r_MaxDischargePower	: REAL;
+	r_MaxChargePower	: REAL;
+	r_DCvoltage			: REAL;
+	r_DCcurrent			: REAL;
+	r_SoH				: REAL;
+	r_NetRemainingCapacity: REAL; //kWh
+	ui_CycleCount		: UINT;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

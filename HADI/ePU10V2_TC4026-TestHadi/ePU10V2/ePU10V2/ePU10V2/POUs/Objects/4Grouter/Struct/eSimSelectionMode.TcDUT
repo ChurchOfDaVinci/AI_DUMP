@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eSimSelectionMode" Id="{832fdd20-0980-42af-9e1c-6c8607500331}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eSimSelectionMode :
+(
+	auto := 0,
+	force_sim1 := 1,
+	force_sim2 := 2
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

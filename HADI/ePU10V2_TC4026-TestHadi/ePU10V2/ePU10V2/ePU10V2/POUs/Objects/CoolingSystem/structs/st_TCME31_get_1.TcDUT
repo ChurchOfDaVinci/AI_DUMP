@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="st_TCME31_get_1" Id="{e0fafad4-f289-4ae2-b23d-e8f0ace7092a}">
+    <Declaration><![CDATA[TYPE st_TCME31_get_1 :
+STRUCT
+	DigitalInput1	:	Bool;
+	DigitalInput2	:	Bool;
+	
+	AnalogInput1	:	real;
+	AnalogInput2	:	real;
+
+	DigitalOutput1	:	Bool;
+	DigitalOutput2	:	Bool;
+	DigitalOutput3	:	Bool;
+	DigitalOutput4	:	Bool;
+	
+	b_CommFault		:	Bool;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

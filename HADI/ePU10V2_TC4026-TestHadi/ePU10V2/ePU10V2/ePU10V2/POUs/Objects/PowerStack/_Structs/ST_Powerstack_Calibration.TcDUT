@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Powerstack_Calibration" Id="{8f8c1dc0-9c59-4dd4-8b32-0dfa0839edd3}">
+    <Declaration><![CDATA[TYPE ST_Powerstack_Calibration:
+STRUCT
+	Master				: ST_PowerModule_calibration;
+	Slave				: ST_PowerModule_calibration;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

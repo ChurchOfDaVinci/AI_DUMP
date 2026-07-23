@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_HMI_Monitor_DcLink" Id="{ed06037e-efd8-47ec-867f-346356760527}">
+    <Declaration><![CDATA[TYPE ST_HMI_Monitor_DcLink :
+STRUCT
+	state 			: STRING;
+	available 		: BOOL;
+	//r_AcCurrentMax	: REAL;
+	//r_AcPowerMax	: REAL;
+	//r_DcPower 		: REAL;
+	//r_AcPower 		: REAL;
+	//r_AcCurrent		: REAL;
+	//r_AcVoltage		: REAL;
+	
+	r_CurrentShunt		: REAL;
+	r_TempratureShunt	: REAL;
+	r_PowerShunt		: REAL;
+	r_ChargeShunt		: REAL;
+	r_BusVoltageShunt	: REAL;
+	r_EnergyShunt		: REAL;  
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

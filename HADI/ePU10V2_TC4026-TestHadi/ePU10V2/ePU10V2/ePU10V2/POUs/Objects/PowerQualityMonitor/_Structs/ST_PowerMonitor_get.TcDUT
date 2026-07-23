@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PowerMonitor_get" Id="{903bbf0c-4bb1-484f-abf3-ff4dd29e1c18}">
+    <Declaration><![CDATA[TYPE ST_PowerMonitor_get :
+STRUCT
+	InputField			:	ST_PowerMonitor_InputField;	
+	OutputField			:	ST_PowerMonitor_OutputField;
+	CEE					:   ST_PQVoltageData;
+	Inverter			: 	ST_PQVoltageData;
+	events				:	ST_PowerMonitor_Events;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

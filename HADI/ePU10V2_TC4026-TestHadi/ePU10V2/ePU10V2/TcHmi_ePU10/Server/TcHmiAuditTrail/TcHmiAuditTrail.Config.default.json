@@ -1,0 +1,102 @@
+{
+    "auditTrailSymbols": {},
+    "blockCommandsOnError": false,
+    "configPageMaxEntries": 200,
+    "createEventOnAudit": false,
+    "databaseConnection": {
+        "connectionString": "Server=localhost; Port=5432; Database=postgres; Uid=postgres; Pwd=@{password};Timeout=10;",
+        "password": "",
+        "tableId": 1
+    },
+    "databaseMaxEntries": 15000,
+    "eventFilters": {
+        "auditTrailDatabaseReset": {
+            "enabled": true,
+            "filter": [
+                {
+                    "comparator": "==",
+                    "path": "name",
+                    "value": "auditTrailDatabaseReset"
+                }
+            ]
+        },
+        "auditTrailErrorLogMessage": {
+            "enabled": true,
+            "filter": [
+                {
+                    "comparator": "==",
+                    "path": "name",
+                    "value": "auditTrailErrorLogMessage"
+                }
+            ]
+        },
+        "authFailed": {
+            "enabled": true,
+            "filter": [
+                {
+                    "comparator": "==",
+                    "path": "name",
+                    "value": "AUTH_FAILED"
+                },
+                {
+                    "logic": "AND"
+                },
+                {
+                    "comparator": "==",
+                    "path": "payload::params::persistPreviousSession",
+                    "value": false
+                }
+            ]
+        },
+        "customAuditTrailLogEntry": {
+            "enabled": true,
+            "filter": [
+                {
+                    "comparator": "==",
+                    "path": "name",
+                    "value": "AuditLogEntry"
+                }
+            ]
+        },
+        "login": {
+            "enabled": true,
+            "filter": [
+                {
+                    "comparator": "==",
+                    "path": "name",
+                    "value": "LOGIN_LOG"
+                },
+                {
+                    "logic": "AND"
+                },
+                {
+                    "comparator": "==",
+                    "path": "payload::params::persistPreviousSession",
+                    "value": false
+                }
+            ]
+        },
+        "logout": {
+            "enabled": true,
+            "filter": [
+                {
+                    "comparator": "==",
+                    "path": "name",
+                    "value": "LOGOUT_LOG"
+                },
+                {
+                    "logic": "AND"
+                },
+                {
+                    "comparator": "!=",
+                    "path": "payload::params::reason",
+                    "value": "PersistPreviousSession"
+                }
+            ]
+        }
+    },
+    "maxErrorLogSize": 2097152,
+    "minCommentLength": 0,
+    "remainingDatabaseEntriesHintLimit": 10,
+    "signatureKey": "AQAAANCMnd8BFdERjHoAwE/Cl+sBAAAA2cAgwAYxT0+uoiyNYt5+TwAAAAAeAAAARQBuAGMAcgB5AHAAdABlAGQAIABkAGEAdABhAAAAEGYAAAABAAAgAAAAZZlnXxyarseoqt/Z4K28FGv3eI/vve8+k/xSjQjOQggAAAAADoAAAAACAAAgAAAAYmWiCh7i9etZhVsSnQEpF9PfEzUTEJlOJPvdPgVcsWywBgAA2uOUdZPHa5xMwiBhFkD8bgDXRFlRnN1Hu6gxoGAosVNvq+yWM1EPmBDoj96Hn5nvc0QKoMwBTb61FB0C543cu//2NtBe1DhPyXlGV5NuVOXbQr+y8BAsPHqQhKfQTsPofQTQk7wumjq84+wXrwen7z5Xvb1hgdm9wdzFcvHDt/iZ8E7zI+Kdh3Xe8Q+Pgl/lL3m/lduaZGwQbYuA/JJna4wNgGdKX3QyYlwwListA91yAhPwoxbtEiSTQOEFd+w3dWq18l3BiyHkcXJD7pyGkmmWYsYATrczyP+qDL+uE4ZP9pC9H2Ev6d1Lub8u4b6i1E/5GuWKZlbG2NIguT8w1Q5ScRBwWBo7hFyK7UI2Vw1lamIuLOCwCYlQXkb+70Vt2W9fhhxtz9SnBPWS2fUgUoZvsE+6YBiRv4z2VyFokFdz5HWy0+RaKUlIxX4327k7Q6qGt89FsUrxCwTIcHKLHsxrp/v0VbabLgZXoAwFAdHfDLTxuP7kVK1gPykzTvCjB+N18JU+VUC/yYKsGV/5z53ASn5F+DRZ2ykrhNi5ysM5/zKLtkVIuXN6xjyBi9ixu4ROeIx7gsJ8cXH7l3Xmf3rssqnXvVKvItVa1vvt8DbAxZV0LwEKpAPada05ubc+pO5hPNt/LTEgcYIhtXbAQLZnCrBRpetSxK4ZL2kVR92yBtunmuElq3Eq6nmtjGeO/oh2lPFVqr21eKcZyiX29ppSU9OqPUgIAprTjDqvXFuo8H10G/iltqEotOyvrJqzA/qP7/Q/4N+h5GDe2Qq5ahfOX85XC7a+STDPs5k7WiMpJAObU8gH6nRyw7g0CsY/F+rS+bOTNju5Tla7T12UsKxTA7FAw4bHCY9zIG/LNY+wZ5Y8+gq69DDTN8fCKM5/uhQ88VgNNd7dqTp6hvmPYbekJbRBYXxRDIy4TPfcyRjrLb/aTgq6mDDjZsbP0lVMAAWio4aKTyvhrZjRSdacxSMthezNXfn+Sdg+paz/EOf111B4bGzwlMoxRHMqDGdfoAALJHO24gqUkqRius83D7YMcGnIvdTYBCdomSJy+A84nVkH59JVO7An/YBP0XWipvJHrQTxoMG4zjOZ3Cu0qxBcd5YwnMk0d8MBpbOj4QoyWLkAZrNtmq7a2/7GNw3uuGzRrhGa5txisGTobviz0vHwEzQ8/HZzLcb0taASB9igkvvOU2cZUZ4hq0ESWD6mhaClkRNUzVeUdFIy8fIg5FSbzutdzq7GCjYXOq5HX4eKhXnSxWgCKuITtyvk+OQ/6cba4KtbBMcTNZt3WUmFibEY/XW3hsaqfl5Rv69GKpaN/CQcmvQpn874KWvXVEADg04WS25KpprEOQEszvIi6MtLkH6BptsnSHUjVngj+7nsnG3kM9cqyRL6WD0l73tzlHRDgVpeC7rZxhrE8DfJXinM2DnjOTDYPgcB/+3cmBw4e78y7nwguxsjHmsHeUleO8//6ygKuKb8wJQhIxoAHnPXDPiZ9S9YWxj/0za3M5w90cFEJ6l1EIeeaf/px76ZvRLssPTo4v+Z5aymOtxvznpI8VD4KE6PvWlsLcuI3KZVEAUh5xta1Jk//S87AmxGm0czDxn8kjQS1rO5Pww0/pwnYG+T3TuEDeeL9xBVGSp4l3PUH6/0nDWQU6UF/EABR+ZP2jfq4UI3mOSzydUrSK3lGvrPl5UmKe3EGgq8xl6+fhtTgERuInEszKtFD/PQkOrhB6BH7K5J0HmWHLwmxtKN3za7HuW7XRcx/X1taa/Gs50DVPS65T/iAH08cMbRP38l2wxky+4H2u5GkQkTI52LRMw5jrZAxMwk9YSZteS7ROg/4VDietJq0gQGGJL48MqaCfLtC2vNiSjifNqCQP4GFvvaO6qH5bHGAahfs2FcoBCPc98ckuiTjHlIonq4MavIDL69SDfYCtRuXoR0V6Vk79J73PNMHdtvvCioi/dNQvSIyB82rozhzrHLZnnC+Gi/FheQ3IOV02jAsEJTxL/h2VgqZfMuQxNa5+9usFGpSqKTn3XoSG3vigxULfXCTj2CDFQ48n9iTyIFxsaMqfcxHKdYzO6I8S78AAgjzhtgu84oeeVy26BjiJIBYxnk29fBwbypDmeeXixQT6R4U/9oFosT+jgVDXY0ZstKrtJbcgqSabZc99WT3ra0bQY1WKMqd8K7nSsYeAR39kgWDc29fWPlgWXYyuoganS/YcIuYRI4N5hqrqkujEhgpEvKGiuBD4mCqLRgMJqyCKCzQIA5DSaIG/3BvSR++emNxV9AAAAA8wSR+It5U4P17Xkm1lV9w7aoyIjRwqBTiYLvwV+eHZqeV0HcrzAQ+b7VScsJMp+1u3pEFo3w6I5uNlzGUmxIZw=="
+}

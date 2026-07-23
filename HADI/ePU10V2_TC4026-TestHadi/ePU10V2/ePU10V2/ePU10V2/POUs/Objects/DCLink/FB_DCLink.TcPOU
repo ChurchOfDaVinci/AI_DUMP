@@ -1,0 +1,334 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_DCLink" Id="{dd571d5c-e744-4b94-9f6f-9bb8e17dc6de}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DCLink
+VAR_IN_OUT CONSTANT
+	st_params					: ST_DCLink_params;
+END_VAR
+
+VAR_INPUT
+	r_InvCurrentDC				: REAL;	
+	r_BattCurrent				: REAL;
+	r_DCbusVoltage				: REAL;	
+	r_BattCCL					: REAL;
+	r_BattDCL					: REAL;
+	b_DCsafetyOK				: BOOL;
+	set							: ST_DCLink_set;
+END_VAR
+
+VAR_OUTPUT
+	get						: ST_DCLink_Get;
+	b_DcEDM 		 		: BOOL;
+	st_PowerDemand			: ST_InternalPowerSupply_PowerDemand;
+END_VAR
+
+VAR
+	TempEDMForce			:	BOOL;
+	IO 						: FB_CNV520;
+	//Powermeter				: fb_shuntbournsSSD;
+	RS_DCBusEnableReq			: RS;
+	r_trigEnableBus			:	R_trig;
+END_VAR
+
+VAR CONSTANT
+	e_ID 				: eObject_ID := eObject_ID.DC_Switchgear;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//Get power data
+//PowerMeter(IP := st_params.IP,
+//			b_enable := settings.Configuration.b_DCbuscoupling,
+//			UpdateInterval := T#500MS);
+
+IO(
+	b_enable				:= settings.Configuration.b_DCbuscoupling,				
+	UpdateInterval			:= T#500MS,
+	DigitalOutput_Enable	:= RS_DCBusEnableReq.Q1 AND (main_fast.InternalPowerSupply.Get.b_HVDCAvailable OR st_params.AllowClosingOnDeadBus),
+	st_params := st_params
+);
+
+st_PowerDemand.b_Demand_HVDC := RS_DCBusEnableReq.Q1;
+r_trigEnableBus(clk := set.b_DCBusEnable);
+
+RS_DCBusEnableReq(	SET := r_trigEnableBus.Q AND NOT IO.CommFault,
+				RESET1 := NOT set.b_DCBusEnable 
+							OR NOT b_DCsafetyOK 
+							OR get.events.OvercurrentTrip);
+
+//get.events.OvervoltageNOK := powermeter.events.b_OvervoltageError;
+get.b_DCCouplingState := io.DigitalInput2;
+b_DcEDM := NOT io.DigitalInput2 OR TempEDMForce;
+get.Powerdata REF= IO.Powerdata;
+
+PowerLimitControl(
+	Voltage			:= r_DCbusvoltage,
+	DCC_current 	:= get.Powerdata.Current,
+	Inv_Current 	:= r_InvCurrentDC,
+	Batt_Current 	:= r_BattCurrent,
+	Batt_CCL		:= ABS(r_BattCCL),
+	Batt_DCL		:= ABS(r_BattDCL),
+	PowerRampRate	:= set.r_PowerRampRate,
+	Inv_CPL			=> get.r_BattChargePowerLimit,
+	Inv_DPL			=> get.r_BattDischargePowerLimit,
+	DCC_CPL			=> get.r_ImportPowerLimit,
+	DCC_DPL			=> get.r_ExportPowerLimit,
+	DCC_CCL			=> get.r_ImportCurrentLimit,
+	DCC_DCL			=> get.r_ExportCurrentLimit);
+
+//Overcurrent protection
+OvercurrentProtection(
+	get.powerdata.Current, 
+	get.r_ImportCurrentLimit, 
+	get.r_exportCurrentLimit);
+
+
+	
+
+	
+			
+
+
+]]></ST>
+    </Implementation>
+    <Method Name="GetDiagnostics" Id="{772b6f7c-61a3-4ec9-a05f-2788fcb05cec}">
+      <Declaration><![CDATA[METHOD GetDiagnostics : BOOL
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+(*Overcurrent trip*)		AddError[w_Index](
+		b_ErrorTrig				:= get.Events.OvercurrentTrip,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 1,
+		e_ObjectID				:= e_id,						//only first call set object ID.
+		s_Message				:= 'coupling overcurrent trip',
+		e_sev					:= eSeverity.warning,	//<-- maybe normal shutdown?
+		b_AutoClear				:= FALSE
+		);
+	w_Index := w_Index +1;
+		
+(*Overvoltage  NOK*)		AddError[w_Index](
+		b_ErrorTrig				:= get.Events.OvervoltageNOK,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 2,
+		e_ObjectID				:= e_id,						//only first call set object ID.
+		s_Message				:= 'Overvoltage protection not OK',
+		e_sev					:= eSeverity.warning,	//<-- maybe normal shutdown?
+		b_AutoClear				:= FALSE
+		);
+	w_Index := w_Index +1;
+
+(*Overvoltage  NOK*)		AddError[w_Index](
+		b_ErrorTrig				:= IO.DigitalInput1,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 3,
+		e_ObjectID				:= e_id,						//only first call set object ID.
+		s_Message				:= 'DC surge protection failed',
+		e_sev					:= eSeverity.warning,	//<-- maybe normal shutdown?
+		b_AutoClear				:= TRUE
+		);
+	w_Index := w_Index +1;
+
+(*Overvoltage  NOK*)		AddError[w_Index](
+		b_ErrorTrig				:= IO.CommFault,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 4,
+		e_ObjectID				:= e_id,						//only first call set object ID.
+		s_Message				:= 'DC IO communication fault',
+		e_sev					:= eSeverity.warning,	//<-- maybe normal shutdown?
+		b_AutoClear				:= TRUE
+		);
+	w_Index := w_Index +1;
+
+
+(*Overvoltage  NOK*)		AddError[w_Index](
+		b_ErrorTrig				:= NOT b_DCsafetyOK,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 5,
+		e_ObjectID				:= e_id,						//only first call set object ID.
+		s_Message				:= 'DC safety not ok',
+		e_sev					:= eSeverity.warning,	//<-- maybe normal shutdown?
+		b_AutoClear				:= TRUE
+		);
+	w_Index := w_Index +1;	
+//(*Overvoltage  NOK*)		AddError[w_Index](
+//		b_ErrorTrig				:= Powermeter.CommFault,
+//		out_ST_Error			:= a_ActiveEvents[w_Index],
+//		w_ErrorID				:= 5,
+//		e_ObjectID				:= e_id,						//only first call set object ID.
+//		s_Message				:= 'DC powermeter communication fault',
+//		e_sev					:= eSeverity.warning,	//<-- maybe normal shutdown?
+//		b_AutoClear				:= TRUE
+//		);
+//	w_Index := w_Index +1;
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetWearCounters" Id="{454c5dc9-22fe-4582-9532-4ac3042d2229}">
+      <Declaration><![CDATA[METHOD GetWearCounters : BOOL
+VAR_INST
+	
+	MCCBLogger			:	FB_Varlogger;
+//	MCCBTripLogger		:	FB_Varlogger;	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+MCCBLogger(		TriggerInput := get.b_DCCouplingState, 
+						LogItemGroup :=  eLogItemGroupID.DcLink, 
+						LogItemName := 'MCCBCnt', 
+						LogType := eLogTypes.TrackCycles);
+(*
+MCCBTripLogger(	TriggerInput := b_MCCBinputShuntTrip, 
+						LogItemGroup :=  eLogItemGroupID.DcLink, 
+						LogItemName := 'MCCBTripCnt', 
+						LogType := eLogTypes.TrackCycles);
+*)
+						
+Wearlogging.SetFloat( eLogItemGroupID.DcLink, 	'Energy', 			eLogTypes.WriteValue, 	REAL_TO_LREAL(get.Powerdata.Energy));
+Wearlogging.SetFloat( eLogItemGroupID.DcLink, 	'MaxTempEver', 		eLogTypes.KeepHighestValue, 	REAL_TO_LREAL(get.Powerdata.Temperature));
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="OverCurrentProtection" Id="{181e06ac-5e90-44d5-93ee-2e89e2cff5c8}">
+      <Declaration><![CDATA[METHOD OverCurrentProtection : BOOL
+VAR_INPUT
+	DCC_Current				: REAL;
+	DCC_CCL					: REAL;
+	DCC_DCL					: REAL;
+END_VAR
+
+VAR_INST
+	ton_OCPdelay 			: TON := (PT:= T#2S);
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ton_OCPDelay(PT := st_params.OvercurrentTripDelay);
+
+IF RS_DCBusEnableReq.q1 THEN
+	IF main_fast.BMS.get.BatteryInfo.e_BMS_PowerOnStatus = ePowerOnStatus.On THEN
+		ton_OCPDelay.IN := DCC_current < -DCC_CCL OR DCC_Current > DCC_DCL;
+	ELSIF st_params.AllowClosingOnDeadBus THEN
+			ton_ocpdelay.IN := DCC_Current < -UINT_TO_INT(st_params.RatedCurrent) OR DCC_Current > st_params.RatedCurrent;
+	END_IF
+ELSE
+	ton_ocpdelay.IN := FALSE;
+END_IF
+	
+IF ton_OCPdelay.Q THEN
+	get.events.OvercurrentTrip := TRUE;
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PowerLimitControl" Id="{4c373e4a-9a6f-4f46-86aa-e9553b219314}">
+      <Declaration><![CDATA[METHOD PowerLimitControl : BOOL
+VAR_INPUT
+	Voltage				: REAL;
+	DCC_Current 		: REAL;
+	Inv_Current			: REAL;
+	Batt_Current		: REAL;
+	Batt_CCL			: REAL;
+	Batt_DCL			: REAL;
+	PowerRampRate		: REAL := 1;
+END_VAR
+
+
+VAR_INST
+	Inv_CCL			: REAL;
+	Inv_DCL			: REAL;
+END_VAR
+
+VAR_OUTPUT
+	Inv_CPL			: REAL;
+	Inv_DPL			: REAL;
+	DCC_CCL 		: REAL;
+	DCC_DCL			: REAL;
+	DCC_CPL 		: REAL;
+	DCC_DPL			: REAL;
+	DCC_set			: REAL;
+END_VAR
+
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*
+	DC power priority
+	auto: 
+		- DC power slow ramp, inverter power limited fast through DC power max variable,
+			(combination of BMS current max - DC coupling current) 
+			>> RESULT: Reduction of battery current causes inverter to immediatly throttle, 
+				after which the DC coupling current is reduced with specified ramp.
+	inverter: 
+		- DC coupling power is reduced first, then inverter is being throttled by batteries directly as usual
+			>> CODING: 
+				DC coupling current set max = BatteryDischargeLimit - inverter power
+				DC coupling current set min = BatteryChargeLimit - inverter power
+				Q = LIMIT(DCCS_min, DCCS, DCCS_max);
+			
+	DCcoupling: 
+		- Inverter is reduced first, then DC coupling is throtthled 
+
+	*)
+	
+CASE set.e_DCpowerPriority OF
+	eDCpowerpriority.auto:
+	//AUTO mode: inverter first, then bus to maintain battery limits
+		//Charge limit of dc coupling
+		Inv_CCL := Batt_CCL + DCC_Current; // 500 + (-100) = 400
+		IF Inv_current <= -Inv_CCL THEN //Invcurrent < 0 is charging
+			DCC_CCL := DCC_CCL - PowerRamprate / 1000;
+		ELSIF Inv_current > -Inv_CCL * MAX(0, 1-st_params.DCpowerControlHyst) THEN
+			DCC_CCL := DCC_CCL + PowerRamprate / 1000;
+		END_IF	
+		
+		//Discharge limit of dc coupling
+		Inv_DCL := Batt_DCL + DCC_Current; // 500 + 100 = 400
+		IF Inv_current >= Inv_DCL THEN
+			DCC_DCL := DCC_DCL - PowerRamprate / 1000;
+		ELSIF Inv_current <= Inv_DCL * MAX(0, 1-st_params.DCpowerControlHyst) THEN
+			DCC_DCL := DCC_DCL + PowerRamprate / 1000;
+		END_IF	
+		
+	eDCpowerPriority.DCcoupling:
+	//DC coupling priority, will reduce inverter power first
+		//Charge limit:
+		Inv_CCL := Batt_CCL + DCC_Current;
+		Inv_DCL := Batt_DCL + DCC_Current;
+		DCC_CCL := Batt_CCL;
+		DCC_DCL := Batt_DCL;
+		
+	eDCpowerpriority.Inverter:
+	//Inverter priority, will reduce DC coupling first.	
+		DCC_CCL := Batt_CCL + Inv_Current;
+		DCC_DCL := Batt_DCL + Inv_Current;
+		Inv_CCL := Batt_CCL;
+		Inv_DCL := Batt_DCL;	
+END_CASE
+
+DCC_DCL := LIMIT(0, DCC_DCL, st_params.RatedCurrent);
+DCC_CCL := LIMIT(0, DCC_CCL, st_params.RatedCurrent);
+
+//Power outputs
+DCC_DPL := ABS(DCC_DCL * voltage / 1000);
+DCC_CPL := ABS(DCC_CCL * voltage / 1000);
+Inv_DPL := ABS(Inv_DCL * voltage / 1000);
+Inv_CPL := ABS(Inv_CCL * voltage / 1000);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{02b43713-0a4c-4211-aaa0-b990ae3dfaf5}">
+      <Declaration><![CDATA[METHOD Reset : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[get.events.OvercurrentTrip := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

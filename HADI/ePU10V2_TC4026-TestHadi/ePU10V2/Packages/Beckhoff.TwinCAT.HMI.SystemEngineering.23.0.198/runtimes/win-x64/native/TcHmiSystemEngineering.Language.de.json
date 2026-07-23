@@ -1,0 +1,35 @@
+{
+  "locale": "de",
+  "localizedText": {
+    "runtimes": "Laufzeiten",
+    "enabled": "Aktiviert",
+    "adsRuntime": "ADS-Laufzeit",
+    "entryPath": "Einstiegspfad",
+    "isInitializedSymbol": "Symbol für Initialisierungsstatus",
+    "autoSymbolUpdate": "Automatische Symbolaktualisierung",
+    "restoreSymbolAccessOnUpdate": "Symbol-Zugriffsrechte bei Symbolaktualisierung wiederherstellen",
+    "enableAuditTrail": "Audit-Trail aktivieren",
+    "state": "Status",
+    "symbolUpdateError": "Symbolaktualisierungsfehler",
+    "storeSymbolAccessesError": "Fehler beim Speichern der Symbolzugriffsrechte",
+    "symbolUpdateStateDesc": "Beschreibung der Symbolaktualisierung",
+    "code": "Code",
+    "message": "Nachricht",
+
+    "autoSymbolUpdate_description": "Überprüft automatisch die SPS auf Änderungen und aktualisiert die Symbole. Das Mapping der Symbole kann einige Zeit in Anspruch nehmen. Daher wird für kleinere Änderungen an der SPS, die sich nicht auf die TcHmiSystemEng.* auswirken, empfohlen, dies auf false zu setzen.",
+    "restoreSymbolAccessOnUpdate_description": "Speichert alle Zugriffsrechte der Symbole vor dem Löschen und stellt sie nach einem Symbol-Update – sofern möglich – automatisch wieder her.",
+    "enableAuditTrail_description": "Verwendet AuditTrail zur Historisierung von Symbolen.",
+
+    "connectionState": "Verbindungsstatus",
+    "systemServiceAdsState": "Systemdienst-ADS-Status",
+    "adsState": "ADS-Status",
+    "adsVersion": "TwinCAT-Version",
+    "deviceName": "Gerätename",
+    "adsProjectName": "Projektname",
+    "adsProjectCompiledAt": "Kompiliert am",
+
+    "symbolInitState": "Symbol-Initialisierungszustand",
+    "symbolInitialized": "Symbol initialisiert",
+    "symbolsUpToDate": "Symbole auf dem neuesten Stand"
+  }
+}

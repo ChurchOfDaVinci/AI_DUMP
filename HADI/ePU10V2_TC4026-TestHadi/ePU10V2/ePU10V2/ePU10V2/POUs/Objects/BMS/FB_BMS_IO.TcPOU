@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_BMS_IO" Id="{9376410e-3d1b-473f-a7e6-b4fb191e9a9e}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_BMS_IO
+
+VAR_INPUT
+	b_BMSEnable			 AT %Q* : BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_enclosure_set" Id="{06763b1f-2c5a-4d26-b542-0b98deaf1893}">
+    <Declaration><![CDATA[TYPE ST_enclosure_set :
+STRUCT
+	by_LedBrightness 	: BYTE := 100;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

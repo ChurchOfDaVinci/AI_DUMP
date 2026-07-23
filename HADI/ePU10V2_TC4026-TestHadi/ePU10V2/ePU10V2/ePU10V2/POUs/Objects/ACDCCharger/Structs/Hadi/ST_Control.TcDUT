@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Control" Id="{fbbb387c-2252-4e3b-b2d8-f5cc4eadd02f}">
+    <Declaration><![CDATA[TYPE ST_Control :
+STRUCT
+	rLimitInputCurrent	: REAL;	// CMD 0F Limit input current on all power modules
+//	stModuleControl		: ARRAY [0..10] OF REAL;
+	bEnableDisable		: BOOL; // CMD 1A (Broadcastong or Group)
+	rSetOutputVoltage	: REAL;	// CMD 1B
+	rSetOutputCurrent	: REAL;	// CMD 1B
+	bResetMode			: BOOL;	// CMD 1E
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

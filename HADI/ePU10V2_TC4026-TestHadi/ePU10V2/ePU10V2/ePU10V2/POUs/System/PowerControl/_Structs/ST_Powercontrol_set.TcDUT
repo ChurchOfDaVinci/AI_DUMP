@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Powercontrol_set" Id="{09024fb7-a12e-48b1-88c6-8bc8ffe1fb5f}">
+    <Declaration><![CDATA[TYPE ST_Powercontrol_set :
+STRUCT
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

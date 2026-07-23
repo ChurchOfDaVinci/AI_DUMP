@@ -1,0 +1,65 @@
+{
+    "$schema": "../../../TwinCAT-HMI-Common/JsonSchemas/Language.Schema.json",
+    "locale": "de",
+    "localizedText": {
+        "AllParameters": "Alle Parameter",
+        "NoChanges": "Keine Änderungen",
+        "Changes": "Änderungen",
+        "ImportParameters": "Parameter importieren",
+        "ExportParameters": "Parameter exportieren",
+        "ConfigRuntime": "Konfigurierte Laufzeit",
+        "UpdatePLCSymbols": "PLC-Symbole aktualisieren",
+        "TeachSymbolValues": "Symbolwerte anlernen",
+        "ParameterName": "Name",
+        "ParameterValue": "Wert",
+        "ParameterPreparedValue": "Vorbereiteter Wert",
+        "ParameterApplyAllPreparedValues": "Alle anwenden",
+        "ParameterApplyPreparedValue": "Anwenden",
+        "NoParametersOrFunctions": "Keine Parameter oder Funktionen.",
+        "PreparedValues": "Vorbereitete Werte",
+        "Loading": "Wird geladen ...",
+        "Required": "Erforderlich",
+
+        "Info_StartEditing": "Klicken Sie hier, um zu bearbeiten.",
+
+        "SymbolSearchCountResults": "{0} Übereinstimmung(en) in {1} von {2} Zeilen.",
+        "Success_ImportingParameters_HeaderText": "Erfolgreich: Parameter wurden importiert",
+        "Success_ImportingParameters_ContentText": "{0} Wert(e) wurden erfolgreich importiert.",
+
+        "Warning_PartiallySuccessfulImport_HeaderText": "Warnung: Teilweise erfolgreicher Import",
+        "Warning_PartiallySuccessfulImport_ContentText": "{0} Wert(e) wurden erfolgreich importiert.\n\nAllerdings konnten die folgenden {1} Symbol(e) nicht importiert werden, da sie nicht existieren:\n{2}",
+
+        "Warning_PLCSymbolsAlreadyUpToDate_HeaderText": "PLC-Symbole sind bereits aktuell",
+        "Warning_PLCSymbolsAlreadyUpToDate_ContentText": "Möchten Sie die Aktualisierung der PLC-Symbole erzwingen?",
+
+        "Warning_ResolvePreparedValuesBeforeImporting_HeaderText": "Warnung: Nicht aufgelöste vorbereitete Werte",
+        "Warning_ResolvePreparedValuesBeforeImporting_ContentText": "Sie haben {0} vorbereitete(n) Wert(e). Bitte wenden Sie diese an oder löschen Sie sie, bevor Sie Symbolwerte importieren.",
+
+        "Error_CallingServerFn": "Der Aufruf der Funktion '{0}' führte zu einem Fehler {1}",
+        "Executed_Successfully": "Erfolgreich ausgeführt",
+        "BooleanEditor_true": "wahr",
+        "BooleanEditor_false": "falsch",
+        "ViewChanges": "Änderungen anzeigen",
+        "Undo": "Rückgängig machen",
+        "Cancel": "Abbrechen",
+        "ForceUpdate": "Erzwingen",
+        "TryAgain": "Erneut versuchen",
+        "ErrorOccured": "Ein Fehler ist aufgetreten",
+        "Info_PLCSymbolUpdateInProgress": "PLC-Symbole werden im Hintergrund aktualisiert. Bitte warten ...",
+        "SymbolSearchBarPlaceholder": "Geben Sie etwas ein, um es zu finden.",
+        "ParameterMinValue": "Min",
+        "ParameterMaxValue": "Max",
+
+        "SymbolInitState": "Symbol-Initialisierungszustand",
+        "SymbolUpdateError": "Aktualisierungsfehler",
+        "SymbolUpdateStateDesc": "Aktualisierungsbeschreibung",
+        "ADSRuntime": "ADS-Laufzeit",
+        "ADSState": "Status",
+        "ADSVersion": "Version",
+        "ADSProjectName": "Projektname",
+        "ADSProjectCompiledAt": "Projekt kompiliert am",
+        "ConnectionState": "Verbindungsstatus",
+        "SystemServiceADSState": "Status des Systemdienstes",
+        "DeviceName": "Gerätename"
+    }
+}

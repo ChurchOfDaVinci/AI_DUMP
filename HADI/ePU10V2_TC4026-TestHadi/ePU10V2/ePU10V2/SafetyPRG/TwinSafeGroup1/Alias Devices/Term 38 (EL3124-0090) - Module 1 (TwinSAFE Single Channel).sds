@@ -1,0 +1,200 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<SafetyDeviceDesc Crc="2165597002" FileFormatVersion="1.9">
+  <AliasDeviceType>
+    <Type>4</Type>
+    <SubType>3124</SubType>
+    <VendorId>2</VendorId>
+  </AliasDeviceType>
+  <SDSID>15</SDSID>
+  <SafetyAliasDevice>
+    <ObjectId>50921477</ObjectId>
+    <LinkingMode>Automatic</LinkingMode>
+    <ConnectionId>15</ConnectionId>
+    <ConnectionMode>master</ConnectionMode>
+    <ConnectionType>TwinSafeScCrc1</ConnectionType>
+    <MapDiag>false</MapDiag>
+    <MapInputs>false</MapInputs>
+    <MapOutputs>false</MapOutputs>
+    <MapState>false</MapState>
+    <ModuleFaultIsComErr>false</ModuleFaultIsComErr>
+    <SafeAddress>2</SafeAddress>
+    <Watchdog>100</Watchdog>
+    <ComErrAck Type="Unset" />
+    <Params>
+      <Param Index="5632" SubIndex="0">04</Param>
+      <Param Index="5632" SubIndex="1">08014070</Param>
+      <Param Index="5632" SubIndex="2">08000000</Param>
+      <Param Index="5632" SubIndex="3">10034070</Param>
+      <Param Index="5632" SubIndex="4">10024070</Param>
+      <Param Index="6664" SubIndex="0">0A</Param>
+      <Param Index="6664" SubIndex="1">08014060</Param>
+      <Param Index="6664" SubIndex="2">10110060</Param>
+      <Param Index="6664" SubIndex="3">10034060</Param>
+      <Param Index="6664" SubIndex="4">10111060</Param>
+      <Param Index="6664" SubIndex="5">10044060</Param>
+      <Param Index="6664" SubIndex="6">10112060</Param>
+      <Param Index="6664" SubIndex="7">10054060</Param>
+      <Param Index="6664" SubIndex="8">10113060</Param>
+      <Param Index="6664" SubIndex="9">10064060</Param>
+      <Param Index="6664" SubIndex="10">10024060</Param>
+      <Param Index="32832" SubIndex="1">0200</Param>
+      <Param Index="32832" SubIndex="2">00000000</Param>
+      <Messages>
+        <IO>
+          <Name>Master Cmd</Name>
+          <Index>28736</Index>
+          <SubIndex>1</SubIndex>
+          <DataType>USINT</DataType>
+          <Direction>Out</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>8</BitSize>
+          <BitOffsMessage>0</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+        <IO>
+          <Name />
+          <Index>0</Index>
+          <SubIndex>0</SubIndex>
+          <DataType />
+          <Direction>Out</Direction>
+          <SafetyType>SafetySil2</SafetyType>
+          <BitSize>8</BitSize>
+          <BitOffsMessage>8</BitOffsMessage>
+          <BitOffsData>0</BitOffsData>
+        </IO>
+        <IO>
+          <Name>Master CRC_0</Name>
+          <Index>28736</Index>
+          <SubIndex>3</SubIndex>
+          <DataType>UINT</DataType>
+          <Direction>Out</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>16</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+        <IO>
+          <Name>Master ConnID</Name>
+          <Index>28736</Index>
+          <SubIndex>2</SubIndex>
+          <DataType>UINT</DataType>
+          <Direction>Out</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>32</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+        <IO>
+          <Name>Slave Cmd</Name>
+          <Index>24640</Index>
+          <SubIndex>1</SubIndex>
+          <DataType>USINT</DataType>
+          <Direction>In</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>8</BitSize>
+          <BitOffsMessage>0</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+        <IO>
+          <Name>AI Module 1.Value</Name>
+          <Index>24576</Index>
+          <SubIndex>17</SubIndex>
+          <DataType>INT</DataType>
+          <Direction>In</Direction>
+          <SafetyType>SafetySil2</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>8</BitOffsMessage>
+          <BitOffsData>0</BitOffsData>
+        </IO>
+        <IO>
+          <Name>Slave CRC_0</Name>
+          <Index>24640</Index>
+          <SubIndex>3</SubIndex>
+          <DataType>UINT</DataType>
+          <Direction>In</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>24</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+        <IO>
+          <Name>AI Module 2.Value</Name>
+          <Index>24592</Index>
+          <SubIndex>17</SubIndex>
+          <DataType>INT</DataType>
+          <Direction>In</Direction>
+          <SafetyType>SafetySil2</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>40</BitOffsMessage>
+          <BitOffsData>16</BitOffsData>
+        </IO>
+        <IO>
+          <Name>Slave CRC_1</Name>
+          <Index>24640</Index>
+          <SubIndex>4</SubIndex>
+          <DataType>UINT</DataType>
+          <Direction>In</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>56</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+        <IO>
+          <Name>AI Module 3.Value</Name>
+          <Index>24608</Index>
+          <SubIndex>17</SubIndex>
+          <DataType>INT</DataType>
+          <Direction>In</Direction>
+          <SafetyType>SafetySil2</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>72</BitOffsMessage>
+          <BitOffsData>32</BitOffsData>
+        </IO>
+        <IO>
+          <Name>Slave CRC_2</Name>
+          <Index>24640</Index>
+          <SubIndex>5</SubIndex>
+          <DataType>UINT</DataType>
+          <Direction>In</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>88</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+        <IO>
+          <Name>AI Module 4.Value</Name>
+          <Index>24624</Index>
+          <SubIndex>17</SubIndex>
+          <DataType>INT</DataType>
+          <Direction>In</Direction>
+          <SafetyType>SafetySil2</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>104</BitOffsMessage>
+          <BitOffsData>48</BitOffsData>
+        </IO>
+        <IO>
+          <Name>Slave CRC_3</Name>
+          <Index>24640</Index>
+          <SubIndex>6</SubIndex>
+          <DataType>UINT</DataType>
+          <Direction>In</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>120</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+        <IO>
+          <Name>Slave ConnID</Name>
+          <Index>24640</Index>
+          <SubIndex>2</SubIndex>
+          <DataType>UINT</DataType>
+          <Direction>In</Direction>
+          <SafetyType>ProtocolData</SafetyType>
+          <BitSize>16</BitSize>
+          <BitOffsMessage>136</BitOffsMessage>
+          <BitOffsData>-1</BitOffsData>
+        </IO>
+      </Messages>
+    </Params>
+  </SafetyAliasDevice>
+</SafetyDeviceDesc>

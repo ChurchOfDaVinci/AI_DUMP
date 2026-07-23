@@ -1,0 +1,330 @@
+{
+    "$schema": "../../TcHmiFramework/Schema/ControlDescription.Schema.json",
+    "apiVersion": 1,
+    "name": "TcHmiParametersAndFunctions",
+    "namespace": "TcHmi.Controls.Beckhoff",
+    "displayName": "Parameters and Functions",
+    "version": {
+        "full": "14.3.361.0",
+        "major": 14,
+        "minor": 3,
+        "build": 361,
+        "revision": 0
+    },
+    "visible": true,
+    "themeable": "Standard",
+    "base": "TcHmi.Controls.System.TcHmiControl",
+    "description": "A control which allows to manual control PLC variables based on PLC attributes.",
+    "defaultDesignerEvent": "",
+    "properties": {
+        "containerControl": false,
+        "geometry": {
+            "width": 1040,
+            "height": 585
+        }
+    },
+    "icons": [
+        {
+            "name": "Icons/16x16.png",
+            "width": 16,
+            "height": 16
+        }
+    ],
+    "template": "Template.html",
+    "dependencyFiles": [
+        {
+            "name": "../dist/TcHmiParametersAndFunctions/TcHmiParametersAndFunctions.esm.js",
+            "type": "EsModule",
+            "description": "Contains all the main logic as ES module."
+        },
+        {
+            "name": "Style.css",
+            "type": "Stylesheet",
+            "description": "Theme independent style"
+        },
+        {
+            "name": "ContextMenu.css",
+            "type": "Stylesheet",
+            "description": "Theme independent style of ContextMenu"
+        }
+    ],
+    "themes": {
+        "Base": {
+            "resources": [
+                {
+                    "name": "Themes/Base/Style.css",
+                    "type": "Stylesheet",
+                    "description": "Theme dependent style"
+                },
+                {
+                    "name": "Themes/Base/ContextMenu.css",
+                    "type": "Stylesheet",
+                    "description": "Theme dependent style of ContextMenu"
+                }
+            ]
+        },
+        "Base-Dark": {
+            "resources": [
+                {
+                    "name": "Themes/Base-Dark/Style.css",
+                    "type": "Stylesheet",
+                    "description": "Theme dependent style"
+                },
+                {
+                    "name": "Themes/Base-Dark/ContextMenu.css",
+                    "type": "Stylesheet",
+                    "description": "Theme dependent style of ContextMenu"
+                }
+            ]
+        }
+    },
+    "attributes": [
+        {
+            "name": "data-tchmi-runtime",
+            "propertyName": "Runtime",
+            "propertySetterName": "setRuntime",
+            "propertyGetterName": "getRuntime",
+            "displayName": "Runtime",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 1,
+            "type": "tchmi:general#/definitions/String",
+            "category": "Common",
+            "description": "The runtime that parameters and functions should be displayed. Use a identifier from the list which was set in the server extension.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": "Runtime1",
+            "defaultValueInternal": ""
+        },
+        {
+            "name": "data-tchmi-root-path",
+            "propertyName": "RootPath",
+            "propertySetterName": "setRootPath",
+            "propertyGetterName": "getRootPath",
+            "displayName": "Root Path",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 2,
+            "type": "tchmi:general#/definitions/String",
+            "category": "Common",
+            "description": "Sets the top node of the symbol hierarchy,\nfiltering navigation to this node and its nested symbols.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": ""
+        },
+        {
+            "name": "data-tchmi-init-path",
+            "propertyName": "InitPath",
+            "propertySetterName": "setInitPath",
+            "propertyGetterName": "getInitPath",
+            "displayName": "Init Path",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 2,
+            "type": "tchmi:general#/definitions/String",
+            "category": "Common",
+            "description": "Specifies the absolute symbol path to open at initialization, which must include RootPath to be visible within the filtered navigation.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": ""
+        },
+        {
+            "name": "data-tchmi-image-base-path",
+            "propertyName": "ImageBasePath",
+            "propertySetterName": "setImageBasePath",
+            "propertyGetterName": "getImageBasePath",
+            "displayName": "Image Base Path",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 2,
+            "type": "tchmi:general#/definitions/String",
+            "category": "Common",
+            "description": "Prefix for TreeView icons.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": "Images"
+        },
+        {
+            "name": "data-tchmi-use-value-as-default-prepared-value",
+            "propertyName": "UseValueAsDefaultPreparedValue",
+            "propertySetterName": "setUseValueAsDefaultPreparedValue",
+            "propertyGetterName": "getUseValueAsDefaultPreparedValue",
+            "displayName": "Use value as default prepared value",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 2,
+            "type": "tchmi:general#/definitions/Boolean",
+            "category": "Common",
+            "description": "Prepared value editor is set to the current value by default when editing is started.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": false
+        },
+        {
+            "name": "data-tchmi-auto-focus-out",
+            "propertyName": "AutoFocusOut",
+            "propertySetterName": "setAutoFocusOut",
+            "propertyGetterName": "getAutoFocusOut",
+            "displayName": "Auto Focus Out",
+            "visible": true,
+            "themeable": "Advanced",
+            "displayPriority": 45,
+            "type": "tchmi:general#/definitions/Boolean",
+            "category": "Common",
+            "description": "Whether the control should automatically lose focus when the user confirms or cancels his interaction via enter or escape.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": true,
+            "defaultValueInternal": false
+        },
+        {
+            "name": "data-tchmi-show-parameters",
+            "propertyName": "ShowParameters",
+            "propertySetterName": "setShowParameters",
+            "propertyGetterName": "getShowParameters",
+            "displayName": "Show Parameters",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 1,
+            "type": "tchmi:general#/definitions/Boolean",
+            "category": "Appearance",
+            "description": "Shows parameters defined by PLC attribute 'TcHmiSystemEng.Parameter.Name'.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": true
+        },
+        {
+            "name": "data-tchmi-show-functions",
+            "propertyName": "ShowFunctions",
+            "propertySetterName": "setShowFunctions",
+            "propertyGetterName": "getShowFunctions",
+            "displayName": "Show Functions",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 2,
+            "type": "tchmi:general#/definitions/Boolean",
+            "category": "Appearance",
+            "description": "Shows functions defined by PLC attribute 'TcHmiSystemEng.Function.Name'.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": true
+        },
+        {
+            "name": "data-tchmi-show-symbol-mapping",
+            "propertyName": "ShowSymbolMapping",
+            "propertySetterName": "setShowSymbolMapping",
+            "propertyGetterName": "getShowSymbolMapping",
+            "displayName": "Show symbol mapping",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 3,
+            "type": "tchmi:general#/definitions/Boolean",
+            "category": "Appearance",
+            "description": "Shows the path of the symbol.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": true
+        },
+        {
+            "name": "data-tchmi-show-tree-view",
+            "propertyName": "ShowTreeView",
+            "propertySetterName": "setShowTreeView",
+            "propertyGetterName": "getShowTreeView",
+            "displayName": "Show Treeview",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 4,
+            "type": "tchmi:general#/definitions/Boolean",
+            "category": "Appearance",
+            "description": "Shows the treeview control.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": true
+        },
+        {
+            "name": "data-tchmi-show-breadcrumb",
+            "propertyName": "ShowBreadcrumb",
+            "propertySetterName": "setShowBreadcrumb",
+            "propertyGetterName": "getShowBreadcrumb",
+            "displayName": "Show Breadcrumb",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 5,
+            "type": "tchmi:general#/definitions/Boolean",
+            "category": "Appearance",
+            "description": "Shows the breadcrumb control.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": true
+        },
+        {
+            "name": "data-tchmi-show-navigation",
+            "propertyName": "ShowNavigation",
+            "propertySetterName": "setShowNavigation",
+            "propertyGetterName": "getShowNavigation",
+            "displayName": "Show Navigation",
+            "visible": true,
+            "themeable": "Standard",
+            "displayPriority": 6,
+            "type": "tchmi:general#/definitions/Boolean",
+            "category": "Appearance",
+            "description": "Shows the navigation.",
+            "readOnly": false,
+            "bindable": true,
+            "defaultBindingMode": "OneWay",
+            "heritable": true,
+            "defaultValue": null,
+            "defaultValueInternal": true
+        }
+    ],
+    "attributeCategories": [
+        {
+            "name": "Appearance",
+            "displayPriority": 540,
+            "defaultCollapsed": true,
+            "description": "Attributes defining the appearance."
+        }
+    ],
+    "functions": [],
+    "events": [],
+    "dataTypes": [
+        {
+            "schema": "Schema/Types.Schema.json"
+        }
+    ],
+    "languages": {
+        "en": "Lang/Language.en.json",
+        "de": "Lang/Language.de.json"
+    }
+}

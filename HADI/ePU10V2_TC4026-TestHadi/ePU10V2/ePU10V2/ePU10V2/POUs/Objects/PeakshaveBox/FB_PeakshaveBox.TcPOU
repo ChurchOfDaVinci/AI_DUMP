@@ -1,0 +1,249 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_PeakshaveBox" Id="{be0f6613-070e-4d0b-a99d-ae5163fe483c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PeakshaveBox
+VAR_IN_OUT CONSTANT
+	st_params 			: ST_peakshavebox_params;
+END_VAR
+
+VAR_INPUT
+	set					: ST_peakshaveBox_set;
+END_VAR
+
+VAR_OUTPUT
+	get					: ST_PeakshaveBox_get; 
+END_VAR
+
+VAR
+	EmptyGet				: ST_PeakshaveBox_get;
+	Buscoupler				: FB_EK1100;
+	Powermeter				: FB_EL3453;
+
+	ton_activationDelay		: TON := (PT := T#2S);
+END_VAR
+
+VAR_INPUT
+	b_enable			: BOOL;
+END_VAR
+
+VAR PERSISTENT
+	setpersist 					: ST_PeakshaveBox_set;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ton_activationDelay(IN := get.b_dataOK AND b_enable AND get.b_buscouplerReady, Q => get.b_active);// AND NOT Powermonitor.get.StatusWord.b_Error;
+//Instantiate FBs
+
+//PSB settings can only be updated when not active
+IF NOT b_enable THEN
+	setpersist := set;
+END_IF
+
+get.b_SettingsChangePending := MEMCMP(ADR(set), ADR(setpersist), SIZEOF(set)) <> 0;
+ 
+
+Buscoupler();
+Powermeter(Quality => get.PowerQuality);
+Datamapping(set:=setPersist, data := get.Powermonitor);	
+
+IF get.b_active THEN
+	get.PSBmode := ePSBMode.Monitor;
+	IF setpersist.b_BreakerControl THEN
+		get.PSBmode := ePSBMode.MonitorControl;
+	END_IF
+ELSE
+	get.PSBmode := ePSBMode.None;
+END_IF
+
+
+
+
+
+]]></ST>
+    </Implementation>
+    <Method Name="GetDiagnostics" Id="{d4bb2571-9c0f-41d6-947c-974663bd2041}">
+      <Declaration><![CDATA[METHOD PUBLIC GetDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*Voltage L1 fault*) 	AddError[w_Index](
+			b_ErrorTrig			:= NOT Get.b_buscouplerReady AND b_enable,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 1,
+			e_ObjectID				:= eObject_ID.PeakshaveBox,
+			s_Message				:= 'Buscoupler not detected',
+			e_sev					:= eseverity.Warning,
+			b_autoClear				:= TRUE
+			);
+		w_Index := w_Index +1;
+
+
+(*Voltage L1 fault*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Powerstatus.b_Error_Phase[1],
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 2,
+			e_ObjectID				:= eObject_ID.PeakshaveBox,
+			s_Message				:= 'L1 error',
+			e_sev					:= eseverity.Warning,
+			b_autoClear				:= TRUE
+			);
+		w_Index := w_Index +1;
+		
+(*Voltage L2 fault*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Powerstatus.b_Error_Phase[2],
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 3,
+			e_ObjectID				:= eObject_ID.PeakshaveBox,
+			s_Message				:= 'L2 error',
+			e_sev					:= eseverity.Warning,
+			b_autoClear				:= TRUE
+			);
+		w_Index := w_Index +1;
+		
+(*Voltage L3 fault*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.Powerstatus.b_Error_Phase[3],
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 4,
+			e_ObjectID				:= eObject_ID.PeakshaveBox,
+			s_Message				:= 'L3 error',
+			e_sev					:= eseverity.Warning,
+			b_autoClear				:= TRUE
+			);
+		w_Index := w_Index +1;
+		
+(*Powermonitor current L1 out of range*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.PowerStatus.b_OverCurrent AND Get.PowerStatus.b_Error_Phase[1],
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 6,
+			e_ObjectID				:= eObject_ID.PeakshaveBox,
+			s_Message				:= 'Powermonitor current L1 out of range',
+			e_sev					:= eseverity.Warning,
+			b_autoClear				:= TRUE
+			);
+		w_Index := w_Index +1;
+		
+(*Powermonitor current L2 out of range*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.PowerStatus.b_OverCurrent AND Get.PowerStatus.b_Error_Phase[2],
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 7,
+			e_ObjectID				:= eObject_ID.PeakshaveBox,
+			s_Message				:= 'Powermonitor current L2 out of range',
+			e_sev					:= eseverity.Warning,
+			b_autoClear				:= TRUE
+			);
+		w_Index := w_Index +1;
+		
+(*Powermonitor current L3 out of range*) 	AddError[w_Index](
+			b_ErrorTrig			:= Get.PowerStatus.b_OverCurrent AND Get.PowerStatus.b_Error_Phase[3],
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 8,
+			e_ObjectID				:= eObject_ID.PeakshaveBox,
+			s_Message				:= 'Powermonitor current L3 out of range',
+			e_sev					:= eseverity.Warning,
+			b_autoClear				:= TRUE
+			);
+		w_Index := w_Index +1;
+
+(*Powermonitor overcurrent fault*) 	AddError[w_Index](
+			b_ErrorTrig				:= Get.PowerStatus.b_OverCurrent,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 11,
+			e_ObjectID				:= eObject_ID.PeakshaveBox,
+			s_Message				:= 'Powermonitor overcurrent fault',
+			e_sev					:= eseverity.Warning,
+			b_autoClear				:= TRUE
+			);
+		w_Index := w_Index +1;
+		
+(*Powermonitor overvoltage fault*) 	AddError[w_Index](
+			b_ErrorTrig				:= Get.PowerStatus.b_OverVoltage,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 12,
+			e_ObjectID				:= eObject_ID.PeakshaveBox,
+			s_Message				:= 'Powermonitor overvoltage fault',
+			e_sev					:= eseverity.Warning,
+			b_autoClear				:= TRUE
+			);
+		w_Index := w_Index +1;
+		
+(*Powermonitor undervoltage fault*) 	AddError[w_Index](
+			b_ErrorTrig				:= Get.PowerStatus.b_UnderVoltage,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 13,
+			e_ObjectID				:= eObject_ID.PeakshaveBox,
+			s_Message				:= 'Powermonitor undervoltage fault',
+			e_sev					:= eseverity.Warning,
+			b_autoClear				:= TRUE
+			);
+		w_Index := w_Index +1;
+
+	
+	(*Setting change pending*) 	AddError[w_Index](
+			b_ErrorTrig				:= get.b_SettingsChangePending,
+			out_ST_Error			:= a_ActiveEvents[w_Index],
+			w_ErrorID				:= 14,
+			e_ObjectID				:= eObject_ID.PeakshaveBox,
+			s_Message				:= 'PSB settings change blocked, disable PSB to apply',
+			e_sev					:= eseverity.Warning,
+			b_autoClear				:= TRUE
+			);
+		w_Index := w_Index +1;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Datamapping" Id="3204236b-6d1d-441f-8e4a-979419a12a3a">
+      <Declaration><![CDATA[METHOD Datamapping : BOOL
+
+VAR_IN_OUT
+	set : ST_PeakshaveBox_set; 
+	data : st_PQVoltageData;
+END_VAR
+
+VAR
+	i : INT;
+END_VAR
+
+VAR_INST
+	FrequencyOKLowLimit  : REAL := 45;
+	FrequencyOKHighLimit : REAL := 65;
+	OverCurrentThreshold : REAL := 1.05;
+
+	PhaseError: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[get.b_buscouplerReady := Buscoupler.state = 8 AND Powermeter.Diagnostics.State = 8;
+
+IF NOT get.b_buscouplerReady THEN
+	get := EmptyGet;	
+ELSE
+	Powermeter.DynamicRatio(Vprimair:= set.r_VtPrimair, VSecundair := set.r_VtSecundair, CtRatio := set.ui_CtRange, CTInverse := set.b_InverseCTdirection,
+	Status => get.PowerStatus,
+	ar_phaseVoltage => data.ar_PhaseVoltage,
+	ar_lineVoltage	=> data.ar_LineVoltage,
+	ar_Current		=> data.ar_Current,
+	ar_ActivePower	=> data.ar_ActivePower,
+	ar_reactivePower => data.ar_ReactivePower,
+	ar_ApparentPower => data.ar_ApparentPower,
+	ar_PowerFactor	=> data.ar_PowerFactor,
+	ar_Frequency	=> data.ar_Frequency,
+	r_VoltageUnbalance => data.r_VoltageUnbalance,
+	r_CurrentUnbalance => data.r_CurrentUnbalance,
+	b_VoltagesOK => data.b_VoltagesOK,
+	e_ACRotationState => data.e_ACrotationStatus
+);
+	
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <LineIds Name="FB_PeakshaveBox">
+      <LineId Id="1" Count="28" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

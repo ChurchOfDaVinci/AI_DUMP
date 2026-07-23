@@ -1,0 +1,448 @@
+{
+  "$schema": "./../../Packages/Beckhoff.TwinCAT.HMI.Framework.14.4.42/runtimes/native1.12-tchmi/Schema/TchmiConfig.Schema.json",
+  "basePath": "./Beckhoff.TwinCAT.HMI.Framework",
+  "scaleMode": "None",
+  "startupView": "Desktop.view",
+  "loginPage": "/Pages/LoginPage.html",
+  "splash": {
+    "versionSource": "Framework"
+  },
+  "projectVersion": "1.0.0.0",
+  "tcHmiServer": {
+    "websocketIntervalTime": 500,
+    "websocketTimeout": 20000,
+    "websocketSystemTimeout": 60000,
+    "websocketSubscriptionMode": null,
+    "disableOptionalSystemSubscriptions": true
+  },
+  "activeTheme": "Base",
+  "themes": {
+    "Base-Dark": {
+      "resources": [
+        {
+          "name": "Themes/Base-Dark/Base-DarkStyle.css",
+          "description": "",
+          "type": "Stylesheet"
+        },
+        {
+          "name": "Themes/Base-Dark/Base-Dark.theme",
+          "description": "",
+          "type": "ThemedValues"
+        }
+      ],
+      "replacesThemeForControls": [],
+      "replacesThemeForPackageComponents": []
+    },
+    "Base": {
+      "resources": [
+        {
+          "name": "Themes/Base/Base.theme",
+          "description": "",
+          "type": "ThemedValues"
+        },
+        {
+          "name": "Themes/Base/BaseStyle.css",
+          "description": "",
+          "type": "Stylesheet"
+        }
+      ],
+      "replacesThemeForControls": [],
+      "replacesThemeForPackageComponents": []
+    }
+  },
+  "dependencyFiles": [
+    {
+      "name": "Fonts/Fonts.css",
+      "description": "",
+      "type": "Stylesheet"
+    },
+    {
+      "name": "Functions/DisableContextMenu.js",
+      "description": "",
+      "type": "JavaScript"
+    },
+    {
+      "name": "Functions/ApplyIotSearchFilter.js",
+      "description": "",
+      "type": "JavaScript"
+    },
+    {
+      "name": "Functions/EDataMappingVarNamesFormat.js",
+      "description": "",
+      "type": "JavaScript"
+    },
+    {
+      "name": "Functions/FormatIOTWriteAllowed.js",
+      "description": "",
+      "type": "JavaScript"
+    },
+    {
+      "name": "Functions/GetCurrentUser.js",
+      "description": "",
+      "type": "JavaScript"
+    },
+    {
+      "name": "Functions/GetEnumString.js",
+      "description": "",
+      "type": "JavaScript"
+    },
+    {
+      "name": "Functions/InitIotDataSharingSettings.js",
+      "description": "",
+      "type": "JavaScript"
+    },
+    {
+      "name": "Functions/SaveIotDataSharingSettings.js",
+      "description": "",
+      "type": "JavaScript"
+    },
+    {
+      "name": "Functions/ToggleSVG.js",
+      "description": "",
+      "type": "JavaScript"
+    },
+    {
+      "name": "Functions/UpdateLanguageIcon.js",
+      "description": "",
+      "type": "EsModule"
+    }
+  ],
+  "userControls": [
+    {
+      "url": "Usercontrols/ParameterList.usercontrol"
+    },
+    {
+      "url": "Usercontrols/SwitchList.usercontrol"
+    },
+    {
+      "url": "Usercontrols/SystemOverview.usercontrol"
+    },
+    {
+      "url": "Usercontrols/SystemOverviewDataBox.usercontrol"
+    }
+  ],
+  "controls": [],
+  "content": [
+    {
+      "url": "Pages/Content1.content",
+      "preload": false,
+      "keepAlive": false,
+      "loadSync": false,
+      "preloadBindings": false
+    },
+    {
+      "url": "Pages/ControlPages/2.1 Input Grid.content",
+      "preload": false,
+      "keepAlive": false,
+      "loadSync": false,
+      "preloadBindings": false
+    },
+    {
+      "url": "Pages/ControlPages/Controls.content",
+      "preload": false,
+      "keepAlive": false,
+      "loadSync": false,
+      "preloadBindings": false
+    },
+    {
+      "url": "Pages/Diagnostics.content",
+      "preload": false,
+      "keepAlive": false,
+      "loadSync": false,
+      "preloadBindings": false
+    },
+    {
+      "url": "Pages/Historics.content",
+      "preload": false,
+      "keepAlive": false,
+      "loadSync": false,
+      "preloadBindings": false
+    },
+    {
+      "url": "Pages/HostContent.content",
+      "preload": false,
+      "keepAlive": false,
+      "loadSync": false,
+      "preloadBindings": false
+    },
+    {
+      "url": "Pages/Monitoring.content",
+      "preload": false,
+      "keepAlive": false,
+      "loadSync": false,
+      "preloadBindings": false
+    },
+    {
+      "url": "Pages/Overview.content",
+      "preload": false,
+      "keepAlive": false,
+      "loadSync": false,
+      "preloadBindings": false
+    },
+    {
+      "url": "Pages/Settings.content",
+      "preload": false,
+      "keepAlive": false,
+      "loadSync": false,
+      "preloadBindings": false
+    }
+  ],
+  "views": [
+    {
+      "url": "Desktop.view",
+      "preload": false,
+      "keepAlive": false,
+      "preloadBindings": false
+    }
+  ],
+  "userFunctions": [
+    {
+      "url": "Functions/ApplyIotSearchFilter.js"
+    },
+    {
+      "url": "Functions/EDataMappingVarNamesFormat.js"
+    },
+    {
+      "url": "Functions/FormatIOTWriteAllowed.js"
+    },
+    {
+      "url": "Functions/GetCurrentUser.js"
+    },
+    {
+      "url": "Functions/GetEnumString.js"
+    },
+    {
+      "url": "Functions/InitIotDataSharingSettings.js"
+    },
+    {
+      "url": "Functions/SaveIotDataSharingSettings.js"
+    },
+    {
+      "url": "Functions/ToggleSVG.js"
+    },
+    {
+      "url": "Functions/UpdateLanguageIcon.js"
+    }
+  ],
+  "symbols": {
+    "internal": {
+      "TitleSize": {
+        "value": 16,
+        "type": "tchmi:general#/definitions/INT",
+        "persist": false,
+        "readonly": true
+      },
+      "TextSize": {
+        "value": 14,
+        "type": "tchmi:general#/definitions/INT",
+        "persist": false,
+        "readonly": true
+      },
+      "BlueTheme": {
+        "value": {
+          "color": "rgba(0, 50, 91, 1)"
+        },
+        "type": "tchmi:framework#/definitions/Color",
+        "persist": false,
+        "readonly": true
+      },
+      "ActiveColor": {
+        "value": {
+          "color": "rgba(76, 175, 80, 1)"
+        },
+        "type": "tchmi:framework#/definitions/Color",
+        "persist": false,
+        "readonly": false
+      }
+    },
+    "themedResources": {
+      "SettingsImage": {
+        "type": "tchmi:general#/definitions/String",
+        "description": "",
+        "values": {
+          "Base-Dark": "Images/icons_service_active.svg",
+          "Base": "Images/icons_service_normal.svg"
+        }
+      }
+    },
+    "timer": {},
+    "package": {}
+  },
+  "intervals": {},
+  "trigger": [],
+  "actionTemplates": [
+    {
+      "name": "PopupOpen",
+      "category": "Action Templates",
+      "actions": [
+        {
+          "objectType": "Condition",
+          "active": true,
+          "parts": [
+            {
+              "if": [
+                {
+                  "compare1": {
+                    "objectType": "Symbol",
+                    "valueType": "tchmi:framework#/definitions/TcHmi.Controls.System.TcHmiPopup.TargetFile",
+                    "symbolExpression": "%tp%Target::path%/tp%"
+                  },
+                  "compare2": {
+                    "objectType": "FunctionExpression",
+                    "functionExpression": "\"\""
+                  },
+                  "compareOperator": "!=",
+                  "logic": null
+                }
+              ],
+              "then": [
+                {
+                  "objectType": "WriteToSymbol",
+                  "active": true,
+                  "symbolExpression": "%ctrl%TcHmiPopupRegion::TargetFile%/ctrl%",
+                  "value": {
+                    "objectType": "Symbol",
+                    "valueType": "tchmi:framework#/definitions/TcHmi.Controls.System.TcHmiPopup.TargetFile",
+                    "symbolExpression": "%tp%Target%/tp%"
+                  },
+                  "asyncWait": true
+                },
+                {
+                  "objectType": "WriteToSymbol",
+                  "active": true,
+                  "symbolExpression": "%ctrl%TcHmiPopupRegion::HeaderText%/ctrl%",
+                  "value": {
+                    "objectType": "Symbol",
+                    "valueType": "tchmi:general#/definitions/String",
+                    "symbolExpression": "%f%ToUpperCase(%tp%Title%/tp%)%/f%"
+                  },
+                  "asyncWait": true
+                },
+                {
+                  "objectType": "ControlApiFunction",
+                  "active": true,
+                  "control": "TcHmiPopupRegion",
+                  "fn": "open",
+                  "asyncWait": true
+                }
+              ]
+            },
+            {
+              "else": []
+            }
+          ],
+          "asyncWait": true
+        }
+      ],
+      "parameters": [
+        {
+          "name": "Target",
+          "type": "tchmi:framework#/definitions/TcHmi.Controls.System.TcHmiPopup.TargetFile",
+          "description": ""
+        },
+        {
+          "name": "Title",
+          "type": "tchmi:general#/definitions/String",
+          "description": ""
+        }
+      ]
+    }
+  ],
+  "languages": {
+    "de": "Localization/de.localization",
+    "en": "Localization/en.localization"
+  },
+  "languageFallback": "",
+  "disableLoadingOptimization": false,
+  "creatorSettings": {
+    "viewport": {
+      "defaultWidth": 1920,
+      "defaultHeight": 1080
+    }
+  },
+  "binding": {
+    "symbolError": "Ignore",
+    "symbolWriteError": "ReadBack"
+  },
+  "packages": [
+    {
+      "name": "Beckhoff.TwinCAT.HMI.BaseTemplate",
+      "basePath": "/Beckhoff.TwinCAT.HMI.BaseTemplate",
+      "symbols": {
+        "package": {}
+      }
+    },
+    {
+      "name": "Beckhoff.TwinCAT.HMI.Controls",
+      "basePath": "/Beckhoff.TwinCAT.HMI.Controls",
+      "symbols": {
+        "package": {}
+      }
+    },
+    {
+      "name": "Beckhoff.TwinCAT.HMI.EcDiagnosticsControl",
+      "basePath": "/Beckhoff.TwinCAT.HMI.EcDiagnosticsControl",
+      "symbols": {
+        "package": {}
+      }
+    },
+    {
+      "name": "Beckhoff.TwinCAT.HMI.Framework",
+      "basePath": "/Beckhoff.TwinCAT.HMI.Framework",
+      "symbols": {
+        "package": {}
+      }
+    },
+    {
+      "name": "Beckhoff.TwinCAT.HMI.Functions",
+      "basePath": "/Beckhoff.TwinCAT.HMI.Functions",
+      "symbols": {
+        "package": {}
+      }
+    },
+    {
+      "name": "Beckhoff.TwinCAT.HMI.Industries.Common",
+      "basePath": "/Beckhoff.TwinCAT.HMI.Industries.Common",
+      "symbols": {
+        "package": {}
+      }
+    },
+    {
+      "name": "Beckhoff.TwinCAT.HMI.ResponsiveNavigation",
+      "basePath": "/Beckhoff.TwinCAT.HMI.ResponsiveNavigation",
+      "symbols": {
+        "package": {}
+      }
+    }
+  ],
+  "keyboardLayouts": [
+    {
+      "url": "KeyboardLayouts/German - compact.keyboard.json"
+    },
+    {
+      "url": "KeyboardLayouts/Numpad (plusminus).keyboard.json"
+    },
+    {
+      "url": "KeyboardLayouts/US - compact.keyboard.json"
+    }
+  ],
+  "systemKeyboard": {
+    "providerName": "",
+    "autoOpen": false,
+    "projectKeyboardMapping": {
+      "de": {
+        "text": "KeyboardLayouts/German - compact.keyboard.json",
+        "decimal": "KeyboardLayouts/Numpad (plusminus).keyboard.json",
+        "numeric": ""
+      },
+      "en": {
+        "text": "KeyboardLayouts/US - compact.keyboard.json",
+        "decimal": "KeyboardLayouts/Numpad (plusminus).keyboard.json",
+        "numeric": ""
+      }
+    }
+  },
+  "systemPopups": {
+    "providerName": "Beckhoff.TcHmiPopups"
+  }
+}

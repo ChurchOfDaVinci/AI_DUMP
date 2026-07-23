@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_HMI_Monitor_ZPT" Id="{e0ae5cd6-923b-453d-8c30-064baba220c2}">
+    <Declaration><![CDATA[TYPE ST_HMI_Monitor_ZPT :
+STRUCT
+	b_ZPTOverloadWarning	: BOOL;
+	b_ZPTOverloadAlarm		: BOOL;
+	b_VoltageUnbalanceWarning: BOOL;
+	b_VoltageUnbalanceAlarm	: BOOL;
+	r_TemperatureL1			: REAL;
+	b_TempWarningL1			: BOOL;
+	b_TempAlarmL1			: BOOL;
+	r_TemperatureL2			: REAL;
+	b_TempWarningL2			: BOOL;
+	b_TempAlarmL2			: BOOL;
+	r_TemperatureL3			: REAL;
+	b_TempWarningL3			: BOOL;
+	b_TempAlarmL3			: BOOL;
+	r_powerload				: REAL;	//%
+	r_voltageunbalance		: REAL; //%
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

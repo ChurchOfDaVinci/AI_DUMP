@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_DCLink_params" Id="{9836a833-2d02-4fa6-b520-41a0dd5f9e67}">
+    <Declaration><![CDATA[TYPE ST_DCLink_params :
+STRUCT
+	RatedCurrent			: UINT 		:= 250;
+	OvercurrentTripDelay	: TIME		:= T#2S;
+	IP						: STRING 	:= '192.168.1.62';
+	DCpowerControlHyst		: REAL 		:= 0.1;	
+	AllowClosingOnDeadBus	:	BOOL	:= FALSE;
+	DIWiredToPLC			:	BOOL	:=	TRUE;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

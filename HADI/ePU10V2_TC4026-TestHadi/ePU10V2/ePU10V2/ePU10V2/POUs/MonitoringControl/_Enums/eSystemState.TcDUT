@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eSystemState" Id="{9414cd0f-174d-46f6-a8d8-ed75b6d14496}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE eSystemState :
+(
+	Off 			:= 0,
+	Shutdown 		:= 1,
+	StandBy 		:= 2,
+	Conditioning 	:= 3,
+	Starting		:= 4,
+	Running			:= 5,
+	Charging_Only	:= 6,
+	Discharging_Only:= 7,
+	Stopped			:= 8,
+	EMstop			:= 9,
+	Reset			:= 10,
+	Init			:= 11,
+	Transport		:= 12,
+	Dehumidifying	:= 13
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

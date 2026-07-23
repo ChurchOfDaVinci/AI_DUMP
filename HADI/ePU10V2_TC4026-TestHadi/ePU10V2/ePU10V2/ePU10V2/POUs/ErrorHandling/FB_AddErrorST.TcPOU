@@ -1,0 +1,205 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_AddErrorST" Id="{818df45c-3c28-41f4-9ded-b5b62e784f1b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AddErrorST
+VAR PERSISTENT
+	b_SMSenableUser				: BOOL;
+END_VAR
+
+VAR_INPUT
+	b_ErrorTrig					: BOOL;
+	b_SMSEnableVDL				: BOOL;
+	t_TriggerTime				: TIME := T#0S;
+	b_AutoClear					: BOOL := FALSE;
+	e_ErrAckAccess				: eErrAckAccess := eErrAckAccess.VDL; //default full access required
+	w_ErrorID					: WORD;
+	e_objectID					: eObject_ID :=  eObject_ID.None;
+	s_message					: STRING;
+	e_sev						: eSeverity;
+END_VAR
+VAR_IN_OUT
+	out_st_Error 				: ST_ErrorStruct;
+END_VAR
+
+VAR_OUTPUT
+	b_out						: BOOL;
+END_VAR
+
+VAR
+	i_instance					: INT;
+	b_clear						: BOOL;
+	s_MessageOld				: STRING;
+	b_MessageChanged			: BOOL;
+	b_SetError					: BOOL;
+	sr_ErrorActive				: SR;
+	bIsInitialized 				: BOOL := FALSE;	
+	ton_FaultTriggerTime		: TON;
+	fTRIG_Fault					: F_TRIG;
+	rTRIG_Fault					: R_TRIG;
+	
+	b_clearCommand				: BOOL;
+	
+	//FOR SMS MESSAGE FUNCTIONALITY
+	b_SetSMSmessage				: BOOL;
+	b_ClearSMSmessage			: BOOL;
+	s_SMSmessage				: STRING;
+	i_SMSMessageIndex			: INT;
+END_VAR
+
+VAR_STAT
+	i_instanceCounter			: INT;
+	e_objectID_static			: eObject_ID;
+END_VAR
+
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//set object ID if given and not same as it was.
+IF e_objectID <> 0 AND e_objectID <> e_objectID_static THEN 
+	e_objectID_static := e_objectID;
+END_IF
+
+IF NOT bIsInitialized THEN
+	//SET default SMS enable	
+	out_st_error.b_SMSEnable := b_SMSEnableVDL OR b_SMSenableUser;
+	//SET error ID
+	out_st_Error.w_ID		:= w_ErrorID + e_objectID_static;
+	//SET severity
+	out_st_Error.s_Severity	:= TO_STRING(e_Sev);
+	//SET instance
+	IF w_ErrorID <> 0 THEN
+		i_instanceCounter := i_instanceCounter +1;
+	END_IF
+	i_instance := i_instanceCounter;
+	
+	bIsInitialized := TRUE;		
+ELSE
+	//only allow user setting when vdl default is not set.
+	IF NOT b_SMSEnableVDL AND b_SMSenableUser <> out_st_error.b_SMSEnable THEN
+		b_SMSenableUser := out_st_error.b_SMSEnable;
+	END_IF
+END_IF
+
+b_MessageChanged := s_MessageOld <> s_Message;
+IF b_MessageChanged THEN
+	// set last stored value
+	s_MessageOld := s_Message;
+	// The code that you want to be executed at the first cycle or on change
+	out_st_Error.s_Message	:= Concat(Concat(TO_STRING(e_objectID_static),' - '), s_message);
+	s_SMSmessage := CONCAT(CONCAT(out_st_Error.s_Severity, ': '), out_st_Error.s_Message);
+END_IF
+
+ton_FaultTriggerTime(IN:= b_ErrorTrig, PT:= t_TriggerTime);
+b_out := ton_FaultTriggerTime.Q;
+out_st_error.b_ErrorActive := b_out;
+
+
+IF b_out THEN	
+	//Also write diagnostics to SystemLog
+	CASE e_sev OF
+		eSeverity.Warning 			: GVL.b_WarningActive := TRUE;
+		eSeverity.Normalshutdown 	: GVL.b_NormalshutdownActive := TRUE;
+		eSeverity.Quickshutdown 	: GVL.b_QuickShutdownActive := TRUE;
+		eSeverity.EmergencyShutdown	: GVL.b_EmergencyShutdownActive := TRUE;
+	END_CASE
+END_IF
+
+rTRIG_Fault(CLK := b_Out);
+b_SetError := rTRIG_Fault.Q OR (out_st_Error.s_DateError = '' AND b_out);
+IF b_SetError AND GVL.b_SystemClockOK THEN;
+	//WriteLogItem(Source := e_objectID, Severity := e_sev, LogText := s_message);
+	out_st_Error.s_DateError := GVL.s_SystemDate;
+	out_st_Error.s_TimeError := GVL.s_SystemTime;
+	out_st_Error.s_TimeCleared	:= '';
+	
+	//for sms service
+	b_SetSMSmessage := TRUE;
+END_IF
+
+//CLEARING
+b_Clear := b_AutoClear AND e_Sev < eSeverity.NormalShutdown AND NOT b_ErrorTrig;
+IF (ErrorHandling.tp_Clearevents.Q OR b_Clear) AND out_st_Error.s_TimeCleared <> '' THEN
+	b_ClearCommand := TRUE;
+END_IF
+
+//CLEARING EVENTS
+IF b_ClearCommand THEN
+	out_st_Error.s_DateError 	:= '';
+	out_st_Error.s_TimeError 	:= '';
+	out_st_Error.s_TimeCleared	:= '';
+	b_ClearCommand := FALSE;
+END_IF
+
+fTRIG_Fault(CLK := b_Out);
+IF out_st_Error.s_TimeError <> '' AND fTRIG_Fault.Q THEN;
+	out_st_Error.s_TimeCleared	:= GVL.s_SystemTime;
+	b_ClearSMSmessage := TRUE;
+END_IF
+
+///SMS message buffer
+IF b_SetSMSmessage AND (b_SMSEnableVDL OR b_SMSenableUser) THEN
+	IF AppendMessage(
+		as_buffer := errorhandling.a_SMSEventBuffer, 
+		s_message := s_SMSmessage, 
+		index=> i_SMSMessageIndex) THEN
+		 	b_SetSMSmessage := FALSE;
+	END_IF 
+ELSIF b_clearSMSmessage THEN
+	IF DeleteMessage(as_buffer := errorhandling.a_SMSEventBuffer, index := i_SMSMessageIndex ) THEN
+		b_ClearSMSmessage := FALSE;
+	END_IF
+END_IF
+
+]]></ST>
+    </Implementation>
+    <Method Name="AppendMessage" Id="{207b776c-fd3c-4bb4-a6f4-cb99241651a2}">
+      <Declaration><![CDATA[METHOD AppendMessage : BOOL;
+VAR_IN_OUT
+	as_buffer	: ARRAY [*] OF STRING;
+END_VAR
+
+VAR_INPUT
+	s_message : STRING;
+END_VAR
+VAR_OUTPUT
+	index : INT;
+END_VAR
+
+VAR
+	i: INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[AppendMessage := FALSE;
+
+FOR i:= TO_INT(LOWER_BOUND(as_buffer,1)) TO TO_INT(UPPER_BOUND(as_buffer,1)) DO
+	IF as_buffer[i] = '' THEN
+		as_buffer[i] := s_message;
+		index := i;
+		AppendMessage := TRUE;
+		EXIT;
+	END_IF	
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="DeleteMessage" Id="{d184323d-be15-436a-bab5-552ee8bc3d3f}">
+      <Declaration><![CDATA[METHOD DeleteMessage : BOOL
+
+VAR_IN_OUT
+	as_buffer	: ARRAY [*] OF STRING;
+END_VAR
+
+VAR_INPUT
+	index		: INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[DeleteMessage := FALSE;
+as_buffer[index] := '';
+
+IF as_buffer[index] = '' THEN
+	DeleteMessage := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

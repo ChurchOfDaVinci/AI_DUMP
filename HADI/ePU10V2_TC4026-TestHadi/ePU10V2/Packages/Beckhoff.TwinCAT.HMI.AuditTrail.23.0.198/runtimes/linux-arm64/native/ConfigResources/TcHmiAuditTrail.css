@@ -1,0 +1,249 @@
+/* General styles */
+
+.content_page {
+    width: 100% !important;
+    max-width: 100%;
+}
+
+.audit-trail-btn {
+    background: #007ACC;
+    color: #FFF !important;
+    border: 0px;
+    font-weight: lighter !important;
+    cursor: pointer;
+    width: 165px;
+    font-family: Segoe UI,Tahoma,Arial,Verdana;
+    font-size: 100%;
+    padding: 0;
+    margin: 0;
+    height: 22px;
+    box-sizing: border-box;
+    text-align: center;
+    display: inline-block;
+    padding-top: 2px;
+}
+
+.audit-trail-btn:hover {
+    text-decoration: none !important;
+}
+
+#audit-trail-export-log-btn {
+    text-decoration: none;
+    padding-top: 4px;
+}
+
+/* Filter function styles */
+.at-sig-verification,
+.filter-function-div {
+    display: flex;
+    width: 50%;
+    padding: 3px 5px;
+    max-width: 380px;
+    border: 1px solid #ccc;
+    margin-top: 10px;
+}
+
+.filter-function-div p {
+    margin-top: 2px;
+    margin-right: 5px;
+    margin-bottom: 0px;
+}
+
+/* Audit Trail table styles*/
+
+#auditTrailTableGenerated {
+    border-collapse: collapse;
+    width: 100%;
+    table-layout: fixed;
+}
+
+#auditTrailTableGenerated th {
+    word-break: break-all;
+    text-align: left;
+}
+
+#auditTrailTableGenerated td {
+    word-break: break-all;
+    overflow-wrap: break-word;
+}
+
+#auditTrailTableGenerated tbody {
+    height: 450px;
+    overflow-y: scroll;
+    width: 100%;
+    display: block;
+    float: left;
+    border: 1px solid #ccc;
+}
+
+thead:after {
+    content: "@";
+    display: block;
+    line-height: 10px;
+    text-indent: -99999px;
+}
+
+#auditTrailTableGenerated thead {
+    display: table;
+    width: 100%;
+}
+
+#auditTrailTableGeneratedHeader .audit-trail-item {
+    border: 1px solid #ccc;
+}
+
+#auditTrailTableGeneratedHeader a {
+    font-weight: normal;
+}
+
+.at-timestamp,
+.at-type {
+    width: 150px;
+}
+
+#auditTrailTableGenerated tr {
+    display: flex;
+}
+
+tbody .at-symbol-name,
+tbody .at-oldvalue,
+tbody .at-newvalue,
+tbody .at-username,
+tbody .at-sessionid,
+tbody .at-comment,
+tbody .at-error {
+    width: calc((100% - 300px) / 7);
+}
+
+.at-type,
+.at-symbol-name,
+.at-oldvalue,
+.at-newvalue,
+.at-username,
+.at-sessionid,
+.at-comment,
+.at-error {
+    border-left: 1px solid #656565;
+}
+
+.audit-trail-item-column {
+    padding: 5px;
+}
+
+.audit-trail-item-column .open-value,
+.audit-trail-item-column .close-value {
+    margin: 0;
+}
+
+.audit-trail-item-column .open-value:hover,
+.audit-trail-item-column .close-value:hover {
+    cursor: pointer;
+}
+
+.audit-trail-item-error {
+    background-color: #eca2a2;
+}
+
+.json-element-div p {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    overflow: hidden;
+    max-width: 100%;
+    text-overflow: ellipsis;
+}
+
+.json-expand-attributes .dots:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
+
+.audit-trail-btn-section div {
+    display: contents;
+}
+
+.audit-trail-btn {
+    margin-top: 15px;
+    margin-right: 2px;
+}
+
+#pages-list {
+    margin-top: 3px;
+}
+
+#pages-list a {
+    margin: 0 5px;
+}
+
+.prev-page-btn,
+.next-page-btn {
+    margin-top: 0;
+}
+
+#pages-list .selected-index {
+    color: #888;
+}
+
+.at-table-legend {
+    width: 40%;
+    max-width: 150px;
+    display: flex;
+}
+
+.at-table-legend .audit-trail-item-error {
+    width: 20px;
+    height: 20px;
+    display: block;
+    margin-right: 5px;
+}
+
+.dots {
+    font-style: italic;
+    color: #888;
+}
+
+.at-verify-sig-label,
+.at-verify-sig-btn {
+    width: 20%;
+}
+
+#at-sig-verification-result {
+    height: 25px;
+}
+
+.at-sig-verification {
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+/* Media queries */
+@media only screen and (max-width: 800px) {
+    thead .at-type, thead .at-timestamp, thead .at-symbol-name, thead .at-oldvalue, thead .at-newvalue {
+        width: calc((100% - 14px) / 5);
+    }
+
+    tbody .at-type,
+    tbody .at-timestamp,
+    tbody .at-symbol-name,
+    tbody .at-oldvalue,
+    tbody .at-newvalue {
+        width: calc(100% / 5);
+    }
+
+    .at-username,
+    .at-sessionid,
+    .at-comment,
+    .at-error {
+        display: none;
+    }
+}
+
+@media only screen and (max-width: 420px) {
+    .audit-trail-btn {
+        width: 100%;
+    }
+
+    .filter-function-div {
+        width: 100%;
+    }
+}

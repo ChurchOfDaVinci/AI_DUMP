@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eBatteryType" Id="{85b9d20e-47e7-4a0e-952f-667dd7b56460}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eBatteryType :
+(
+	standard_306Ah := 0,
+	highpower_280Ah := 1
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

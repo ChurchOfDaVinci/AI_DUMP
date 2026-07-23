@@ -1,0 +1,21 @@
+{
+  "$schema": "../../Packages/Beckhoff.TwinCAT.HMI.Framework.14.4.42/runtimes/native1.12-tchmi/Schema/LocalizationDescription.Schema.json",
+  "locale": "de",
+  "localizedText": {
+    "L_Language": "Sprache",
+    "L_German": "Deutsch",
+    "L_English": "Englisch",
+    "L_LanguageSelection": "Sprachauswahl",
+    "L_CloseText": "Schließen",
+    "L_Overview": "Overview",
+    "L_Monitoring": "Monitoring",
+    "L_Controls": "Controls",
+    "L_Diagnostics": "Diagnostics",
+    "L_Settings": "Einstellungen",
+    "L_Historics": "Geschichte",
+    "L_Power": "Power",
+    "L_Voltage": "Spannung",
+    "L_Output": "Output",
+    "L_Input": "Eingang"
+  }
+}

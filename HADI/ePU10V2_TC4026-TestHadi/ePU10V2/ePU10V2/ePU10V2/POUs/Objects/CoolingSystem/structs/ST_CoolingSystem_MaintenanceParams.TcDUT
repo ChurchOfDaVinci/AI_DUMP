@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_CoolingSystem_MaintenanceParams" Id="{3e76ec91-7465-47ca-8b95-e69e82fe6b60}">
+    <Declaration><![CDATA[TYPE ST_CoolingSystem_MaintenanceParams :
+STRUCT
+	//manual activation of cooling system. Max runtime is limited to 30 minutes
+	b_ActivateCooling							: BOOL; 
+	b_ActivateHeating							: BOOL;	
+	
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

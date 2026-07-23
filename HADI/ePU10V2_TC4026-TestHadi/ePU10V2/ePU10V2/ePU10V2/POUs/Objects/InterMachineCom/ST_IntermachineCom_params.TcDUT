@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_IntermachineCom_params" Id="{e7d98dc6-13b2-4fb5-8cf3-0bca68d180a8}">
+    <Declaration><![CDATA[TYPE ST_IntermachineCom_params :
+STRUCT
+	InternalBrokerIP		: STRING := '10.4.0.41';
+	MasterPublishRate		: TIME := T#20MS;
+	SlavePublishRate		: TIME := T#1S;
+	WatchdogPulseRate		: TIME := T#2S;
+	EMstopCoupling			: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

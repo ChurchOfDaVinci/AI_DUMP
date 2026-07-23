@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_HMI_Monitor_UPS" Id="{2f9a6a22-bf68-46af-a15c-ea82a4c3450f}">
+    <Declaration><![CDATA[TYPE ST_HMI_Monitor_UPS :
+STRUCT
+	b_ChargerActive		: BOOL;
+	b_SupplyOnBattery	: BOOL;
+	r_InputVoltage		: REAL;
+	r_OutputVoltage		: REAL;
+	r_OutputCurrent		: REAL;
+	r_BatteryVoltage	: REAL;
+	b_InputVoltageFault	: BOOL;
+	b_BatteryLowInfo	: BOOL;
+	b_BatteryLowWarning : BOOL;
+	b_BatteryLowCritical: BOOL;
+	ui_SoC				: UINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

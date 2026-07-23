@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_OperationVars_BMS" Id="{6521f37a-3e1a-47df-b524-3676fe4dbc9b}">
+    <Declaration><![CDATA[TYPE ST_OperationVars_BMS :
+STRUCT
+	b_ManualStartHVDC	: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PQstatusData" Id="{ae5e65f1-a1c2-4cb1-b8c6-88483d39f239}">
+    <Declaration><![CDATA[TYPE ST_PQstatusData:
+STRUCT
+	b_Fault			: BOOL;
+	b_OverVoltage 	: BOOL;
+	b_UnderVoltage	: BOOL;
+	b_OverFrequency : BOOL;
+	b_UnderFrequency: BOOL;
+	b_OverCurrent	: BOOL;
+	b_SettingFault	: BOOL;
+	b_Error_Phase 	: ARRAY [1..3] OF BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

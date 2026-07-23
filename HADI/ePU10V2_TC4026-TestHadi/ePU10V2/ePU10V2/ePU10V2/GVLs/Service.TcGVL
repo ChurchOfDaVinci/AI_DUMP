@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <GVL Name="Service" Id="{87364ad8-2041-4518-89d1-57c829f80795}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+	Powerstack			: ST_Powerstack_service;
+	BMS					: ST_BMS_service;
+	Router				: ST_Router_service;
+	ACDCCharger			: ST_ACDCCharger_service;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

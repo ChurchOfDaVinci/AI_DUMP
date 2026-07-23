@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_SoftSettings_Setup" Id="{3251b053-c8bc-4d16-8a70-967e96862352}">
+    <Declaration><![CDATA[TYPE ST_SoftSettings_Setup :
+STRUCT
+	e_AcInputType						: eAcInputType;
+	b_MasterSlaveMode					: BOOL := FALSE;	
+	b_PeakshaveBoxEnable				: BOOL;
+	e_Gridmode							: eGridmode := eGridMode.auto;
+	e_DcCouplingType					: eDCinputType;
+	b_ExtGenset							: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

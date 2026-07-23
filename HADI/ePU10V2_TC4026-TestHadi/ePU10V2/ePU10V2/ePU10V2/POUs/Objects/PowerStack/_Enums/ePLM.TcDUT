@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ePLM" Id="{06db29a0-cd69-4fb5-a499-8cc0746daa2a}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+
+TYPE ePLM: //power limiting 
+(
+	FreqShift := 0,
+	VoltShift := 1,
+	FreqVoltShift := 2,
+	Shutdown := 3
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

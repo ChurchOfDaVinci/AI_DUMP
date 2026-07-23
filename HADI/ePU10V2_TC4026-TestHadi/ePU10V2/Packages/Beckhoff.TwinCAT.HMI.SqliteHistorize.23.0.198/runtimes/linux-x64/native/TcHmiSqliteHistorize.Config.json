@@ -1,0 +1,348 @@
+{
+  "$schema": "../../TcHmiSrv/schema/ExtensionSettings.Schema.json",
+  "version": "23.0.198.0",
+  "configVersion": "1.0.1.2",
+  "guid": "EB1F70B7-D988-4EFE-8AB5-6D46DD4CED09",
+  "visibility": "AlwaysShow",
+  "policies": [
+    "StrictPropertyValidation"
+  ],
+  "symbols": {
+    "GetTrendLineData": {
+      "userGroups": [
+        "__SystemUsers"
+      ],
+      "readValue": {
+        "anyOf": [
+          {
+            "versions": [
+              1.0
+            ],
+            "function": true,
+            "writeValue": {
+              "type": "object",
+              "properties": {
+                "chartName": {
+                  "type": "string",
+                  "description": "TrendLineChart name."
+                },
+                "xAxisStart": {
+                  "$ref": "#/definitions/stringTypeArray"
+                },
+                "xAxisEnd": {
+                  "$ref": "#/definitions/stringTypeArray"
+                },
+                "displayWidth": {
+                  "type": "number",
+                  "minimum": 2.0,
+                  "maximum": 10240.0,
+                  "description": "Display width of the TrendLineChart in pixels."
+                },
+                "yAxes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "symbol"
+                    ],
+                    "properties": {
+                      "symbol": {
+                        "type": "string",
+                        "description": "Symbol name."
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "chartName",
+                "yAxes",
+                "xAxisStart",
+                "displayWidth"
+              ]
+            },
+            "type": "object",
+            "properties": {
+              "axesData": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Recording time of data point."
+                      },
+                      "y": {
+                        "type": "number",
+                        "description": "Historized value."
+                      },
+                      "error": {
+                        "type": "number",
+                        "description": "Error code associated with the data point."
+                      },
+                      "flags": {
+                        "type": "string",
+                        "description": "Recording state flags indicating when data recording started or stopped."
+                      }
+                    }
+                  }
+                },
+                "description": "Array with sub-array for each symbol."
+              }
+            }
+          },
+          {
+            "versions": [
+              2.0
+            ],
+            "function": true,
+            "writeValue": {
+              "type": "object",
+              "properties": {
+                "chartName": {
+                  "type": "string",
+                  "description": "TrendLineChart name."
+                },
+                "xAxisStart": {
+                  "$ref": "#/definitions/stringTypeArray"
+                },
+                "xAxisEnd": {
+                  "$ref": "#/definitions/stringTypeArray"
+                },
+                "displayWidth": {
+                  "type": "number",
+                  "minimum": 2.0
+                },
+                "yAxes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": [
+                      "symbol"
+                    ],
+                    "properties": {
+                      "symbol": {
+                        "type": "string",
+                        "description": "Symbol name."
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "analyticsType": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "minimum",
+                      "maximum",
+                      "average"
+                    ]
+                  },
+                  "description": "Specifies which analytics calculations to perform on the retrieved data."
+                }
+              },
+              "required": [
+                "chartName",
+                "yAxes",
+                "xAxisStart",
+                "displayWidth"
+              ]
+            },
+            "type": "object",
+            "properties": {
+              "axesData": {
+                "type": "array",
+                "items": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "string",
+                        "format": "date-time",
+                        "description": "Recording time of data point."
+                      },
+                      "y": {
+                        "type": "number",
+                        "description": "Historized value."
+                      },
+                      "error": {
+                        "type": "number",
+                        "description": "Error code associated with the data point."
+                      },
+                      "flags": {
+                        "type": "string",
+                        "description": "Recording state flags indicating when data recording started or stopped."
+                      }
+                    }
+                  }
+                },
+                "description": "Array with sub-array for each symbol."
+              },
+              "analyticsData": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "minimum": {
+                      "type": "number",
+                      "description": "The minimum value of all data points in the requested time range."
+                    },
+                    "maximum": {
+                      "type": "number",
+                      "description": "The maximum value of all data points in the requested time range."
+                    },
+                    "average": {
+                      "type": "number",
+                      "description": "The average value of all data points in the requested time range."
+                    }
+                  }
+                },
+                "description": "Array with analytics data for each symbol."
+              }
+            }
+          }
+        ]
+      }
+    },
+    "GetTrendLineWindow": {
+      "userGroups": [
+        "__SystemUsers"
+      ],
+      "writeValue": {
+        "type": "object",
+        "properties": {
+          "chartName": {
+            "type": "string",
+            "description": "TrendLineChart name."
+          },
+          "xAxisStart": {
+            "$ref": "#/definitions/stringTypeArray"
+          },
+          "xAxisEnd": {
+            "$ref": "#/definitions/stringTypeArray"
+          },
+          "yAxes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": [
+                "symbol"
+              ],
+              "properties": {
+                "symbol": {
+                  "type": "string",
+                  "description": "Symbol name."
+                }
+              },
+              "additionalProperties": false
+            },
+            "description": "Start and end time for TrendLineChart."
+          }
+        },
+        "required": [
+          "chartName",
+          "yAxes",
+          "xAxisStart"
+        ]
+      },
+      "readValue": {
+        "function": true,
+        "type": "object",
+        "properties": {
+          "xAxisStart": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp from recording."
+          },
+          "xAxisEnd": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp from recording."
+          }
+        }
+      }
+    },
+    "HistorizeData": {
+      "userGroups": [
+        "__SystemUsers"
+      ],
+      "readValue": {
+        "function": true
+      }
+    },
+    "Diagnostics": {
+      "userGroups": [
+        "__SystemUsers"
+      ],
+      "readValue": {
+        "type": "object",
+        "function": true,
+        "properties": {
+          "databaseSize": {
+            "propertyOrder": 1,
+            "type": "number",
+            "unit": "byte"
+          },
+          "numEntries": {
+            "type": "integer",
+            "propertyOrder": 2,
+            "configDescription": "descNumEntries"
+          },
+          "numEntriesLifetime": {
+            "type": "number",
+            "propertyOrder": 3,
+            "configDescription": "descNumEntries"
+          },
+          "recordingTime": {
+            "type": "string",
+            "format": "timespan",
+            "propertyOrder": 4
+          },
+          "estimatedDatabaseSize": {
+            "propertyOrder": 5,
+            "type": "number",
+            "unit": "byte"
+          },
+          "estimatedDatabaseSizePerSymbol": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number",
+              "unit": "byte"
+            }
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    "DeleteDatabaseEntries": {
+      "userGroups": [
+        "__SystemUsers"
+      ],
+      "readValue": {
+        "function": true
+      },
+      "writeValue": {
+        "type": "object",
+        "properties": {
+          "symbolName": {
+            "type": "string",
+            "description": "Delete database entries of symbol. If 'symbolName' is not set, all entries in the database will be deleted."
+          },
+          "disableRecording": {
+            "type": "boolean",
+            "description": "Disables the recording of one or all historize symbols depending if 'symbolName' is set."
+          }
+        }
+      }
+    }
+  },
+  "packageVersion": "23.0.198",
+  "productVersion": "23.0.198",
+  "signature": "Ok2CI7wY0oBgdJ3jPLVhE1+xyTqExI/TN1FEkjmNQQs0TubBpk4uTUW5y2PlWCA+rD01z82rNZDBL8wUJrjH4APZHy1cm90lRNitPZ3KjhCZf8+bGZQSq8fZhRvLJx5Zu1lVeI2FkaTqk9obW128RJi7SH9fCy7lCPupg8a1x5ZYENMN4RSJT/Lydrs7mh6rz3KCwlFaOZn/oN9QIi7SML77/tvvnqtKWBcPLpq1TsPquy0+uIP4liicFuIuXKJuF5BFmGexfI54+swd8OeRXrM3IuO501UIvzixXE3kLNljZE0kjTnikICCSFCmumlhfmAfjxFq4PT5+nqOtp7UGw=="
+}

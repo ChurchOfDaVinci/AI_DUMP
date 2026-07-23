@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PNInput_PeakShaveBox" Id="{2411ed8f-5865-4a5f-80fb-4638b0cdc28b}">
+    <Declaration><![CDATA[TYPE ST_PNInput_PeakShaveBox :
+STRUCT
+	w_Control			:	WORD;
+	ui_FeedInCurrentLimit	:	UINT;
+	ui_SupplyCurrentLimit	:	UINT;
+	ui_VTRatio				:	UINT;
+	UI_CTRatio				:	UINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

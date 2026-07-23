@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_EventLogger_Params" Id="{2dc1efe8-78e8-4632-873f-5033db78d2b3}">
+    <Declaration><![CDATA[TYPE  ST_EventLogger_Params :
+STRUCT
+	MaxFileSize 		: UDINT := 5000000; //bytes
+	LogWriteInterval 	: TIME := T#1M;
+	MaxFileCount 		: UINT := 100; 
+	MaxFillGrade		: REAL := 0.9;  //controls how full a log file is allowed to get (as a percentage of MaxFileSize) before the logger rotates to the next file.
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

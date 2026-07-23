@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Powerstack_Service" Id="{b7261a14-bcc5-49f5-abb8-762990946357}">
+    <Declaration><![CDATA[TYPE ST_Powerstack_Service :
+STRUCT
+	Netcontactor			: St_Netcontactor_service;
+	PowermoduleMaster		: ST_Powermodule_Service;
+	PowermoduleSlave		: ST_Powermodule_Service;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

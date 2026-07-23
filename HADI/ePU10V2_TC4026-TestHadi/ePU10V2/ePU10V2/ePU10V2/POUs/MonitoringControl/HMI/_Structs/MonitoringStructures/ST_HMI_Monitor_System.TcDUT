@@ -1,0 +1,30 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_HMI_Monitor_System" Id="{9364eeb3-ab4f-4c58-b9c4-c1460d9016e7}">
+    <Declaration><![CDATA[TYPE ST_HMI_Monitor_System :
+STRUCT
+	r_currentEfficiency		: REAL;
+	r_averageEfficiency		: REAL;
+	r_RountripEfficiency	: REAL;
+	r_DischargeEnergy		: REAL;
+	r_ChargedEnergy			: REAL;
+	
+	e_SystemState			: eSystemState; //0:Idle, 1: Stand-by, 2:Conditioning, 3:Dry-Cycle, 4: Running, 5: Charging only, 6: Discharging only, 7: Stopped 8:Fault
+	e_GridMode				: eGridmode;
+	e_UgridPowermode		: eUgridPowermode;
+	
+	b_EarthingSelected		: BOOL;
+	b_startAllowed			: BOOL;
+	
+	b_Alert					: BOOL;
+	b_SMSnumberConfigured	: BOOL;
+	b_CustomNameConfigured	: BOOL;
+	b_TransportModePending	: BOOL;
+	b_MasterSlaveModeEnabled: BOOL;
+	
+	s_SystemName			: STRING(20);
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

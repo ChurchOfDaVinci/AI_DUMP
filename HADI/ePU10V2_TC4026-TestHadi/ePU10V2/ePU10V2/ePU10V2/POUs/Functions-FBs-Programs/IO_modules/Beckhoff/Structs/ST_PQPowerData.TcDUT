@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PQPowerData" Id="{a8bd4a52-8c63-4e9b-912a-3f9213046c82}">
+    <Declaration><![CDATA[TYPE ST_PQPowerData :
+STRUCT
+	//Power
+	ar_ApparentPower			: 	ARRAY[0..3] OF REAL;
+	ar_ReactivePower			: 	ARRAY[0..3] OF REAL;
+	ar_ActivePower				: 	ARRAY[0..3] OF REAL;
+
+	//Energy Consumed
+	r_EnergyConsumed			:	REAL := 0;
+	
+	//Energy Delivered
+	r_EnergySupplied			:	REAL := 0;
+	
+	//THD
+	ar_CurrentTHD						:	ARRAY[0..3] OF REAL := [0, 0, 0, 0];	
+	
+	//PF
+	ar_PowerFactor				:	ARRAY[0..3] OF REAL := [0, 0, 0, 0];
+	
+	//Current
+	ar_Current					: 	ARRAY[0..4] OF REAL := [0, 0, 0, 0];
+	r_CurrentUnbalance			:	REAL;
+END_STRUCT
+END_TYPE
+
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_ModuleStatus" Id="{190a371f-33d9-45f3-97ff-4a6e469072de}">
+    <Declaration><![CDATA[TYPE ST_ModuleStatus :
+STRUCT
+	 (* STATUS 2 *)
+    bPfcOff              : BOOL;	// Bit 7
+    bInputOverVoltage    : BOOL;	// Bit 6	
+    bInputUnderVoltage   : BOOL;	// Bit 5
+    bInputAsymmetry      : BOOL;	// Bit 4
+    bPhaseLost           : BOOL;	// Bit 3
+    bLoadSharingError    : BOOL;	// Bit 2
+    bModuleIdDuplicate   : BOOL;	// Bit 1
+    bPowerLimitation     : BOOL;	// Bit 0
+
+    (* STATUS 1 *)
+    bCanTimeout          : BOOL;	// Bit 7    /////////
+    bSlowStartup         : BOOL;	// Bit 6
+    bOutputOverVoltage   : BOOL;	// Bit 5
+    bTempHigh            : BOOL;	// Bit 4
+    bFanError            : BOOL;	// Bit 3
+    bModuleProtection    : BOOL;	// Bit 2
+    bModuleError         : BOOL;	// Bit 1      ////////////
+    bDcSideOff           : BOOL;	// Bit 0
+
+    (* STATUS 0 *)
+    bDischargeAbnormal   : BOOL;	// Bit 5
+    bMpptSwitchMode      : BOOL;	// Bit 4
+    bPfcAbnormal         : BOOL;	// Bit 3
+    bInternalCommError   : BOOL;	// Bit 2
+    bOutputShortCircuit  : BOOL;	// Bit 0
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

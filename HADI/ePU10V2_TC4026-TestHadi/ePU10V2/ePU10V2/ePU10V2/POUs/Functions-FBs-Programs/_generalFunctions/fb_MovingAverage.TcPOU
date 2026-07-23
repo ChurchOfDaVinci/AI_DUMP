@@ -1,0 +1,36 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="fb_MovingAverage" Id="{3f70d8a5-0410-4f7d-a65a-d1509bfc3b71}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fb_MovingAverage
+VAR_INPUT
+	IN 		: REAL;
+	length	: UINT;
+	enable 	: BOOL;
+END_VAR
+VAR_OUTPUT
+	Q : REAL;
+END_VAR
+VAR
+	r_Sumvalue		: REAL;
+	ui_Index		: UINT; 
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[IF enable THEN
+	r_Sumvalue := r_sumvalue + IN;
+	ui_Index := ui_index +1;
+	
+	IF ui_index > length THEN
+		r_Sumvalue := r_Sumvalue - Q * (ui_index - length +1);
+		ui_index := length - 1; 
+	END_IF
+	
+	Q := r_Sumvalue / MAX(1, ui_Index); 
+ELSE
+	Q := IN;
+	r_Sumvalue := 0;
+	ui_Index := 0;
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

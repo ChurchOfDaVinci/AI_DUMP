@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="PackWord" Id="{43eaee77-87fe-4ad3-bab7-f0bbb3057ebc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION PackWord : WORD
+VAR_INPUT
+	b0			: BOOL;
+	b1			: BOOL;
+	b2			: BOOL;
+	b3			: BOOL;
+	b4			: BOOL;
+	b5			: BOOL;
+	b6			: BOOL;
+	b7			: BOOL;
+	b8			: BOOL;
+	b9			: BOOL;
+	b10			: BOOL;
+	b11			: BOOL;
+	b12			: BOOL;
+	b13			: BOOL;
+	b14			: BOOL;
+	b15			: BOOL;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[PackWord.0	:= b0;
+PackWord.1	:= b1;
+PackWord.2	:= b2;
+PackWord.3	:= b3;
+PackWord.4	:= b4;
+PackWord.5	:= b5;
+PackWord.6	:= b6;
+PackWord.7	:= b7;
+PackWord.8	:= b8;
+PackWord.9	:= b9;
+PackWord.10	:= b10;
+PackWord.11	:= b11;
+PackWord.12	:= b12;
+PackWord.13	:= b13;
+PackWord.14	:= b14;
+PackWord.15	:= b15;
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

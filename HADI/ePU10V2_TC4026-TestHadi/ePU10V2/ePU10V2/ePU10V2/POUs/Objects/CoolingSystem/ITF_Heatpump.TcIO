@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Itf Name="ITF_Heatpump" Id="{81ad603a-925f-4a1a-a781-e035266bc339}">
+    <Declaration><![CDATA[INTERFACE ITF_Heatpump EXTENDS ITF_StandardFB
+]]></Declaration>
+    <Property Name="HeatpumpState" Id="{e84765d7-8c03-4c69-90aa-09fbaaa90fbd}">
+      <Declaration><![CDATA[PROPERTY HeatpumpState : eHeatpumpState]]></Declaration>
+      <Get Name="Get" Id="{7d37d180-4b07-4576-a3f6-55a919cc972b}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Get>
+    </Property>
+    <Property Name="OperationMode" Id="{05db1adb-b4b7-42a0-b0f2-2acad7899755}">
+      <Declaration><![CDATA[PROPERTY OperationMode : eHeatpumpMode]]></Declaration>
+      <Set Name="Set" Id="{7c757362-308e-4764-9814-e386549cc734}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+    <Property Name="Setpoint" Id="{3189da90-1975-4c1e-80fa-59a44dd66182}">
+      <Declaration><![CDATA[PROPERTY Setpoint : Real]]></Declaration>
+      <Set Name="Set" Id="{1548dbf7-ce76-40da-bb52-4d575df1b9b9}">
+        <Declaration><![CDATA[]]></Declaration>
+      </Set>
+    </Property>
+  </Itf>
+</TcPlcObject>

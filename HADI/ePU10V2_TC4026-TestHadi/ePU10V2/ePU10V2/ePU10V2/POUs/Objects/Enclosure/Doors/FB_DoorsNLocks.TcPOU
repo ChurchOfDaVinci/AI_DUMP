@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_DoorsNLocks" Id="{0f18930b-1276-414d-b991-129d0ca996c3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DoorsNLocks
+VAR_OUTPUT
+	get 		: ST_DoorsNLocks_get;
+END_VAR
+
+VAR_INPUT
+	b_DoorswitchOptionFitted	: BOOL;
+END_VAR
+
+VAR
+	b_ControlPanelDoorfb		AT %I* : BOOL;
+	b_ClientPanelDoorfb			AT %I* : BOOL;
+	b_InverterDoorOpen			AT %I* : BOOL;
+	b_UPSBatteryDoorOpen		AT %I* : BOOL;
+    b_MainBatteryLeftDoorOpen	AT %I* : BOOL;
+    b_MainBatteryRightDoorOpen	AT %I* : BOOL;
+	BusCouplerState				AT %I* : UINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+if b_DoorswitchOptionFitted then
+	get.b_BuscouplerOK := BusCouplerState = 8;
+	
+	get.b_ControlPanelDoorOpen 		:= get.b_BuscouplerOK and not b_ControlPanelDoorfb;
+	get.b_ClientPanelDoorOpen		:= get.b_BuscouplerOK and not b_ClientPanelDoorfb; 
+	get.b_InverterDoorOpen			:= get.b_BuscouplerOK and not b_InverterDoorOpen;	     
+	get.b_UPSBatteryDoorOpen		:= get.b_BuscouplerOK and not b_UPSBatteryDoorOpen;		    
+	get.b_MainBatteryLeftDoorOpen	:= get.b_BuscouplerOK and not b_MainBatteryLeftDoorOpen;	
+	get.b_MainBatteryRightDoorOpen  := get.b_BuscouplerOK and not b_MainBatteryRightDoorOpen;
+else
+	get.b_ControlPanelDoorOpen 		:= false;
+    get.b_ClientPanelDoorOpen		:= false;
+    get.b_InverterDoorOpen			:= false;
+    get.b_UPSBatteryDoorOpen		:= false;
+    get.b_MainBatteryLeftDoorOpen	:= false;
+    get.b_MainBatteryRightDoorOpen  := false;
+END_IF]]></ST>
+    </Implementation>
+    <Method Name="GetDiagnostics" Id="{bb6cfa9e-5c58-4a2f-b5c4-c0e3a760ca17}">
+      <Declaration><![CDATA[METHOD PUBLIC GetDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+
+VAR_OUTPUT
+	b_errorActive	: BOOL;
+	b_warningActive	: BOOL;
+END_VAR
+
+VAR
+	by_errCt	: BYTE;
+	by_warnCt	: BYTE;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[AddError[w_Index](
+		b_ErrorTrig				:= get.b_ClientpanelDoorOpen,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 1,
+		e_ObjectID				:=  eObject_ID.Enclosure_doors,
+		s_Message				:= 'clientpanel door opened',
+		e_sev					:= eseverity.info,
+		b_AutoClear				:= TRUE
+		);
+		w_Index := w_Index +1;
+		
+AddError[w_Index](
+		b_ErrorTrig				:= get.b_ControlPanelDoorOpen,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 2,
+		s_Message				:= 'controlpanel door opened',
+		e_sev					:= eseverity.info,
+		b_AutoClear				:= TRUE,
+		);
+		w_Index := w_Index +1;
+		
+AddError[w_Index](
+		b_ErrorTrig				:= get.b_InverterDoorOpen,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 3,
+		s_Message				:= 'Inverter door opened',
+		e_sev					:= eseverity.info,
+		b_AutoClear				:= TRUE
+		);
+		w_Index := w_Index +1;
+		
+AddError[w_Index](
+		b_ErrorTrig				:= get.b_MainBatteryLeftDoorOpen,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 4,
+		s_Message				:= 'Left main battery door opened',
+		e_sev					:= eseverity.info,
+		b_AutoClear				:= TRUE
+		);
+		w_Index := w_Index +1;
+		
+AddError[w_Index](
+		b_ErrorTrig				:= get.b_MainBatteryRightDoorOpen,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 5,
+		s_Message				:= 'Right main battery door opened',
+		e_sev					:= eseverity.info,
+		b_AutoClear				:= TRUE
+		);
+		w_Index := w_Index +1;
+
+AddError[w_Index](
+		b_ErrorTrig				:= get.b_UPSBatteryDoorOpen,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 6,
+		s_Message				:= 'UPS battery door opened',
+		e_sev					:= eseverity.info,
+		b_AutoClear				:= TRUE
+		);
+		w_Index := w_Index +1;
+		
+AddError[w_Index](
+		b_ErrorTrig				:= b_DoorswitchOptionFitted and not get.b_BuscouplerOK,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 7,
+		s_Message				:= 'Doorswitch IO module inoperative',
+		e_sev					:= eseverity.info,
+		b_AutoClear				:= TRUE
+		);
+		w_Index := w_Index +1;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

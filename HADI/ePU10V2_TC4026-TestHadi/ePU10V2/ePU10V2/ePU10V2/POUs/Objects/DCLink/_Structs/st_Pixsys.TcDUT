@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="st_Pixsys" Id="{c3163f1d-3f0a-4efb-b3f5-dc8646a9d747}">
+    <Declaration><![CDATA[TYPE st_Pixsys :
+STRUCT
+	b_DoEnable			: BOOL;	
+	b_DoFeedbackOn 		: BOOL;
+	b_Di1				: BOOL;
+	b_Di2				: BOOL;		
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

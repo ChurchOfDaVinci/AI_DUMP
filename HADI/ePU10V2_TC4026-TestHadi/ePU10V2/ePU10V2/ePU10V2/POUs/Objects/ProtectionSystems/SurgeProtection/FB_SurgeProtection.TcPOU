@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_SurgeProtection" Id="{a7d86522-4376-436a-8a27-abb296075d1d}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_SurgeProtection
+VAR_OUTPUT
+	get				: ST_surgeprotection_get;
+END_VAR
+
+VAR CONSTANT
+	w_ID			: WORD := eObject_ID.SurgeProtection;
+END_VAR
+
+VAR	
+	
+	a_bRead					AT %I* : ARRAY [1..2] OF BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[get.b_Type12_OK := a_bRead[2];
+get.b_Type3_OK 	:= a_bRead[1];]]></ST>
+    </Implementation>
+    <Method Name="GetDiagnostics" Id="{11a65771-d601-4f02-b9a2-cb15674160e5}">
+      <Declaration><![CDATA[METHOD GetDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*Type1/2 warning*)			AddError[w_Index](
+		b_ErrorTrig			:= NOT(get.b_Type12_OK),
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 1,
+		e_ObjectID				:= eObject_ID.SurgeProtection,
+		s_Message				:= 'Type 1+2 Fault',
+		e_sev					:= eseverity.warning,
+		e_ErrAckAccess		:= eErrAckAccess.VDL
+	);
+	w_Index := w_Index +1;
+	
+(*Type3 warning*)			AddError[w_Index](
+		b_ErrorTrig			:= NOT(get.b_Type3_OK),
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 2,
+		s_Message				:= 'Type 3 Fault',
+		e_sev					:= eseverity.warning,
+		e_ErrAckAccess		:= eErrAckAccess.VDL
+	);
+	w_Index := w_Index +1;
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

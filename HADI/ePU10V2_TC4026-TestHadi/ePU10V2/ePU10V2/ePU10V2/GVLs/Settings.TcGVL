@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <GVL Name="Settings" Id="{698b39e8-0ca7-46a8-953d-1cdb1c02da88}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL PERSISTENT
+	{ attribute 'TcHmiSymbol.ShowRecursively' }
+	Configuration						: ST_System_Config;
+	{ attribute 'TcHmiSymbol.ShowRecursively' }
+	MachineParams						: ST_System_MachineParams;
+	{ attribute 'TcHmiSymbol.ShowRecursively' }
+	GridParams							: ST_System_GridCodeParams;
+	{ attribute 'TcHmiSymbol.ShowRecursively' }
+	Properties							: ST_System_Properties;
+	{ attribute 'TcHmiSymbol.ShowRecursively' }
+	Calibration							: ST_System_Calibration;
+	{ attribute 'TcHmiSymbol.ShowRecursively' }
+	Save								: BOOL;
+	{ attribute 'TcHmiSymbol.ShowRecursively' }
+	Load								: BOOL;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

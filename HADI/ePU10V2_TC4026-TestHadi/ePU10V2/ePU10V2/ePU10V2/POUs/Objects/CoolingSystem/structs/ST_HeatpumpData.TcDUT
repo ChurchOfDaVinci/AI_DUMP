@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_HeatpumpData" Id="{e7ac0618-4719-4ddc-89c2-9717fdad1b8b}">
+    <Declaration><![CDATA[TYPE ST_HeatpumpData :
+STRUCT
+	i_FW_Version		:	INT;		//1
+	i_FW_release		:	INT;		//2
+	w_FW_Subrelease		:	WORD;		//3
+	w_FW_creationDate	:	WORD;		//4
+	
+	w_Serialnumber		:	ARRAY[0..17] OF WORD;	//80-97
+	
+	i_OperatingHours	:	INT;		//305-317?
+	
+	r_CoolantPower		:  	REAL;
+	r_InletWaterTemp	:	REAL;		//400
+	r_OutletWaterTemp	:	REAL;		//401
+	r_HighPressure		:	REAL;		//406
+	r_LowPressure		:	REAL;		//414
+	r_CompInputTemp		:	REAL;		//422
+	r_OutdoorTemp		:	REAL;		//428
+	r_CompOutputTemp	:	REAL;		//433-435
+	ui_WaterFlowRate		:	UINT;		//444
+	
+	w_ErrorList			:	ARRAY[1..7] OF WORD;	//950-956	
+	
+	r_FanSpeedPCT		:	REAL;		//7000
+	r_PumpSpeedPCT		:	REAL;		//7001
+	
+	r_SetpointHeating	:	REAL;		//7204
+	r_SetpointCooling	:	REAL;		//7203
+	b_DefrostingActive	:	BOOL;		//7214.14
+	
+	HeatpumpEvents		:	st_HeatpumpEvents;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Genset_setpoints" Id="{03501d86-b151-4eaa-8c22-850e7caa294e}">
+    <Declaration><![CDATA[TYPE ST_Genset_setpoints :
+STRUCT
+	r_SoCStart							: REAL := 10; //%
+	r_SoCStop							: REAL := 90; //%
+	r_BatteryloadStart					: REAL := 90; //%
+	r_BatteryloadStop					: REAL := 50; //%
+	b_StartAtBatteryError				: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

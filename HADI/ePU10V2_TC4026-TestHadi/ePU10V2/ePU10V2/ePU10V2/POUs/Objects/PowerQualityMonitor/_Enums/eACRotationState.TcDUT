@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eACRotationState" Id="{507df994-b688-409a-a360-fb45baf949dd}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE eACRotationState :
+(
+	Left := -1,
+	None := 0,
+	Right := 1
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

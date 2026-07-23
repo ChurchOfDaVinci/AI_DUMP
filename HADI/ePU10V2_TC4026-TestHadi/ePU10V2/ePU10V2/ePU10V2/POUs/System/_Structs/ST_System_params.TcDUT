@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_System_params" Id="{26d1f6db-4db6-471e-99cd-41a365c91435}">
+    <Declaration><![CDATA[TYPE ST_System_params :
+STRUCT
+	//Monitoring & control
+	Powercontroller						: ST_Powercontrol_params;
+	GenGridController					: ST_GenGridController_params;
+	b_VDLReset							: BOOL;
+	OutputContactSignal					: eOutputContactSignal := eOutputContactSignal.GenStartStop;
+	SystemTime							: ST_SystemTime;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

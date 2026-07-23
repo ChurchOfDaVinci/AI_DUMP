@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eInverterModes" Id="{13783930-6109-498b-b249-6befd6c9b0f2}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE eInverterModes :
+(
+	Afe := 0,
+	Island := 1,
+	Microgrid := 2
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_System_MachineParams" Id="{47922c1d-4635-4dcc-bc18-7c21b8f7cf41}">
+    <Declaration><![CDATA[TYPE ST_System_MachineParams :
+STRUCT
+	BMS									: ST_BMS_params;
+	ACDCCharger							: ST_ACDCCharger_params;
+	Interpowersupply					: ST_InternalPowerSupply_Params;
+	Powerstack							: ST_Powerstack_Params;
+	Coolingsystem						: ST_Coolingsystem_Params;
+	NeutralTransformer					: ST_Neutraltransformer_Params;
+	Protections							: ST_Protectionsystems_Params;
+	Enclosure							: ST_Enclosure_Params;
+	system								: ST_System_params;
+	IOT									: ST_IOT_params;
+	Router								: ST_Router_params;
+	PSB									: ST_peakshavebox_params;
+	ACswitchgear						: ST_ACswitchgear_params;
+	HartingIO							: ST_HartingIO_params;
+	GenComm								: ST_GenComm_params;
+	Eventlogger							: ST_EventLogger_params;
+	DC									: ST_DClink_params;
+	ExtController						: ST_ExtController_params;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eGenOperationMode" Id="{a9083b00-52fc-4ec6-bcd3-6f4109bdbd99}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eGenOperationMode :
+(
+	None := 0,
+	BlockMode := 1,
+	ManualMode := 2,
+	SemiAuto := 3,
+	Auto	:=	4,
+	Test	:=	5
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

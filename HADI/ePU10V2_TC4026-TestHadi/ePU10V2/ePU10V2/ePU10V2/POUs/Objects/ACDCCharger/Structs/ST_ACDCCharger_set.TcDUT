@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_ACDCCharger_set" Id="{d561b5d0-7ad3-42f0-9093-134edb7f5e42}">
+    <Declaration><![CDATA[TYPE ST_ACDCCharger_set :
+STRUCT
+	b_enable			: 	BOOL;
+	e_ControlType		: 	ePowerControlType;
+	r_currentSetpoint 	: 	REAL;
+	r_powersetpoint		: 	REAL;
+	r_MinGridVoltage	:	REAL;
+	r_SocTarget			:	REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

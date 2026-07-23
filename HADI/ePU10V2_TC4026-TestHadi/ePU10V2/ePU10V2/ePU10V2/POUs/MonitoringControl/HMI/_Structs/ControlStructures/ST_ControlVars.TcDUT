@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_ControlVars" Id="{7b502290-ddf8-4b94-b521-eb204866a6ef}">
+    <Declaration><![CDATA[TYPE ST_ControlVars :
+STRUCT
+	b_start							: BOOL;
+	b_stop							: BOOL;
+	b_shutdown						: BOOL;
+	b_Reset							: BOOL;
+	b_SystemShutdown				: BOOL;
+	b_EMstop						: BOOL;
+	b_ClearHistory					: BOOL;
+	b_ActivateSettings 				: BOOL;
+	b_ActivateIotSettings			: BOOL;
+	b_startDeHum					: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

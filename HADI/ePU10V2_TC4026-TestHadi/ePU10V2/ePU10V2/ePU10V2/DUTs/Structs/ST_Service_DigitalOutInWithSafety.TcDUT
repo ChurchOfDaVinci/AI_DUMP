@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Service_DigitalOutInWithSafety" Id="{6a03e69e-bd85-40ba-9b30-d87541fbc8ee}">
+    <Declaration><![CDATA[TYPE ST_Service_DigitalOutInWithSafety EXTENDS ST_Service_DigitalOutIn:
+STRUCT
+	{attribute 'TcHmiSystemEng.Parameter.Name' := 'Dependency state'}
+	SafetyLoopOK			: BOOL; 
+	EDM					: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,275 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_CoolingSystem" Id="{f632dad5-0ddb-4b03-b8d0-21b7b8da0602}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_CoolingSystem IMPLEMENTS ITF_standardFB
+VAR_IN_OUT
+	st_params					: ST_Coolingsystem_params;
+END_VAR
+
+VAR
+	EMstopActive	:	Bool;	
+
+	Heatpump 	: 	ITF_Heatpump;
+	LGHeatpump	:	FB_LGThermaV;
+	RemoteIO	:	FB_TruCompTCME21_IOModule;
+	
+	b_PumpEnable		AT %Q* : Bool;
+	b_HeatpumpEnable	AT %Q* : Bool;
+	b_HeatpumpFuseFB	AT %I* : Bool;
+	
+	
+END_VAR
+
+
+VAR_INPUT
+	//Internal power supply status
+	b_HVDC_Available			:	BOOL;	//from FB_ips, 24V online
+	b_400v_Available 			:	BOOL;	//from FB_ips, 400vac online
+
+	InverterConditioningRequirement		:	eConditioningRequirement;	
+	BMSConditioningRequirement			:	eConditioningRequirement;
+	EnclosureConditioningRequirement	:	eConditioningRequirement;
+	ACDCConditioningRequirement			:	eConditioningRequirement;
+	ManualConditioningRequirement		:	eConditioningRequirement;		
+END_VAR
+
+VAR_OUTPUT
+	get						: st_CoolingSystem_Get;
+	IPSRequest 				: ST_InternalPowerSupply_PowerDemand;//to FB_IPS, power requirements for cooling system
+	b_FanPowerstackEnable	: BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+Heatpump := LGHeatpump;
+pumpcontrol();
+HeatpumpControl();
+
+RemoteIO();
+RemoteIO.set.IPAddress 		:= st_params.IO_IPaddress;
+get.r_CoolantTemperature 	:= RemoteIO.Get.AnalogInput1;
+get.r_CoolantPressure		:=	Remoteio.Get.AnalogInput2;
+
+IF not EMstopActive THEN
+	IF Heatpump.HeatpumpState = eHeatpumpstate.Active_Cooling THEN
+		get.CoolingSystemState := eCoolingSystemState.ActiveCooling;
+	ELSIF  Heatpump.HeatpumpState = eHeatpumpstate.Active_Heating THEN
+		get.CoolingSystemState := eCoolingSystemState.ActiveHeating;
+	ELSIF b_PumpEnable THEN
+		get.CoolingSystemState := eCoolingSystemState.Circulating;
+	ELSE
+		get.CoolingSystemState := eCoolingSystemState.OFF;
+	END_IF
+end_if
+]]></ST>
+    </Implementation>
+    <Method Name="EMstop" Id="{b3a9a3c0-915c-4ec5-a067-d150e877f2c9}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD EMstop : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[EMstopActive := true;
+Heatpump.EMstop();
+get.CoolingSystemState := eCoolingSystemstate.EMSTOP;
+EMstop := true;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="getDiagnostics" Id="{d08efe4f-65db-427f-b42c-aa4ce172e5a7}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD getDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[AddError[w_Index](
+	b_ErrorTrig			:= get.events.b_CoolingSystemFuseFailure,
+	out_ST_Error		:= a_ActiveEvents[w_Index],
+	w_ErrorID			:= 1,
+	e_ObjectID			:=  eObject_ID.Cooling,
+	s_Message			:= 'Heatpump breaker tripped, heatpump inoperative',
+	e_sev				:= eseverity.Warning,
+	b_AutoClear			:= TRUE
+);
+w_Index := w_Index +1;
+	
+
+AddError[w_Index](
+	b_ErrorTrig			:= Get.Events.b_CoolingLoopPressureTooLow,
+	out_ST_Error		:= a_ActiveEvents[w_Index],
+	w_ErrorID			:= 2,
+	s_Message			:= 'pressure fault',
+	e_sev				:= eSeverity.NormalShutdown,	
+	b_AutoClear			:= FALSE,
+);
+w_Index := w_Index +1;	
+	
+
+AddError[w_Index](
+	b_ErrorTrig			:= Get.Events.b_CoolingLoopPressureLow,
+	out_ST_Error		:= a_ActiveEvents[w_Index],
+	w_ErrorID			:= 3,
+	s_Message			:= 'pressure warning',
+	e_sev				:= eSeverity.Warning,	
+	b_AutoClear			:= TRUE,
+);
+w_Index := w_Index +1;	
+	
+	
+AddError[w_Index](
+	b_ErrorTrig			:= get.events.b_CoolantTempHigh,
+	out_ST_Error		:= a_ActiveEvents[w_Index],
+	w_ErrorID			:= 4,
+	s_Message			:= 'Coolant temperature high',
+	e_sev				:= eseverity.warning,
+	b_AutoClear			:= TRUE
+);
+w_Index := w_Index +1;
+	
+
+AddError[w_Index](
+	b_ErrorTrig			:= get.events.b_CoolantTempTooHigh,
+	out_ST_Error		:= a_ActiveEvents[w_Index],
+	w_ErrorID			:= 5,
+	s_Message			:= 'Coolant temperature too high',
+	e_sev				:= eseverity.NormalShutdown,
+);
+w_Index := w_Index +1;
+
+
+AddError[w_Index](
+	b_ErrorTrig			:= get.events.b_CoolantTempLow,
+	out_ST_Error		:= a_ActiveEvents[w_Index],
+	w_ErrorID			:= 6,
+	s_Message			:= 'Coolant temperature low',
+	e_sev				:= eseverity.warning,
+	b_AutoClear			:= TRUE
+);
+w_Index := w_Index +1;
+
+Heatpump.getDiagnostics(AddError := AddError, a_ActiveEvents := a_ActiveEvents, w_Index := w_Index);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HeatpumpControl" Id="{1e8aec11-8c03-4a70-9e50-440f924318cc}">
+      <Declaration><![CDATA[METHOD HeatpumpControl : BOOL
+VAR_INPUT
+END_VAR
+
+
+VAR_inst
+	ton_heatpumpPowerDelay	:	Ton	:=	(PT := T#1s);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//if any of the mayor parts require conditioning, the heatpump is required and thus 400VAC is required
+if not EMStopActive and 
+	(InverterConditioningRequirement > eConditioningRequirement.Pumprequired OR 
+	BMSConditioningRequirement > eConditioningRequirement.Pumprequired OR 
+	ACDCConditioningRequirement > eConditioningRequirement.Pumprequired) or
+	ManualConditioningRequirement > eConditioningRequirement.none then
+	
+	ipsrequest.b_Demand_400V := true;
+	
+	if b_400v_Available then
+		if Heatpump.HeatpumpState >= eHeatpumpState.Standby then 
+			if InverterConditioningRequirement = eConditioningRequirement.CoolingRequired or
+				BMSConditioningRequirement = eConditioningRequirement.CoolingRequired OR 
+				ACDCConditioningRequirement = eConditioningRequirement.CoolingRequired OR
+				ManualConditioningRequirement = eConditioningRequirement.CoolingRequired then
+					Heatpump.OperationMode := eHeatpumpMode.Cooling;
+					Heatpump.Setpoint := max(main_fast.enclosure.get.climate.r_Dewpoint + 2, 18);
+			elsif InverterConditioningRequirement = eConditioningRequirement.HeatingRequired or
+				BMSConditioningRequirement = eConditioningRequirement.HeatingRequired OR 
+				ACDCConditioningRequirement = eConditioningRequirement.HeatingRequired or
+				ManualConditioningRequirement = eConditioningRequirement.HeatingRequired then
+					Heatpump.OperationMode := eHeatpumpMode.Heating;
+					Heatpump.Setpoint := 35;
+			END_IF
+		end_if
+	end_if
+else
+	Heatpump.OperationMode := eHeatpumpMode.Standby;
+	if heatpump.HeatpumpState <> eHeatpumpState.Active_Heating and heatpump.HeatpumpState <> eHeatpumpState.Active_cooling then
+		ipsrequest.b_Demand_400V := false;
+	END_IF
+END_IF
+
+ton_heatpumpPowerDelay(in := b_400v_Available and b_HeatpumpFuseFB);
+b_HeatpumpEnable := ton_heatpumpPowerDelay.Q;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Init" Id="{bf277a9f-25d4-4e3f-bf42-d4b9767c43fd}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Init : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Heatpump.Init();]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="InternalConditioning" Id="{72f37d88-c59b-42c8-afc0-bef2aaf7488d}">
+      <Declaration><![CDATA[METHOD InternalConditioning : eConditioningRequirement
+VAR_INST
+	ManualconditioningTimelimit	:	ton := (PT := T#30M);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+InternalConditioning := eConditioningrequirement.none;
+
+// IF 		st_Params.b_ActivateCooling AND NOT ManualconditioningTimelimit.q 	or 
+// 		
+// 	THEN
+// 	InternalConditioning := eConditioningrequirement.CoolingRequired;
+// ELSIF st_Params.b_ActivateHeating AND NOT ManualconditioningTimelimit.q THEN
+// 	InternalConditioning := eConditioningrequirement.HeatingRequired;
+// END_IF
+// 
+// //to prevent the system being stuck in a manual mode. It is automatically deactivated after the set time limit (1H). 
+// ManualConditioningTimelimit(in := st_Params.b_ActivateCooling OR st_Params.b_ActivateHeating);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PumpControl" Id="{040ae916-ef3e-4a88-a274-a2dc8d9bb137}">
+      <Declaration><![CDATA[METHOD PumpControl : BOOL
+VAR_INPUT
+END_VAR
+
+var_inst
+	tof_PumpOffDelay	:	Tof	:=	(pt := T#30s);
+	PumpRequired		:	Bool;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+PumpRequired := InverterConditioningRequirement > eConditioningrequirement.none or
+ 				ACDCConditioningRequirement	 > eConditioningrequirement.none AND
+				not EMstopActive and 
+					ManualConditioningRequirement > eConditioningRequirement.none or
+					(BMSConditioningRequirement > eConditioningrequirement.none or
+					EnclosureConditioningRequirement > eConditioningrequirement.none);
+
+tof_PumpOffDelay(in := PumpRequired);
+
+IPSRequest.b_Demand_HVDC := PumpRequired or b_PumpEnable; 
+b_PumpEnable := tof_PumpOffDelay.Q and b_HVDC_Available;
+
+
+//enclosureconditioning requires powerstack fan to run
+b_FanPowerstackEnable := EnclosureConditioningRequirement > eConditioningrequirement.none and b_PumpEnable;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{2e1006d9-51bd-4d90-81ed-bb86335f15c4}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Reset : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[EMstopActive := false;
+Heatpump.Reset();
+
+IF get.CoolingSystemState = eCoolingSystemstate.EMSTOP THEN
+	get.CoolingSystemState := eCoolingSystemstate.OFF;
+end_if
+
+Reset := true;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,31 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eStatusPowerStack" Id="{dbe0ee84-f684-4415-993b-7d0f54b2e8a6}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE eStatusPowerStack :
+(
+	Init					:= 0,	// Not ready to do anything yet
+	off						:= 1, 	// OFF MCCBs OPEN,
+	idle					:= 2, 	// MCCB CLOSED, No modulation, Netcontactor CLOSED with grid OR Netcontactor OPEN + modulation with no grid
+	running					:= 3,	// MCCB CLOSED + Modulation, Netcontactor CLOSED
+	ecorunning				:= 4,	// MCCB CLOSED + Modulation with only one out of two inverters, Netcontactor CLOSED
+	Wait_CoolingMode1		:= 20,
+	Wait_HVDC				:= 21,
+	Start_Master			:= 22, 	// Starting master
+	Start_Slave				:= 23,	// Starting slave
+	Synchronization			:= 24,
+	Wait_CoolingMode2		:= 25,
+	Standby					:= 9,
+	Standby_GridSupply		:= 10, 	// POWERMODULE 1 + 2 off, Netcontactor Closed
+	Standby_InternalSupply	:= 11,	// PowerModule 1 ON, powermodule 2 Off, Netcontactor OPEN
+	shutdown				:= 12,
+	fault					:= 13,
+	GridCodeStop			:= 14,
+	Cooling_Shutdown		:= 15  // 	
+);		
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

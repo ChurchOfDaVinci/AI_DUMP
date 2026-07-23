@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="GenGridMode" Id="{ab5fc5ea-5b92-457c-b517-36b37635e07d}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE GenGridMode :
+(
+	none := 0,
+	Grid := 1,
+	GridDisconnected := 11,
+	GridToNone := 12,
+	Genset := 2
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

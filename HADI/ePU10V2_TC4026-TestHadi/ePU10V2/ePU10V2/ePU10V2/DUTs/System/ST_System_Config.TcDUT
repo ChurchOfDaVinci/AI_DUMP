@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_System_Config" Id="{e1248683-53dc-4e96-8ddc-67ad403548cb}">
+    <Declaration><![CDATA[TYPE ST_System_Config :
+STRUCT
+	DefaultSettingsActive			: BOOL := TRUE; //To verify when all settings have been reset.
+	b_DoublePowerModule				: BOOL := FALSE;
+	b_PeakshaverBoxEnable			: BOOL := FALSE;
+	
+	//NeutralTransformer
+	b_NeutralTransformer			: BOOL := FALSE;
+	
+	
+	//Netcontactor
+	b_AutomaticACrotation			: BOOL := FALSE;
+	
+	//DC
+	b_DCbuscoupling					: BOOL := FALSE;
+	b_DcCharger						: BOOL := FALSE;
+	
+	//AC
+	b_ACInputConnection				: BOOL := FALSE;
+	b_ThirdOutputConnection			: BOOL := FALSE;
+	//communication
+	e_PNcouplerType					: ePNcouplerType := ePNcouplerType.None;
+	
+	//batteries
+	by_NoBatteryStrings			 	: BYTE := 3; // pieces
+	e_BatteryType					: eBatteryType := eBatteryType.standard_306Ah;
+	
+	//Powernet option
+	b_PowernetClient				: BOOL :=  FALSE;
+	
+	//CLIENT specifics
+	b_ClientHMI						: BOOL := FALSE;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

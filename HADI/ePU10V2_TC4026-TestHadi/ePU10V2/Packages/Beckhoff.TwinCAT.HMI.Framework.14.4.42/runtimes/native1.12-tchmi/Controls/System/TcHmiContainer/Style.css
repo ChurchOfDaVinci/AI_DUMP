@@ -1,0 +1,8 @@
+/** Styles for all themes */
+
+/* Style for the main element */
+.TcHmi_Controls_System_TcHmiContainer,
+.tchmi-container {
+    perspective: inherit;
+    perspective-origin: inherit;
+}

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_ProtectionSystems_get" Id="{c1c9b2be-98af-477c-aa1b-0263e2a01a7a}">
+    <Declaration><![CDATA[TYPE ST_ProtectionSystems_get :
+STRUCT
+	//Fire Detection System
+	FireDetection						: ST_Firedetection_get;
+	
+	//InsulationMonitor
+	Insulation							: ST_InsulationMonitor_get;
+	
+	//MRCDB
+	MRCDB								: ST_ResidualCurrentMonitor_get;
+	
+	//Surge protection
+	Surge								: ST_SurgeProtection_get;
+	
+	//Overcurrent protection
+	OvercurrentProtection				: ST_OverCurrentProtection_Get;
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

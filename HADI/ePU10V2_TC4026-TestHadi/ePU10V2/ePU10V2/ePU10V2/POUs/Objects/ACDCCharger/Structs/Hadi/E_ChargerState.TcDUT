@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="E_ChargerState" Id="{73d979d3-002a-43e6-8b13-29ff42e14b6f}">
+    <Declaration><![CDATA[TYPE E_ChargerState :
+(
+    Idle := 0,
+    ModulesOff := 10,
+    SetVI := 20,
+    CheckVoltage := 30,
+    EnableModules := 40,
+    Running := 100,
+    Shutdown := 200,
+    OpenRelay := 210,
+    Fault := 900
+);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

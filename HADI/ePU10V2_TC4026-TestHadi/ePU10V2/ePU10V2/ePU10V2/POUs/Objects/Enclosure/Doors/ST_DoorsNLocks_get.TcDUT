@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_DoorsNLocks_get" Id="{5236b545-1465-4c3a-8495-06143d67e04c}">
+    <Declaration><![CDATA[TYPE ST_DoorsNLocks_get :
+STRUCT
+	b_BuscouplerOK					: Bool;
+	b_ClientpanelDoorOpen			: BOOL;
+	b_ControlPanelDoorOpen			: BOOL;	
+	b_InverterDoorOpen				: BOOL;
+	b_UPSBatteryDoorOpen			: BOOL;
+	b_MainBatteryLeftDoorOpen		: BOOL;
+	b_MainBatteryRightDoorOpen		: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

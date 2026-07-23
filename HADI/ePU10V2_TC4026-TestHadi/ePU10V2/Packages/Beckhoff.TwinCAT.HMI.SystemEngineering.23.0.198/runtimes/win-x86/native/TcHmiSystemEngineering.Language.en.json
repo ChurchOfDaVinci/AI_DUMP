@@ -1,0 +1,35 @@
+{
+  "locale": "en",
+  "localizedText": {
+    "runtimes": "Runtimes",
+    "enabled": "Enabled",
+    "adsRuntime": "ADS runtime",
+    "entryPath": "Entry path",
+    "isInitializedSymbol": "Symbol for initialization status",
+    "autoSymbolUpdate": "Automatic symbol update",
+    "restoreSymbolAccessOnUpdate": "Restore symbol access on symbol update",
+    "enableAuditTrail": "Enable audit trail",
+    "state": "State",
+    "symbolUpdateError": "Symbol update error",
+    "storeSymbolAccessesError": "Store symbol accesses error",
+    "symbolUpdateStateDesc": "Symbol update description",
+    "code": "Code",
+    "message": "Message",
+
+    "autoSymbolUpdate_description": "Automatically checks the PLC for changes and maps the symbols. Mapping of the symbols may take some time. Therefore, for smaller changes on the PLC that do not affect the TcHmiSystemEng.*, it is recommended to set this to false.",
+    "restoreSymbolAccessOnUpdate_description": "Stores all symbol access rights before deletion and restores them automatically after a symbol update wherever possible.",
+    "enableAuditTrail_description": "Uses AuditTrail to historize symbols.",
+
+    "connectionState": "Connection state",
+    "systemServiceAdsState": "System service ADS state",
+    "adsState": "ADS state",
+    "adsVersion": "TwinCAT version",
+    "deviceName": "Device name",
+    "adsProjectName": "Project name",
+    "adsProjectCompiledAt": "Compiled at",
+
+    "symbolInitState": "Symbol initialization state",
+    "symbolInitialized": "Symbol initialized",
+    "symbolsUpToDate": "Symbols up to date"
+  }
+}

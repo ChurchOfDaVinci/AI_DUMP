@@ -1,0 +1,84 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.12">
+  <DUT Name="st_BMS_Events" Id="{f709d18b-55fb-49d3-8ea9-8f09644fee1c}">
+    <Declaration><![CDATA[TYPE st_BMS_Events :
+STRUCT
+	//sunspec error list
+	b_COMMUNICATION_ERROR			:	BOOL;
+	b_OVER_TEMP_ALARM				:	BOOL;
+	b_OVER_TEMP_WARNING				:	BOOL;
+	b_UNDER_TEMP_ALARM				:	BOOL;
+	b_UNDER_TEMP_WARNING			:	BOOL;
+	b_OVER_CHARGE_CURRENT_ALARM		:	BOOL;
+	b_OVER_CHARGE_CURRENT_WARNING	:	BOOL;
+	b_OVER_DISCHARGE_CURRENT_ALARM	:	BOOL;
+	b_OVER_DISCHARGE_CURRENT_WARNING:	BOOL;
+	b_OVER_VOLT_ALARM				:	BOOL;
+	b_OVER_VOLT_WARNING				:	BOOL;
+	b_UNDER_VOLT_ALARM				:	BOOL;
+	b_UNDER_VOLT_WARNING			:	BOOL;
+	b_UNDER_SOC_MIN_ALARM			:	BOOL;
+	b_UNDER_SOC_MIN_WARNING			:	BOOL;
+	b_OVER_SOC_MAX_ALARM			:	BOOL;
+	b_OVER_SOC_MAX_WARNING			:	BOOL;
+	b_VOLTAGE_IMBALANCE_WARNING		:	BOOL;
+	b_TEMPERATURE_IMBALANCE_ALARM	:	BOOL;
+	b_TEMPERATURE_IMBALANCE_WARNING	:	BOOL;
+	b_CONTACTOR_ERROR				:	BOOL;
+	b_FAN_ERROR						:	BOOL;
+	b_GROUND_FAULT					:	BOOL;
+	b_OPEN_DOOR_ERROR				:	BOOL;
+	b_CURRENT_IMBALANCE_WARNING		:	BOOL;
+	b_OTHER_ALARM					:	BOOL;
+	b_OTHER_WARNING					:	BOOL;
+	b_CONFIGURATION_ALARM			:	BOOL;
+	b_CONFIGURATION_WARNING			:	BOOL;
+	b_POWERONFAULT					: 	BOOL;
+	b_POWEROFFFAULT					:	BOOL;
+	b_DISCONNECTOR_OFF				: 	BOOL;
+	
+	b_SocLowLimitOutOfRange			:	BOOL;
+	b_SocHighLimitOutOfRange		: 	BOOL;
+	
+	b_SBMUCommError					:	ARRAY [0..3] OF BOOL;	
+	b_SBMUFailedToConnect			:	ARRAY [0..3] OF BOOL;
+
+	(* old event list. Replaced by sunspec
+	BMSWatchdogWarning				:	BOOL;
+	BMSWatchdogError				:	BOOL;
+	
+	BMSWarningStatus				:	BOOL;
+	BMSFaultStatus					:	BOOL;
+	
+	BMSPowerOnFault					:	BOOL;
+	BMSPowerOffFault				:	BOOL;
+	
+	SOCLowWarning					: 	BOOL;
+	OverVoltageWarning				:	BOOL;
+	UnderVoltageWarning				:	BOOL;
+	VoltageBalanceWarning			:	BOOL;
+	
+	OverTemperatureWarning			:	BOOL;
+	UnderTemperatureWarning			:	BOOL;
+	TemperatureDifferenceWarning	:	BOOL;
+	
+	OverCurrentWarning				:	BOOL;
+	
+	CommunicationWarning			:	BOOL;
+	
+	OverVoltageError				:	BOOL;
+	UnderVoltageError				:	BOOL;
+	OverTemperatureError			:	BOOL;
+	UnderTemperatureError			:	BOOL;
+	
+	CSCError						:	BOOL;
+	SBMUError						:	BOOL;
+	MBMUError						:	BOOL;
+	
+	CommunicationError				:	BOOL;
+	*)
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

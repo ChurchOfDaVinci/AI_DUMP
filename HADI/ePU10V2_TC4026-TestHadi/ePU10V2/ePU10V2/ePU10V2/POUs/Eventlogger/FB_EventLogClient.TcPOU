@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_EventLogClient" Id="{8d00ec58-7866-4c74-a054-f8c06be1eb3f}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EventLogClient
+
+
+VAR_STAT
+	fbLoggerStatic	: REFERENCE TO FB_Eventlogger;
+	e_objectID			: eObject_id;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <Method Name="Init" Id="{8e64f769-b29d-47f4-b06c-089af1f3f661}">
+      <Declaration><![CDATA[METHOD PUBLIC Init : BOOL
+VAR_INPUT
+	Eventlogger	: REFERENCE TO FB_Eventlogger;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF __ISVALIDREF(Eventlogger) THEN
+	fbLoggerStatic REF= Eventlogger;
+	Init := TRUE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LogEvent" Id="{571f0174-cc74-4ec7-9d58-3f4f1e348ea4}">
+      <Declaration><![CDATA[METHOD PUBLIC LogEvent : BOOL
+VAR_INPUT
+	eCategory	: eEventLogCategory;
+	eSeverity	: eEventLogSeverity;
+	Message		: STRING;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF __ISVALIDREF(fbLoggerStatic) THEN
+	LogEvent := fbLoggerStatic.PushEvent(
+		eCategory := eCategory,
+		eSeverity := eSeverity,
+		sSourceFB := TO_STRING(e_ObjectID),
+		sMessage := Message);
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="LogEventOnRise" Id="{a3e1c2d4-5f6b-7a8c-9d0e-1f2a3b4c5d6e}">
+      <Declaration><![CDATA[METHOD PUBLIC LogEventOnRise : BOOL
+// Each call site must pass a unique ID (0..100) so that every trigger
+// gets its own independent R_TRIG slot within this FB instance.
+VAR_INPUT
+	ID			: BYTE;		// unique index per call site, 0..100 per instance
+	Trigger		: BOOL; 
+	eCategory	: eEventLogCategory;
+	eSeverity	: eEventLogSeverity;
+	Message		: STRING;
+	objectID	: eObject_id;
+END_VAR
+VAR_INST
+	arTrig		: ARRAY[0..100] OF R_TRIG;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF ID > 100 THEN RETURN; END_IF
+arTrig[ID](CLK := Trigger);
+IF arTrig[ID].Q THEN
+	LogEventOnRise := LogEvent(eCategory := eCategory, eSeverity := eSeverity, Message := Message);
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ObjectID" Id="{50c32cbf-5846-4b8c-9b25-9189b7576e3a}">
+      <Declaration><![CDATA[METHOD ObjectID : BOOL
+VAR_INPUT
+	IN		: eObject_id;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[e_objectID := IN;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

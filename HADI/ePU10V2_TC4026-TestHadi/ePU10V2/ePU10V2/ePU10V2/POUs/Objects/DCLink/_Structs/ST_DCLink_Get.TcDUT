@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_DCLink_Get" Id="{1eee37a2-3d57-4cc4-8f20-af24b3850966}">
+    <Declaration><![CDATA[TYPE ST_DCLink_Get :
+STRUCT
+	b_DCCouplingState				: BOOL;
+	Powerdata						: REFERENCE TO ST_Bourns_Powerdata;
+	r_ratedCurrent					: REAL;
+	r_BattChargePowerLimit			: REAL;
+	r_BattDischargePowerLimit		: REAL;
+	
+	r_ExportPowerLimit				: REAL;
+	r_ExportCurrentLimit			: REAL;
+	r_ImportPowerLimit				: REAL;
+	r_ImportCurrentLimit			: REAL;
+	events							: ST_DCLink_events;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

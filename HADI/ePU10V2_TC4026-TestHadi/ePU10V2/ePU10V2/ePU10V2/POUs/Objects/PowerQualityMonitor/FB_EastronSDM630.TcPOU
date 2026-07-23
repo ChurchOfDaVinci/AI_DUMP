@@ -1,0 +1,216 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_EastronSDM630" Id="{cd8703f6-ea07-45c0-9a18-12a47f68164a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EastronSDM630 IMPLEMENTS ITF_StandardFB
+VAR_INPUT
+END_VAR
+VAR_OUTPUT
+END_VAR
+VAR
+	get			:	st_Eastron_get;	
+END_VAR
+
+Var_in_out constant
+	st_params 	: 	st_EastronParams;
+END_VAR
+
+var	
+	ReadInputRegs		:	FB_MBReadInputRegs;
+	StartInputRegRead	:	Bool;
+	InputRegData		:	Array[0..35] of dword;
+	InputRegDataCommtimer	:	Ton := (PT := T#5s); 
+
+	ReadInputRegsB			:	FB_MBReadInputRegs;
+	StartInputRegReadB		:	Bool;
+	InputRegDataB			:	Array[0..14] of dword;
+	InputRegDataCommtimerB	:	Ton := (PT := T#5s); 	
+	
+	Step			: 	uint	:=	0;
+		
+	Ton_UpdateInterval	:	TON := (PT := T#1000ms);
+	
+	b_CommFault		:	Bool;
+end_var]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+Ton_UpdateInterval(in := not Ton_UpdateInterval.Q);
+
+InputRegDataCommtimer();
+InputRegDataCommtimerB();
+
+	
+get.b_DataValid := not (InputRegDataCommtimer.Q or InputRegDataCommtimerB.q);
+	
+	case step of
+		0:
+			if Ton_UpdateInterval.Q then
+				Step := 10;
+			END_IF
+				
+		10: //read analog input status
+			StartInputRegRead := true;	
+			Step := 11;
+		11: 
+			StartInputRegRead := false;
+			IF NOT ReadInputRegs.bBusy THEN
+				IF NOT ReadInputregs.bError THEN	
+					get.PhaseVoltage[phases.L1] := dWordToReal(InputRegData[0]);
+					get.PhaseVoltage[phases.L2] := dWordToReal(InputRegData[1]);
+					get.PhaseVoltage[phases.L3] := dWordToReal(InputRegData[2]);
+					
+					get.Current[phases.L1] := dWordToReal(InputRegData[3]);
+					get.Current[phases.L2] := dWordToReal(InputRegData[4]);
+					get.Current[phases.L3] := dWordToReal(InputRegData[5]);
+					
+					get.ActivePower[phases.L1] := dWordToReal(InputRegData[6]);
+					get.ActivePower[phases.L2] := dWordToReal(InputRegData[7]);
+					get.ActivePower[phases.L3] := dWordToReal(InputRegData[8]);
+					
+					get.ApparentPower[phases.L1] := dWordToReal(InputRegData[9]);
+					get.ApparentPower[phases.L2] := dWordToReal(InputRegData[10]);
+					get.ApparentPower[phases.L3] := dWordToReal(InputRegData[11]);
+					
+					get.ReactivePower[phases.L1] := dWordToReal(InputRegData[12]);
+					get.ReactivePower[phases.L2] := dWordToReal(InputRegData[13]);
+					get.ReactivePower[phases.L3] := dWordToReal(InputRegData[14]);
+					
+					get.Powerfactor[phases.L1] := dWordToReal(InputRegData[15]);
+					get.Powerfactor[phases.L2] := dWordToReal(InputRegData[16]);
+					get.Powerfactor[phases.L3] := dWordToReal(InputRegData[17]);
+					
+					get.PhaseVoltage[phases.AVG] 	:= dWordToReal(InputRegData[21]);
+					get.Current[phases.avg] 		:= dWordToReal(InputRegData[23]);
+					get.ActivePower[phases.Sum] 	:= dWordToReal(InputRegData[26]);
+					get.ApparentPower[phases.Sum] 	:= dWordToReal(InputRegData[28]);	
+					get.ReactivePower[phases.Sum] 	:= dWordToReal(InputRegData[30]);
+					get.Powerfactor[phases.AVG] 	:= dWordToReal(InputRegData[31]);	
+					
+					get.Frequency					:= dWordToReal(InputRegData[35]);
+					
+					InputRegDataCommtimer.in := false;
+				else
+					InputRegDataCommtimer.IN := true;
+				END_IF
+				step := 20;
+			end_if
+			
+		20: //read analog input status
+			StartInputRegReadB := true;	
+			Step := 21;
+		21: 
+			StartInputRegReadB := false;
+			IF NOT ReadInputRegsB.bBusy THEN
+				IF NOT ReadInputregsB.bError THEN	
+					get.TotalActiveEnergyIn[phases.L1] := dWordToReal(InputRegDataB[0]);
+					get.TotalActiveEnergyIn[phases.L2] := dWordToReal(InputRegDataB[1]);
+					get.TotalActiveEnergyIn[phases.L3] := dWordToReal(InputRegDataB[2]);
+					get.TotalActiveEnergyIn[phases.Sum] := get.TotalActiveEnergyIn[phases.L1] + get.TotalActiveEnergyIn[phases.L2] + get.TotalActiveEnergyIn[phases.L3];
+					
+					get.TotalActiveEnergyOut[phases.L1] := dWordToReal(InputRegDataB[3]);
+					get.TotalActiveEnergyOut[phases.L2] := dWordToReal(InputRegDataB[4]);
+					get.TotalActiveEnergyOut[phases.L3] := dWordToReal(InputRegDataB[5]);
+					get.TotalActiveEnergyOut[phases.Sum] := get.TotalActiveEnergyOut[phases.L1] + get.TotalActiveEnergyOut[phases.L2] + get.TotalActiveEnergyOut[phases.L3];
+
+					get.TotalReactiveEnergyIn[phases.L1] := dWordToReal(InputRegDataB[9]);
+					get.TotalReactiveEnergyIn[phases.L2] := dWordToReal(InputRegDataB[10]);
+					get.TotalReactiveEnergyIn[phases.L3] := dWordToReal(InputRegDataB[11]);
+					get.TotalReactiveEnergyIn[phases.Sum] := get.TotalReactiveEnergyIn[phases.L1] + get.TotalReactiveEnergyIn[phases.L2] + get.TotalReactiveEnergyIn[phases.L3];
+					
+					get.TotalReActiveEnergyOut[phases.L1] := dWordToReal(InputRegDataB[12]);
+					get.TotalReActiveEnergyOut[phases.L2] := dWordToReal(InputRegDataB[13]);
+					get.TotalReActiveEnergyOut[phases.L3] := dWordToReal(InputRegDataB[14]);
+					get.TotalReActiveEnergyOut[phases.Sum] := get.TotalReActiveEnergyOut[phases.L1] + get.TotalReActiveEnergyOut[phases.L2] + get.TotalReActiveEnergyOut[phases.L3];
+					
+					InputRegDataCommtimerB.in := false;
+				else
+					InputRegDataCommtimerB.in := True;
+				END_IF
+				step := 0;
+			end_if			
+	END_CASE
+
+
+ReadInputregs(
+	sIPAddr := st_params.IPaddress,
+	nTCPPort := 502,
+	nUnitID := 1,
+	nMBAddr := 0,
+	nQuantity := 72,
+	cbLength := SIZEOF(InputRegData),
+	pDestaddr := ADR(InputRegData),
+	bExecute := StartInputRegRead	
+);
+
+ReadInputregsB(
+	sIPAddr := st_params.IPaddress,
+	nTCPPort := 502,
+	nUnitID := 1,
+	nMBAddr := 173,
+	nQuantity := 28,
+	cbLength := SIZEOF(InputRegDataB),
+	pDestaddr := ADR(InputRegDataB),
+	bExecute := StartInputRegReadB	
+);
+]]></ST>
+    </Implementation>
+    <Method Name="DwordToReal" Id="{c33becdf-a283-49d2-a20f-0a773a3f3626}">
+      <Declaration><![CDATA[METHOD DwordToReal : Real
+VAR_INPUT
+	in	:	Dword;
+END_VAR
+
+var
+	DwToReal	:	un_WordToFloat;
+	RealVar		:	real;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[dWToReal.dwordVal := BE32_to_host(in);
+RealVar := DwToReal.floatVal;
+
+if not isNAN(RealVar) then
+	DwordToReal := RealVar;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EMstop" Id="{37783bcf-f6f5-45dd-883e-00d7b2f81581}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD EMstop : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="getDiagnostics" Id="{4e5a7fd2-d1b1-407f-8919-e359c68494c6}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD getDiagnostics
+VAR_INPUT
+	AddError	: POINTER TO FB_AddErrorST;
+	a_ActiveEvents	: POINTER TO ST_ErrorStruct;
+END_VAR
+VAR_IN_OUT
+	w_Index	: WORD;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Init" Id="{99b755aa-7b13-48d9-a7bb-709cbe62e7d6}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Init : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{21b19050-c204-4224-a1c9-72c07c05eea0}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Reset : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

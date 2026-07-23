@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="St_GenGridController_ParamsGenset" Id="{79853d00-3427-435a-b4db-e41891493355}">
+    <Declaration><![CDATA[TYPE St_GenGridController_ParamsGenset :
+STRUCT
+	OverloadTripDelay	 		: UINT := 3000; //ms
+	UnderFrequencyLimit			: REAL := 49;
+	UnderfrequencyTripDelay		: UINT := 2000; //ms
+	OverFrequencyLimit			: REAL := 51;
+	OverfrequencyTripDelay		: UINT := 2000; //ms
+	UnderVoltageLimit			: REAL := 360;
+	UnderVoltageTripDelay		: UINT := 2000; //ms
+	OverVoltageLimit			: REAL := 435;
+	OverVoltageTripDelay		: UINT := 2000; //ms
+	ShutdownTimeout				: UINT := 180; //s
+	GenDownRetries				: BYTE := 3;
+	OverloadOffDelay			: TIME := T#10M;
+	OverloadOnDelay				: TIME := T#10S;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

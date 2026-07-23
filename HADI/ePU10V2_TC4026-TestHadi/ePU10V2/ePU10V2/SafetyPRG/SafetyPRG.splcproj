@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project Crc="2715698589" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{7cf53b8d-8c62-42ad-8464-a1955e8795cf}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <RootNamespace>TwinCAT3SafePlcProject</RootNamespace>
+    <AssemblyName>TwinCAT3SafePlcProject</AssemblyName>
+    <FileUpgradeFlags />
+    <UpgradeBackupLocation />
+    <OldToolsVersion>2.0</OldToolsVersion>
+    <TargetSystem>EL6900</TargetSystem>
+    <ProgrammingLanguage>Graphical Editor</ProgrammingLanguage>
+    <Worker>VESDe</Worker>
+    <IntProjName>SafetyPRG</IntProjName>
+    <IsNewCreated>false</IsNewCreated>
+    <SPlcProjVersion>1.8.0.0</SPlcProjVersion>
+    <NextSdsId>18</NextSdsId>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <DebugSymbols>false</DebugSymbols>
+    <OutputPath>bin\Release\</OutputPath>
+    <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="TargetSystemConfig.xml">
+      <Visible>false</Visible>
+    </None>
+    <None Include="TwinSafeGroup1\Alias Devices\Co1AboveLimit.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\Co2AboveLimit.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\DcMccbEDM.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\DcSafetyOK.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\ErrorAcknowledgement.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\EstopSoftwareOK.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\MccbMasterEDM.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\MccbSlaveEDM.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\NetcontactorEDM.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\Run.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\SafetyOk.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\Term 10 %28EL2904%29 - Module 1 %28FSOES%29.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\Term 38 %28EL3124-0090%29 - Module 1 %28TwinSAFE Single Channel%29.sds" />
+    <None Include="TwinSafeGroup1\Alias Devices\Term 9 %28EL1918%29 - Module 1 %28FSOE%29.sds" />
+    <None Include="TwinSafeGroup1\TwinSafeGroup1.sal" />
+    <None Include="TwinSafeGroup1\TwinSafeGroup1.sal.diagram">
+      <Visible>false</Visible>
+      <DependentUpon>TwinSafeGroup1\TwinSafeGroup1.sal</DependentUpon>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="TwinSafeGroup1" />
+    <Folder Include="TwinSafeGroup1\Alias Devices" />
+  </ItemGroup>
+  <ProjectExtensions />
+</Project>

@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="st_Wifi" Id="{42e7f11a-6ea3-45da-9890-c7ad4bd5f487}">
+    <Declaration><![CDATA[TYPE st_Wifi :
+STRUCT
+	WifiClienModeStatus		:	eWifiStatus;
+	WifiAPModeStatus		:	eWifiStatus;
+	WifiApNumberOfClients	:	Uint;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

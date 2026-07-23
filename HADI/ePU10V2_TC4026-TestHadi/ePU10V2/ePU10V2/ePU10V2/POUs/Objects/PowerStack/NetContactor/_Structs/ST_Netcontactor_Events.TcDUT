@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Netcontactor_Events" Id="{687de295-381b-4724-8a83-57ef1a983706}">
+    <Declaration><![CDATA[TYPE ST_Netcontactor_Events :
+STRUCT
+	b_AMFEnabled							: BOOL;
+	b_ContactorRightFbFault					: BOOL;
+	b_ContactorLeftFbFault					: BOOL;
+	b_ContactorFbTimeout					: BOOL;
+	b_PhaseRotationFault					: BOOL;
+	b_IllegalLeftFieldSelected				: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PeakshaveBox_Set" Id="{4978bb3b-3bd6-4034-a72d-1e677220775b}">
+    <Declaration><![CDATA[TYPE ST_PeakshaveBox_Set :
+STRUCT
+	b_ContactorClose : BOOL;
+	b_BreakerControl : BOOL;
+	ui_CtRange		 : UINT := 1000;
+	r_VtPrimair		 : REAL;
+	r_VtSecundair	 : REAL;	 
+	b_InverseCTdirection: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

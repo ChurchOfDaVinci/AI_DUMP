@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_InternalPowerSupply_IO" Id="{14a37718-20e2-4b4a-9114-4d8672574bf3}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_InternalPowerSupply_IO
+
+VAR_INPUT 
+	b_DCPsuEnable		AT %Q* : BOOL := FALSE;
+	b_ACPsuEnable		AT %Q* : BOOL := TRUE;
+END_VAR
+
+VAR_OUTPUT
+	DCPSU_OK 			AT %I*: BOOL;
+	ACPSU_OK 			AT %I*: BOOL;
+	GridFuseOK 			AT %I*: BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+    <LineIds Name="FB_InternalPowerSupply_IO">
+      <LineId Id="1" Count="0" />
+    </LineIds>
+  </POU>
+</TcPlcObject>

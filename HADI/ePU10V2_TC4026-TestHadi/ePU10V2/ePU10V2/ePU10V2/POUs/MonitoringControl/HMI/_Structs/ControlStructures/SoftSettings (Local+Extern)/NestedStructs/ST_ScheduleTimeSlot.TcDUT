@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_ScheduleTimeSlot" Id="{01266640-ee72-4c8f-afcd-435f7b307fd2}">
+    <Declaration><![CDATA[TYPE ST_ScheduleTimeSlot :
+STRUCT
+	b_active					: BOOL;
+	usi_DayOfWeek				: USINT; // 0-7 (0 is none, 1 is Monday , function will be disabled)
+	usi_HourOfDay				: USINT; // 0-23
+	usi_MinuteOfHour			: USINT; // 0-59
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

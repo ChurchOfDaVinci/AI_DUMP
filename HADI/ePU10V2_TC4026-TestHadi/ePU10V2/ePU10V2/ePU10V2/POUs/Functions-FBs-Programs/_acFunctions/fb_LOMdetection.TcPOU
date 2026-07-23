@@ -1,0 +1,124 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="fb_LOMdetection" Id="{3428cf99-4f5e-4ed2-953d-deb46a4d1517}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK fb_LOMdetection
+VAR_INPUT
+	r_Freq		: REAL;
+	r_NomFreq	: REAL;
+	r_volt		: REAL;
+	b_enable	: BOOL;
+	SlowDetection	: BOOL;
+END_VAR
+VAR_IN_OUT CONSTANT
+	st_params : ST_Powerstack_LOMparams;
+END_VAR
+
+VAR_OUTPUT
+	Q	: BOOL;
+END_VAR
+VAR	
+	nomFreq					:  REAL;
+	tofQTripTime		: TOF := (PT := T#1S);
+	ton_Reset : TON 		:= (PT := T#1S);
+	ton_FreqNOKDelay1		: TON := (PT := T#2S);
+	ton_FreqNOKDelay2		: TON := (PT := T#0.2S);
+	FreqThreshold1			: REAL := 0.2;
+	ton_VoltNOKDelay		: TON := (PT := T#2S);
+	FreqMin					: REAL;
+	FreqMax					: REAL;
+	b_FreqNOK			: BOOL;
+END_VAR	
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Nomfreq := settings.GridParams.r_GridNominalFrequency;
+FreqMin	:= settings.GridParams.r_GridFrequencyMin;
+FreqMax	:= settings.GridParams.r_GridFrequencyMax;
+ton_FreqNOKDelay1(IN := LIMIT(Nomfreq - FreqThreshold1, r_Freq, Nomfreq + FreqThreshold1) <> r_freq,
+	PT := SEL(SlowDetection, T#0.5S, T#3S)
+		);
+ton_FreqNOKDelay2(IN := LIMIT(FreqMin, r_Freq, FreqMax) <> r_freq);
+ton_VoltNOKDelay(IN := NOT ACvoltageCheck(IN := r_Volt));
+tofQTripTime(Q => Q);
+
+tofQTripTime.IN := (rocof(
+	frequency :=  r_freq, 
+	NomFrequency := r_nomFreq,)
+	OR
+	ton_FreqNOKDelay1.Q
+	OR
+	ton_FreqNOKDelay2.Q 
+	OR
+	ton_VoltNOKDelay.Q)
+	AND
+	b_enable;
+	
+ton_Reset();]]></ST>
+    </Implementation>
+    <Method Name="Reset" Id="{067e83fe-4ae2-4b4c-9d8f-e97dccc3b665}">
+      <Declaration><![CDATA[METHOD Reset : BOOL
+VAR_INPUT
+END_VAR
+
+VAR_INST
+	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ton_Reset.IN := Q;
+
+IF NOT Q THEN
+	ton_Reset.IN := FALSE;
+	Reset := TRUE;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RoCoF" Id="{01a76ce9-0053-4f34-b46b-ac222ae53383}">
+      <Declaration><![CDATA[METHOD RoCoF : BOOL
+VAR_INPUT
+	frequency	: REAL;
+	NomFrequency: REAL;
+END_VAR
+
+VAR_INST
+	FastmodeDelay	: TON := (PT := T#2s);
+	t_detectionTime	: TIME;
+	FrequencyMA		: FB_movingaverage := (enable := TRUE);
+	rocofLast		: REAL;
+	FreqLast		: REAL;
+	FreqDelta		: REAL;	
+	DetectionTimer	: TON;
+	RoCofAct		: REAL;
+	LomDetected		: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[FrequencyMA(IN := Frequency, length :=  st_params.FreqFilterLength);
+
+FastModeDelay(IN := NOT SlowDetection AND NOT st_params.ForceSlowDetection);
+t_DetectionTime := TO_TIME(SEL(FastModeDelay.Q, st_params.DetectionTimeSlow_ms, st_params.DetectionTimeFast_ms));
+detectionTimer(IN := NOT detectiontimer.Q, PT := t_DetectionTime );
+
+IF detectionTimer.Q THEN
+	RocofAct := (FrequencyMA.Q - FreqLast) / (MAX(1, TO_REAL(t_DetectionTime)) * 0.001);
+	FreqLast:= FrequencyMA.Q;
+END_IF
+
+IF ABS(rocofLast) < ABS(rocofAct) THEN
+	rocofLast := rocofAct;
+END_IF
+
+IF ABS(RocofAct) > st_params.RoCoFlimit * SEL(SlowDetection, 1, 4) AND b_Enable THEN
+	LomDetected := TRUE;
+END_IF
+
+IF ton_Reset.Q OR NOT b_enable THEN
+	rocofLast := 0;
+	LomDetected := FALSE;
+END_IF
+
+Rocof := LomDetected;
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

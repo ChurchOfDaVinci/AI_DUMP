@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PNOutput_Battery" Id="{e85c5060-c55f-4ee4-9960-752040efbd87}">
+    <Declaration><![CDATA[TYPE ST_PNOutput_Battery :
+STRUCT
+	ui_Status						: UINT;
+	w_Warnings						: WORD;
+	w_Faults						: WORD;
+
+	ui_SOC							: UINT;
+	ui_SOH							: UINT;
+	ui_DClinkVoltage 				: UINT;
+	i_DClinkCurrent 				: INT;
+	ui_MaxAllowedDischargeCurrent 	: UINT;
+	ui_MaxAllowedChargeCurrent 		: UINT;
+	i_MinCellTemperature 			: INT;
+	i_MaxCellTemperature			: INT;
+	ui_RemainingChargeEnergy 		: UINT;
+	ui_RemainingDischargeEnergy 	: UINT;
+	ui_CycleCount					: UINT;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

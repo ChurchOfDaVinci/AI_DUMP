@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_System_GridcodeParams" Id="{077ab519-1761-4c69-86df-c71ed96d80d7}">
+    <Declaration><![CDATA[TYPE ST_System_GridcodeParams :
+STRUCT
+	r_GridNominalVoltage				: REAL := 400; //VAC
+	r_GridNominalFrequency				: REAL := 50; // Hz
+	r_GridVoltageMin					: REAL := 360;
+	r_GridvoltageMax					: REAL := 440;
+	r_GridFrequencyMin					: REAL := 48.5;
+	r_GridFrequencyMax					: REAL := 51.5;
+	r_CurrentUnbalanceLimit				: REAL := 50;  //%
+	ui_GCokReleaseTime					: UINT := 60; //seconds
+	ui_GCTripMaxTripTime				: UINT := 40; // milliseconds
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

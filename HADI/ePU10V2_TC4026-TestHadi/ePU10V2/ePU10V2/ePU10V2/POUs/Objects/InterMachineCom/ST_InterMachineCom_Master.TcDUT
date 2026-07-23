@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_InterMachineCom_Master" Id="{d3d51c86-52d3-4fea-95fc-faad42fb9468}">
+    <Declaration><![CDATA[TYPE ST_InterMachineCom_Master :
+STRUCT
+	PS		: REAL; //Power setpoint, scale 0.1% 
+	QS		: REAL; // Reactive Setpoint, scale 0.1%
+	CW		: WORD; // ControlWord, b0: Start, b1: Stop, b2: shutdown, b3: EMstop, b4: Reset, b15: watchdog signal
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

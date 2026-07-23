@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_OperationVars_Genset" Id="{2e99b50b-23cd-4fb8-9862-69c96b0eaf2b}">
+    <Declaration><![CDATA[TYPE ST_OperationVars_Genset :
+STRUCT 
+	b_manualStart			: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

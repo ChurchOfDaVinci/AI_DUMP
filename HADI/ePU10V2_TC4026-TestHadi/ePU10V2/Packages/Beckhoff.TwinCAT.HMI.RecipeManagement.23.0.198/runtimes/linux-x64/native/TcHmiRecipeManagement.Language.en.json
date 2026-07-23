@@ -1,0 +1,24 @@
+{
+  "locale": "en",
+  "localizedText": {
+    "RECIPELIST": "Recipe list",
+    "version": "Symbol version",
+    "recipeVersioningEnabled": "Recipe versioning",
+    "MSG_RM_READ_ERROR": "Read error: {0}",
+    "MSG_RM_ACTIVATE_WARNING": "Activate warning: {0}",
+    "DESC_FOLDER_RECIPE": "Folder for recipes and/or folders",
+    "DESC_FOLDER_RECIPETYPE": "Folder for recipe types and/or folders",
+    "DESC_RECIPE": "Recipes are based on recipe types",
+    "DESC_RECIPE_LOCKED": "Locks the recipe. Locked recipes cannot be activated or modified.",
+    "DESC_RECIPETYPE": "Recipe type is a general description of a set of symbols",
+    "DESC_VERSIONING_ENABLED": "Enable version tracking for recipes. This option can only be changed when no recipes or recipe types are configured.",
+    "recipeNames": "Recipe names",
+    "recipeTypeNames": "RecipeType names",
+    "NESTED_RECIPE_REQUIRES_VERSION": "Nested recipe reference must include a version (e.g. 'RecipeName::v1') when versioning is enabled.",
+    "RECIPE_LOCKED": "The recipe is locked and cannot be modified or activated.",
+    "RECIPETYPE_CONTAINS_LOCKED_RECIPES": "The recipe type cannot be modified because it is referenced by locked recipes.",
+    "RECIPE_REFERENCED_BY_LOCKED_RECIPE": "The recipe cannot be modified because it is referenced by a locked recipe.",
+    "VERSIONING_CHANGE_REQUIRES_EMPTY_CONFIG": "Versioning can only be enabled or disabled when no recipes or recipe types are configured.",
+    "VERSIONING_BLACKLISTED_NAME": "The name pattern 'v' followed by digits (v1, v2, etc.) is reserved for versions and cannot be used for folders or recipe types."
+  }
+}

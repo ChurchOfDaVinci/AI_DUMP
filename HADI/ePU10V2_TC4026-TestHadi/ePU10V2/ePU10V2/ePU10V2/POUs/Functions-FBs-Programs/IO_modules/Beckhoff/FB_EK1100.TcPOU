@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_EK1100" Id="{f0915f53-deb0-41a0-9767-43d19234ebbf}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EK1100
+VAR_OUTPUT
+	state						AT %I* : UINT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

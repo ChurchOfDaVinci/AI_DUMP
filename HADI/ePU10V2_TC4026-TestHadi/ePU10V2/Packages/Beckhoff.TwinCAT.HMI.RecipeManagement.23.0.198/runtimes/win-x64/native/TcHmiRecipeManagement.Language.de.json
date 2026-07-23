@@ -1,0 +1,24 @@
+{
+  "locale": "de",
+  "localizedText": {
+    "RECIPELIST": "Rezeptliste",
+    "version": "Symbol-Version",
+    "recipeVersioningEnabled": "Rezeptversionierung",
+    "MSG_RM_READ_ERROR": "Fehler beim Lesen: {0}",
+    "MSG_RM_ACTIVATE_WARNING": "Warnung beim Aktivieren: {0}",
+    "DESC_FOLDER_RECIPE": "Ordner für Rezepte und/oder weitere Ordner",
+    "DESC_FOLDER_RECIPETYPE": "Ordner für Rezepttypen und/oder weitere Ordner",
+    "DESC_RECIPE": "Ein Rezept basiert auf einem Rezepttyp",
+    "DESC_RECIPE_LOCKED": "Sperrt das Rezept. Gesperrte Rezepte können nicht aktiviert oder geändert werden.",
+    "DESC_RECIPETYPE": "Ein Rezepttyp ist eine allgemeine Beschreibung eines Satzes von Symbolen",
+    "DESC_VERSIONING_ENABLED": "Aktiviert die Versionierung für Rezepte. Diese Option kann nur geändert werden, wenn keine Rezepte oder Rezepttypen konfiguriert sind.",
+    "recipeNames": "Rezeptnamen",
+    "recipeTypeNames": "Rezepttypnamen",
+    "NESTED_RECIPE_REQUIRES_VERSION": "Verschachtelte Rezeptreferenz muss eine Version enthalten (z.B. 'Rezeptname::v1'), wenn die Versionierung aktiviert ist.",
+    "RECIPE_LOCKED": "Das Rezept ist gesperrt und kann nicht geändert oder aktiviert werden.",
+    "RECIPETYPE_CONTAINS_LOCKED_RECIPES": "Der Rezepttyp kann nicht geändert werden, da er von gesperrten Rezepten referenziert wird.",
+    "RECIPE_REFERENCED_BY_LOCKED_RECIPE": "Das Rezept kann nicht geändert werden, da es von einem gesperrten Rezept referenziert wird.",
+    "VERSIONING_CHANGE_REQUIRES_EMPTY_CONFIG": "Versionierung kann nur aktiviert oder deaktiviert werden, wenn keine Rezepte oder Rezepttypen konfiguriert sind.",
+    "VERSIONING_BLACKLISTED_NAME": "Das Namensmuster 'v' gefolgt von Ziffern (v1, v2, usw.) ist für Versionen reserviert und kann nicht für Ordner oder Rezepttypen verwendet werden."
+  }
+}

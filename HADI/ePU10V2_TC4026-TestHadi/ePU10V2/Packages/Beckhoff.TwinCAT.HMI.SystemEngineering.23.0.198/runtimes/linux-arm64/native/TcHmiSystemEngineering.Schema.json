@@ -1,0 +1,162 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "runtimes": {
+      "type": "object",
+      "configDescription": "runtimes",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": false
+          },
+          "adsRuntime": {
+            "type": "string",
+            "optionMethod": {
+              "symbol": "ADS.Config::RUNTIMES::{key}"
+            }
+          },
+          "entryPath": {
+            "type": "string",
+            "optionMethod": {
+              "symbol": "{domain}.ListSymbolsOfPath",
+              "writeValue": {
+                "adsRuntime": {
+                  "$data": "#/properties/runtimes/additionalProperties/adsRuntime"
+                },
+                "path": {
+                  "$data": "#/properties/runtimes/additionalProperties/entryPath"
+                }
+              }
+            }
+          },
+          "isInitializedSymbol": {
+            "type": "string",
+            "optionMethod": {
+              "symbol": "{domain}.ListSymbolsOfPath",
+              "writeValue": {
+                "adsRuntime": {
+                  "$data": "#/properties/runtimes/additionalProperties/adsRuntime"
+                },
+                "path": {
+                  "$data": "#/properties/runtimes/additionalProperties/isInitializedSymbol"
+                }
+              }
+            }
+          },
+          "autoSymbolUpdate": {
+            "type": "boolean",
+            "configDescription": "autoSymbolUpdate_description"
+          },
+          "restoreSymbolAccessOnUpdate": {
+            "type": "boolean",
+            "configDescription": "restoreSymbolAccessOnUpdate_description"
+          },
+          "enableAuditTrail": {
+            "type": "boolean",
+            "configDescription": "enableAuditTrail_description"
+          },
+          "adsTimestamp": {
+            "type": "string",
+            "visibility": "AlwaysHide"
+          },
+          "schemaHash": {
+            "allOf": [
+              {
+                "$ref": "tchmi:general#/definitions/UINT64"
+              },
+              {
+                "visibility": "AlwaysHide"
+              }
+            ]
+          },
+          "schema": {
+            "type": "object",
+            "properties": {
+              "definitions": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "properties": {
+                "type": "object",
+                "additionalProperties": true
+              },
+              "type": {
+                "type": "string"
+              }
+            },
+            "visibility": "AlwaysHide"
+          },
+          "symbolValues": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "timestamp": {
+                  "type": "string"
+                },
+                "value": {}
+              },
+              "required": [
+                "timestamp",
+                "value"
+              ]
+            },
+            "visibility": "AlwaysHide"
+          },
+          "symbolAccesses": {
+            "type": "object",
+            "properties": {
+              "default": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "integer"
+                }
+              },
+              "usergroups": {
+                "type": "object",
+                "additionalProperties": {
+                  "type": "object",
+                  "additionalProperties": {
+                    "type": "integer"
+                  }
+                }
+              }
+            },
+            "visibility": "AlwaysHide"
+          }
+        },
+        "required": [
+          "enabled",
+          "adsRuntime",
+          "autoSymbolUpdate",
+          "restoreSymbolAccessOnUpdate",
+          "enableAuditTrail"
+        ],
+        "default": {
+          "enabled": false,
+          "adsRuntime": "PLC1",
+          "autoSymbolUpdate": false,
+          "restoreSymbolAccessOnUpdate": false,
+          "enableAuditTrail": false
+        }
+      },
+      "defaultConfigurable": true,
+      "default": {
+        "Runtime1": {
+          "enabled": false,
+          "adsRuntime": "PLC1",
+          "autoSymbolUpdate": false,
+          "restoreSymbolAccessOnUpdate": false,
+          "enableAuditTrail": false
+        }
+      }
+    }
+  },
+  "required": [
+    "runtimes"
+  ],
+  "additionalProperties": false
+}

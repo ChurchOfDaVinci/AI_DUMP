@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Neutraltransformer_params" Id="{0ad501dd-7889-4fd1-9cda-8f27da18d3a8}">
+    <Declaration><![CDATA[TYPE ST_Neutraltransformer_params :
+STRUCT
+	ui_ratedpower					: UINT := 60; // kVA
+	by_TemperatureHighWarning		: BYTE := 80;
+	by_TemperatureHighAlarm			: BYTE := 90;
+	ui_TemperatureHighTripDelay		: UINT := 10; // seconds
+	by_VoltageUnbalanceWarning		: BYTE := 10; // %
+	by_VoltageUnbalanceAlarm		: BYTE := 20; // %
+	ui_VoltageUnbalanceTripDelay	: UINT := 10;// seconds
+	r_OCTripFactor					: REAL := 1.4;  //Overcurrent trip factor software
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

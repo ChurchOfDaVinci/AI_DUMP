@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_UPSEvents" Id="{2075b0c0-1330-4f6b-9861-c97a9d769a04}">
+    <Declaration><![CDATA[TYPE ST_UPSEvents :
+STRUCT
+	b_BatteryLowInfo		:	BOOL;	//initialize DC conditioning
+	b_BatteryLowWarning		:	BOOL;	//Battery charging failed, consider shutdown
+	b_BatteryLowError		:	BOOL;	//Battery level critical, System should shutdown
+	b_NoBatteryError		:	BOOL;	//no Battery voltage detected?
+	b_InputVoltageWarning	:	BOOL;	//ipsstate says 24v is available, but no input is seen.
+	
+	b_UPSBatteryCalibrationActive	:	Bool;
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

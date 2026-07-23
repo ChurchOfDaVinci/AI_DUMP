@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ePowerModuleThrottlingState" Id="{dcccd83d-1c30-4525-9324-91a9ce1b46d2}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE ePowerModuleThrottlingState :
+(
+	None := 0,
+	FilterTemp := 1,
+	InverterTemp:= 2,
+	Overvoltage := 3
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

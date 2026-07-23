@@ -1,0 +1,150 @@
+/* Theme depended control css. */
+/* Base Theme*/
+
+.TcHmi_Controls_Beckhoff_TcHmiParametersAndFunctions-template {
+    background: white;
+
+    .notification-wrapper {
+        background: rgba(0, 0, 0, 0.5);
+
+        .notification {
+            background: #900;
+            color: white;
+        }
+    }
+
+    .crossed-out {
+        color: red;
+    }
+
+    .runtime-disabled-overlay {
+        background: rgba(255, 255, 255, 0.9);
+        color: black;
+    }
+
+    beckhoff-parameters-and-functions-table {
+        .arrow {
+            border-color: black;
+        }
+
+        .parameters-and-functions-table-row {
+            &:nth-child(2n + 1) {
+                background: white;
+            }
+
+            &:nth-child(2n) {
+                background: #f9f9f9;
+            }
+
+            &:hover {
+                background: #b0bbc2;
+            }
+        }
+
+        .table .header {
+            background: white;
+            border-bottom: 0px solid #ccc;
+
+            .header-labels {
+                &:hover .resize-bar {
+                    background: #ccc;
+                }
+            }
+
+            &.shadow {
+                box-shadow: 1px 1px 2px 2px #eee;
+            }
+            .notification {
+                &.info {
+                    background: aliceblue;
+                }
+
+                &.error {
+                    background: #ff8383;
+                }
+            }
+        }
+
+        .highlight {
+            background: #efc03c !important;
+        }
+
+        .search-bar input {
+            border-color: #aaa;
+            color: black;
+        }
+
+        .parameter-or-function-name {
+            color: #2774ba;
+        }
+
+        .parameter-or-function-mapping,
+        .parameter-or-function-info {
+            color: #4e4e4e;
+        }
+
+        tbody {
+            tr:hover {
+                background: #eee;
+            }
+
+            tr:nth-of-type(even) {
+                background: #f6f6f6;
+            }
+
+            tr:nth-child(n + 2):hover {
+                background: #ccc;
+            }
+        }
+
+        button {
+            background-color: white;
+            border-color: black;
+            color: black;
+
+            &:hover {
+                background-color: #2774ba;
+                color: white;
+            }
+        }
+
+        .group-lines span {
+            background: #2774ba;
+        }
+
+        table thead {
+            background: white;
+        }
+
+        .info {
+            background: #ddeeff;
+        }
+
+        .group-row:has(.symbol-group .parameter-with-prepared-value) > .group-label,
+        .parameter-with-prepared-value {
+            background: lightyellow !important;
+        }
+    }
+
+    .navigation {
+        border-right-color: #ddd;
+
+        .nav-button {
+            &:hover {
+                background: #eee;
+            }
+            .runtime-diagnostics-toggle-btn {
+                background: white;
+            }
+        }
+    }
+
+    .open-permission-management-btn {
+        color: black;
+    }
+
+    .notification-bubble {
+        background: #e37717;
+        color: white;
+    }
+}

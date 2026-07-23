@@ -1,0 +1,1227 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_AcDcCharger" Id="{ab9af14e-480c-4243-8b53-22af316e6411}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_AcDcCharger
+
+VAR_IN_OUT CONSTANT
+	st_params				:	ST_ACDCCharger_Params;
+END_VAR
+
+VAR_IN_OUT
+	st_service : ST_ACDCCharger_Service;
+END_VAR
+
+VAR_INPUT
+	enable					: 	BOOL;
+
+	Set						:	ST_ACDCCharger_set;
+	//BMS					:	st_BMS_BatterySummary;	
+	r_Soc 					: 	REAL;
+	r_SystemVoltage			: 	REAL;
+	r_SystemCurrent			: 	REAL;
+	r_MaxChargeCurrent		:	REAL;
+	b_BatteryFullyCharged	: BOOL;
+	b_BatteryOn				: BOOL;	
+END_VAR
+VAR_OUTPUT
+	Get			:	ST_ACDCCharger_get;
+	IPSRequest	:	ST_InternalPowerSupply_PowerDemand;
+END_VAR
+VAR
+	BuscouplerState	AT %I*	: UINT;
+	RxQueue			AT %I*	:	CANRXQUEUESTRUCT_E_10;  //without Transaction Time
+	TxQueue			AT %Q*	:	CANTXQUEUESTRUCT_E_10;
+	b_BuscouplerFound: BOOL;
+END_VAR
+VAR   // should add as input var
+    bEmergencyStop : BOOL := FALSE;
+    bResetFault : BOOL;
+	GroupID	: BYTE := 1;
+//	uiNumberofUnits	: UINT :=1;  // the number of units that are phyzicaly designed
+//	rPset	: REAL; // AC Power set limit
+//	rIset   : REAL; // AC Current set limit
+//	bPowerMode : BOOL; // P mode sett selection
+END_VAR
+VAR	
+	diag 	: ST_SystemDiagnostic;
+    txIndex : INT;
+    Step 	: INT;
+    NumberOfMessagesToSend : INT := 10;
+
+    voltage_mV : UDINT;
+    current_mA : UDINT;
+	stData : ST_Data;
+    stControl : ST_Control;
+	DeviceNo   : BYTE := 16#0B;
+	rxIndex : INT; 
+//    ChargerState : E_ChargerState := E_ChargerState.Idle;
+	rVoltageWindow : REAL := 5.0;   // should be base on percentage or Volt?!
+    bVoltageWindowOk : BOOL;  // check if voltage within the window
+    b_ModuleCommunicationLost : BOOL;
+    bWarning : BOOL;
+    rChargerVoltageSetpoint : REAL;
+    rChargerCurrentSetpoint : REAL;
+    eval : ST_SystemEval;	
+	bValidPrev : ARRAY [0..10] OF BOOL;  // test
+	bFreezeCurrent : BOOL; // test	
+	rMaxLimit		: REAL;
+
+    tCycle : TON;
+    tCheck : TON;
+    tComWatchdog : TON;
+    rPower_kW : REAL;
+    rIsetReq : REAL := 60.0; (* configurable *)
+    rCurrentCmd : REAL;
+END_VAR
+VAR CONSTANT
+	e_ID 				: eObject_ID := eObject_ID.ACDCCharger;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+IF enable THEN
+	IF (BuscouplerState <> 8) THEN
+		get.e_SystemStatus := eACDCChargerstate.init;
+		get.Events.b_BuscouplerNotFound := TRUE;
+	ELSE
+		get.Events.b_BuscouplerNotFound := False;
+		IF get.e_SystemStatus = eACDCChargerstate.init THEN
+			get.e_SystemStatus := eACDCChargerstate.off;
+		END_IF
+		
+		// should be 50ms to 200ms 
+		tCycle(IN := NOT tCycle.Q, PT := T#50MS);
+				
+		IF tCycle.Q THEN
+			ReadingRx();
+			//UpdateStData();  // keep the last value! Useless?!
+			EvaluateSystem();
+			ChargingControl();
+			SafetyCheck();
+		    ValidateOutput();
+			RunStateMachine();
+			HandleCanCommunication();
+			EvaluateDiagnostics();
+		END_IF
+	END_IF
+END_IF
+]]></ST>
+    </Implementation>
+    <Folder Name="NestedStructs" Id="{45265876-5dad-47ec-b4d9-2c87f840c8fb}" />
+    <Method Name="BuildCanId" Id="{cd7d9619-e0ae-42d4-8234-9246438044ad}" FolderPath="NestedStructs\">
+      <Declaration><![CDATA[METHOD BuildCanId : DWORD
+VAR_INPUT
+    CommandNo  : BYTE;   // protocol command
+    TargetAddr : BYTE := 1;   // group / module / broadcast(0x3F)
+	
+END_VAR
+VAR
+	 ErrorCode : BYTE := 0;   // always 0
+	 SourceAddr : BYTE := 16#F0;   // Controller address
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+  // TargetAddr := 1;
+   DeviceNo := 16#0B;
+   ErrorCode:= 0;
+   SourceAddr := 16#F0;
+   
+   
+   BuildCanId :=
+      SHL(DWORD#1,31)                // bit31 = extended CAN frame
+   OR SHL(TO_DWORD(ErrorCode),26)       // error code
+   OR SHL(TO_DWORD(DeviceNo),22)        // device number   Multicas: 0x0B, BroadCasti:0x0A
+   OR SHL(TO_DWORD(CommandNo),16)       // command 
+   OR SHL(TO_DWORD(TargetAddr),8)       // target address
+   OR TO_DWORD(SourceAddr);             // source address]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ChargingControl" Id="{586f5e43-9f6d-468b-a485-482b5b06422f}" FolderPath="NestedStructs\">
+      <Declaration><![CDATA[METHOD PRIVATE ChargingControl
+VAR_INPUT
+END_VAR
+VAR_INST
+	rRawV : REAL;
+	rPrevV : REAL;
+	rRampLimitV : REAL := 20;
+	rCurrentReq : REAL;
+	rVoltageRamp : REAL;
+	rAcPower	: REAL;
+	rAcCurrent : REAL := 0.0;
+	rMinGridVoltage	: REAL;
+	i : INT;
+	rTempMin : REAL;
+	tDelayJumpOff	: TOf;
+	bTestb : BOOL;
+	srTest	: SR;
+	tTestB : TOF;
+	iUnitsTemp	: INT;
+	
+	iPrevHealthyModules : INT;
+	tNewModuleTimer : TON;
+	iEffectiveModules : INT;
+	
+	rTest : REAL;
+	
+	r_MinGridVoltageDerating 	: REAL := 1;
+	r_TempDerating 				: REAL := 1;
+	BMSChargeCurrentLimit		:	REAL;
+	
+	
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[ 
+// Battery Voltage from BMS
+
+set.r_MinGridVoltage 	:= LIMIT(360, set.r_MinGridVoltage, 440);
+set.r_currentSetpoint 	:= LIMIT(0, set.r_currentSetpoint, 125);
+set.r_powersetpoint 	:= LIMIT(0, set.r_powersetpoint, st_params.ui_ModuleDesignPower * st_params.ui_NrOfInstalledModules);
+set.r_SocTarget 		:= LIMIT(0, set.r_SocTarget, 100);
+
+IF b_BatteryOn THEN // bms.e_BMS_PowerOnStatus = ePowerOnSTatus.On THEN
+	rChargerVoltageSetpoint := r_SystemVoltage + st_params.r_VoltageWindow;
+ELSE
+	rChargerVoltageSetpoint := 0.0;
+END_IF
+
+IF r_Soc >= set.r_SocTarget OR b_BatteryFullyCharged THEN//bms.e_BMS_Status = eBMS_status.FullCharge THEN
+	get.events.b_SOCLimitReached := TRUE;
+ELSIF r_Soc < set.r_SocTarget - st_params.SocHysteresis THEN
+	get.events.b_SOCLimitReached := FALSE;
+END_IF
+
+
+//rPower_kW := (stData.rSystemOutVoltageDc * stData.rSystemOutCurrentDc) / 1000.0;
+
+rMinGridVoltage := 1000.0;
+FOR i := 0 TO TO_INT(st_params.ui_NrOfInstalledModules - 1) DO
+    IF stData.stModuleData[i].rExternalVoltageDc > 550 AND NOT stData.stModuleData[i].stStatus.bPfcOff  THEN
+        
+        rTempMin := MIN( stData.stModuleData[i].rVoltageL1L2,
+            				stData.stModuleData[i].rVoltageL2L3,
+            				stData.stModuleData[i].rVoltageL3L1 );
+        
+        rMinGridVoltage := MIN(rMinGridVoltage, rTempMin);        
+    END_IF;
+END_FOR;
+
+IF (stData.rSystemOutVoltageDc > 1.0) THEN
+	CASE set.e_ControlType OF
+		ePowerControlType.Power		:	
+			rIsetReq := (set.r_powersetpoint * 1000 / stData.rSystemOutVoltageDc) * 0.95;
+			get.events.b_CurrentLimitActive := FALSE;
+			
+		ePowerControlType.Current 	:	
+			rIsetReq := ((rMinGridVoltage * set.r_currentSetpoint * 1.73) / stData.rSystemOutVoltageDc) * 0.95;
+			get.events.b_CurrentLimitActive := TRUE;
+			
+		ePowerControlType.Both 		:	
+			rIsetReq := (set.r_powersetpoint * 1000 / stData.rSystemOutVoltageDc) * 0.95;
+			IF (rMinGridVoltage * set.r_currentSetpoint * 1.73) < set.r_powersetpoint * 1000 THEN
+				rIsetReq := ((rMinGridVoltage * set.r_currentSetpoint * 1.73) / stData.rSystemOutVoltageDc) * 0.95;
+				get.events.b_CurrentLimitActive := TRUE;
+			ELSE
+				get.events.b_CurrentLimitActive := FALSE;
+			END_IF
+	END_CASE
+ELSE
+	riSetReq := 0;
+END_IF
+
+BMSChargeCurrentLimit := ABS(r_MaxChargeCurrent) + r_SystemCurrent + stData.rSystemOutCurrentDc;
+IF BMSChargeCurrentLimit < rIsetReq THEN
+	rCurrentCmd := BMSChargeCurrentLimit - 2;
+	get.Events.b_BatteryLimitDeratingActive := TRUE;
+ELSE
+	rCurrentCmd := MIN(rCurrentCMD + ST_Params.BMSChargeLimitRampRate, rIsetReq);
+	get.Events.b_BatteryLimitDeratingActive := FALSE;
+END_IF
+
+ 
+//ACVoltageRamp
+IF rMinGridVoltage < set.r_MinGridVoltage THEN
+	r_MinGridVoltageDerating := MAX(r_MinGridVoltageDerating * 0.999, 0.1);
+ELSIF rMinGridVoltage > set.r_MinGridVoltage + st_params.GridVoltageHysteresis THEN
+	r_MinGridVoltageDerating := MIN(r_MinGridVoltageDerating * 1.001, 1);
+END_IF
+
+get.Events.b_ACUnderVoltageDeratingActive := r_MinGridVoltageDerating < 1;
+
+
+IF eval.rMaxTemperature > 80.0 THEN
+	r_TempDerating := MAX(r_TempDerating * 0.999, 0.1);
+ELSIF eval.rMaxTemperature < 75.0 THEN
+	r_TempDerating := MIN(r_TempDerating * 1.001, 1);
+END_IF
+get.Events.b_TemperatureDeratingActive := r_TempDerating < 1;
+
+
+// a unit back after a short lost( less than 10s  and keep stData.rNumberOfModules as original value)
+iEffectiveModules := eval.iHealthyModules;
+IF eval.iHealthyModules > iPrevHealthyModules THEN
+	iEffectiveModules := eval.iHealthyModules + (eval.iHealthyModules - iPrevHealthyModules);
+END_IF
+
+
+// Current setpoint
+//rCurrent := LIMIT(0.0, rCurrentCmd, eval.rTotalAvailableCurrent) / MAX(iEffectiveModules, 1);
+IF bFreezeCurrent THEN
+    rChargerCurrentSetpoint := 0;              // or keep last value if you prefer
+    bFreezeCurrent := FALSE;    // only 1 cycle
+ELSE
+    rChargerCurrentSetpoint := LIMIT(0.0, rCurrentCmd, eval.rTotalAvailableCurrent) / MAX(iEffectiveModules, 1);
+END_IF
+
+iPrevHealthyModules := eval.iHealthyModules;
+
+// if any unit is back after a long lost, stData.rNumberOfModules become 0 for a momment
+tDelayJumpOff(IN := (stData.rNumberOfModules < eval.iHealthyModules), PT := T#1S);
+
+IF tDelayJumpOff.Q THEN
+	rChargerCurrentSetpoint := 0.0;
+END_IF
+
+IF iEffectiveModules > 0 THEN
+	rChargerCurrentSetpoint := 
+		LIMIT(0, rChargerCurrentSetpoint * r_MinGridVoltageDerating * r_TempDerating, eval.rTotalAvailableCurrent / iEffectiveModules);
+ELSE
+	rChargerCurrentSetpoint := 0;
+END_IF
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EMSTOP" Id="{caeb2d80-c981-4e75-a25f-ad11b9883295}">
+      <Declaration><![CDATA[METHOD EMSTOP : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+get.e_SystemStatus := eACDCChargerState.Fault;
+
+EMSTOP := true;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EvaluateDiagnostics" Id="{696cf786-3539-454f-b542-7db779f32cee}" FolderPath="NestedStructs\">
+      <Declaration><![CDATA[METHOD PRIVATE EvaluateDiagnostics
+VAR
+    i : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	
+
+//Reset all
+diag.bAnyError 				:= FALSE;
+diag.bAnyWarning 			:= FALSE;
+
+diag.bError_OutputOV 		:= FALSE;
+diag.bError_OverTemp 		:= FALSE;
+diag.bError_ShortCircuit	:= FALSE;
+diag.bError_ModuleError 	:= FALSE;
+diag.bError_CommLost 		:= FALSE;
+diag.bError_PhaseLost 		:= FALSE;
+
+diag.bWarn_InputOV 			:= FALSE;
+diag.bWarn_InputUV 			:= FALSE;
+diag.bWarn_FanError 		:= FALSE;
+diag.bWarn_PowerLimit 		:= FALSE;
+diag.bWarn_TempHigh 		:= FALSE;
+
+diag.bAllModulesOff 		:= TRUE;
+diag.bAllModulesOn 			:= TRUE;
+
+
+FOR i := 0 TO TO_INT(st_params.ui_NrOfInstalledModules - 1) DO
+
+    //ERRORS
+    IF stData.stModuleData[i].stStatus.bOutputOverVoltage THEN
+        diag.bError_OutputOV := TRUE;
+    END_IF
+
+    IF stData.stModuleData[i].stStatus.bTempHigh THEN
+        diag.bError_OverTemp := TRUE;
+    END_IF
+
+    IF stData.stModuleData[i].stStatus.bOutputShortCircuit THEN
+        diag.bError_ShortCircuit := TRUE;
+    END_IF
+
+    IF stData.stModuleData[i].stStatus.bModuleError OR
+       stData.stModuleData[i].stStatus.bModuleProtection THEN
+        diag.bError_ModuleError := TRUE;
+    END_IF
+
+    IF stData.stModuleData[i].stStatus.bCanTimeout THEN
+        diag.bError_CommLost := TRUE;
+    END_IF
+
+    IF stData.stModuleData[i].stStatus.bPhaseLost THEN
+        diag.bError_PhaseLost := TRUE;
+    END_IF
+
+
+    //WARNINGS
+    IF stData.stModuleData[i].stStatus.bInputOverVoltage THEN
+        diag.bWarn_InputOV := TRUE;
+    END_IF
+
+    IF stData.stModuleData[i].stStatus.bInputUnderVoltage THEN
+        diag.bWarn_InputUV := TRUE;
+    END_IF
+
+    IF stData.stModuleData[i].stStatus.bFanError THEN
+        diag.bWarn_FanError := TRUE;
+    END_IF
+
+    IF stData.stModuleData[i].stStatus.bPowerLimitation THEN
+        diag.bWarn_PowerLimit := TRUE;
+    END_IF
+
+    IF stData.stModuleData[i].stStatus.bTempHigh THEN
+        diag.bWarn_TempHigh := TRUE;
+    END_IF
+
+
+    //MODULE STATE
+    IF NOT stData.stModuleData[i].stStatus.bDcSideOff AND stData.stModuleData[i].stStatus.bSlowStartup THEN
+        diag.bAllModulesOff := FALSE;
+    END_IF
+
+    IF stData.stModuleData[i].stStatus.bDcSideOff AND stData.stModuleData[i].stStatus.bSlowStartup THEN
+        diag.bAllModulesOn := FALSE;
+    END_IF
+
+END_FOR
+
+IF diag.bAllModulesOff THEN
+	diag.bAllModulesOn := FALSE;
+END_IF
+
+
+//GLOBAL FLAGS
+diag.bAnyError :=
+    diag.bError_OutputOV OR
+    diag.bError_OverTemp OR
+    diag.bError_ShortCircuit OR
+    diag.bError_ModuleError OR
+    diag.bError_CommLost OR
+    diag.bError_PhaseLost;
+
+diag.bAnyWarning :=
+    diag.bWarn_InputOV OR
+    diag.bWarn_InputUV OR
+    diag.bWarn_FanError OR
+    diag.bWarn_PowerLimit OR
+    diag.bWarn_TempHigh;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EvaluateSystem" Id="{d8f78fac-be2b-41b2-af31-15b8ce4337b2}" FolderPath="NestedStructs\">
+      <Declaration><![CDATA[METHOD PRIVATE EvaluateSystem
+VAR
+    i : INT;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+
+
+eval.bAllModulesOff := TRUE;
+eval.bAnyModuleActive := FALSE;
+eval.bAnyModuleFault := FALSE;
+eval.bGridOk := TRUE;
+eval.rTotalAvailableCurrent := 0;
+eval.rMaxTemperature := 0;
+eval.iHealthyModules := 0;
+
+get.Events.b_ACPhaselossFault	:=	FALSE;
+get.Events.b_ACUndervoltage		:=	FALSE;
+get.Events.b_ACOvervoltage		:=	FALSE;
+
+
+FOR i := 0 TO TO_INT(st_params.ui_NrOfInstalledModules - 1) DO
+
+    IF NOT stData.stModuleData[i].stStatus.bDcSideOff AND stData.stModuleData[i].stStatus.bSlowStartup THEN
+        eval.bAllModulesOff := FALSE;
+        eval.bAnyModuleActive := TRUE;
+        eval.iHealthyModules := eval.iHealthyModules + 1;
+    END_IF
+
+    (* Sum current *)
+    eval.rTotalAvailableCurrent := eval.rTotalAvailableCurrent +
+        stData.stModuleData[i].ravilableCurrentDc;
+
+    (* Max temp *)
+    IF stData.stModuleData[i].rTemprature > eval.rMaxTemperature THEN
+        eval.rMaxTemperature := stData.stModuleData[i].rTemprature;
+    END_IF
+
+    (* Fault detection *)
+    IF stData.stModuleData[i].stStatus.bModuleError OR
+       stData.stModuleData[i].stStatus.bOutputShortCircuit OR
+       stData.stModuleData[i].stStatus.bOutputOverVoltage THEN
+        eval.bAnyModuleFault := TRUE;
+    END_IF
+
+    (* Grid check *)
+    IF stData.stModuleData[i].stStatus.bPhaseLost THEN
+		get.Events.b_ACPhaselossFault := TRUE;
+		eval.bGridOk := FALSE;
+	END_IF
+
+   	IF stData.stModuleData[i].stStatus.bInputOverVoltage THEN
+		get.Events.B_ACOvervoltage := TRUE;
+		eval.bGridOk := FALSE;
+	END_IF
+	
+	IF stData.stModuleData[i].stStatus.bInputUnderVoltage THEN
+		get.Events.B_ACUndervoltage := TRUE;
+		eval.bGridOk := FALSE;
+    END_IF
+
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetDiagnostics" Id="{f5cd9414-bb27-4cc7-b053-4b49d8c290fd}">
+      <Declaration><![CDATA[METHOD GetDiagnostics 
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+
+
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+(*Module Output OverVoltage Alarm*)	AddError[w_Index](
+		b_ErrorTrig			:= st_params.b_ACDCChargerFitted AND (BuscouplerState <> 8),
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 1,
+		e_ObjectID			:= e_ID,
+		s_Message			:= 'Buscoupler not found',
+		e_sev				:= eseverity.Warning,
+		t_TriggerTime		:= T#2S
+);
+w_Index := w_Index +1;
+
+(*Module Output OverVoltage Alarm*)	AddError[w_Index](
+		b_ErrorTrig			:= get.Events.B_ACPhaselossFault,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 2,
+		e_ObjectID			:= e_ID,
+		s_Message			:= 'Input phase missing',
+		e_sev				:= eseverity.Warning,
+		t_TriggerTime		:= T#1S
+);
+w_Index := w_Index +1;
+
+(*Module Output OverVoltage Alarm*)	AddError[w_Index](
+		b_ErrorTrig			:= get.Events.B_ACOvervoltage,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 3,
+		e_ObjectID			:= e_ID,
+		s_Message			:= 'Input Overvoltage detected',
+		e_sev				:= eseverity.Warning,
+		t_TriggerTime		:= T#1S
+);
+w_Index := w_Index +1;
+
+(*Module Output OverVoltage Alarm*)	AddError[w_Index](
+		b_ErrorTrig			:= get.Events.B_ACUndervoltage,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 4,
+		e_ObjectID			:= e_ID,
+		s_Message			:= 'Input Undervoltage detected',
+		e_sev				:= eseverity.Warning,
+		t_TriggerTime		:= T#1S
+);
+w_Index := w_Index +1;
+
+(*Module Output OverVoltage Alarm*)	AddError[w_Index](
+		b_ErrorTrig			:= get.Events.b_FailedToGenerateDCOutput,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 5,
+		e_ObjectID			:= e_ID,
+		s_Message			:= 'Charger failed to generate output',
+		e_sev				:= eseverity.Warning,
+		t_TriggerTime		:= T#1S
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(*
+(*Module Output OverVoltage Alarm*)	AddError[w_Index](
+		b_ErrorTrig			:= diag.bError_OutputOV,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 13,
+		e_ObjectID			:= eObject_ID.NeutralTransformer,
+		s_Message			:= 'module output overvoltage alarm',
+		e_sev				:= eseverity.Normalshutdown,
+		t_TriggerTime		:= T#2S
+);
+w_Index := w_Index +1;
+
+(*Module OverTemp Alarm*)	AddError[w_Index](
+		b_ErrorTrig			:= diag.bError_OverTemp,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 14,
+		s_Message			:= 'module overtemperature alarm',
+		e_sev				:= eseverity.Normalshutdown,
+		t_TriggerTime		:= T#2S
+);
+w_Index := w_Index +1;
+
+(*Short Circuit Alarm*)	AddError[w_Index](
+		b_ErrorTrig			:= diag.bError_ShortCircuit,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 15,
+		s_Message			:= 'output short circuit alarm',
+		e_sev				:= eseverity.Normalshutdown,
+		t_TriggerTime		:= T#1S
+);
+w_Index := w_Index +1;
+
+(*Module Error Alarm*)	AddError[w_Index](
+		b_ErrorTrig			:= diag.bError_ModuleError,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 16,
+		s_Message			:= 'module error/protection alarm',
+		e_sev				:= eseverity.Normalshutdown,
+		t_TriggerTime		:= T#1S
+);
+w_Index := w_Index +1;
+
+(*Communication Lost Alarm*)	AddError[w_Index](
+		b_ErrorTrig			:= diag.bError_CommLost,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 17,
+		s_Message			:= 'communication lost alarm',
+		e_sev				:= eseverity.Normalshutdown,
+		t_TriggerTime		:= T#3S
+);
+w_Index := w_Index +1;
+
+(*Phase Lost Alarm*)	AddError[w_Index](
+		b_ErrorTrig			:= diag.bError_PhaseLost,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 18,
+		s_Message			:= 'phase lost alarm',
+		e_sev				:= eseverity.Normalshutdown,
+		t_TriggerTime		:= T#2S
+);
+w_Index := w_Index +1;
+
+
+(* ===== WARNINGS ===== *)
+
+(*Input OverVoltage Warning*)	AddError[w_Index](
+		b_ErrorTrig			:= diag.bWarn_InputOV,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 19,
+		s_Message			:= 'input overvoltage warning',
+		e_sev				:= eseverity.Warning,
+		b_AutoClear			:= TRUE
+);
+w_Index := w_Index +1;
+
+(*Input UnderVoltage Warning*)	AddError[w_Index](
+		b_ErrorTrig			:= diag.bWarn_InputUV,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 20,
+		s_Message			:= 'input undervoltage warning',
+		e_sev				:= eseverity.Warning,
+		b_AutoClear			:= TRUE
+);
+w_Index := w_Index +1;
+
+(*Fan Error Warning*)	AddError[w_Index](
+		b_ErrorTrig			:= diag.bWarn_FanError,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 21,
+		s_Message			:= 'fan error warning',
+		e_sev				:= eseverity.Warning,
+		b_AutoClear			:= TRUE
+);
+w_Index := w_Index +1;
+
+(*Power Limitation Warning*)	AddError[w_Index](
+		b_ErrorTrig			:= diag.bWarn_PowerLimit,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 22,
+		s_Message			:= 'power limitation warning',
+		e_sev				:= eseverity.Warning,
+		b_AutoClear			:= TRUE
+);
+w_Index := w_Index +1;
+
+(*Temperature High Warning*)	AddError[w_Index](
+		b_ErrorTrig			:= diag.bWarn_TempHigh,
+		out_ST_Error		:= a_ActiveEvents[w_Index],
+		w_ErrorID			:= 23,
+		s_Message			:= 'module temperature high warning',
+		e_sev				:= eseverity.Warning,
+		b_AutoClear			:= TRUE
+);
+w_Index := w_Index +1;
+
+*)]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="HandleCanCommunication" Id="{fbc5f801-4ac8-44a1-8e80-5d591acd45f7}" FolderPath="NestedStructs\">
+      <Declaration><![CDATA[METHOD PRIVATE HandleCanCommunication
+VAR
+    i, j : INT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+
+
+
+//POLLING (requestin to read data)
+IF TxQueue.TxCounter = RxQueue.TxCounter AND NumberOfMessagesToSend > 0 THEN
+
+    CASE Step OF
+        0: TxQueue.TxMessages[txIndex].cobId := BuildCanId(16#01, GroupID);
+        1: TxQueue.TxMessages[txIndex].cobId := BuildCanId(16#02, GroupID);
+        2: TxQueue.TxMessages[txIndex].cobId := BuildCanId(16#04, GroupID);
+        3: TxQueue.TxMessages[txIndex].cobId := BuildCanId(16#06, GroupID);
+        4: TxQueue.TxMessages[txIndex].cobId := BuildCanId(16#0C, GroupID);
+    END_CASE
+
+    TxQueue.TxMessages[txIndex].length := 8;
+
+    FOR j := 0 TO 7 DO
+        TxQueue.TxMessages[txIndex].data[j] := 0;
+    END_FOR
+
+    txIndex := txIndex + 1;
+    IF txIndex > 4 THEN txIndex := 0; END_IF
+
+    Step := Step + 1;
+    IF Step > 4 THEN Step := 0; END_IF
+
+END_IF
+
+
+//COMMANDS 
+CASE get.e_SystemStatus OF
+
+    //MODULE OFF Command
+	eACDCChargerState.stopping,  eACDCChargerState.fault:
+        TxQueue.TxMessages[5].cobId := BuildCanId(16#1A, GroupID);
+        TxQueue.TxMessages[5].data[0] := 1;
+        TxQueue.TxMessages[5].length := 8;
+
+
+    // MODULE ON Command
+    eACDCChargerState.starting,  eACDCChargerState.running:
+        TxQueue.TxMessages[5].cobId := BuildCanId(16#1A, GroupID);
+        TxQueue.TxMessages[5].data[0] := 0;
+        TxQueue.TxMessages[5].length := 8;
+
+END_CASE
+
+
+//SETPOINT CMD 
+IF get.e_SystemStatus = eACDCChargerState.starting OR get.e_SystemStatus = eACDCChargerState.running THEN
+
+    voltage_mV := REAL_TO_UDINT(rChargerVoltageSetpoint * 1000);
+    current_mA := REAL_TO_UDINT(rChargerCurrentSetpoint * 1000);
+
+    TxQueue.TxMessages[6].cobId := BuildCanId(16#1C, GroupID);
+
+    TxQueue.TxMessages[6].data[0] := TO_BYTE(SHR(voltage_mV,24));
+    TxQueue.TxMessages[6].data[1] := TO_BYTE(SHR(voltage_mV,16));
+    TxQueue.TxMessages[6].data[2] := TO_BYTE(SHR(voltage_mV,8));
+    TxQueue.TxMessages[6].data[3] := TO_BYTE(voltage_mV);
+
+    TxQueue.TxMessages[6].data[4] := TO_BYTE(SHR(current_mA,24));
+    TxQueue.TxMessages[6].data[5] := TO_BYTE(SHR(current_mA,16));
+    TxQueue.TxMessages[6].data[6] := TO_BYTE(SHR(current_mA,8));
+    TxQueue.TxMessages[6].data[7] := TO_BYTE(current_mA);
+
+    TxQueue.TxMessages[6].length := 8;
+
+END_IF
+
+
+//TX TRIGGER 
+TxQueue.NoOfTxMessages := TO_UINT(NumberOfMessagesToSend);
+TxQueue.TxCounter := TxQueue.TxCounter + 1;
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="limitation" Id="{63907ba4-5805-4e34-af13-712be90f4354}" FolderPath="NestedStructs\">
+      <Declaration><![CDATA[METHOD limitation : REAL
+VAR_INPUT
+END_VAR
+
+VAR_INST
+	rAvailableChargePower 		: REAL;
+	rRampUp			: REAL;
+	rRampDown		: REAL;	
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[limitation := r_MaxChargeCurrent + r_SystemCurrent + stData.rSystemOutCurrentDc;
+
+//// ramp
+//rRampUp   := 0.5;   // slow increase
+//rRampDown := 5.0;   // fast decrease
+
+//IF stData.rSystemOutCurrentDc > rAvailableChargePower THEN
+//    // reduce fast 
+//    rMaxLimit := MAX(stData.rSystemOutCurrentDc - rRampDown, rAvailableChargePower);
+//ELSE
+//    // increase slowly (avoid jump)
+//    rMaxLimit := MIN(stData.rSystemOutCurrentDc + rRampUp, rAvailableChargePower);
+//END_IF;
+
+//get.Events.b_BatteryLimitDeratingActive := bms.r_MaxChargeCurrentAllowed + bms.r_SystemCurrent]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="MapStatusToStruct" Id="{53187ea4-08f6-49a6-9340-2e3bb4d8203a}" FolderPath="NestedStructs\">
+      <Declaration><![CDATA[METHOD MapStatusToStruct : ST_ModuleStatus
+VAR_INPUT
+    Status2 : BYTE;   // Received status byte 2
+    Status1 : BYTE;   // Received status byte 1
+    Status0 : BYTE;   // Received status byte 0
+END_VAR
+VAR
+    result : ST_ModuleStatus;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+
+(* ------------------- STATUS 2 ------------------- *)
+result.bPfcOff            := (Status2 AND 16#80) <> 0;  // Bit 7
+result.bInputOverVoltage  := (Status2 AND 16#40) <> 0;  // Bit 6
+result.bInputUnderVoltage := (Status2 AND 16#20) <> 0;  // Bit 5
+result.bInputAsymmetry    := (Status2 AND 16#10) <> 0;  // Bit 4
+result.bPhaseLost         := (Status2 AND 16#08) <> 0;  // Bit 3
+result.bLoadSharingError  := (Status2 AND 16#04) <> 0;  // Bit 2
+result.bModuleIdDuplicate := (Status2 AND 16#02) <> 0;  // Bit 1
+result.bPowerLimitation   := (Status2 AND 16#01) <> 0;  // Bit 0
+
+(* ------------------- STATUS 1 ------------------- *)
+result.bCanTimeout        := (Status1 AND 16#80) <> 0;  // Bit 7
+result.bSlowStartup       := (Status1 AND 16#40) <> 0;  // Bit 6
+result.bOutputOverVoltage := (Status1 AND 16#20) <> 0;  // Bit 5
+result.bTempHigh          := (Status1 AND 16#10) <> 0;  // Bit 4
+result.bFanError          := (Status1 AND 16#08) <> 0;  // Bit 3
+result.bModuleProtection  := (Status1 AND 16#04) <> 0;  // Bit 2
+result.bModuleError       := (Status1 AND 16#02) <> 0;  // Bit 1
+result.bDcSideOff         := (Status1 AND 16#01) <> 0;  // Bit 0
+
+(* ------------------- STATUS 0 ------------------- *)
+result.bDischargeAbnormal  := (Status0 AND 16#20) <> 0; // Bit 5
+result.bMpptSwitchMode     := (Status0 AND 16#10) <> 0; // Bit 4
+result.bPfcAbnormal        := (Status0 AND 16#08) <> 0; // Bit 3
+result.bInternalCommError  := (Status0 AND 16#04) <> 0; // Bit 2
+result.bOutputShortCircuit := (Status0 AND 16#01) <> 0; // Bit 0
+
+MapStatusToStruct := result;  // return struct]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ReadingRx" Id="{1ec761c1-3b16-40af-89fb-cf2899068b14}" FolderPath="NestedStructs\">
+      <Declaration><![CDATA[METHOD ReadingRx : BOOL
+VAR_INPUT
+END_VAR
+VAR_INST
+	rxID : UDINT;                      // received CAN identifier
+	commandNo : UDINT;                  // decoded command number
+    deviceNo : UDINT;                   // decoded device number
+    errorCode : UDINT;                  // decoded error code
+	ModuleAddr : BYTE;
+    ControllerAddr : BYTE;
+	rxData : ARRAY[0..7] OF USINT;      // received data buffer
+	tmpFloat : ARRAY[0..3] OF BYTE;
+END_VAR
+VAR_INST
+	mydword : DWORD;
+	mydword2 : DWORD;
+    iWd         : INT;
+    rxIndex     : INT;
+
+    tModuleWd   : ARRAY [0..10] OF TON;
+    bKickModule : ARRAY [0..10] OF BOOL;;
+	stEmptyModule : ST_ModuleData; // all fields = 0 by default
+	
+	TempVoltage : ARRAY[0..2] OF REAL;
+	Divider	:	UINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+
+// Reset kick flags every cycle
+FOR iWd := 0 TO 10 DO
+    bKickModule[iWd] := FALSE;
+END_FOR
+
+
+// Receive and decode data
+IF RxQueue.RxCounter <> TxQueue.RxCounter THEN
+	b_ModuleCommunicationLost := FALSE;
+    FOR rxIndex := 0 TO TO_INT(MAX(0, RxQueue.NoOfRxMessages - 1)) DO//max(0,NumberOfMessagesToSend-1) DO
+
+        rxID := RxQueue.RxMessages[rxIndex].cobId AND 16#1FFFFFFF;;     // read CAN identifier
+        rxData := RxQueue.RxMessages[rxIndex].Data;  // copy payload
+		
+		//// extract command from COB-ID  cmd := TO_BYTE(SHR(msg.cobId,16) AND 16#3F);
+
+        (* decode identifier fields according to GCP protocol *)
+        errorCode := TO_BYTE(SHR(rxID , 26) AND 16#7);       // bits 28-26
+        deviceNo  := TO_BYTE(SHR(rxID , 22) AND 16#F);       // bits 25-22
+        commandNo := TO_BYTE(SHR(rxID , 16) AND 16#3F);      // bits 21-16
+     //   ModuleAddr     := TO_BYTE(SHR(rxID , 8)  AND 16#FF); // bits 15-8 (source address)
+	//	ControllerAddr := TO_BYTE(rxID AND 16#FF);           // bits 7-0  (target address)
+	    ControllerAddr     := TO_BYTE(SHR(rxID , 8)  AND 16#FF); 
+		ModuleAddr := TO_BYTE(rxID AND 16#FF);          
+
+
+        CASE commandNo OF
+
+        (* ---- response: system/group voltage & current (float) ---- *)
+       1:// 16#01:
+            tmpFloat[0] := rxData[0];
+            tmpFloat[1] := rxData[1];
+            tmpFloat[2] := rxData[2];
+            tmpFloat[3] := rxData[3];
+			
+			
+			//SHL(TO_DWORD(readData[i-1]), 16) OR TO_DWORD(readData[i]);
+			mydword := SHL(TO_DWORD(tmpFloat[0]), 24) OR SHL(TO_DWORD(tmpFloat[1]), 16) OR SHL(TO_DWORD(tmpFloat[2]), 8) OR TO_DWORD(tmpFloat[3]);
+			
+            MEMCPY(ADR(stData.rSystemOutVoltageDc), ADR(mydword), 4);  // copy bytes into REAL
+
+            tmpFloat[0] := rxData[4];
+            tmpFloat[1] := rxData[5];
+            tmpFloat[2] := rxData[6];
+            tmpFloat[3] := rxData[7];
+			
+			mydword2 := SHL(TO_DWORD(tmpFloat[0]), 24) OR SHL(TO_DWORD(tmpFloat[1]), 16) OR SHL(TO_DWORD(tmpFloat[2]), 8) OR TO_DWORD(tmpFloat[3]);
+			
+            MEMCPY(ADR(stData.rSystemOutCurrentDc), ADR(mydword2), 4);
+
+        (* ---- response: module count ---- *)
+      2://  16#02:
+            stData.rNumberOfModules := rxData[2];                     // number of modules
+			
+	3://	16#03: 
+			bKickModule[ModuleAddr] := TRUE;
+       			 // convert big-endian float to REAL
+			tmpFloat[0] := rxData[3];
+			tmpFloat[1] := rxData[2];
+			tmpFloat[2] := rxData[1];
+			tmpFloat[3] := rxData[0];
+			MEMCPY(ADR(stData.stModuleData[ModuleAddr].rOutVoltageDc), ADR(tmpFloat), 4); // per-module output voltage
+	
+			tmpFloat[0] := rxData[7];
+			tmpFloat[1] := rxData[6];
+			tmpFloat[2] := rxData[5];
+			tmpFloat[3] := rxData[4];
+			MEMCPY(ADR(stData.stModuleData[ModuleAddr].rOutCurrentDc), ADR(tmpFloat), 4); // per-module output current
+				
+			
+	4: //	16#04:  // module status
+			bKickModule[ModuleAddr] := TRUE;
+			
+            stData.stModuleData[ModuleAddr].rTemprature := TO_SINT(rxData[4]);
+            stData.stModuleData[ModuleAddr].rStatus2   	:= rxData[5];
+            stData.stModuleData[ModuleAddr].rStatus1    := rxData[6];
+            stData.stModuleData[ModuleAddr].rStatus0    := rxData[7];
+			(* decode bits into struct *)
+			stData.stModuleData[ModuleAddr].stStatus :=	MapStatusToStruct(Status2 := rxData[5], Status1 := rxData[6], Status0 := rxData[7]);
+
+     6://   16#06:  // AC input voltage
+	 		bKickModule[ModuleAddr] := TRUE;
+			
+    		stData.stModuleData[ModuleAddr].rVoltageL1L2 := TO_REAL(rxData[0]*256 + rxData[1]) * 0.1;
+            stData.stModuleData[ModuleAddr].rVoltageL2L3 := TO_REAL(rxData[2]*256 + rxData[3]) * 0.1;
+            stData.stModuleData[ModuleAddr].rVoltageL3L1 := TO_REAL(rxData[4]*256 + rxData[5]) * 0.1;
+
+   12://     16#0C:  // external voltage / available current
+   			bKickModule[ModuleAddr] := TRUE;
+			
+        	stData.stModuleData[ModuleAddr].rExternalVoltageDc  := TO_REAL(rxData[0]*256 + rxData[1]) * 0.1;
+            stData.stModuleData[ModuleAddr].ravilableCurrentDc 	:= TO_REAL(rxData[2]*256 + rxData[3]) * 0.1;
+
+
+        END_CASE
+
+    END_FOR	
+
+	TxQueue.RxCounter := RxQueue.RxCounter;
+
+	tComWatchdog(IN := FALSE);
+ELSE
+		
+	(* Communication *)
+	tComWatchdog(IN := TRUE AND NOT bResetFault, PT := T#10S);
+	IF tComWatchdog.Q THEN
+		stData.rNumberOfModules := 0;
+		stData.rSystemOutCurrentDc := 0;
+		stData.rSystemOutVoltageDc :=0;
+		b_ModuleCommunicationLost := TRUE;
+	END_IF
+
+END_IF
+
+
+
+
+// watchdog 
+FOR iWd := 0 TO 10 DO
+
+    // Restart watchdog if message received
+    IF bKickModule[iWd] THEN
+        tModuleWd[iWd](IN := FALSE);
+    END_IF
+
+    // Run watchdog
+    tModuleWd[iWd](IN := TRUE, PT := T#5S);
+
+    // Timeout handling
+    IF tModuleWd[iWd].Q THEN
+        stData.stModuleData[iWd] := stEmptyModule;   // reset 
+        stData.stModuleData[iWd].bValid := FALSE;
+    ELSE
+        stData.stModuleData[iWd].bValid := TRUE;
+    END_IF
+	
+	// to prevent jump in current set
+	IF (NOT bValidPrev[iWd]) AND stData.stModuleData[iWd].bValid THEN
+    	bFreezeCurrent := TRUE;
+	END_IF
+
+	bValidPrev[iWd] := stData.stModuleData[iWd].bValid;
+	
+	
+END_FOR
+
+Divider := 0;
+TempVoltage[0] := 0;
+TempVoltage[1] := 0;
+TempVoltage[2] := 0;
+
+FOR iWd := 0 TO 10 DO
+	IF stdata.stModuleData[iWd].bValid THEN
+		TempVoltage[0] := TempVoltage[0] + stData.stModuleData[iWd].rVoltageL1L2;
+		TempVoltage[1] := TempVoltage[1] + stData.stModuleData[iWd].rVoltageL2L3;
+		TempVoltage[2] := TempVoltage[2] + stData.stModuleData[iWd].rVoltageL3L1;
+		Divider := Divider +1;
+	END_IF
+END_FOR
+
+get.ar_ACvoltage[Phases.L1] := TempVoltage[0]/MAX(divider,1);
+get.ar_ACvoltage[Phases.L2] := TempVoltage[1]/MAX(divider,1);
+get.ar_ACvoltage[Phases.L3] := TempVoltage[2]/MAX(divider,1);
+get.ar_ACvoltage[Phases.AVG] := ((get.ar_ACvoltage[Phases.L1] + get.ar_ACvoltage[Phases.L2] + get.ar_ACvoltage[Phases.L3]) / 3 );
+
+get.r_DcCurrent := stdata.rSystemOutCurrentDc;
+get.r_DcVoltage := stdata.rSystemOutVoltageDc;
+get.r_DcPower 	:= (stdata.rSystemOutCurrentDc * stdata.rSystemOutVoltageDc)/1000;
+
+get.ACmeasurements.ar_ActivePower[0] := get.r_DcPower/0.95;
+IF get.ar_ACvoltage[Phases.AVG] > 0 THEN
+	get.ACmeasurements.ar_Current[0] := (1000*get.r_DcPower/0.95)/get.ar_ACvoltage[Phases.AVG]/1.73;
+ELSE
+	get.ACmeasurements.ar_Current[0] := 0;
+END_IF
+get.r_AvailablePower := (stdata.stModuleData[0].ravilableCurrentDc * stdata.stModuleData[0].rExternalVoltageDc) + 
+						(stdata.stModuleData[1].ravilableCurrentDc * stdata.stModuleData[1].rExternalVoltageDc);
+
+
+//IF diag.bError_PhaseLost
+//get.Events.b_ACPhaseLossError := diag.bError_PhaseLost;
+
+
+
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{c6a6159f-20a1-4743-b7b9-a9b5f563be4e}">
+      <Declaration><![CDATA[METHOD Reset : BOOL
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+IF get.e_SystemStatus = eACDCChargerState.Fault THEN
+	get.e_SystemStatus := eACDCChargerState.init;
+	get.Events.b_FailedToGenerateDCOutput := FALSE;
+END_IF
+
+Reset := TRUE;
+(*
+io.b_ResetOverCurrentProtection := get.events.b_OvercurrentAlarm;
+Reset := NOT get.events.b_OvercurrentAlarm;
+*)]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="RunStateMachine" Id="{f1bd3e16-3c5b-4c77-8732-022a334c660f}" FolderPath="NestedStructs\">
+      <Declaration><![CDATA[METHOD PRIVATE RunStateMachine
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+
+
+
+IF b_ModuleCommunicationLost AND  get.e_SystemStatus <> eACDCChargerState.fault THEN
+    get.e_SystemStatus := eAcDcChargerState.off;
+END_IF
+
+CASE get.e_SystemStatus OF
+
+	eACDCChargerState.off:
+		IPSRequest.b_Demand_HVDC := false;
+	 	IF NOT b_ModuleCommunicationLost THEN
+			get.e_SystemStatus := eACDCChargerState.Standby;
+		END_IF
+	
+	eACDCChargerState.Standby:
+		IPSRequest.b_Demand_HVDC := false;
+		IF set.b_Enable AND NOT get.events.b_SOCLimitReached AND eval.bGridOK THEN
+			IPSRequest.b_Demand_HVDC := true;
+			if main_fast.InternalPowerSupply.Get.b_HVDCAvailable then
+				get.e_SystemStatus := eACDCChargerState.starting;
+			end_if
+		END_IF
+	
+	eACDCChargerState.starting:	
+		IF NOT eval.bAllModulesOff THEN    // at least one module is on
+			get.e_SystemStatus := eACDCChargerState.running;
+		END_IF
+		
+	eACDCChargerState.running:	
+		IF NOT set.b_Enable OR get.events.b_SOCLimitReached OR NOT eval.bGridOK THEN 
+			get.e_SystemStatus := eACDCChargerState.stopping;
+		END_IF
+	
+	eACDCChargerState.stopping:	
+		IF eval.bAllModulesOff THEN
+			get.e_SystemStatus := eACDCChargerState.Standby;
+		END_IF
+END_CASE]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SafetyCheck" Id="{ff5f274f-2ead-4e95-8232-69bebd337f6b}" FolderPath="NestedStructs\">
+      <Declaration><![CDATA[METHOD PRIVATE SafetyCheck
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+ 
+
+
+(* Window check *)
+bVoltageWindowOk := stData.rSystemOutVoltageDc > r_SystemVoltage - 5.0;
+tCheck(in:= NOT eval.bAllModulesOff AND not bVoltageWindowOk, PT := T#5S);
+
+IF tCheck.Q THEN
+	get.Events.b_FailedToGenerateDCOutput := TRUE;
+	get.e_SystemStatus := eACDCChargerstate.fault;
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="UpdateStData" Id="{9cb094ab-dfd8-45b1-91a2-526143c4a390}" FolderPath="NestedStructs\">
+      <Declaration><![CDATA[METHOD PRIVATE UpdateStData
+VAR
+    i : INT;
+END_VAR
+VAR_INST
+	stDataLast : ST_Data;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+
+
+// Loop through modules
+FOR i := 0 TO TO_INT(stData.rNumberOfModules) DO
+    IF stData.stModuleData[i].stStatus.bCanTimeout THEN
+        // Keep previous good value
+        stData.stModuleData[i] := stDataLast.stModuleData[i];
+    ELSE
+        // Save new value as last known good
+        stDataLast.stModuleData[i] := stData.stModuleData[i];
+    END_IF
+END_FOR
+
+// Save system-level values
+IF NOT b_ModuleCommunicationLost THEN
+    stDataLast.rSystemOutVoltageDc := stData.rSystemOutVoltageDc;
+    stDataLast.rSystemOutCurrentDc := stData.rSystemOutCurrentDc;
+    stDataLast.rNumberOfModules   := stData.rNumberOfModules;
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ValidateOutput" Id="{9cb4f4ff-339e-4cfc-99f6-c68616d198d9}" FolderPath="NestedStructs\">
+      <Declaration><![CDATA[METHOD PRIVATE ValidateOutput
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+
+
+IF get.e_SystemStatus = eACDCChargerstate.running THEN
+
+    IF ABS(stData.rSystemOutVoltageDc - rChargerVoltageSetpoint) > rChargerVoltageSetpoint * 0.1 THEN
+        bWarning := TRUE;
+    END_IF
+
+    IF ABS(stData.rSystemOutCurrentDc - rChargerCurrentSetpoint) > rChargerCurrentSetpoint * 0.2 THEN
+        bWarning := TRUE;
+    END_IF
+ELSE
+	bWarning := FALSE;	
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

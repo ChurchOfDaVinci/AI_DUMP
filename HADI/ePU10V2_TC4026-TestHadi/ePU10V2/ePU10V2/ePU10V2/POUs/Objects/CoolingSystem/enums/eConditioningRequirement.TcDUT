@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eConditioningRequirement" Id="{62fe32f6-2e93-462c-9106-6f64bf2308bc}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE eConditioningRequirement :
+(
+	none := 0,
+	Pumprequired		:=	1,
+	HeatingRequired 	:= 	2,
+	CoolingRequired 	:= 	3
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

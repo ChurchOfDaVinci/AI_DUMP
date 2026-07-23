@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_DCLink_events" Id="{f4b4cf21-77e7-4040-bea0-ede876a44d20}">
+    <Declaration><![CDATA[TYPE ST_DCLink_events :
+STRUCT
+	OvercurrentTrip			: BOOL;
+	OvervoltageNOK			: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

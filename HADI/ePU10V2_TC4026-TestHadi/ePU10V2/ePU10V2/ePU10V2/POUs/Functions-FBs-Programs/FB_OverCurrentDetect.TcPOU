@@ -1,0 +1,113 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_OverCurrentDetect" Id="{9dcd0c41-bbf4-4ceb-a540-193fe6c918c8}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_OverCurrentDetect
+VAR_INPUT
+	ui_Ik					: UINT := 10; // kA/s 
+	ui_RatedCurrent			: UINT; // A
+	ui_gain					: UINT := 15;
+	b_reset					: BOOL;
+	r_In					: REAL;
+	t_ResetTime				: TIME := T#2S;  
+	t_MaxPickUpTime			: TIME := T#30M;
+END_VAR
+	
+VAR_OUTPUT
+	b_alarm						: BOOL;
+	b_warning					: BOOL;
+	ui_actLoad					: UINT; //%
+	r_MaxCurrentDetected		: REAL;
+	t_MaxTimeActive				: TIME;
+	t_RemainingTime				: TIME;
+END_VAR
+VAR
+	ton_PickUpTimer			: TON := (PT:=T#10S);
+	ton_ResetTimer			: TON := (PT:=T#5S);
+	r_MaxCurrent			: REAL;
+	t_MaxTime				: TIME;
+END_VAR
+
+VAR
+	r_ThermalMax		 	: REAL ;
+	r_CurrentLimit			: REAL;
+	r_Overcurrent			: REAL;
+	r_thermalLoad			: REAL;
+	r_thermalDelta			: REAL;
+	r_thermalEnergy			: REAL;
+	r_StepSize				: REAL;				
+	//fb_loadMa				: FB_MovingAverage := (enable:= TRUE);
+	i_instance				: INT;	
+	init					: BOOL := TRUE;	
+END_VAR
+
+VAR_STAT
+	i_instanceCounter		: INT;
+	ton_evalTimer			: TON := (PT := T#10MS);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ton_pickUpTimer(PT:=t_MaxPickUpTime);
+ton_ResetTimer(PT:=t_ResetTime);
+
+
+IF i_instance = 0 THEN
+	ton_EvalTimer(IN := NOT ton_evaltimer.Q);
+END_IF
+
+IF ton_evalTimer.Q THEN
+	r_thermalMax := EXPT(TO_REAL(ui_Ik) * 1000,2);
+	r_CurrentLimit := TO_REAL(ui_ratedCurrent);
+	r_OverCurrent := r_in - r_CurrentLimit ;
+	r_thermalLoad := EXPT(r_in, 2);
+	r_StepSize := TO_REAL(ton_evalTimer.PT) / 1000;
+	r_thermalDelta := EXPT(r_overcurrent * SEL(r_OverCurrent >0, ui_gain / 5, ui_gain),2) * SEL(r_OverCurrent >0, -1, 1);
+	r_thermalEnergy := LIMIT(0, r_thermalEnergy + r_ThermalDelta * r_stepsize * 2, r_thermalMax * 1.01); // unknown why *2, but this gives correct remaining time...
+
+	//fb_loadMa(IN := MAX(0,r_thermalDelta), Length := 2);
+	
+	IF r_IN >= r_CurrentLimit THEN
+		t_remainingTime := MIN(t_maxPickUpTime - ton_pickUpTimer.ET, TO_TIME((MAX(0,r_thermalMax - r_thermalEnergy)) / MAX(1, r_thermalDelta) *1000)); 
+		ui_actLoad := TO_UINT(r_In / MAX(1,ui_RatedCurrent) * 100);
+		ton_PickUpTimer.IN := TRUE;
+		ton_ResetTimer.IN := FALSE;
+		IF t_MaxTime < ton_PickUpTimer.ET THEN
+			t_MaxTime := ton_PickUpTimer.ET;
+			t_MaxTimeActive := t_MaxTime;
+		END_IF
+		
+		IF r_MaxCurrent < ABS(r_IN) THEN
+			r_MaxCurrent := ABS(r_IN);
+			r_MaxCurrentDetected := r_MaxCurrent;
+		END_IF
+	ELSIF r_IN < r_CurrentLimit THEN
+		t_remainingTime := t_MaxPickUpTime;
+		ton_ResetTimer.IN := TRUE;
+		ton_PickUpTimer.IN := NOT(ton_ResetTimer.Q);
+	END_IF
+	
+	b_Alarm := ton_PickUpTimer.Q OR t_remainingTime = T#0S;
+	b_Warning := ton_PickUpTimer.IN;
+	
+	IF NOT ton_PickUpTimer.IN THEN
+		ui_actLoad := 0;
+		r_maxCurrent := 0;
+		t_MaxTime := T#0S;
+	END_IF
+	
+	IF b_reset THEN
+		r_thermalEnergy := 0;
+		r_MaxCurrentDetected := 0;
+		t_MaxTimeActive := T#0S;
+	END_IF
+
+END_IF
+
+
+IF init THEN
+	init := FALSE;
+	i_instance := i_instanceCounter;
+	i_instanceCounter:= i_instanceCounter +1;
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

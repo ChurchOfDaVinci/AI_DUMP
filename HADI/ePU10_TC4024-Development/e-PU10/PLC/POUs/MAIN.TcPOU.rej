@@ -1,9 +1,0 @@
-diff a/e-PU10/PLC/POUs/MAIN.TcPOU b/e-PU10/PLC/POUs/MAIN.TcPOU	(rejected hunks)
-@@ -86,6 +86,7 @@
-       <LineId Id="129" Count="0" />
-       <LineId Id="132" Count="2" />
-       <LineId Id="139" Count="0" />
-+      <LineId Id="157" Count="0" />
-       <LineId Id="152" Count="1" />
-       <LineId Id="135" Count="0" />
-       <LineId Id="162" Count="1" />

@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eHeatPumpState" Id="{56ff513c-6771-4137-81bc-6c723de15f43}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE eHeatPumpState :
+(
+	OFF := 0,
+	Initializing := 1,
+	Standby := 2,
+	Active_Cooling := 3,
+	Active_Heating := 4,
+	ERROR := 5
+)UINT := OFF;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eIoTCommVersion" Id="{f890216b-e8c2-4bcb-8a19-1ba9157488c4}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eIoTCommVersion :
+(
+	V1 := 0,
+	V2 := 1
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

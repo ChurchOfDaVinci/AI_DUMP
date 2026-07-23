@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="st_TCME31_Set" Id="{2cdec817-d5ed-4bf9-b8af-d8cf72a78442}">
+    <Declaration><![CDATA[TYPE st_TCME31_Set :
+STRUCT
+	IPAddress		:	String := '192.168.1.70';
+	
+	DigitalOutput1	:	Bool;
+	DigitalOutput2	:	Bool;
+	DigitalOutput3	:	Bool;
+	DigitalOutput4	:	Bool;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

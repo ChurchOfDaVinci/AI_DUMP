@@ -1,0 +1,65 @@
+{
+    "$schema": "../../../TwinCAT-HMI-Common/JsonSchemas/Language.Schema.json",
+    "locale": "en",
+    "localizedText": {
+        "AllParameters": "All parameters",
+        "NoChanges": "No changes",
+        "Changes": "Changes",
+        "ImportParameters": "Import parameters",
+        "ExportParameters": "Export parameters",
+        "ConfigRuntime": "Config runtime",
+        "UpdatePLCSymbols": "Update PLC symbols",
+        "TeachSymbolValues": "Teach symbol values",
+        "ParameterName": "Name",
+        "ParameterValue": "Value",
+        "ParameterPreparedValue": "Prepared value",
+        "ParameterApplyAllPreparedValues": "Apply all",
+        "ParameterApplyPreparedValue": "Apply",
+        "NoParametersOrFunctions": "No parameters or functions.",
+        "PreparedValues": "Prepared values",
+        "Loading": "Loading ...",
+        "Required": "Required",
+
+        "Info_StartEditing": "Click here to edit.",
+
+        "SymbolSearchCountResults": "{0} matche(s) in {1} of {2} rows.",
+        "Success_ImportingParameters_HeaderText": "Success: Importing parameters",
+        "Success_ImportingParameters_ContentText": "{0} value(s) were imported successfully.",
+
+        "Warning_PartiallySuccessfulImport_HeaderText": "Warning: Partially successful import",
+        "Warning_PartiallySuccessfulImport_ContentText": "{0} value(s) were imported successfully.\n\nHowever, the following {1} symbol(s) could not be imported since they do not exists:\n{2}",
+
+        "Warning_PLCSymbolsAlreadyUpToDate_HeaderText": "PLC symbols already up to date",
+        "Warning_PLCSymbolsAlreadyUpToDate_ContentText": "Do you want to force a PLC symbol update?",
+
+        "Warning_ResolvePreparedValuesBeforeImporting_HeaderText": "Warning: Unresolved prepared values",
+        "Warning_ResolvePreparedValuesBeforeImporting_ContentText": "You have {0} prepared value(s). Please apply or clear them before importing symbol values.",
+
+        "Error_CallingServerFn": "Calling the function '{0}' replied with an error {1}",
+        "Executed_Successfully": "Executed successfully",
+        "BooleanEditor_true": "true",
+        "BooleanEditor_false": "false",
+        "ViewChanges": "View changes",
+        "Undo": "Undo",
+        "Cancel": "Cancel",
+        "ForceUpdate": "Force update",
+        "TryAgain": "Try again",
+        "ErrorOccured": "Error occured",
+        "Info_PLCSymbolUpdateInProgress": "PLC is being updated in the background. Please wait ...",
+        "SymbolSearchBarPlaceholder": "Type in anything you want to find.",
+        "ParameterMinValue": "Min",
+        "ParameterMaxValue": "Max",
+
+        "SymbolInitState": "Symbol init state",
+        "SymbolUpdateError": "Update error",
+        "SymbolUpdateStateDesc": "Update description",
+        "ADSRuntime": "ADS Runtime",
+        "ADSState": "State",
+        "ADSVersion": "Version",
+        "ADSProjectName": "Project name",
+        "ADSProjectCompiledAt": "Project compiled at",
+        "ConnectionState": "Connection state",
+        "SystemServiceADSState": "State of System Service",
+        "DeviceName": "Device name"
+    }
+}

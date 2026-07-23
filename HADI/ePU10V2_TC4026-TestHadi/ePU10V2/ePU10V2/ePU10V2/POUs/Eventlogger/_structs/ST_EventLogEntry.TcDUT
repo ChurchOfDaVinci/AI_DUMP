@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_EventLogEntry" Id="{95c3cc6f-7cf7-4584-bd7f-65e8fb6d69c7}">
+    <Declaration><![CDATA[TYPE ST_EventLogEntry :
+STRUCT
+	sTimestamp	: STRING(63);
+	eCategory	: eEventLogCategory;
+	eSeverity	: eEventLogSeverity;
+	sSourceFB	: STRING(63);
+	sMessage	: STRING(255);
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

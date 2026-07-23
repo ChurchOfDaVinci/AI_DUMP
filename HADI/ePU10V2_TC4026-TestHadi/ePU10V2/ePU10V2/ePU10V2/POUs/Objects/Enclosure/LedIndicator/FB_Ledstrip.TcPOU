@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_Ledstrip" Id="{075865b6-e917-436d-a252-ff1eeb30d573}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Ledstrip
+VAR_INPUT
+	brightness						: BYTE; // in 
+END_VAR
+
+VAR_IN_OUT CONSTANT
+	st_params				: st_ledstrip_params;
+END_VAR
+
+VAR_OUTPUT
+	get 					: st_ledstrip_get;
+END_VAR
+VAR
+	ledBeckhoff				: FB_ledBeckhoff;
+	MachineData				: ST_Ledstrip_MachineData;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ledbeckhoff(Machinedata := Machinedata, st_params := st_params, Brightness := brightness, DemoMode := GVL.b_LEDDemoMode);
+
+get := ledbeckhoff.get;
+]]></ST>
+    </Implementation>
+    <Method Name="GetDiagnostics" Id="{814a0865-4163-4ae4-87bd-d86bd73f9afe}">
+      <Declaration><![CDATA[METHOD PUBLIC GetDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+
+VAR_OUTPUT
+	b_errorActive	: BOOL;
+	b_warningActive	: BOOL;
+END_VAR
+
+VAR
+	by_errCt	: BYTE;
+	by_warnCt	: BYTE;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	(*LED Error*)		AddError[w_Index](
+		b_ErrorTrig			:= get.b_error,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 1,
+		e_ObjectID				:=  eObject_ID.Enclosure_LED,
+		s_Message				:= 'LED error',
+		e_sev					:= eseverity.info,
+		b_AutoClear			:= TRUE
+		);
+		w_Index := w_Index +1;
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetMachineStatus" Id="{17561dc0-f8ab-4210-a0e5-99d7d4a438c9}">
+      <Declaration><![CDATA[METHOD SetMachineStatus : BOOL
+VAR_INPUT
+	b_Error 		: BOOL;
+	b_Warning		: BOOL;
+	b_Attention		: BOOL;
+	b_Normal		: BOOL;
+	b_Off			: BOOL;
+	r_Soc			: REAL;
+	r_DCcurrent		: REAL;
+END_VAR
+
+VAR_INST
+	r_socDemo	: REAL := 30;
+	r_CurrentDemo : REAL := 0;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF b_off THEN
+	machinedata.e_systemStatus := eSystemStatus.off;
+ELSIF b_Error THEN
+	machinedata.e_systemStatus := eSystemStatus.error;
+ELSIF b_warning THEN
+	machinedata.e_systemStatus := eSystemStatus.warning;
+ELSIF b_attention THEN
+	machinedata.e_systemStatus := eSystemStatus.attention;
+ELSIF b_normal THEN
+	machinedata.e_systemStatus := eSystemStatus.normal;
+ELSE
+	machinedata.e_systemStatus := eSystemStatus.neutral;
+END_IF
+
+MachineData.r_SOC := r_soc;
+MachineData.r_DCCurrent := r_DCcurrent;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

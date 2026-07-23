@@ -1,0 +1,124 @@
+﻿{
+  "$schema": "../.hmiframework/Schema/ControlDescription.Schema.json",
+  "apiVersion": 1,
+  "name": "LoadingSpinner",
+  "namespace": "TcHmi.Controls.Loading_Spinner_Package",
+  "displayName": "LoadingSpinner",
+  "version": {
+    "full": "1.0.0.0",
+    "major": 1,
+    "minor": 0,
+    "revision": 0,
+    "build": 0
+  },
+  "visible": true,
+  "themeable": "Standard",
+  "base": "TcHmi.Controls.System.TcHmiControl",
+  "description": "A simple loading spinner",
+  "properties": {
+    "containerControl": false,
+    "geometry": {
+      "width": 150,
+      "height": 150
+    }
+  },
+  "icons": [
+    {
+      "name": "Icons/16x16.png",
+      "width": 16,
+      "height": 16
+    },
+    {
+      "name": "Icons/24x24.png",
+      "width": 24,
+      "height": 24
+    },
+    {
+      "name": "Icons/32x32.png",
+      "width": 32,
+      "height": 32
+    },
+    {
+      "name": "Icons/64x64.png",
+      "width": 64,
+      "height": 64
+    }
+  ],
+  "template": "Template.html",
+  "dependencyFiles": [
+    {
+      "name": "LoadingSpinner.js",
+      "type": "JavaScript",
+      "description": "Contains all the main logic."
+    },
+    {
+      "name": "Style.css",
+      "type": "Stylesheet",
+      "description": "Theme independent style"
+    }
+  ],
+    "themes": {
+        "Base": {
+            "resources": [
+                {
+                    "name": "Themes/Base/Style.css",
+                    "type": "Stylesheet",
+                    "description": "Theme dependent style"
+                }
+            ]
+        },
+        "Base-Dark": {
+            "resources": [
+                {
+                    "name": "Themes/Base-Dark/Style.css",
+                    "type": "Stylesheet",
+                    "description": "Theme dependent style"
+                }
+            ]
+        }
+    },
+  "attributes": [
+    {
+      "name": "data-tchmi-loadingspinner-spin",
+      "displayName": "Spin",
+      "propertyName": "Spin",
+      "propertySetterName": "setLoadingSpinnerSpin",
+      "propertyGetterName": "getLoadingSpinnerSpin",
+      "visible": true,
+      "type": "tchmi:general#/definitions/Boolean",
+      "description": "Toggles the spinning of the Loading Spinner",
+      "category": "Configuration",
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "defaultValue": false,
+      "defaultValueInternal": false
+    },
+    {
+      "name": "data-tchmi-loadingspinner-borderwidth",
+      "displayName": "BorderWidth",
+      "propertyName": "BorderWidth",
+      "propertySetterName": "setLoadingSpinnerBorderWidth",
+      "propertyGetterName": "getLoadingSpinnerBorderWidth",
+      "visible": true,
+      "type": "tchmi:general#/definitions/Integer",
+      "description": "Sets the Loading Spinner Border Width",
+      "category": "Configuration",
+      "requiredOnCompile": false,
+      "readOnly": false,
+      "bindable": true,
+      "heritable": true,
+      "defaultValue": 5,
+      "defaultValueInternal": 5
+    }
+  ],
+  "attributeCategories": [],
+  "functions": [],
+  "events": [],
+  "dataTypes": [
+    {
+      "schema": "Schema/Types.Schema.json"
+    }
+  ]
+}

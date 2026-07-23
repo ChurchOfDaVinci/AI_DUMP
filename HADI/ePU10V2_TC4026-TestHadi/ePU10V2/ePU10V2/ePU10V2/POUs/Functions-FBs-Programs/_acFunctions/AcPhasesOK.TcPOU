@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="AcPhasesOK" Id="{8166fdbf-7a68-4dc4-ab39-d15bd729a0f7}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION AcPhasesOK : BOOL
+VAR_INPUT
+	LineVoltageL1		: REAL;
+	LineVoltageL2		: REAL;
+	LineVoltageL3		: REAL;
+END_VAR
+VAR
+	L1OK				: BOOL;
+	L2OK				: BOOL;
+	L3OK 				: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[L1OK := LIMIT(settings.GridParams.r_GridVoltageMin, LineVoltageL1, settings.GridParams.r_GridVoltageMax) = LineVoltageL1;
+L2OK := LIMIT(settings.GridParams.r_GridVoltageMin, LineVoltageL2, settings.GridParams.r_GridVoltageMax) = LineVoltageL2;
+L3OK := LIMIT(settings.GridParams.r_GridVoltageMin, LineVoltageL3, settings.GridParams.r_GridVoltageMax) = LineVoltageL3;
+
+
+AcPhasesOK := L1OK AND L2OK AND L3OK;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

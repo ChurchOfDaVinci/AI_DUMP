@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_ExtController_limits" Id="{79488a81-b8c3-4338-9e29-59a50dc50dc3}">
+    <Declaration><![CDATA[TYPE ST_ExtController_limits :
+STRUCT
+	r_InputCtLimit			: REAL := 800;
+	r_InverterPowerLimit	: REAL := 360;
+	r_InverterCurrentLimit	: REAL := 520;
+	r_NominalVoltageMin		: REAL := 360;
+	r_NominalVoltageMax		: REAL := 440;
+	r_NominalFreqMin		: REAL := 47.5;
+	r_NominalFreqMax		: REAL := 52.5;
+	r_DroopMax				: REAL := 10; 
+	r_PowerRampLimit		: REAL := 300; //%/s
+	r_PSBCtLimit			: REAL := 4000;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

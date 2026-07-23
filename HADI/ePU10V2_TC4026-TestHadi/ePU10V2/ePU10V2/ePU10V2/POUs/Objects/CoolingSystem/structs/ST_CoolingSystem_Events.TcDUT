@@ -1,0 +1,24 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_CoolingSystem_Events" Id="{2c7a5c12-1af9-4390-9d60-836f13a36971}">
+    <Declaration><![CDATA[TYPE ST_CoolingSystem_Events :
+STRUCT
+	//faults
+	b_CoolingSystemFuseFailure		: 	BOOL;
+	
+	
+	//System pressure dropped below idle minimum pressure. suspect coolant loss.
+	b_CoolingLoopPressureLow	: 	BOOL := FALSE;	
+	b_CoolingLoopPressureTooLow	: 	BOOL := FALSE;	
+	
+	//Temperature errors
+	b_CoolantTempLow				: 	BOOL;
+	b_CoolantTempTooHigh			: 	BOOL;
+	b_CoolantTempHigh				: 	BOOL;
+	
+	HeatpumpEvents					:	ST_HeatpumpEvents;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

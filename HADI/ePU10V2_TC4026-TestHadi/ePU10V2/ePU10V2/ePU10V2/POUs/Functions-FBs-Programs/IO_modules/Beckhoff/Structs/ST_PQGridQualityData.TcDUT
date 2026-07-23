@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PQGridQualityData" Id="{b3dece41-0c95-4025-8197-fd34a6e9a4b5}">
+    <Declaration><![CDATA[TYPE ST_PQGridQualityData :
+STRUCT
+	b_systemState				: 	BOOL;
+	uli_TimeVoltZeroCrossup 	: 	ULINT;
+	r_PowerQualityFactor		:	REAL;
+	r_ROCOF						: 	REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

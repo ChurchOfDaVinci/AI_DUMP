@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eLogType" Id="{3d9ed66a-7875-4f33-971c-96a39f3c2434}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+TYPE eLogType :
+(
+	none := 0,
+	nuc := 1,
+	cloud := 2
+)UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

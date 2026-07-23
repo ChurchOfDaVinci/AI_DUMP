@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eEventLogSeverity" Id="{5afc3753-5a1f-43c6-924f-e9f9f59b50f2}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eEventLogSeverity :
+(
+	Info := 0,
+	Warning := 1,
+	Fault := 2
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

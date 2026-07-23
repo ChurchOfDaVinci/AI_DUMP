@@ -1,0 +1,180 @@
+{
+  "$schema": "../../../TcHmiSrv/schema/ExtensionSettings.Schema.json",
+  "version": "14.5.14.0",
+  "configVersion": "1.0.1.16",
+  "guid": "8531ffca-0c7b-43c6-8e7a-f92e66654539",
+  "visibility": "AlwaysShow",
+  "policies": [
+    "StrictPropertyValidation"
+  ],
+  "symbols": {
+    "GetConfigurations": {
+      "readValue": {
+        "function": true,
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      },
+      "writeValue": {
+        "type": "string"
+      }
+    },
+    "GetSymbolHeadline": {
+      "readValue": {
+        "allOf": [
+          {
+            "function": true
+          },
+          {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "writeValue": {
+        "type": "string"
+      }
+    },
+    "Diagnostics": {
+      "readValue": {
+        "function": true,
+        "type": "object",
+        "properties": {
+          "guid": {
+            "type": "string"
+          },
+          "runtimes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "connectionState": {
+                  "type": "string"
+                },
+                "productLevel": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "connectionState"
+              ]
+            }
+          },
+          "reportsInProgress": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "guid",
+          "runtimes",
+          "reportsInProgress"
+        ]
+      }
+    },
+    "OrderReport": {
+      "writeValue": {
+        "oneOf": [
+          {
+            "type": "string"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "reportName": {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9_\\-\\{\\}]+$"
+              },
+              "exportName": {
+                "type": "string",
+                "description": "Name of the exported report. You can use '{current_time}' as placeholder for the current timestamp.",
+                "pattern": "^[a-zA-Z0-9_\\-\\{\\}]+$"
+              },
+              "htmlContainers": {
+                "$ref": "#/definitions/htmlContainers"
+              }
+            },
+            "required": [
+              "reportName"
+            ]
+          }
+        ]
+      },
+      "readValue": {
+        "function": true,
+        "type": "object",
+        "properties": {
+          "currentGuid": {
+            "type": "string"
+          },
+          "inProgress": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "AddResource": {
+      "readValue": {
+        "function": true
+      },
+      "writeValue": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "integer",
+            "enum": [
+              0,
+              1
+            ],
+            "options": [
+              {
+                "value": 0,
+                "label": "CSS"
+              },
+              {
+                "value": 1,
+                "label": "JavaScript"
+              }
+            ]
+          },
+          "name": {
+            "type": "string"
+          },
+          "data": {
+            "type": "string"
+          },
+          "runtime": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "data",
+          "runtime",
+          "type"
+        ]
+      }
+    }
+  },
+  "dotNetTargetFramework": "net8.0",
+  "dotNetTargetFrameworkVersion": "v3.0",
+  "dotNetPlatformTarget": "AnyCPU",
+  "dotNetConfiguration": "Release",
+  "packageVersion": "14.2.7758",
+  "productVersion": "14.5.14.0",
+  "signature": "igePxtGLpYp8FgiFIqp00amDm6DXzZ8gDDdj//8f1xkootokewktUB4d3e7B7MTYAuPjjHMRE3P5IWSCVah5etbl2OVgQFl+8k5rCsprk49mbUR+CAE+E1PddO0xJ36hgi9aQT1dw/XTBEU/g6p0ddzJTM242zF73JFi1dL34vKxSS89NU7CYCb3p3rCc7lHY8RRiE9m7jcqegqAU0kAK8yf6TZQpeRRN3BaqU/HZ1VK6Ye8J78q3/SrhUaDKrKJsMhr+X7rWljlbVRNPWPTSrGByLClzqUqNoXLLcGmhOuKmKzUiNLF7jQFxbEkx1xeO1MH6CNeXmwOPK0AAV0wlA=="
+}

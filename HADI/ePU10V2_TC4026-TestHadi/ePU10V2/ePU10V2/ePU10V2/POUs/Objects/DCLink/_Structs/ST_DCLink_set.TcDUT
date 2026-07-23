@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_DCLink_set" Id="{c90fdbf9-e8cf-432f-a90d-c59cd355f493}">
+    <Declaration><![CDATA[TYPE ST_DCLink_set :
+STRUCT
+	b_DCBusEnable			:	Bool;
+//	b_MCCBclose				: BOOL;
+//	b_MCCBopen				: BOOL;
+	r_ChargePowerLimit		: REAL;
+	r_DischargePowerLimit	: REAL;
+	r_DCCRatedPower			: REAL; // of the external device
+	r_PowerRampRate			: REAL;
+	e_DCpowerPriority		: eDCpowerPriority := eDCpowerPriority.DCcoupling;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

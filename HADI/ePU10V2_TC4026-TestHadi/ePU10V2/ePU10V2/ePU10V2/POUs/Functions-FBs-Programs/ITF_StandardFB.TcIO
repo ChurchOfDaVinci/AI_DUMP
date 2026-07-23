@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Itf Name="ITF_StandardFB" Id="{1ff54861-7e61-400a-a15a-c0cb5d445c6a}">
+    <Declaration><![CDATA[INTERFACE ITF_StandardFB
+]]></Declaration>
+    <Method Name="EMstop" Id="{0ee59298-071d-415d-8b60-1fa427633d9b}">
+      <Declaration><![CDATA[METHOD EMstop : Bool
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="getDiagnostics" Id="{e8887f99-5c4f-4384-b52a-b164a9b15492}">
+      <Declaration><![CDATA[METHOD getDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Init" Id="{4d0bd109-c989-4c1a-9e98-b73d9a0fd00d}">
+      <Declaration><![CDATA[METHOD Init : Bool
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+    <Method Name="Reset" Id="{bf1c81e8-9c87-4182-ad78-8df62fad367a}">
+      <Declaration><![CDATA[METHOD Reset : Bool
+VAR_INPUT
+END_VAR
+]]></Declaration>
+    </Method>
+  </Itf>
+</TcPlcObject>

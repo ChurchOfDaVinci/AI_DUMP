@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_System_Properties" Id="{6642a065-15b1-44f0-9fe9-c13978d515ce}">
+    <Declaration><![CDATA[TYPE ST_System_Properties :
+STRUCT
+	r_RatedActivePower		: 	REAL;
+	r_RatedApparentPower	: 	REAL;
+	r_RatedCurrent			: 	REAL;
+	r_ratedCurrentInput		: 	REAL := 700;
+	r_ratedCurrentOutput	: 	REAL;
+	r_RatedEnergyCapacity	: 	REAL; // kWh
+	r_SelfdischargeRate		: 	REAL := 3; // 3% per month
+	s_ProductionDate		: 	STRING;
+	s_Weight				: 	STRING;
+	s_ManufacturerModel		: 	STRING := 'e-PU10';
+	s_ConfigurationCode		: 	STRING;
+	s_SerialNumber			: 	STRING;
+	by_SWverMajor			:	BYTE;
+	by_SWverMinor			:	BYTE;
+	by_SWverPatch			:	BYTE;
+	by_SWverBuild			:	BYTE;
+	s_SWversionNumber		: 	STRING;
+	s_Client				: 	STRING;
+	r_DischargedEnergy		: 	REAL;
+	r_ChargedEnergy			: 	REAL;
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eOutputContactSignal" Id="{67ae74eb-8864-484d-9726-6ee2a7b1e472}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+
+TYPE eOutputContactSignal :
+(
+	None 			:= 	0,
+	FireAlarm 		:= 	1,
+	GenStartStop 	:= 	2,
+	HPU				:= 	3,
+	SystemActive	:=	4,
+	PVenable		:= 	5,
+	ManualOpen		:=	99,
+	ManualClose		:=	100
+) UINT;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

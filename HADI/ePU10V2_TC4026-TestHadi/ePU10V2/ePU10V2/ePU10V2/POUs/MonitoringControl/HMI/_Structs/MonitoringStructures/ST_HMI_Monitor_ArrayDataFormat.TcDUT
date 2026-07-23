@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_HMI_Monitor_ArrayDataFormat" Id="{53a1befd-9f70-4431-8593-f38201ffec83}">
+    <Declaration><![CDATA[TYPE ST_HMI_Monitor_ArrayDataFormat :
+STRUCT
+	s_name				: STRING(25);
+	s_type				: STRING(12);
+	s_unit				: STRING(12);
+	r_data				: REAL;
+	i_precision			: INT := -1;
+	b_warning			: BOOL;
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

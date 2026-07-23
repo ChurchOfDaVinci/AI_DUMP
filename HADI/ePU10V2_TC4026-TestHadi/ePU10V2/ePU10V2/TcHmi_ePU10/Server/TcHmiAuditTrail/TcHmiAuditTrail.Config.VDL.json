@@ -1,0 +1,7 @@
+{
+    "databaseConnection": {
+        "connectionString": "Server=localhost; Port=5432; Database=postgres; Uid=postgres; Pwd=@{password};Timeout=10;",
+        "password": "",
+        "tableId": 1
+    }
+}

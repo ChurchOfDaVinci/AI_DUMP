@@ -1,0 +1,43 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_ExtController_Events" Id="{99af104d-7877-4f11-8c60-84664ce6cc06}">
+    <Declaration><![CDATA[TYPE ST_ExtController_Events :
+STRUCT
+	b_HeartbeatFault			: BIT;
+	b_couplerError				:	bit;
+	
+	// control limit warnings
+	b_FeedInLimitOutOfRange		: BIT;
+	b_SupplyLimitOutOfRange 	: BIT;
+	b_IdleChargePowerOutofRange	: BIT;
+	b_BatOloadStartOutOfRange	: BIT;
+	b_BatOloadStopOutOfRange	: BIT;
+	b_SocTargetOutOfRange		: BIT;
+	b_SocStartOutOfRange		: BIT;
+	b_SocStopOutOfRange			: BIT;
+	b_PsetOutOfRange			: BIT;
+	b_QsetOutOfRange			: BIT;
+	b_PFsetOutOfRange			: BIT;
+	b_NominalVoltageOutOfRange	: BIT;
+	b_NominalFreqOutOfRange		: BIT;
+	b_FreqDroopOutOfRange		: BIT;
+	b_VoltageDroopOutOfRange	: BIT;
+	b_PmaxOutOfRange			: BIT;
+	b_PminOutOfRange			: BIT;
+	b_SmaxOutOfRange			: BIT;
+	b_AmaxOutOfRange			: BIT;
+	b_PowerRamprateOutOfRange	: BIT;
+	b_PSBFeedInLimitOutOfRange	: BIT;
+	b_PSBSupplyLimitOutOfRange: BIT;
+	b_PSBIdleChargePowerOutOfRange: BIT;
+	b_PSBSoCTargetOutOfRange	: BIT;
+	b_SoCHighLimitOutOfRange	: BIT;
+	b_SoCLowLimitOutOfRange		: BIT;
+	b_GridModeValueOutOfRange	: BIT;
+	b_PowermodeValueOutOfRange	: BIT;
+
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

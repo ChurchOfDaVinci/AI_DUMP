@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_TestScripts" Id="{c61006df-23f2-453f-ab01-f750b74d97b9}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TestScripts
+VAR_IN_OUT CONSTANT
+	monitor								: ST_System_Monitor;
+END_VAR
+VAR_IN_OUT
+	Controlvars			: ST_HMI_Control;
+END_VAR
+
+VAR
+	b_enable :BOOL := FALSE;
+	fbEventLogClient : FB_EventLogClient;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbEventLogClient.LogEventOnRise(
+	ID := 0,
+	Trigger := Controlvars.control.b_ActivateSettings,
+	eCategory := eEventLogCategory.ReleaseTrigger,
+	eSeverity := eEventLogSeverity.Info,
+	Message := 'Activate settings trigger received');
+
+CyclicPowerTest(b_enable);
+
+SinusPower(Period := T#10S, offset := 0, Amplitude := 100);]]></ST>
+    </Implementation>
+    <Method Name="CapacityTestRoutine" Id="{218fc3e6-4804-4437-a7f0-617dd5cb9cc0}">
+      <Declaration><![CDATA[METHOD CapacityTestRoutine : BOOL
+VAR_INPUT
+	StartCapacityTest	:	BOOL;
+	HaltCapacityTest	: 	BOOL;
+END_VAR
+
+VAR_INST
+	FileOpen	:	FB_FileOpen;
+	FileWrite	:	FB_FilePuts;
+	FileClose	:	FB_FileClose;
+	
+	rtrig_FileOpen		:	r_trig;
+	rtrig_FileWrite		:	r_trig;
+	rtrig_FileClose		:	r_trig;
+	
+	ftrig_FileOpenDone	:	f_trig;
+	rtrig_FileWrite		:	r_trig;
+	rtrig_FileClose		:	r_trig;
+	
+	Filename	:	STRING := 'C:\Users\Administrator\Documents\CapacityTestResult.txt';
+	Filehandle	: UINT;
+	
+	RestPeriod	: 	TIME	:= T#1H;
+	TestPowerLevel		:	REAL	:=	200; //200kw
+	
+	rtrig_starttest		:	r_trig;
+	ftrig_filehandler	:	f_trig;
+	
+	TestStep	:	eCapTestState := eCapTestState.init;
+	Substep		:	uint := 0;
+	
+	bWriteText			:	BOOL;
+	Logtext				:	STRING;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[rtrig_starttest(clk := StartCapacityTest AND TestStep = eCapTestState.init);
+
+IF HaltCapacityTest THEN
+	TestStep := eCapTestState.StopSystem;
+END_IF
+
+CASE TestStep OF
+	eCapTestState.init:
+		IF ftrig_FileOpenDone.Q THEN
+			IF NOT fileOpen.bError AND Filehandle > 0 THEN
+				TestStep := eCapTestState.WriteSerial;
+			ELSE
+				HaltCapacityTest := TRUE;
+			END_IF
+		END_IF
+		
+		
+	eCapTestState.WriteSerial:
+		Logtext := Concat(Concat('Capacity test for ePU10 serial: ', settings.Properties.s_SerialNumber), '$0A');
+		bWriteText := TRUE;
+		IF NOT bWriteText THEN
+			TestStep := eCapTestState.WriteNameplateCap;
+		END_IF
+	
+	eCapTestState.WriteNameplateCap:
+		Logtext := concat(Concat(Concat('Nameplate Capacity: ', settings.Properties.r_RatedEnergyCapacity), ' kWh'), '$0A');
+		bWriteText := TRUE;
+		IF NOT bWriteText THEN
+			TestStep := eCapTestState.WriteDatetime;
+		END_IF
+		
+	eCapTestState.WriteDatetime:
+		Logtext := concat(Concat('Test started: ', TO_STRING(gvl.dt_SystemDateTime)), '$0A');
+		bWriteText := TRUE;
+		IF NOT bWriteText THEN
+			TestStep := eCapTestState.StartSystem;
+		END_IF
+		
+	eCapTestState.StartSystem:
+		IF NOT monitor.powerstack.b_GridACdetected OR NOT monitor.powerstack.b_InverterRunning THEN
+			Logtext := concat('Test halted: System not running ', '$0A');
+			bWriteText := TRUE;
+			IF NOT bWriteText THEN
+				HaltCapacityTest := TRUE;
+			END_IF
+		ELSE
+			TestStep := eCapTestState.InitialCharge;
+			SubStep := 0;
+		END_IF
+	
+	
+	eCapTestState.InitialCharge:
+		controlvars.Operation.system.r_Pset := -TestPowerLevel;
+		controlvars.Operation.system.r_Qset := 0;
+		
+		IF monitor.system.e_State = eSystemState.Discharging_Only THEN
+			controlvars.Operation.system.r_Pset := 0;
+			
+			CASE substep OF
+				0:	Logtext := concat(concat('Initial Charge done at ', TO_STRING(gvl.dt_SystemDateTime)), '$0A');
+					bWriteText := TRUE;
+					IF NOT bWriteText THEN
+						substep := substep+1;
+					END_IF
+				1:	
+					Logtext := concat('SBMU1 voltages: ', TO_STRING(monitor.battery.BatteryInfo.ar_CellVoltage[0]));
+					Logtext := concat(Logtext, ', ');
+					Logtext := concat(Logtext, TO_STRING(monitor.battery.BatteryInfo.ar_CellVoltage[1]));
+					Logtext := concat(Logtext, ', ');
+					Logtext := concat(Logtext, TO_STRING(monitor.battery.BatteryInfo.ar_CellVoltage[2]));
+					Logtext := concat(Logtext, '$0A');
+					bWriteText := TRUE;
+					IF NOT bWriteText THEN
+						substep := substep+1;
+					END_IF
+			END_CASE
+			Logtext := concat(concat('Initial Charge done at ', TO_STRING(gvl.dt_SystemDateTime)), '$0A');
+			bWriteText := TRUE;
+			IF NOT bWriteText THEN
+				HaltCapacityTest := TRUE;
+			END_IF
+		END_IF
+		
+	RestPeriod1:
+	DischargeCycle:
+	RestPeriod2:
+	ChargeCycle:
+	RestPeriod3:
+	StopSystem:
+END_CASE
+
+FileOpen(sPathName := FileName, nMode := FOPEN_MODEWRITE OR FOPEN_MODETEXT, bExecute := rtrig_starttest.q, tTimeout := T#1S, hfile => filehandle);
+ftrig_FileOpenDone(clk := FileOpen.bBusy);
+FileWrite(hfile := Filehandle, sLine := Logtext, bExecute := rtrig_startwrite.Q, tTimeout := T#2S);
+FileClose(hfile := Filehandle, rtrig_CloseFile.Q);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CyclicPowerTest" Id="{232a8689-2a2d-453f-8da2-5de27b2abdcd}">
+      <Declaration><![CDATA[METHOD CyclicPowerTest : BOOL
+VAR_INPUT
+	start	: BOOL;
+END_VAR
+VAR_INST
+	ftrigReset	: f_trig;
+	rtrigStart	: R_Trig;
+	tod_Start	: TOD := TOD#7:00:00.000;
+	tod_Stop	: TOD := TOD#18:00:00.000;
+	
+	timeOK		: BOOL;
+	Direction	: INT;
+	
+	PowerSet	: REAL := 320;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//timeOK := TO_TOD(GVL.dt_SystemDateTime) > tod_start AND TO_TOD(GVL.dt_SystemDateTime) < tod_stop; ; 
+
+rtrigStart(CLK:= start);
+IF rtrigStart.Q THEN
+	controlvars.operation.system.r_Pset := 200;
+END_IF
+
+IF start THEN//AND timeOK THEN
+	controlvars.operation.system.r_Qset := -200;
+	rtrigStart(CLK:= start);
+
+	IF monitor.battery.BatteryInfo.r_SOCScaled < 10 THEN
+		Direction := -1;
+	ELSIF monitor.battery.BatteryInfo.r_SOCScaled > 95 THEN
+		Direction := 1;
+	END_IF
+	
+	controlvars.operation.system.r_Pset := Direction * PowerSet; 
+END_IF
+
+ftrigReset(CLK:= START);
+IF ftrigReset.Q THEN 
+	controlvars.operation.system.r_Pset := 0;
+	controlvars.operation.system.r_Qset := 0;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SinusPower" Id="{9836b4df-d55d-48cd-9f9f-9762bf1cd755}">
+      <Declaration><![CDATA[METHOD SinusPower : REAL
+VAR_INPUT
+	period			: TIME;
+	offset			: REAL;
+	Amplitude		: UINT := 300;
+END_VAR
+
+VAR_INST
+	cycletime : INT := 2;
+	i : INT;
+	PI : REAL := 3.1415926535897932384626433832795;
+	
+	samples	 : INT;
+	RadperSample : REAL;
+	Rad			: REAL;
+	
+	Q			: REAL;
+END_VAR
+
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[samples := TO_INT(period) / cycletime;
+RadPerSample := 2* PI / samples;
+
+Rad := Rad + RadperSample;
+
+IF RAD >= PI THEN
+	RAD := 0;
+END_IF
+
+Q := Amplitude * SIN(rad) + offset ;
+SinusPower := Q;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

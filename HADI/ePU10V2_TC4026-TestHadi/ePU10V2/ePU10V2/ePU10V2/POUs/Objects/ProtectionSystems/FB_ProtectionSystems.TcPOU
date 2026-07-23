@@ -1,0 +1,82 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_ProtectionSystems" Id="{9cc5c671-19c8-4366-a780-61d3832ea6fe}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ProtectionSystems
+VAR_IN_OUT CONSTANT
+	st_params				: ST_Protectionsystems_params;
+END_VAR
+
+VAR_OUTPUT
+	get						: ST_ProtectionSystems_get;
+	b_SystemShutdownCMD		: BOOL;
+END_VAR
+
+VAR_INPUT
+	set						: ST_ProtectionSystems_set;
+	
+	b_BatteryAlarm			: BOOL;
+END_VAR
+
+VAR_IN_OUT CONSTANT
+	Powermonitor : st_powermonitor_get;
+END_VAR
+
+VAR
+	Firedetection			: FB_Firedetection;
+	InsulationMonitor		: FB_InsulationMonitor;
+	SurgeProtection			: FB_SurgeProtection;
+	ResidualCurrentMonitor	: FB_RCmonitor;
+	OverCurrentProtection	: FB_OvercurrentProtection;
+END_VAR
+
+VAR_INPUT
+	ToInsuMon				:	St_InsulationMonitor_PassThrough;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[firedetection(st_params := st_params.firedetection, get => get.FireDetection, set := set.FireDetection, b_SystemShutdownCMD => b_systemshutdownCMD, b_batteryAlarm:= b_batteryalarm);
+
+InsulationMonitor(ToInsuMon := ToInsuMon, get => get.Insulation, set := set.Insulation,
+st_params := st_params.InsulationMonitor);
+
+SurgeProtection(get => get.Surge);
+
+ResidualCurrentMonitor(get => get.MRCDB);
+
+OverCurrentProtection(st_params := st_Params.OCP,
+	get=>get.OvercurrentProtection,
+	powermonitor := powermonitor,
+	set:= set.OvercurrentProtection,
+	b_inputsectionAvailable := settings.Configuration.b_ACInputConnection,
+	b_thirdOutputAvailable := settings.configuration.b_ThirdOutputConnection);
+
+]]></ST>
+    </Implementation>
+    <Method Name="GetDiagnostics" Id="{a1e638fa-05ba-4908-9d9b-106a6d4c91ff}">
+      <Declaration><![CDATA[METHOD GetDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Firedetection.GetDiagnostics(Adderror := AddError, a_ActiveEvents := a_ActiveEvents, w_Index := w_index);
+Surgeprotection.GetDiagnostics(Adderror := AddError, a_ActiveEvents := a_ActiveEvents, w_Index := w_index);
+InsulationMonitor.GetDiagnostics(Adderror := AddError, a_ActiveEvents := a_ActiveEvents, w_Index := w_index);
+ResidualCurrentMonitor.GetDiagnostics(Adderror := AddError, a_ActiveEvents := a_ActiveEvents, w_Index := w_index);
+OvercurrentProtection.GetDiagnostics(Adderror := AddError, a_ActiveEvents := a_ActiveEvents, w_Index := w_index);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{a2b35635-0dd3-474f-b6bf-ae4462a33883}">
+      <Declaration><![CDATA[METHOD PUBLIC Reset : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[Reset := Firedetection.Reset() AND OvercurrentProtection.Reset() AND insulationmonitor.Reset() AND ResidualCurrentMonitor.Reset();
+
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

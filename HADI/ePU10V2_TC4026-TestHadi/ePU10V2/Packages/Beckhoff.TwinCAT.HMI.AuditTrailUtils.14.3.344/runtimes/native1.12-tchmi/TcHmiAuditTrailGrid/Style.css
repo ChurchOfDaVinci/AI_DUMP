@@ -1,0 +1,120 @@
+/** Styles for all themes */
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-template {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-template-menu-bar {
+    display: flex;
+    position: relative;
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-template-grid-container {
+    position: relative;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-menu-button {
+    position: relative;
+    height: 30px;
+    width: 30px;
+    margin: 5px;
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-template-grid-container
+    .TcHmi_Controls_Beckhoff_TcHmiDatagrid {
+    height: 100%;
+    width: 100%;
+}
+
+/*
+ * Audit trail grid popups
+ */
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup dl {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 702px;
+    margin: 0;
+    text-align: left;
+    user-select: text;
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup dt {
+    width: 92px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 1px;
+    padding: 5px;
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup dd {
+    width: calc(100% - 112px);
+    margin-left: 0;
+    overflow-wrap: break-word;
+    margin-bottom: 1px;
+    padding: 5px;
+    white-space: pre-wrap;
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup dd dl {
+    display: inline;
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup dd dt {
+    width: auto;
+    min-width: 16px;
+    padding: 0;
+    margin-right: 5px;
+    margin-bottom: 0;
+    float: left;
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup dd dd {
+    display: block;
+    width: auto;
+    min-height: 16px;
+    padding: 0;
+    padding-left: 20px;
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup dd dd dl {
+    display: inline-block;
+    width: 100%;
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup
+    .TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup-export-container {
+    display: grid;
+    grid-template-rows: repeat(5, 1fr);
+    grid-template-columns: 2fr 4fr 26px;
+    grid-gap: 4px;
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup-export-text {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup-export-filter-display {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup-export-filter-value {
+    display: block;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+    max-width: 200px;
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup
+    .TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup-export-container
+    .TcHmi_Controls_Beckhoff_TcHmiCheckbox {
+    height: 26px;
+    width: 26px;
+}

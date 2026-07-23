@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_EnclosureClimate_Params" Id="{debfc554-4d26-42af-89f0-5d4546f7ee90}">
+    <Declaration><![CDATA[TYPE ST_EnclosureClimate_Params :
+STRUCT
+	r_HumidityHysteris		: REAL:= 2;
+	r_HumidityHigh			: REAL:= 80;
+	r_HumidityTooHigh		: REAL:= 90;
+	r_TemperatureHysteris	: REAL:= 2;
+	r_TemperatureHigh		: REAL:= 40;
+	r_TemperatureTooHigh	: REAL:= 50;
+	r_TemperatureLow		: REAL:= -10;
+	r_TemperatureTooLow		: REAL:= -20;
+	
+	r_EnclosureConditioningTempMin					: REAL := 10.0;
+	r_EnclosureConditioningTempMax					: REAL := 40.0;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

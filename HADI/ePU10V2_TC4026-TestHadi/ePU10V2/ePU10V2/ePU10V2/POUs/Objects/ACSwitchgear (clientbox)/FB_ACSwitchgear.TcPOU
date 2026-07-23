@@ -1,0 +1,288 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_ACSwitchgear" Id="{4981a379-5e08-41f9-98ab-1aba30fb52db}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ACSwitchgear
+
+VAR_IN_OUT CONSTANT
+	st_params : ST_ACswitchgear_params;
+END_VAR
+
+VAR_OUTPUT
+	get								: ST_ACSwitchgear_Get;
+	b_Out_InputContactorEDM			: BOOL;
+END_VAR
+
+VAR_INPUT
+	b_TransportMode						: BOOL;
+	b_InputAvailable					: BOOL;
+	b_NeutralTransformerAvailable		: BOOL;
+	b_MCCBinputShuntTrip		AT %Q* : BOOL;
+	b_MCCBOutputShuntTrip		AT %Q* : BOOL;
+	set									: ST_ACswitchgear_set;
+END_VAR
+VAR
+	EventLog				: FB_EventLogClient;
+	IO 						: ST_ACswitchgear_IO;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[get.b_InputSectionAvailable := b_InputAvailable;
+
+read();
+
+IF b_TransportMode THEN
+	TransportDefaults();
+ELSE
+	write();
+END_IF
+
+Eventlogs();
+]]></ST>
+    </Implementation>
+    <Action Name="Eventlogs" Id="{ed075c5b-5e0d-4243-a603-148c39b33636}">
+      <Implementation>
+        <ST><![CDATA[//logging section
+Eventlog.LogEventOnRise(ID:= 0, 
+	io.b_InputContactorClose, 
+	eEventlogCategory.Output, 
+	eEventLogSeverity.Info,
+	"input contactor close signal set");
+
+Eventlog.LogEventOnRise(ID:= 1, 
+	io.b_InputContactorOpen, 
+	eEventlogCategory.Output, 
+	eEventLogSeverity.Info,
+	"input contactor open signal set");
+	
+Eventlog.LogEventOnRise(ID:= 3,
+    io.b_SyncEnable,
+	eEventlogCategory.Output, 
+	eEventLogSeverity.Info,
+	"input contactor feedback recieved");
+
+Eventlog.LogEventOnRise(ID:= 4,
+    io.b_InputContactorFb,
+	eEventlogCategory.Input, 
+	eEventLogSeverity.Info,
+	"input contactor feedback recieved");]]></ST>
+      </Implementation>
+    </Action>
+    <Method Name="GetDiagnostics" Id="{3e049b26-8ab4-42d0-97ae-6af43cbb0a60}">
+      <Declaration><![CDATA[METHOD GetDiagnostics : BOOL
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*Input MCCB disconnected*)		AddError[w_Index](
+		b_ErrorTrig				:= NOT get.b_InputMCCBfb AND b_inputAvailable,
+		b_SMSEnableVDL			:= FALSE,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 1,
+		e_objectID				:= eObject_ID.AC_Switchgear,
+		s_Message				:= 'Input MCCB state: open',
+		e_sev					:= eSeverity.Info,
+		b_AutoClear				:= TRUE,
+		e_ErrAckAccess			:= eErrAckAccess.General
+		);
+		w_Index := w_Index +1;
+		
+(*Input MCCB disconnected*)		AddError[w_Index](
+		b_ErrorTrig				:= NOT Get.b_OutputMCCBfb,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 2,
+		s_Message				:= 'Output MCCB state: open',
+		e_sev					:= eSeverity.Info,
+		b_AutoClear				:= TRUE,
+		e_ErrAckAccess			:= eErrAckAccess.General
+
+		);
+	w_Index := w_Index +1;
+	
+(*CEE prefuse*)		AddError[w_Index](
+		b_ErrorTrig				:= get.events.b_CEEprefuseFault,
+		b_SMSEnableVDL			:= FALSE,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 3,
+		s_Message				:= 'CEE prefuse not OK',
+		e_sev					:= eSeverity.Warning,
+		b_AutoClear				:= FALSE,
+		e_ErrAckAccess			:= eErrAckAccess.Operator
+		);
+	w_Index := w_Index +1;
+	
+(*Input MCCB shunt supply*)		AddError[w_Index](
+		b_ErrorTrig				:= get.events.b_InputMCCBShuntFault,
+		b_SMSEnableVDL			:= FALSE,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 4,
+		s_Message				:= '24VDC to input MCCB shunt not OK',
+		e_sev					:= eSeverity.Normalshutdown,
+		b_AutoClear				:= FALSE,
+		e_ErrAckAccess			:= eErrAckAccess.Operator
+		);
+	w_Index := w_Index +1;
+	
+(*Output MCCB shunt supply*)	AddError[w_Index](
+		b_ErrorTrig				:= get.events.b_OutputMCCBShuntFault,
+		b_SMSEnableVDL			:= FALSE,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 4,
+		s_Message				:= '24VDC to output MCCB shunt not OK',
+		e_sev					:= eSeverity.Normalshutdown,
+		b_AutoClear				:= FALSE,
+		e_ErrAckAccess			:= eErrAckAccess.Operator
+		);
+	w_Index := w_Index +1;
+	
+		
+(*Input contactor feedback*)	AddError[w_Index](
+		b_ErrorTrig				:= get.events.b_InputContactorFault,
+		b_SMSEnableVDL			:= FALSE,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 5,
+		s_Message				:= 'Input contactor feedback fault',
+		e_sev					:= eSeverity.warning,
+		b_AutoClear				:= FALSE,
+		e_ErrAckAccess			:= eErrAckAccess.General
+		);
+	w_Index := w_Index +1;
+	
+(*Input contactor not working*)	AddError[w_Index](
+		b_ErrorTrig				:= settings.Configuration.b_ACInputConnection AND NOT st_params.EnableInputContactor,
+		b_SMSEnableVDL			:= FALSE,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 6,
+		s_Message				:= 'Input contactor operation disabled',
+		e_sev					:= eSeverity.warning,
+		b_AutoClear				:= TRUE,
+		e_ErrAckAccess			:= eErrAckAccess.General
+		);
+	w_Index := w_Index +1;
+	
+
+		
+(*Input contactor not working*)	AddError[w_Index](
+		b_ErrorTrig				:= NOT Get.b_OutputMCCBfb AND (NOT st_params.EnableInputContactor OR NOT Get.b_InputMCCBfb),
+		b_SMSEnableVDL			:= FALSE,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 7,
+		s_Message				:= 'System operation halted, close MCCB to continue',
+		e_sev					:= eSeverity.warning,
+		b_AutoClear				:= TRUE,
+		e_ErrAckAccess			:= eErrAckAccess.General
+		);
+	w_Index := w_Index +1;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetWearCounters" Id="{0dc02eb3-0a1c-41ab-a308-947571bd0ef4}">
+      <Declaration><![CDATA[METHOD GetWearCounters : BOOL
+VAR_INST
+	InputContactorLogger	:	FB_Varlogger;
+	InputMCCBLogger			:	FB_Varlogger;
+	InputMCCBTripLogger		:	FB_Varlogger;
+	OutputMCCBLogger		:	FB_Varlogger;
+	OutputMCCBTripLogger	:	FB_Varlogger;
+	PenLinkLogger			:	FB_Varlogger;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+InputContactorLogger(	TriggerInput := get.b_InputContactorfb, 
+						LogItemGroup :=  eLogItemGroupID.ACSwitchgear, 
+						LogItemName := 'InputContCnt', 
+						LogType := eLogTypes.TrackCycles);
+
+InputMCCBLogger(		TriggerInput := get.b_InputMCCBfb, 
+						LogItemGroup :=  eLogItemGroupID.ACSwitchgear, 
+						LogItemName := 'InputMCCBCnt', 
+						LogType := eLogTypes.TrackCycles);
+
+InputMCCBTripLogger(	TriggerInput := b_MCCBinputShuntTrip, 
+						LogItemGroup :=  eLogItemGroupID.ACSwitchgear, 
+						LogItemName := 'InputMCCBTripCnt', 
+						LogType := eLogTypes.TrackCycles);
+
+OutputMCCBLogger(		TriggerInput := get.b_OutputMCCBfb, 
+						LogItemGroup :=  eLogItemGroupID.ACSwitchgear, 
+						LogItemName := 'OutputMCCBCnt', 
+						LogType := eLogTypes.TrackCycles);
+
+OutputMCCBTripLogger(	TriggerInput := b_MCCBOutputShuntTrip, 
+						LogItemGroup :=  eLogItemGroupID.ACSwitchgear, 
+						LogItemName := 'OutputMCCBTripCnt', 
+						LogType := eLogTypes.TrackCycles);						
+						
+PenLinkLogger(			TriggerInput := get.b_PENlinkfb, 
+						LogItemGroup :=  eLogItemGroupID.ACSwitchgear, 
+						LogItemName := 'PENLinkCnt', 
+						LogType := eLogTypes.TrackCycles);						
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="read" Id="{21ec84ac-a4ac-42f3-bc0c-afea3ba3a9ab}">
+      <Declaration><![CDATA[METHOD read : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF b_inputAvailable THEN
+	get.b_InputSynchronizerfb := io.b_Synchronizerfb;
+	get.b_InputMCCBfb := io.b_InputMCCBfb;
+	get.b_InputContactorfb:= io.b_InputContactorFb;
+	get.b_InputMCCBshuntOK:= io.b_InputMCCBShuntOK;
+ELSE
+	//Defaults for safety program
+	get.b_InputMCCBfb := FALSE;
+END_IF
+
+IF b_NeutralTransformerAvailable THEN
+	get.b_PENlinkfb := io.b_penFb;
+END_IF
+get.b_OutputMCCBshuntOK := io.b_OutputMCCBShuntOk;
+get.b_OutputMCCBfb := io.b_OutputMCCBfb;
+get.b_CEEprefuseOK := io.b_CEEprefuseOK;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetEvents" Id="{1fe1568f-2d13-4867-bca6-750a17a5f56e}">
+      <Declaration><![CDATA[METHOD PRIVATE SetEvents : BOOL
+
+VAR_INST
+	ton_InputContactorDiscDelay		: TON := (PT:= T#1S);
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[get.events.b_InputMCCBShuntFault := NOT get.b_InputMCCBShuntOK;
+get.events.b_OutputMCCBShuntFault := NOT get.b_OutputMCCBShuntOK;
+get.events.b_CEEprefuseFault := NOT get.b_CEEprefuseOK;
+ton_InputContactorDiscDelay(IN:= get.b_InputContactorfb <> set.b_inputContactorClose);
+get.events.b_InputContactorFault := ton_InputContactorDiscDelay.Q;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="TransportDefaults" Id="{5016265a-7e27-4160-8c16-fd7f84e996b0}">
+      <Declaration><![CDATA[METHOD TransportDefaults : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[io.b_InputContactorOpen := TRUE;
+io.b_SyncEnable := FALSE;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Write" Id="{f1397e75-fa47-4f18-b811-b94a6a0293b4}">
+      <Declaration><![CDATA[METHOD Write : BOOL
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF st_params.EnableInputContactor THEN 
+	io.b_InputContactorClose := set.b_inputContactorClose OR st_params.ForceCloseInput;
+	io.b_InputContactorOpen	:= set.b_inputContactorOpen OR st_params.ForceOpenInput;
+END_IF
+
+io.b_SyncEnable := set.b_EnableSynchronizer;
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

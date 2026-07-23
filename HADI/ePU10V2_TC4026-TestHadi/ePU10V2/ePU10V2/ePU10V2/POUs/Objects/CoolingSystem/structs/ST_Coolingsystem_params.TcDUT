@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Coolingsystem_params" Id="{95999b5a-1488-47ae-81a9-6594dcc47b3c}">
+    <Declaration><![CDATA[TYPE ST_Coolingsystem_params :
+STRUCT
+	b_DoubleHeatpump							: BOOL := FALSE;
+	
+	// Minimum base coolant pressure
+	r_MinimumSystemBasePressureWarningLevel		: REAL := 1;
+	r_MinimumSystemBasePressureErrorLevel		: REAL := 0.7;
+
+	PrimaryHeatpumpAddr							:	BYTE := 1;
+	CoilSettings								:	BYTE := 2#0000_0001;
+	SecondaryHeatpumpAddr						:	BYTE := 2;
+	dw_HeatpumpOperationDelay					: DWORD := 30; // minutes
+	
+	//If the heatpump has run within this timeframe, no preheating is required before operation can start
+	i_SkipHPPreheatingTime						: 	INT		:= 60; //minutes. 
+	r_MinimumCoolantTemperatureForHPHeatingMode	:	REAL	:= 15;
+	
+	IO_IPaddress								: 	STRING := '192.168.1.52';
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

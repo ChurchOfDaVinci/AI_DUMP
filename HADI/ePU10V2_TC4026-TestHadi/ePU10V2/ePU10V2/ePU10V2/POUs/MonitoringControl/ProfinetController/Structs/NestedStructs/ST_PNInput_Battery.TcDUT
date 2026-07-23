@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PNInput_Battery" Id="{a4d61282-7f77-4188-9130-09f98a2cc63e}">
+    <Declaration><![CDATA[TYPE ST_PNInput_Battery :
+STRUCT
+	w_Control		:	WORD;
+	ui_SocMinLimit	:	UINT	:=	0;
+	ui_SocMaxLimit	:	UINT	:=	100;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ePowerControlMode" Id="{e3deb3fe-2850-47b2-b3dd-4f41b58a3d9e}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE ePowerControlMode :
+(
+	None 						:= 0,
+	PeakshaveExt 				:= 1,
+	PeakshaveInputGrid 			:= 2,
+	PeakshaveInputGen 			:= 3
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

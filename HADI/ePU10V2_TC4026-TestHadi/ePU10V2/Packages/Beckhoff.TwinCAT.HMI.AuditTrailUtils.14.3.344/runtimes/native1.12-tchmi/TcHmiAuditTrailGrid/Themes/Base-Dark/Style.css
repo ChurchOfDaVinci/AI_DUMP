@@ -1,0 +1,66 @@
+/** Styles for the theme: Base-Dark */
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid {
+    --tchmi-background: var(--tchmi-background-color-1);
+    background-color: var(--tchmi-background);
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-filter-button
+    .TcHmi_Controls_Beckhoff_TcHmiButton-template {
+    background-image: url('Images/filter.svg');
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-filter-button.down
+    .TcHmi_Controls_Beckhoff_TcHmiButton-template {
+    background-image: url('Images/filter-active.svg');
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-export-button
+    .TcHmi_Controls_Beckhoff_TcHmiButton-template {
+    background-image: url('Images/download.svg');
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-export-button.down
+    .TcHmi_Controls_Beckhoff_TcHmiButton-template {
+    background-image: url('Images/download-active.svg');
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup {
+    --tchmi-popup-details-background: var(--tchmi-foreground-color-2);
+    --tchmi-popup-details-color: var(--tchmi-foreground-color-1);
+    --tchmi-popup-details-content-background: var(--tchmi-background-color-3);
+    --tchmi-popup-details-content-color: var(--tchmi-foreground-color-1);
+    --tchmi-popup-border: var(--tchmi-background-color-2);
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup dt,
+.tchmi-event-grid-template-details-popup dt {
+    background-color: var(--tchmi-popup-details-background);
+    color: var(--tchmi-popup-details-color);
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup dd,
+.tchmi-event-grid-template-details-popup dd {
+    background-color: var(--tchmi-popup-details-content-background);
+    color: var(--tchmi-popup-details-content-color);
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup dd dt,
+.tchmi-event-grid-template-details-popup dd dt {
+    background-color: transparent;
+    font-weight: bold;
+    color: var(--tchmi-popup-color);
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup dd dt::after,
+.tchmi-event-grid-template-details-popup dd dt::after {
+    content: ':';
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup dd dd,
+.tchmi-event-grid-template-details-popup dd dd {
+    background-color: transparent;
+}
+
+.TcHmi_Controls_Beckhoff_AuditTrailUtils_TcHmiAuditTrailGrid-popup-export-filter-display {
+    border: 1px solid var(--tchmi-popup-border);
+}

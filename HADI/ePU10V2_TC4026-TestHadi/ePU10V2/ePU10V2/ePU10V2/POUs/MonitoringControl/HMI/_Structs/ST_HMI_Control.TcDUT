@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_HMI_Control" Id="{cdcba1ea-45d3-42b0-bb45-0a5cb6e9a079}">
+    <Declaration><![CDATA[TYPE ST_HMI_Control EXTENDS ST_System_Control:
+STRUCT
+	HMIonly				: ST_ControlsHMIonly;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

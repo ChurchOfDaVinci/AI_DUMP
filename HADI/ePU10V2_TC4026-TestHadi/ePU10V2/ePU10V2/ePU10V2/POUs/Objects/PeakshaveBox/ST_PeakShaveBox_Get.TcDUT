@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PeakShaveBox_Get" Id="{33c5722f-15da-4d92-854e-828c06ec61ce}">
+    <Declaration><![CDATA[TYPE ST_PeakShaveBox_Get :
+STRUCT
+	PSBmode				: ePSBMode;
+	Powermonitor 		: st_PQVoltageData;
+	PowerQuality		: St_PQGridQualityData;
+	PowerStatus			: ST_PQstatusData;
+	r_MaxCTCurrent		: REAL:= 4000;
+	b_buscouplerReady	: BOOL;
+	b_active			: BOOL;
+	b_dataOK			: BOOL;
+	b_ContactorFb		: BOOL;
+	b_SyncFb			: BOOL;
+	b_SettingsChangePending	:	BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

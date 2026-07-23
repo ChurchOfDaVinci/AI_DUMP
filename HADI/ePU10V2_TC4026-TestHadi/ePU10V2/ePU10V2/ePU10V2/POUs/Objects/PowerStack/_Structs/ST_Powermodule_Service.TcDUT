@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Powermodule_Service" Id="{0c7df973-b138-49fc-8dc0-bf9aba61af0c}">
+    <Declaration><![CDATA[TYPE ST_Powermodule_Service :
+STRUCT
+	b_FieldBusControlEnable			: BOOL := TRUE;
+	b_FanOn							: eForceBool;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

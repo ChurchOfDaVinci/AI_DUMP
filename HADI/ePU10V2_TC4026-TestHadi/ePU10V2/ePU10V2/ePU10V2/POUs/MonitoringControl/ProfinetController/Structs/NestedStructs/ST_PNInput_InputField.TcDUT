@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PNInput_InputField" Id="{9115772f-5584-463e-96c3-941ff892b1ab}">
+    <Declaration><![CDATA[TYPE ST_PNInput_InputField :
+STRUCT
+	w_Control				:	WORD;
+	InputConnectionType		:	UINT;
+//	ui_FeedInCurrentLimit	:	UINT;
+//	ui_FeedOutCurrentLimit	:	UINT;
+//	ui_IdleChargePower 		:	UINT;
+//	ui_SocTarget			:	UINT;
+//	ui_InputConnectionType	:	UINT;
+END_STRUCT                       
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="st_Powercontrol_params" Id="{3905d0fb-28f1-45f4-a136-0d1ee23f6521}">
+    <Declaration><![CDATA[TYPE st_Powercontrol_params :
+STRUCT
+	//PIDreset				: BOOL; //rising edge
+	SocDroop				: ST_PowerControl_SocDroopParams;
+	FreqShiftPID			: st_Powercontrol_PIDparams := (Enable:= FALSE, kp:=0.1, Tv:=0, Tn:=1000, Td:=0, Outerwindow:= 0, Innerwindow := 0, OutputDeadband := 0, InputDeadband := 0.05);
+	ReactivePID				: st_Powercontrol_PIDparams := (Enable:= TRUE, kp:=5, Tv:=0, Tn:=20, Td:=0, Outerwindow:= 0, Innerwindow := 0, OutputDeadband := 0.5, InputDeadband := 1);
+	ActivePID				: st_Powercontrol_PIDparams := (Enable:= TRUE, kp:=5, Tv:=100, Tn:=15, Td:=100, Outerwindow:= 0, Innerwindow := 0, OutputDeadband := 0.5, InputDeadband := 1);
+	VoltagePeakshavePID		: st_Powercontrol_PIDparams := (Enable:= TRUE, kp:=1, Tv:=0, 	Tn:=200, Td:=0, Outerwindow:= 0, Innerwindow := 0, OutputDeadband := 0, InputDeadband := 20);
+	TransitionRamp			: UINT := 5; // kw & kva per second
+	TransitionTime			: UINT := 500; // milliseconds
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

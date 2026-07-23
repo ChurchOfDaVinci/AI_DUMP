@@ -1,0 +1,215 @@
+{
+  "$schema": "../../TcHmiSrv/schema/ExtensionSettings.Schema.json",
+  "version": "23.0.198.0",
+  "configVersion": "1.0.0.6",
+  "guid": "8C623C99-B488-4F60-AE59-BEEBAEB6A020",
+  "visibility": "AlwaysShow",
+  "policies": [
+    "StrictPropertyValidation"
+  ],
+  "symbols": {
+    "Diagnostics": {
+      "userGroups": [
+        "__SystemUsers"
+      ],
+      "readValue": {
+        "function": true,
+        "readOnly": true,
+        "type": "object",
+        "additionalProperties": {
+          "type": "object",
+          "properties": {
+            "state": {
+              "type": "string"
+            },
+            "symbolsUpToDate": {
+              "type": "boolean"
+            },
+            "symbolUpdateStateDesc": {
+              "type": "string"
+            },
+            "symbolUpdateError": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "storeSymbolAccessesError": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string"
+                },
+                "message": {
+                  "type": "string"
+                }
+              }
+            },
+            "symbolInitState": {
+              "type": "string"
+            },
+            "symbolInitialized": {
+              "type": "boolean"
+            },
+            "adsRuntime": {
+              "type": "object",
+              "properties": {
+                "connectionState": {
+                  "propertyOrder": 1,
+                  "type": "string"
+                },
+                "systemServiceAdsState": {
+                  "propertyOrder": 2,
+                  "type": "string"
+                },
+                "adsState": {
+                  "propertyOrder": 3,
+                  "type": "string"
+                },
+                "deviceName": {
+                  "propertyOrder": 4,
+                  "type": "string"
+                },
+                "adsApplicationName": {
+                  "propertyOrder": 5,
+                  "type": "string",
+                  "visibility": "HideInEngineering"
+                },
+                "adsProjectName": {
+                  "propertyOrder": 6,
+                  "type": "string"
+                },
+                "adsProjectCompiledAt": {
+                  "propertyOrder": 7,
+                  "type": "string",
+                  "format": "date-time",
+                  "visibility": "HideInEngineering"
+                },
+                "adsVersion": {
+                  "propertyOrder": 8,
+                  "type": "string"
+                },
+                "adsVersionBuild": {
+                  "propertyOrder": 9,
+                  "type": "integer",
+                  "minimum": 0,
+                  "visibility": "HideInEngineering"
+                },
+                "isUserModeRuntime": {
+                  "propertyOrder": 10,
+                  "type": "boolean",
+                  "visibility": "HideInEngineering"
+                }
+              },
+              "required": [
+                "deviceName",
+                "adsVersion",
+                "adsState",
+                "connectionState"
+              ]
+            }
+          }
+        }
+      }
+    },
+    "ListSymbols": {
+      "userGroups": [
+        "__SystemUsers"
+      ],
+      "readValue": {
+        "function": true,
+        "readOnly": true,
+        "type": "object",
+        "properties": {}
+      }
+    },
+    "GetSchema": {
+      "userGroups": [
+        "__SystemUsers"
+      ],
+      "writeValue": {
+        "type": "string"
+      },
+      "readValue": {
+        "function": true
+      }
+    },
+    "ListSymbolsOfPath": {
+      "userGroups": [
+        "__SystemUsers"
+      ],
+      "writeValue": {
+        "type": "object",
+        "properties": {
+          "adsRuntime": {
+            "type": "string"
+          },
+          "path": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "adsRuntime",
+          "path"
+        ]
+      },
+      "readValue": {
+        "function": true,
+        "readOnly": true,
+        "type": "array",
+        "items": {
+          "type": "string"
+        }
+      }
+    },
+    "GetTreeView": {
+      "userGroups": [
+        "__SystemUsers"
+      ],
+      "writeValue": {
+        "type": "string"
+      },
+      "readValue": {
+        "function": true,
+        "readOnly": true,
+        "type": "object",
+        "properties": {}
+      }
+    },
+    "UpdateRuntime": {
+      "writeValue": {
+        "type": "object",
+        "properties": {
+          "runtime": {
+            "type": "string"
+          },
+          "forceUpdate": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "runtime"
+        ]
+      },
+      "readValue": {
+        "function": true
+      }
+    },
+    "TeachSymbolValues": {
+      "writeValue": {
+        "type": "string"
+      },
+      "readValue": {
+        "function": true
+      }
+    }
+  },
+  "packageVersion": "23.0.198",
+  "productVersion": "23.0.198",
+  "signature": "QLn5H8OK+Sju3QBg1tSXVcDRm+w0s83yGFc/zzDQUEOzZ2T3PRfw/zArDEEq2DOoJ4RJyZnA3nX/1QBY21K0mJ8Wg3H2edieLpSVSovEqyMhRJqN9tevPcU+qlf0+Q89DMpdl1Kk4fj1g0KhdQ9zccYxJe/uqV7OmGKZLtOi2tLmw5vQ/OmD84CyCfysV3oB45Q845d9wJz6GKWyYhbashyxKB3K65hqRZDKZHX3HCbUcg+KjfgnBnA7utz0vNCcrpeNThi/PjBnlp5FrYkJe3bpJpjvBxYmV8GU7k9u0K54JAbR/1ZXHHpvQqja6cOP0TGeqQ52PA0DONGhU2t4+Q=="
+}

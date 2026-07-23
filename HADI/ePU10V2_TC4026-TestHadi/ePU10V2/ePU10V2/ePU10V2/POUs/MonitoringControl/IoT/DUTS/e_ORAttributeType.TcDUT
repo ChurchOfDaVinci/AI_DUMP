@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="e_ORAttributeType" Id="{b5c5a3ff-3bde-42ef-9059-ca6dd59debc3}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE e_ORAttributeType :
+(
+	text := 0,
+	number := 2,
+	integer := 3,
+	JSON := 4
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

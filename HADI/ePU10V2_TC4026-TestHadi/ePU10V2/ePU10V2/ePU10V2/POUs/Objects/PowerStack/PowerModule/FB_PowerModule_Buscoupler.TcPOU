@@ -1,0 +1,102 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_PowerModule_Buscoupler" Id="{9ab2970d-8964-436c-a426-d395a40f7fb1}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_PowerModule_Buscoupler
+VAR_IN_OUT
+	get									: ST_PowerModule_Get;
+	b_MccbEDM							: BOOL;
+END_VAR
+
+VAR_INPUT
+	b_MCCBChargeSpring					: BOOL := TRUE;
+	b_DCmainContactor					: BOOL := FALSE;
+	b_DCprechargeContactor				: BOOL := FALSE;
+	b_FanOn								: BOOL := FALSE;
+	b_D7SyncRq							: BOOL := FALSE;
+END_VAR
+
+VAR
+	a_StatusDataIN				AT %I* : ARRAY[1..1] OF UINT;
+	a_EL2008					AT %Q* : ARRAY[1..8] OF BOOL;
+	a_EL1008					AT %I* : ARRAY[1..8] OF BOOL;
+	a_EL3208					AT %I* : ARRAY[1..8] OF ST_AnalogInputData;
+	AdditionalMeasurements		: FB_Powermodule_additionalMeasurements;
+END_VAR
+
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[b_MCCBChargeSpring := TRUE; // NOT get.b_MccbTripOK;
+
+read();
+
+Write();
+
+AdditionalMeasurements(Get := get);]]></ST>
+    </Implementation>
+    <Method Name="Read" Id="{525edc4d-0211-4afe-9e23-90ae75d78581}">
+      <Declaration><![CDATA[METHOD Read
+
+VAR
+	r_precision	: REAL := 0.1;
+	i			: INT;
+END_VAR
+
+var_inst
+	ton_FlowOK	:	Ton := (pt := T#5s);
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[
+
+//Mapping input data
+get.ui_BuscouplerCommStatus				:= a_StatusDataIN[1];
+ 
+
+// booleans can be written directly
+get.b_MccbTripOK						:= a_EL1008[1];
+b_MccbEDM								:= a_EL1008[2];
+get.b_FanFb								:= a_EL1008[3];
+get.b_MccbUvr24VdcOK					:= a_EL1008[4];
+get.b_DCcontactorFb						:= a_EL1008[5];
+ton_FlowOK(in							:= a_EL1008[6]);
+
+get.b_FlowSwitchOK	 := ton_FlowOK.q;	
+// scale temperature measurements
+get.r_TemperatureCMChoke[1] := a_EL3208[1].Value * r_precision;
+get.r_TemperatureCMChoke[2] := a_EL3208[2].Value * r_precision;
+get.r_TemperatureCMChoke[3] := a_EL3208[3].Value * r_precision;
+get.r_TemperatureCMChoke[4] := a_EL3208[4].Value * r_precision;
+get.r_TemperatureGridchoke[1] := a_EL3208[5].Value * r_precision;
+get.r_TemperatureGridchoke[2]  := a_EL3208[6].Value * r_precision;
+get.r_TemperatureGridchoke[3]  := a_EL3208[7].Value * r_precision;
+//spare := a_EL3208[8] * r_precision;
+
+get.Events.b_PT100Underrange := FALSE;
+get.Events.b_PT100Overrange := FALSE;
+get.Events.by_PT100ErrorCount := 0;
+FOR i := 1 TO 8 DO
+	IF a_EL3208[i].Status.Underrange THEN get.Events.b_PT100Underrange := TRUE; END_IF;
+	IF a_EL3208[i].Status.Overrange THEN get.Events.b_PT100Overrange := TRUE; END_IF;
+	IF a_EL3208[i].Status.Error THEN get.Events.by_PT100ErrorCount := get.Events.by_PT100ErrorCount +1; END_IF;
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Write" Id="{4337197d-3f0f-4e4e-bbaa-52fca09e4545}">
+      <Declaration><![CDATA[METHOD Write
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[(*NOTE: the input bit array of the el2008 has by default wrong naming. The hardware IO arrangement is from top to bottom columnswise.
+While software linked IO is from left to right, row wise.
+ The name cannot be changed. It is inconvenient to adjust the GSDML file as it comes from the internal libary.
+This solved in the mapping between IO and a_EL2008 output array*)
+
+a_EL2008[5]	:= b_DCprechargeContactor;
+a_EL2008[4]	:= b_DCmainContactor;
+a_EL2008[3] := TRUE;// b_MCCBChargeSpring; // MCCB reset
+a_EL2008[2] := b_fanOn;
+a_EL2008[1] := b_D7SyncRq; 
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

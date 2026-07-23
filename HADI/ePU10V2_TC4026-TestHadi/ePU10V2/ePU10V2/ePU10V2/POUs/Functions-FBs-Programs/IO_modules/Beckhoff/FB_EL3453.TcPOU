@@ -1,0 +1,427 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_EL3453" Id="{6c58e14d-b028-4e1f-a97b-54c10a6e1ee5}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EL3453
+
+VAR_OUTPUT	
+	Diagnostics					: MDP5001_341_I_C314AD31;
+	General						: ST_PQVoltageData;
+	Status						: ST_PQstatusData;
+	Quality						: ST_PQGridQualityData;	
+	ConfiguredCtRatio			: ARRAY [1..4] OF REAL;		
+END_VAR
+
+VAR
+	EL3453 						: MDP5001_341_6E3B8FF1;
+	DiagData					: MDP5001_341_C314AD31;
+		
+	VRatio  				: REAL := 1;
+	CRatio  				: REAL := 1000;
+	CInverse				: BOOL := FALSE; 
+	
+	
+	bInitDone				: BOOL;
+END_VAR
+
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[Diagnostics := DiagData.MDP5001_341_Input;
+General:= PQVoltageData();
+Quality := GridQuality();
+Status:= Status;
+
+GetPMXsettings(b_start := NOT bInitDone);
+
+bInitDone := TRUE;]]></ST>
+    </Implementation>
+    <Method Name="DynamicRatio" Id="{1b511aa5-d6c9-4cba-909b-dbd6fc4bac04}">
+      <Declaration><![CDATA[METHOD DynamicRatio
+VAR_INPUT
+	VPrimair  				: REAL := 400;
+	VSecundair				: REAL := 400;
+	CtRatio  				: UINT := 1000;
+	CTInverse				: BOOL := FALSE; 
+END_VAR
+
+VAR_INST	
+	OverCurrentThreshold : REAL := 1.05;
+	FrequencyOkLowLimit : REAL := 45;
+	FrequencyOkHighLimit : REAL := 65;
+	VoltageOkHighLimitPU : REAL := 1.1;
+	VoltageOkLowLimitPU : REAL := 0;
+END_VAR
+
+VAR
+	i : INT;
+	PhaseError :BOOL;
+END_VAR
+
+VAR_OUTPUT
+	Status					 : ST_PQstatusData;
+	b_VoltagesOK			 : BOOL;
+	e_ACrotationState		 : eACRotationState;
+	ar_PhaseVoltage			 : ARRAY [0..3] OF REAL;
+	ar_LineVoltage			 : ARRAY [0..3] OF REAL;
+	ar_Current				 : ARRAY [0..4] OF REAL;
+	ar_ActivePower			 : ARRAY [0..3] OF REAL;
+	ar_ReactivePower		 : ARRAY [0..3] OF REAL;
+	ar_ApparentPower		 : ARRAY [0..3] OF REAL;
+	ar_PowerFactor			 : ARRAY [0..3] OF REAL;
+	ar_Frequency			 : ARRAY [0..3] OF REAL;
+	r_voltageUnbalance		 : REAL;
+	r_CurrentUnbalance		 : REAL;
+END_VAR
+
+VAR
+	ReactiveDirection			: SINT;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF VPrimair = 0 OR VSecundair = 0 THEN
+	Status.b_SettingFault := TRUE;
+	RETURN;
+END_IF
+
+VRatio := Vprimair / Vsecundair;
+CRatio := CtRatio;
+CInverse := CTInverse;
+
+//current
+ar_Current[1]:= ValueConversion(DataSelector._C, ABS(EL3453.MDP5001_341_Input.L1_Classic_Current));
+ar_Current[2]:= ValueConversion(DataSelector._C, ABS(EL3453.MDP5001_341_Input.L2_Classic_Current));
+ar_Current[3]:= ValueConversion(DataSelector._C, ABS(EL3453.MDP5001_341_Input.L3_Classic_Current));
+ar_Current[0] := (ar_Current[1] + ar_Current[2] + ar_Current[3]) / 3;
+
+//voltage
+ar_PhaseVoltage[1] := ValueConversion(DataSelector._V, EL3453.MDP5001_341_Input.L1_Classic_Voltage);
+ar_PhaseVoltage[2] := ValueConversion(DataSelector._V, EL3453.MDP5001_341_Input.L2_Classic_Voltage);
+ar_PhaseVoltage[3] := ValueConversion(DataSelector._V, EL3453.MDP5001_341_Input.L3_Classic_Voltage);
+ar_PhaseVoltage[0] := (ar_PhaseVoltage[1] + ar_PhaseVoltage[2] + ar_PhaseVoltage[3]) / 3;
+
+ar_LineVoltage[1]:= ar_PhaseVoltage[1]* 1.73;
+ar_LineVoltage[2]:= ar_PhaseVoltage[2]* 1.73;
+ar_LineVoltage[3]:= ar_PhaseVoltage[3]* 1.73;
+ar_LineVoltage[0] := ar_PhaseVoltage[0] * 1.73;
+
+IF VRatio <> 0 THEN
+	b_VoltagesOK:= ACPhasesOK(ar_LineVoltage[1] / VRatio, ar_LineVoltage[2] / VRatio, ar_LineVoltage[3] / VRatio);
+END_IF
+e_ACrotationState	:= GetRotatingField(EL3453.MDP5001_341_Input.Total_Status_Grid_Direction, b_VoltagesOk);
+
+
+//active power
+ar_ActivePower[1]:= ValueConversion(DataSelector._P, EL3453.MDP5001_341_Input.L1_Classic_Active_power);
+ar_ActivePower[2]:= ValueConversion(DataSelector._P, EL3453.MDP5001_341_Input.L2_Classic_Active_power);
+ar_ActivePower[3]:= ValueConversion(DataSelector._P, EL3453.MDP5001_341_Input.L3_Classic_Active_power);
+ar_ActivePower[0] := (ar_ActivePower[1] + ar_ActivePower[2] + ar_ActivePower[3]);
+
+//Reactive power
+IF EL3453.MDP5001_341_Input.Total_Reactive_Fundamental_Reactive_Power_Fund < 0 THEN ReactiveDirection := -1; ELSE ReactiveDirection := 1; END_IF
+ar_ReactivePower[1]:= ReactiveDirection * ValueConversion(DataSelector._Q, EL3453.MDP5001_341_Input.L1_Classic_Reactive_power);
+ar_ReactivePower[2]:= ReactiveDirection * ValueConversion(DataSelector._Q, EL3453.MDP5001_341_Input.L2_Classic_Reactive_power);
+ar_ReactivePower[3]:= ReactiveDirection * ValueConversion(DataSelector._Q, EL3453.MDP5001_341_Input.L3_Classic_Reactive_power);
+ar_ReactivePower[0] := (ar_ReactivePower[1] + ar_ReactivePower[2] + ar_ReactivePower[3]);
+
+//Apparent power
+ar_ApparentPower[1]:= ValueConversion(DataSelector._S, EL3453.MDP5001_341_Input.L1_Classic_Apparent_power);
+ar_ApparentPower[2]:= ValueConversion(DataSelector._S, EL3453.MDP5001_341_Input.L2_Classic_Apparent_power);
+ar_ApparentPower[3]:= ValueConversion(DataSelector._S, EL3453.MDP5001_341_Input.L3_Classic_Apparent_power);
+ar_ApparentPower[0] := (ar_ApparentPower[1] + ar_ApparentPower[2] + ar_ApparentPower[3]);
+
+//Frequecny
+ar_Frequency[1] := ValueConversion(DataSelector._F, EL3453.MDP5001_341_Input.L1_Classic_Frequency);
+ar_Frequency[2] := ValueConversion(DataSelector._F, EL3453.MDP5001_341_Input.L2_Classic_Frequency);
+ar_Frequency[3] := ValueConversion(DataSelector._F, EL3453.MDP5001_341_Input.L3_Classic_Frequency);
+ar_Frequency[0]	:= (ar_Frequency[1] + ar_Frequency[2] + ar_Frequency[3]) / 3;
+
+ar_PowerFactor [1] := Powerfactor(ar_ActivePower[1], ar_ApparentPower[1], ar_ReactivePower[1]);
+ar_PowerFactor [2] := Powerfactor(ar_ActivePower[2], ar_ApparentPower[2], ar_ReactivePower[2]);
+ar_PowerFactor [3] := Powerfactor(ar_ActivePower[3], ar_ApparentPower[3], ar_ReactivePower[3]);
+ar_PowerFactor [0] := Powerfactor(ar_ActivePower[0], ar_ApparentPower[0], ar_ReactivePower[0]);
+r_VoltageUnbalance := LineUnbalance(ar_LineVoltage[1], ar_LineVoltage[2], ar_LineVoltage[3]);
+r_CurrentUnbalance := LineUnbalance(ar_Current[1], ar_Current[2], ar_Current[3]);
+
+//loop through phases 
+FOR i := 1 TO 3 DO
+	PhaseError := FALSE;
+	
+	IF ar_Current[i] >= OverCurrentThreshold * CtRatio THEN
+		Status.b_OverCurrent := TRUE;
+		PhaseError := TRUE;
+	END_IF
+	
+	IF LIMIT(VoltageOKLowLimitPU * Vsecundair, ar_LineVoltage[i], VoltageOKHighLimitPU * VSecundair) <> ar_LineVoltage[i] THEN
+		Status.b_OverVoltage := ar_lineVoltage[i] >= VoltageOKHighLimitPU * VSecundair;
+		Status.b_UnderVoltage := ar_lineVoltage[i] <= VoltageOKLowLimitPU * VSecundair;
+		PhaseError := TRUE;
+	END_IF
+	
+	IF LIMIT(FrequencyOKLowLimit, ar_Frequency[i], FrequencyOKHighLimit) <> ar_Frequency[i] THEN
+		PhaseError := TRUE;
+		status.b_OverFrequency := ar_Frequency[i] >= FrequencyOKHighLimit;
+		status.b_UnderFrequency := ar_Frequency[i] <= FrequencyOKLowLimit;
+	END_IF
+	
+	IF phaseError THEN
+		status.b_Fault := TRUE;
+		status.b_Error_Phase[i] := PhaseError;
+	END_IF
+END_FOR]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{b3b51530-ae08-4b80-b002-1e22b3d68228}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[bInitDone := FALSE;
+	
+	
+	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FixedRatio" Id="{5548a93a-043f-4c9a-93dc-a58f51857220}">
+      <Declaration><![CDATA[METHOD FixedRatio: BOOL
+VAR_INPUT
+END_VAR
+
+VAR_INST
+	b_VoltagesOk : BOOL;
+END_VAR
+
+VAR_OUTPUT
+	Status 			: ST_PQStatusData;
+	Measurements 	: ST_PQVoltageData;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//General stuff
+b_VoltagesOk							:= ACphasesOK(EL3453.MDP5001_341_Input.Total_L_L_Voltages_L1_L2_Voltage, EL3453.MDP5001_341_Input.Total_L_L_Voltages_L2_L3_Voltage, EL3453.MDP5001_341_Input.Total_L_L_Voltages_L3_L1_Voltage);
+Measurements.b_VoltagesOK				:= b_VoltagesOk;
+Measurements.e_ACrotationStatus			:= GetRotatingField(EL3453.MDP5001_341_Input.Total_Status_Grid_Direction, b_VoltagesOk);
+Measurements.ar_phaseVoltage[1]			:= EL3453.MDP5001_341_Input.L1_Basic_Voltage;
+Measurements.ar_phaseVoltage[2]			:= EL3453.MDP5001_341_Input.L2_Basic_Voltage;
+Measurements.ar_phaseVoltage[3]			:= EL3453.MDP5001_341_Input.L3_Basic_Voltage;
+Measurements.ar_PhaseVoltage[0] 			:= (EL3453.MDP5001_341_Input.L1_Basic_Voltage + EL3453.MDP5001_341_Input.L2_Basic_Voltage + EL3453.MDP5001_341_Input.L3_Basic_Voltage) / 3;
+Measurements.ar_LineVoltage[1] 			:= EL3453.MDP5001_341_Input.Total_L_L_Voltages_L1_L2_Voltage;
+Measurements.ar_LineVoltage[2] 			:= EL3453.MDP5001_341_Input.Total_L_L_Voltages_L2_L3_Voltage;
+Measurements.ar_LineVoltage[3] 			:= EL3453.MDP5001_341_Input.Total_L_L_Voltages_L3_L1_Voltage;
+Measurements.ar_LineVoltage[0] 			:= (EL3453.MDP5001_341_Input.Total_L_L_Voltages_L1_L2_Voltage + EL3453.MDP5001_341_Input.Total_L_L_Voltages_L2_L3_Voltage + EL3453.MDP5001_341_Input.Total_L_L_Voltages_L3_L1_Voltage) / 3;
+Measurements.ar_PowerFactor[1] 			:= EL3453.MDP5001_341_Input.L1_Power_Power_Factor;
+Measurements.ar_PowerFactor[2] 			:= EL3453.MDP5001_341_Input.L2_Power_Power_Factor;
+Measurements.ar_PowerFactor[3] 			:= EL3453.MDP5001_341_Input.L3_Power_Power_Factor;
+Measurements.ar_PowerFactor[0] 			:= EL3453.MDP5001_341_Input.Total_Basic_Power_Factor;
+Measurements.ar_current[1]					:= EL3453.MDP5001_341_Input.L1_Basic_Current;
+Measurements.ar_current[2]					:= EL3453.MDP5001_341_Input.L2_Basic_Current;
+Measurements.ar_current[3]					:= EL3453.MDP5001_341_Input.L3_Basic_Current;
+Measurements.ar_current[4]					:= EL3453.MDP5001_341_Input.Total_Basic_Neutral_Line_Current;
+Measurements.ar_Current[0]					:= (EL3453.MDP5001_341_Input.L1_Basic_Current + EL3453.MDP5001_341_Input.L2_Basic_Current + EL3453.MDP5001_341_Input.L3_Basic_Current) / 3;
+Measurements.ar_activePower[1]				:= EL3453.MDP5001_341_Input.L1_Power_Fundamental_active_Power_Fund;
+Measurements.ar_activePower[2]				:= EL3453.MDP5001_341_Input.L2_Power_Fundamental_active_Power_Fund;
+Measurements.ar_activePower[3]				:= EL3453.MDP5001_341_Input.L3_Power_Fundamental_active_Power_Fund;
+Measurements.ar_activePower[0]				:= EL3453.MDP5001_341_Input.Total_active_Fundamental_active_Power_Fund;
+Measurements.ar_ReactivePower[1]			:= EL3453.MDP5001_341_Input.L1_Power_Fundamental_Reactive_Power_Fund;
+Measurements.ar_ReactivePower[2]			:= EL3453.MDP5001_341_Input.L2_Power_Fundamental_Reactive_Power_Fund;
+Measurements.ar_ReactivePower[3]			:= EL3453.MDP5001_341_Input.L3_Power_Fundamental_Reactive_Power_Fund;
+Measurements.ar_ReactivePower[0]			:= EL3453.MDP5001_341_Input.Total_Reactive_Fundamental_Reactive_Power_Fund;
+Measurements.ar_ApparentPower[1]			:= EL3453.MDP5001_341_Input.L1_Power_Apparent_Power;
+Measurements.ar_ApparentPower[2]			:= EL3453.MDP5001_341_Input.L2_Power_Apparent_Power;
+Measurements.ar_ApparentPower[3]			:= EL3453.MDP5001_341_Input.L3_Power_Apparent_Power;
+Measurements.ar_ApparentPower[0]			:= EL3453.MDP5001_341_Input.Total_Apparent_Apparent_Power;
+Measurements.r_VoltageUnbalance			:= EL3453.MDP5001_341_Input.Total_Advanced_Voltage_Unbalance;
+Measurements.r_CurrentUnbalance			:= LineUnbalance(EL3453.MDP5001_341_Input.L1_Basic_Current, EL3453.MDP5001_341_Input.L2_Basic_Current, EL3453.MDP5001_341_Input.L3_Basic_Current);
+Measurements.ar_CurrentTHD[1]				:= EL3453.MDP5001_341_Input.L1_Advanced_Current_Total_Harmonic_Distortion;
+Measurements.ar_CurrentTHD[2]				:= EL3453.MDP5001_341_Input.L2_Advanced_Current_Total_Harmonic_Distortion;
+Measurements.ar_CurrentTHD[3]				:= EL3453.MDP5001_341_Input.L3_Advanced_Current_Total_Harmonic_Distortion;
+Measurements.ar_CurrentTHD[0]				:= EL3453.MDP5001_341_Input.Total_Advanced_Max_Current_Harmonic_Distortion;
+Measurements.ar_VoltageTHD[1]				:= EL3453.MDP5001_341_Input.L1_Advanced_Voltage_Total_Harmonic_Distortion;
+Measurements.ar_VoltageTHD[2]				:= EL3453.MDP5001_341_Input.L2_Advanced_Voltage_Total_Harmonic_Distortion;
+Measurements.ar_VoltageTHD[3]				:= EL3453.MDP5001_341_Input.L3_Advanced_Voltage_Total_Harmonic_Distortion;
+Measurements.ar_VoltageTHD[0]				:= EL3453.MDP5001_341_Input.Total_Advanced_Max_Voltage_Harmonic_Distortion;
+Measurements.ar_Frequency[1] 				:= ValueConversion(DataSelector._F, EL3453.MDP5001_341_Input.L1_Classic_Frequency);
+Measurements.ar_Frequency[2] 				:= ValueConversion(DataSelector._F, EL3453.MDP5001_341_Input.L2_Classic_Frequency);
+Measurements.ar_Frequency[3] 				:= ValueConversion(DataSelector._F, EL3453.MDP5001_341_Input.L3_Classic_Frequency);
+Measurements.ar_Frequency[0]				:= EL3453.MDP5001_341_Input.Total_Basic_Frequency;
+Measurements.r_EnergyConsumed				:= TO_REAL(EL3453.MDP5001_341_Input.Total_Active_Active_Negative_Energy)/1000;
+Measurements.r_EnergySupplied				:= TO_REAL(EL3453.MDP5001_341_Input.Total_Active_Active_Positive_Energy)/1000;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetPMXsettings" Id="{6cd016e1-de3c-4ffc-a76c-4ca529d428d7}">
+      <Declaration><![CDATA[METHOD GetPMXsettings
+VAR_INPUT
+	b_start : BOOL := TRUE;
+END_VAR
+ 
+
+VAR_INST
+	PMXsettingsIndex			: ARRAY [1..4] OF WORD := [16#8000, 16#8100, 16#8200, 16#8300];
+	SettingIndex				: BYTE := 16#12; //11 = voltage ratio, 12 = current ration
+	fbReadCardParams			: FB_EcCoESdoRead;
+	ratio						: FLOAT;
+END_VAR
+VAR
+	i : INT;
+	SnetID : STRING(23);
+	AmsnetID : T_AmsNetID;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF b_Start THEN
+    fbReadCardParams(
+        sNetID     := Tc2_System.F_CreateAmsNetId(DiagData.MDP5001_341_Input.AdsAddr.netId),
+        nSlaveAddr := DiagData.MDP5001_341_Input.AdsAddr.port,
+        nIndex     := PMXsettingsIndex[i],
+        nSubIndex  := SettingIndex,
+        pDstBuf    := ADR(ratio),
+        cbBufLen   := SIZEOF(ratio),
+        bExecute   := TRUE,
+        tTimeOut   := T#2S,
+    );
+
+   IF NOT fbReadCardParams.bBusy AND fbReadCardParams.cbRead > 0 THEN
+		IF NOT fbReadCardParams.bError THEN
+			ConfiguredCtRatio[i] := ratio;
+			i := i + 1;
+		END_IF
+   END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetRotatingField" Id="{2b75240f-78b9-479c-b501-b2226c44f5c9}">
+      <Declaration><![CDATA[METHOD PRIVATE GetRotatingField : eAcRotationState
+VAR_INPUT
+	b_Griddirection : BOOL;
+	b_ACok			: BOOL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF NOT b_ACok THEN
+	GetRotatingField := eAcRotationstate.None;
+ELSE
+	IF b_GridDirection = 1 THEN
+		GetRotatingField := eAcRotationstate.Right;
+	ELSE
+		GetRotatingField := eAcRotationstate.Left;
+	END_IF	
+END_IF
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GridQuality" Id="{cbdfe96c-4f95-4b73-83c4-9a50b367f754}">
+      <Declaration><![CDATA[METHOD PRIVATE GridQuality : ST_PQGridQualityData;
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF EL3453.MDP5001_341_Input.L1_Status_Voltage_Sign_Bit THEN
+	GridQuality.uli_TimeVoltZeroCrossup := EL3453.MDP5001_341_Input.L1_Timing_Voltage_Last_Zero_Crossing;
+END_IF
+
+GridQuality.b_SystemState 				:= EL3453.MDP5001_341_Input.Total_Status_System_State;
+GridQuality.r_PowerQualityFactor 		:= EL3453.MDP5001_341_Input.Total_Status_Power_Quality_Factor;
+GridQuality.r_Rocof 					:= EL3453.MDP5001_341_Input.Total_Basic_ROCOF;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PQVoltageData" Id="{d4394b36-ee44-41a0-a642-2b66756729a4}">
+      <Declaration><![CDATA[METHOD PRIVATE PQVoltageData : ST_PQVoltageData;
+
+VAR_INST
+	b_VoltagesOK 	: BOOL;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//General stuff
+b_VoltagesOk								:= ACphasesOK(PQVoltageData.ar_LineVoltage[1], PQVoltageData.ar_LineVoltage[2], PQVoltageData.ar_LineVoltage[3]);
+PQVoltageData.b_VoltagesOK					:= b_VoltagesOk;
+PQVoltageData.e_ACrotationStatus			:= GetRotatingField(EL3453.MDP5001_341_Input.Total_Status_Grid_Direction, b_VoltagesOk);
+PQVoltageData.ar_phaseVoltage[1]			:= EL3453.MDP5001_341_Input.L1_Basic_Voltage;
+PQVoltageData.ar_phaseVoltage[2]			:= EL3453.MDP5001_341_Input.L2_Basic_Voltage;
+PQVoltageData.ar_phaseVoltage[3]			:= EL3453.MDP5001_341_Input.L3_Basic_Voltage;
+PQVoltageData.ar_PhaseVoltage[0] 			:= (EL3453.MDP5001_341_Input.L1_Basic_Voltage + EL3453.MDP5001_341_Input.L2_Basic_Voltage + EL3453.MDP5001_341_Input.L3_Basic_Voltage) / 3;
+PQVoltageData.ar_LineVoltage[1] 			:= EL3453.MDP5001_341_Input.Total_L_L_Voltages_L1_L2_Voltage;
+PQVoltageData.ar_LineVoltage[2] 			:= EL3453.MDP5001_341_Input.Total_L_L_Voltages_L2_L3_Voltage;
+PQVoltageData.ar_LineVoltage[3] 			:= EL3453.MDP5001_341_Input.Total_L_L_Voltages_L3_L1_Voltage;
+PQVoltageData.ar_LineVoltage[0] 			:= (EL3453.MDP5001_341_Input.Total_L_L_Voltages_L1_L2_Voltage + EL3453.MDP5001_341_Input.Total_L_L_Voltages_L2_L3_Voltage + EL3453.MDP5001_341_Input.Total_L_L_Voltages_L3_L1_Voltage) / 3;
+PQVoltageData.ar_PowerFactor[1] 			:= EL3453.MDP5001_341_Input.L1_Power_Power_Factor;
+PQVoltageData.ar_PowerFactor[2] 			:= EL3453.MDP5001_341_Input.L2_Power_Power_Factor;
+PQVoltageData.ar_PowerFactor[3] 			:= EL3453.MDP5001_341_Input.L3_Power_Power_Factor;
+PQVoltageData.ar_PowerFactor[0] 			:= EL3453.MDP5001_341_Input.Total_Basic_Power_Factor;
+PQVoltageData.ar_current[1]					:= EL3453.MDP5001_341_Input.L1_Basic_Current;
+PQVoltageData.ar_current[2]					:= EL3453.MDP5001_341_Input.L2_Basic_Current;
+PQVoltageData.ar_current[3]					:= EL3453.MDP5001_341_Input.L3_Basic_Current;
+PQVoltageData.ar_current[4]					:= EL3453.MDP5001_341_Input.Total_Basic_Neutral_Line_Current;
+PQVoltageData.ar_Current[0]					:= (EL3453.MDP5001_341_Input.L1_Basic_Current + EL3453.MDP5001_341_Input.L2_Basic_Current + EL3453.MDP5001_341_Input.L3_Basic_Current) / 3;
+PQVoltageData.ar_activePower[1]				:= EL3453.MDP5001_341_Input.L1_Power_Fundamental_active_Power_Fund;
+PQVoltageData.ar_activePower[2]				:= EL3453.MDP5001_341_Input.L2_Power_Fundamental_active_Power_Fund;
+PQVoltageData.ar_activePower[3]				:= EL3453.MDP5001_341_Input.L3_Power_Fundamental_active_Power_Fund;
+PQVoltageData.ar_activePower[0]				:= EL3453.MDP5001_341_Input.Total_active_Fundamental_active_Power_Fund;
+PQVoltageData.ar_ReactivePower[1]			:= EL3453.MDP5001_341_Input.L1_Power_Fundamental_Reactive_Power_Fund;
+PQVoltageData.ar_ReactivePower[2]			:= EL3453.MDP5001_341_Input.L2_Power_Fundamental_Reactive_Power_Fund;
+PQVoltageData.ar_ReactivePower[3]			:= EL3453.MDP5001_341_Input.L3_Power_Fundamental_Reactive_Power_Fund;
+PQVoltageData.ar_ReactivePower[0]			:= EL3453.MDP5001_341_Input.Total_Reactive_Fundamental_Reactive_Power_Fund;
+PQVoltageData.ar_ApparentPower[1]			:= EL3453.MDP5001_341_Input.L1_Power_Apparent_Power;
+PQVoltageData.ar_ApparentPower[2]			:= EL3453.MDP5001_341_Input.L2_Power_Apparent_Power;
+PQVoltageData.ar_ApparentPower[3]			:= EL3453.MDP5001_341_Input.L3_Power_Apparent_Power;
+PQVoltageData.ar_ApparentPower[0]			:= EL3453.MDP5001_341_Input.Total_Apparent_Apparent_Power;
+PQVoltageData.r_VoltageUnbalance			:= EL3453.MDP5001_341_Input.Total_Advanced_Voltage_Unbalance;
+PQVoltageData.r_CurrentUnbalance			:= LineUnbalance(EL3453.MDP5001_341_Input.L1_Basic_Current, EL3453.MDP5001_341_Input.L2_Basic_Current, EL3453.MDP5001_341_Input.L3_Basic_Current);
+PQVoltageData.ar_CurrentTHD[1]				:= EL3453.MDP5001_341_Input.L1_Advanced_Current_Total_Harmonic_Distortion;
+PQVoltageData.ar_CurrentTHD[2]				:= EL3453.MDP5001_341_Input.L2_Advanced_Current_Total_Harmonic_Distortion;
+PQVoltageData.ar_CurrentTHD[3]				:= EL3453.MDP5001_341_Input.L3_Advanced_Current_Total_Harmonic_Distortion;
+PQVoltageData.ar_CurrentTHD[0]				:= EL3453.MDP5001_341_Input.Total_Advanced_Max_Current_Harmonic_Distortion;
+PQVoltageData.ar_VoltageTHD[1]				:= EL3453.MDP5001_341_Input.L1_Advanced_Voltage_Total_Harmonic_Distortion;
+PQVoltageData.ar_VoltageTHD[2]				:= EL3453.MDP5001_341_Input.L2_Advanced_Voltage_Total_Harmonic_Distortion;
+PQVoltageData.ar_VoltageTHD[3]				:= EL3453.MDP5001_341_Input.L3_Advanced_Voltage_Total_Harmonic_Distortion;
+PQVoltageData.ar_VoltageTHD[0]				:= EL3453.MDP5001_341_Input.Total_Advanced_Max_Voltage_Harmonic_Distortion;
+PQVoltageData.ar_Frequency[1] 				:= ValueConversion(DataSelector._F, EL3453.MDP5001_341_Input.L1_Classic_Frequency);
+PQVoltageData.ar_Frequency[2] 				:= ValueConversion(DataSelector._F, EL3453.MDP5001_341_Input.L2_Classic_Frequency);
+PQVoltageData.ar_Frequency[3] 				:= ValueConversion(DataSelector._F, EL3453.MDP5001_341_Input.L3_Classic_Frequency);
+PQVoltageData.ar_Frequency[0]				:= EL3453.MDP5001_341_Input.Total_Basic_Frequency;
+PQVoltageData.r_EnergyConsumed				:= TO_REAL(EL3453.MDP5001_341_Input.Total_Active_Active_Negative_Energy)/1000;
+PQVoltageData.r_EnergySupplied				:= TO_REAL(EL3453.MDP5001_341_Input.Total_Active_Active_Positive_Energy)/1000;
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ValueConversion" Id="{e91ee676-956d-4ef4-8d42-7bde370fc8c9}">
+      <Declaration><![CDATA[METHOD ValueConversion : REAL
+VAR_INPUT
+	selector		: DataSelector;
+	IN				: LINT;
+END_VAR
+
+VAR
+	totalRatio		: REAL;
+	scale			: REAL;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[scale := 0.001; //default
+
+CASE selector OF
+ 	DataSelector._C:
+		totalRatio := CRatio;
+	DataSelector._V:
+		totalRatio := VRatio;
+	DataSelector._P, DataSelector._Q:
+		totalRatio := CRatio * VRatio * SEL(CInverse, 1, -1) / 1000;
+	DataSelector._S, DataSelector._E:
+		totalRatio := CRatio * VRatio / 1000;
+	DataSelector._F:
+		totalRatio := 1;
+END_CASE
+
+ValueConversion := TO_REAL(IN) * scale * totalRatio;]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

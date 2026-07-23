@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_HMI_Monitor_Protections" Id="{7859b4a9-68b4-4fb9-959f-75b9f715679d}">
+    <Declaration><![CDATA[TYPE ST_HMI_Monitor_Protections :
+STRUCT
+	b_MrcdbOK					: BOOL;
+	b_MrcdbWarning				: BOOL;
+	b_MrcdbAlarm				: BOOL;
+	b_InsulationEnable			: BOOL;
+	b_InsulationOk				: BOOL;
+	b_InsulationWarning			: BOOL;
+	b_InsulationAlarm			: BOOL;
+	b_InsulationPenDetected		: BOOL; //discrepence of PEN config and detected situation
+	e_EarthingSystemDetected	: eEarthingSystems; //0: Unknown, 1: TN-S, 2: TN-C, 3: IT.
+	b_SurgeType12OK				: BOOL;
+	b_SurgeType3OK				: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

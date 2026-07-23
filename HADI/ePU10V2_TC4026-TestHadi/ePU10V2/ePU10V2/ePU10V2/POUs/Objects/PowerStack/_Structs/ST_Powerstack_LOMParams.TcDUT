@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Powerstack_LOMParams" Id="{a2379ea6-642c-46d8-8f29-107b77a3b8e7}">
+    <Declaration><![CDATA[TYPE ST_Powerstack_LOMParams :
+STRUCT
+	ForceSlowDetection	: BOOL := FALSE;
+	FreqFilterLength	: UINT := 5; // samples 
+	DetectionTimeFast_ms: UINT := 50; // milliseconds
+	DetectionTimeSlow_ms: UINT := 1000; // milliseconds
+	RoCofLimit			: REAL := 0.5; // Hz/s
+	PowerPulseSize		: REAL := 0.5; // %, of rated power during ugrid to enable LOM detection.
+	EnablePowerPulse	: BOOL := TRUE;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

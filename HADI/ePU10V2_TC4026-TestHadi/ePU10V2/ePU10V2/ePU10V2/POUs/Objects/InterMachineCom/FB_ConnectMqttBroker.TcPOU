@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_ConnectMqttBroker" Id="{5108089b-4dfd-4d5c-b090-3be1f333f483}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ConnectMqttBroker
+VAR_INPUT
+	bRestartConnection			: BOOL;
+	bConnect					: BOOL;
+	sHostName					: STRING;
+					
+END_VAR
+VAR_OUTPUT
+	eConnectionState			: eConnectionState;
+	bIncomingMsg	: BOOL;
+	sMessage		: STRING;
+END_VAR
+VAR
+	fbMqttClient					: FB_IotMqttClient;
+	fbMessageQueue					: FB_IotMqttMessageQueue;
+	fbMessage						: FB_IotMqttMessage;
+	ton_ReconnectionTimer			: TON := (PT:=T#5S);
+	bSetParameter					: BOOL;
+	rTrigReinitCom					: R_TRIG;
+	rTrigComStateOK					: R_Trig;
+	
+	//subscription
+	bSubscribed 					: BOOL;
+	sSubscribedTopic 				: STRING;
+	sReceivedTopic					: STRING;
+	
+	//json files
+	fbJson         	: FB_JsonSaxWriter;
+  	fbJsonDataType 	: FB_JsonReadWriteDataType;
+	sJsonDocPub     : STRING(255);
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ton_ReconnectionTimer(IN:= NOT ton_ReConnectionTimer.Q AND NOT fbMqttClient.bConnected);
+rTrigReinitCom(CLK := bRestartConnection);
+bIncomingMsg := FALSE;
+
+IF ton_reconnectionTimer.Q OR rTrigReinitCom.Q THEN
+	eConnectionState := eConnectionState.disconnected;
+	//Reset connection
+	fbMqttClient.Execute(FALSE);
+	//Configure
+	IF bSetParameter THEN
+		bSetParameter := FALSE;
+		fbMqttClient.sHostName							:= sHostName;
+		fbMqttClient.nHostPort							:= 1883;
+		fbMqttClient.ipMessageQueue						:= fbMessageQueue;
+	END_IF
+ELSE
+	fbMqttClient.Execute(bConnect);
+	//Reset parameter set for next time connecting
+	bSetParameter := TRUE;
+END_IF
+
+rTrigComStateOK(CLK := fbMqttClient.bConnected);
+IF rTrigComStateOK.Q THEN
+	eConnectionState := eConnectionState.connected;
+END_IF
+
+
+//receive message at subscribed topic
+IF fbMessageQueue.nQueuedMessages > 0 THEN
+	 IF fbMessageQueue.Dequeue(fbMessage:=fbMessage) THEN
+		fbMessage.GetTopic(pTopic:=ADR(sReceivedTopic), nTopicSize:=SIZEOF(sReceivedTopic) );
+			// Process asset messages
+			bIncomingMsg	:= TRUE;
+			fbMessage.GetPayload(pPayload:=ADR(sMessage), nPayloadSize:=SIZEOF(sMessage), bSetNullTermination:=TRUE);
+			sMessage:=LEFT(sMessage,LEN(sMessage) -1 );
+	END_IF
+END_IF
+
+//TO ADD, when no slaves are present, reduce publish interval]]></ST>
+    </Implementation>
+    <Method Name="Publish" Id="{ed58980b-4c37-4c38-b0ad-d189a3c5af9e}">
+      <Declaration><![CDATA[METHOD Publish : BOOL
+VAR_INPUT
+	Interval		: TIME;
+	sTopic			: STRING;
+	sMessage		: STRING;
+END_VAR
+
+VAR_INST
+	tMinInterval 				: TIME := T#10MS;
+	tonPublishInterval			: TON;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[// publish
+tonpublishInterval(PT := MAX(tMinInterval, Interval));
+
+IF fbMqttClient.bConnected THEN
+    tonPublishInterval.IN := TRUE;
+    IF tonPublishInterval.Q THEN // publish new payload every second
+        tonPublishInterval.IN := FALSE;
+		fbMqttClient.Publish(sTopic:=sTopic,
+		pPayload := ADR(sMessage),
+		nPayloadSize := LEN2(ADR(sMessage)),
+		eQoS := TcIotMqttQos.AtMostOnceDelivery,
+		bRetain:= FALSE,
+		bQueue := FALSE);
+    END_IF
+END_IF]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Subscribe" Id="{5a09b538-fc70-4333-9f5e-c3e7dde78a8f}">
+      <Declaration><![CDATA[METHOD Subscribe : BOOL;
+VAR_INPUT
+	sTopic		: STRING; 
+END_VAR
+
+VAR_INST
+	sReceivedTopic : STRING;
+END_VAR
+
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF fbMqttClient.bConnected AND NOT bSubscribed THEN
+	sSubscribedTopic := sTopic;
+   bSubscribed := fbMqttClient.Subscribe(sTopic:=sTopic, eQoS:=TcIotMqttQos.AtMostOnceDelivery); //sSubTopic
+END_IF
+
+IF sSubscribedTopic <> sTopic THEN
+	bSubscribed := FALSE;
+END_IF
+
+
+
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

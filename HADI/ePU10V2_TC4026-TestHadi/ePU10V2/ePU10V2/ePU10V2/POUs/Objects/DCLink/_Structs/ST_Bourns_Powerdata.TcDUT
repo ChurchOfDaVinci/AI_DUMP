@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Bourns_Powerdata" Id="{257670e0-6846-48a8-a6c3-812a0de5940a}">
+    <Declaration><![CDATA[TYPE ST_Bourns_Powerdata :
+STRUCT
+	Power			: REAL;
+	Current			: REAL;
+	Voltage			: REAL;
+	Energy			: REAL;
+	EnergyImport	: REAL;
+	EnergyExport	: REAL;
+	Temperature		: REAL;
+	Charge			: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

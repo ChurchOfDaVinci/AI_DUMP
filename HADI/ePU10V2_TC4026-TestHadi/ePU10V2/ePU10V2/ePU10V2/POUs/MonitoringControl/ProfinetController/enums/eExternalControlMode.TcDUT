@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eExternalControlMode" Id="{f6dd61a0-169c-4719-8409-3ddb1d74c7c0}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eExternalControlMode :
+(
+	off := 0,
+	Readonly := 1,
+	BasicControl := 2,
+	AdvancedControl := 3
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

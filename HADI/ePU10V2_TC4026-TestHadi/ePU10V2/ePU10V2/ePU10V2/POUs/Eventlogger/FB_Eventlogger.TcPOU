@@ -1,0 +1,358 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_Eventlogger" Id="{4ceb7042-c2cb-48a4-b12d-643f16a5dece}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_Eventlogger
+VAR_IN_OUT
+    stParams : ST_EventLogger_Params;
+END_VAR
+
+VAR CONSTANT
+    cQueueSize              : UINT := 64;
+    cDefaultWriteInterval   : TIME := T#1M;
+    cDefaultMaxFileSize     : UDINT := 5000000;
+    cDefaultMaxFileCount    : UINT := 5;
+    cDefaultFillGrade       : LREAL := 0.9;
+    cLogFileName            : STRING(255) := 'C:\PLCUtility\ePU10Log.csv';
+END_VAR
+
+VAR
+    // Queue
+    aQueue              : ARRAY[0..63] OF ST_EventLogEntry;
+    nWriteIndex         : UINT;
+    nReadIndex          : UINT;
+    nQueuedItems        : UINT;
+    stCurrentEntry      : ST_EventLogEntry;
+
+    // 4026 Event logging replacement
+    // EventLogger sink for dynamic runtime messages
+    fbTcEventLogger : FB_TcEventLogger;
+
+    // CSV buffer
+    sPendingCsv         : STRING(8191);
+
+    // Timing
+    tonWriteInterval    : TON;
+    tWriteInterval      : TIME;
+    nMaxFileSize        : UDINT;
+    nMaxFileCount       : UINT;
+    lrMaxFillGrade      : LREAL;
+    nRotateThreshold    : UDINT;
+
+    // File handling
+    fbFileOpen          : FB_FileOpen;
+    fbFileWrite         : FB_FileWrite;
+    fbFileClose         : FB_FileClose;
+
+    hFile               : UINT;
+    eFileState          : UINT;
+
+    bFileOpenExecute    : BOOL;
+    bFileWriteExecute   : BOOL;
+    bFileCloseExecute   : BOOL;
+
+    bWritePending       : BOOL;
+    bOverwriteOnOpen    : BOOL;
+
+    nActiveFileIndex    : UINT;
+    aFileSizes          : ARRAY[0..9] OF UDINT;
+
+    sActiveFileName     : STRING(255);
+    nPendingWriteLen    : UDINT;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[ApplyParams();
+tonWriteInterval(IN := TRUE, PT := tWriteInterval);
+
+WHILE nQueuedItems > 0 DO
+	stCurrentEntry := aQueue[nReadIndex];
+	nReadIndex := (nReadIndex + 1) MOD cQueueSize;
+	nQueuedItems := nQueuedItems - 1;
+	// TODO: Load state from previously suspended application
+
+	fbTcEventLogger.SendMessageEx(
+		nEventId := GetEventId(stCurrentEntry.eCategory),
+		eSeverity := SeverityToTcSeverity(eSeverity := stCurrentEntry.eSeverity),
+		sMessage := stCurrentEntry.sMessage);
+		
+	AppendCsv(stEntry := stCurrentEntry);
+END_WHILE
+
+IF tonWriteInterval.Q AND (LEN(sPendingCsv) > 0) THEN
+	bWritePending := TRUE;
+	tonWriteInterval(IN := FALSE);
+END_IF
+
+IF bWritePending THEN
+	IF nMaxFileSize > 0 THEN
+		IF (aFileSizes[nActiveFileIndex] + TO_UDINT(LEN(sPendingCsv))) >= nRotateThreshold THEN
+			nActiveFileIndex := (nActiveFileIndex + 1) MOD nMaxFileCount;
+			aFileSizes[nActiveFileIndex] := 0;
+			bOverwriteOnOpen := TRUE;
+		END_IF
+	END_IF
+	GetActiveFileName();
+	
+	CASE eFileState OF
+		0:
+			bFileOpenExecute := TRUE;
+			eFileState := 10;
+			
+		10:
+			fbFileOpen(
+				sNetId := '',
+				sPathName := sActiveFileName,
+				nMode := SEL(bOverwriteOnOpen, FOPEN_MODEAPPEND OR FOPEN_MODETEXT, FOPEN_MODEWRITE OR FOPEN_MODETEXT),
+				ePath := PATH_GENERIC,
+				bExecute := bFileOpenExecute,
+				tTimeout := T#2S,
+				hFile => hFile);
+			bFileOpenExecute := FALSE;
+			
+			IF NOT fbFileOpen.bBusy THEN
+				IF fbFileOpen.bError THEN
+					eFileState := 0;
+					bWritePending := FALSE;
+				ELSE
+					bOverwriteOnOpen := FALSE;
+					eFileState := 20;
+				END_IF
+			END_IF
+			
+		20:
+			nPendingWriteLen := TO_UDINT(LEN(sPendingCsv));
+			fbFileWrite(
+				sNetId := '',
+				hFile := hFile,
+				pWriteBuff := ADR(sPendingCsv),
+				cbWriteLen := nPendingWriteLen,
+				bExecute := bFileWriteExecute,
+				tTimeout := T#2S);
+			
+			IF NOT bFileWriteExecute THEN
+				bFileWriteExecute := TRUE;
+			ELSE
+				bFileWriteExecute := FALSE;
+			END_IF
+			
+			IF NOT fbFileWrite.bBusy THEN
+				IF fbFileWrite.bError THEN
+					eFileState := 30;
+				ELSIF fbFileWrite.cbWrite = nPendingWriteLen THEN
+					aFileSizes[nActiveFileIndex] := aFileSizes[nActiveFileIndex] + nPendingWriteLen;
+					sPendingCsv := '';
+					eFileState := 30;
+				END_IF
+			END_IF
+			
+		30:
+			fbFileClose(
+				sNetId := '',
+				hFile := hFile,
+				bExecute := bFileCloseExecute,
+				tTimeout := T#2S);
+			
+			IF NOT bFileCloseExecute THEN
+				bFileCloseExecute := TRUE;
+			ELSE
+				bFileCloseExecute := FALSE;
+			END_IF
+			
+			IF NOT fbFileClose.bBusy THEN
+				eFileState := 0;
+				bWritePending := FALSE;
+			END_IF
+	END_CASE
+END_IF
+]]></ST>
+    </Implementation>
+    <Method Name="AppendCsv" Id="{b97f8275-6c93-4f1f-9ca4-29317db96b5d}">
+      <Declaration><![CDATA[METHOD PRIVATE AppendCsv : BOOL
+VAR_INPUT
+	stEntry : ST_EventLogEntry;
+END_VAR
+VAR
+	sLine		: STRING(511);
+	sCategory	: STRING(31);
+	sSeverity	: STRING(31);
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[sCategory := CategoryToString(eCategory := stEntry.eCategory);
+sSeverity := SeverityToString(eSeverity := stEntry.eSeverity);
+
+sLine := CONCAT(stEntry.sTimestamp, ',');
+sLine := CONCAT(sLine, sSeverity);
+sLine := CONCAT(sLine, '/');
+sLine := CONCAT(sLine, sCategory);
+sLine := CONCAT(sLine, ',');
+sLine := CONCAT(sLine, stEntry.sSourceFB);
+sLine := CONCAT(sLine, ',');
+sLine := CONCAT(sLine, stEntry.sMessage);
+sLine := CONCAT(sLine, '$0D$0A');
+
+IF (LEN(sPendingCsv) + LEN(sLine)) < SIZEOF(sPendingCsv) THEN
+	sPendingCsv := CONCAT(sPendingCsv, sLine);
+	AppendCsv := TRUE;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="ApplyParams" Id="{68b6fdc6-da31-4f01-a0ff-fec4bf03298b}">
+      <Declaration><![CDATA[METHOD PRIVATE ApplyParams
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[tWriteInterval := stParams.LogWriteInterval;
+IF tWriteInterval <= T#0S THEN
+	tWriteInterval := cDefaultWriteInterval;
+END_IF
+
+nMaxFileSize := TO_UDINT(stParams.MaxFileSize);
+IF nMaxFileSize = 0 THEN
+	nMaxFileSize := cDefaultMaxFileSize;
+END_IF
+
+nMaxFileCount := TO_UINT(stParams.MaxFileCount);
+IF nMaxFileCount = 0 THEN
+	nMaxFileCount := cDefaultMaxFileCount;
+ELSIF nMaxFileCount > 10 THEN
+	nMaxFileCount := 10;
+END_IF
+
+lrMaxFillGrade := TO_LREAL(stParams.MaxFillGrade);
+IF lrMaxFillGrade <= 0 THEN
+	lrMaxFillGrade := cDefaultFillGrade;
+ELSIF lrMaxFillGrade > 1 THEN
+	lrMaxFillGrade := 1;
+END_IF
+
+nRotateThreshold := TO_UDINT(TO_LREAL(nMaxFileSize) * lrMaxFillGrade);
+IF nRotateThreshold = 0 THEN
+	nRotateThreshold := nMaxFileSize;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="CategoryToString" Id="{c2ce8da6-8a4a-40bc-8d3c-16559cc92395}">
+      <Declaration><![CDATA[METHOD PRIVATE CategoryToString : STRING
+VAR_INPUT
+	eCategory : eEventLogCategory;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE eCategory OF
+	eEventLogCategory.SFCStep:
+		CategoryToString := 'SFC_STEP';
+	eEventLogCategory.ReleaseTrigger:
+		CategoryToString := 'RELEASE_TRIGGER';
+	eEventLogCategory.Generic:
+		CategoryToString := 'GENERIC';
+	eEventLogCategory.Output:
+		CategoryToString := 'OUTPUT';
+	eEventLogCategory.Input:
+		CategoryToString := 'INPUT';
+END_CASE
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetActiveFileName" Id="{f5326ca6-6f77-46d6-a0af-4e2f309a863b}">
+      <Declaration><![CDATA[METHOD PRIVATE GetActiveFileName
+VAR_INPUT
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[IF nActiveFileIndex = 0 THEN
+	sActiveFileName := cLogFileName;
+ELSE
+	sActiveFileName := CONCAT('C:\PLCUtility\ePU10Log_', TO_STRING(nActiveFileIndex));
+	sActiveFileName := CONCAT(sActiveFileName, '.csv');
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetEventId" Id="{f03152e9-f5f0-47cf-922a-5d6252f98d61}">
+      <Declaration><![CDATA[METHOD PRIVATE GetEventId : UDINT
+VAR_INPUT
+	eCategory : eEventLogCategory;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[GetEventId := 10000 + TO_UDINT(eCategory);
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="PushEvent" Id="{fdd8fa57-e446-4d0d-bb79-8f02fc8e95f4}">
+      <Declaration><![CDATA[METHOD PUBLIC PushEvent : BOOL
+VAR_INPUT
+	eCategory	: eEventLogCategory;
+	eSeverity	: eEventLogSeverity;
+	sSourceFB	: STRING;
+	sMessage	: STRING;
+END_VAR
+VAR
+	stNewEntry	: ST_EventLogEntry;
+	sTimestamp	: STRING(63);
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[sTimestamp := CONCAT(GVL.s_SystemDate, ' ');
+sTimestamp := CONCAT(sTimestamp, GVL.s_SystemTime);
+
+stNewEntry.sTimestamp := sTimestamp;
+stNewEntry.eCategory := eCategory;
+stNewEntry.eSeverity := eSeverity;
+stNewEntry.sSourceFB := sSourceFB;
+stNewEntry.sMessage := sMessage;
+
+IF nQueuedItems >= cQueueSize THEN
+	nReadIndex := (nReadIndex + 1) MOD cQueueSize;
+	nQueuedItems := nQueuedItems - 1;
+END_IF
+
+aQueue[nWriteIndex] := stNewEntry;
+nWriteIndex := (nWriteIndex + 1) MOD cQueueSize;
+nQueuedItems := nQueuedItems + 1;
+
+PushEvent := TRUE;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SeverityToString" Id="{92fddfb5-c8c7-4767-8069-0ab36ec4f08c}">
+      <Declaration><![CDATA[METHOD PRIVATE SeverityToString : STRING
+VAR_INPUT
+	eSeverity : eEventLogSeverity;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE eSeverity OF
+	eEventLogSeverity.Warning:
+		SeverityToString := 'WARNING';
+	eEventLogSeverity.Fault:
+		SeverityToString := 'FAULT';
+ELSE
+	SeverityToString := 'INFO';
+END_CASE
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SeverityToTcSeverity" Id="{10dbf94f-91f0-4e68-8bfa-8f537fda1f77}">
+      <Declaration><![CDATA[METHOD PRIVATE SeverityToTcSeverity : TcEventSeverity
+VAR_INPUT
+	eSeverity : eEventLogSeverity;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[CASE eSeverity OF
+	eEventLogSeverity.Warning:
+		SeverityToTcSeverity := TcEventSeverity.Warning;
+	eEventLogSeverity.Fault:
+		SeverityToTcSeverity := TcEventSeverity.Error;
+ELSE
+	SeverityToTcSeverity := TcEventSeverity.Info;
+END_CASE
+]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

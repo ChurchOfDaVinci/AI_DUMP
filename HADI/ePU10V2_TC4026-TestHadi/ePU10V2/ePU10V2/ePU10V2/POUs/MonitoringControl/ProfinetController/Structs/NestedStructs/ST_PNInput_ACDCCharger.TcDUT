@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PNInput_ACDCCharger" Id="{b83f44b6-9f45-4ef6-9122-b3d791f071de}">
+    <Declaration><![CDATA[TYPE ST_PNInput_ACDCCharger :
+STRUCT
+	w_Control			:	WORD;
+	ui_ACCurrentlimit	:	UINT	:=	0;
+	UI_Pset				:	UINT	:=	0;
+	ui_SocMaxLimit		:	UINT	:=	100;
+	ui_MinGridVoltage	:	Uint	:=	360;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

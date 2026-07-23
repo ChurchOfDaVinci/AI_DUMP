@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PowerModule_params" Id="{451231f5-67bf-4dd3-863f-0b4da2d99bad}">
+    <Declaration><![CDATA[TYPE ST_PowerModule_params :
+STRUCT
+	//Rated settings
+	r_InverterRatedCurrent			: REAL := 460; //Ampere // according danfoss grid current rating
+	r_InverterRatedPower			: REAL := 360; //kva // according rated max current
+	i_VoltageOffset					: INT := 4; //correction factor voltage control.
+	i_DCVramprate					: INT := -1; //-1 = disabled
+	
+	//Limits
+	r_ACCurrentLimitMax				: REAL := 650;
+	r_ACcurrentLimitMin				: REAL := 100;
+	r_ModulationIndexLimit			: REAL := 98; //indicator for AC voltage limitation of the drive. Controls AC limit PID.
+	r_ModulationIndexLimitHyst		: REAL := 0.5; 
+	
+	//Temperatures and conditioning
+	r_powerLoadFanOn				: REAL := 30;	
+	r_FilterTempFanOn				: REAL := 50;
+	r_FilterTempWarning				: REAL := 80; //also used for throttling start
+	r_FilterTempAlarm				: REAL := 90; //also used for for throttling end 
+	r_InverterTempWarning			: REAL := 55; //also used for throttling start
+	r_InverterTempAlarm				: REAL := 60; //also used for for throttling end 
+	r_ThrottlingMinimum				: REAL := 0.3; //% of rated power.
+	
+	//Releases
+	ui_DCVoltageDeltaPrechargeOK	: UINT := 20; // VDC
+	ui_DCvoltageMinPrechargeOK		: UINT := 590; //VDC
+	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Netcontactor_service" Id="{471b76d4-04ab-4611-9854-20402008b4cd}">
+    <Declaration><![CDATA[TYPE ST_Netcontactor_service :
+STRUCT
+	Right			: ST_service_DigitalOutInWithSafety;
+	Left			: ST_service_DigitalOutInWithSafety;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,106 @@
+.content_page {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block;
+}
+
+.r-report-config,
+.r-report-generation,
+.r-reports-in-progress {
+    max-width: 600px;
+    border: 1px solid #ccc;
+    padding: 20px;
+}
+
+#r-last-report {
+    width: 100%;
+    height: 400px;
+    background-color: #FFF;
+}
+
+.r-current-configuration tr {
+    margin-bottom: 30px;
+}
+
+#r-servers {
+    width: 60%
+}
+
+#r-reports {
+    padding: 20px 50px;
+}
+
+.r-report,
+.r-table {
+    border: 1px solid #ccc;
+    padding: 20px;
+}
+
+.r-columns {
+    background-color: #4f4fa2;
+}
+
+#r-add-report,
+.r-add-table,
+.r-table-column-add {
+    display: flex;
+}
+
+.r-report-headline,
+.r-report-headline-btn {
+    font-size: 20px;
+    height: 30px;
+}
+
+.r-report-headline {
+    width: calc(100% - 80px);
+}
+
+.r-report-headline-btn {
+    width: 50px;
+    height: 30px;
+}
+
+.r-tables,
+.r-valuepairs,
+.r-textfields {
+    margin: 40px 20px;
+}
+
+.r-table {
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-bottom: 5px;
+}
+
+.r-table table {
+    margin-top: 10px;
+}
+
+.r-table table,
+.r-table th,
+.r-table td,
+.r-textfields table,
+.r-textfields th,
+.r-textfields td {
+    border: 1px solid #aaa;
+}
+
+.r-table td {
+    height: 20px;
+}
+
+.r-table-headline,
+.r-table-symbol,
+.r-table-data-btn {
+    font-size: 15px;
+    max-width: 150px;
+}
+
+.r-table-column a[data-blacklisted="true"] {
+    color: #aaa;
+}
+
+button:hover {
+    background-color: rgb(40, 102, 40);
+}

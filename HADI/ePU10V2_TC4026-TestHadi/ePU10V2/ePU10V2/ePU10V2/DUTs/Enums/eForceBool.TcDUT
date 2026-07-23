@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eForceBool" Id="{2c25cd44-78fc-41f3-aae3-58dc2bc7cd22}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE eForceBool:
+(
+	none := 0,
+	On	:= 1,
+	Off := 2
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

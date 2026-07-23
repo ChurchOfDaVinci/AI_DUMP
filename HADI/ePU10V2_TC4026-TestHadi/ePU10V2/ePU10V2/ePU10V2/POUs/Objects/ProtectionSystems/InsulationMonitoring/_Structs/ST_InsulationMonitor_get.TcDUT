@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_InsulationMonitor_get" Id="{f03fda51-285c-4fb6-9458-9a5320accc13}">
+    <Declaration><![CDATA[TYPE ST_InsulationMonitor_get :
+STRUCT
+	b_Enabled							: BOOL;	
+	b_PENlinkDetected					: BOOL;
+	b_Warning							: BOOL;
+	e_EarthingSystemDetected			: eEarthingSystems;
+	b_PENlinkOperatedFault				: BOOL;
+	b_EarthingSystemMismatch			: BOOL;
+	b_NoEarthingSystemSet				: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

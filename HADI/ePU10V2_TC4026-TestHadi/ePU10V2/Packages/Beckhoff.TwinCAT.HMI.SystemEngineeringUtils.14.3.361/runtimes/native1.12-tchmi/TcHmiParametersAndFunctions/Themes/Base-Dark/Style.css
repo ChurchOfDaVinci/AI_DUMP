@@ -1,0 +1,145 @@
+/* Theme depended control css. */
+/* Base-Dark Theme*/
+
+.TcHmi_Controls_Beckhoff_TcHmiParametersAndFunctions-template {
+    background: #121212;
+
+    .notification-wrapper {
+        background: rgba(255, 255, 255, 0.1);
+
+        .notification {
+            background: #e00;
+            color: black;
+        }
+    }
+
+    .crossed-out {
+        color: red;
+    }
+
+    .runtime-disabled-overlay {
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+    }
+
+    .resize-bar {
+        background: rgba(255, 255, 255, 0.05);
+    }
+
+    beckhoff-parameters-and-functions-table {
+        .arrow {
+            border-color: white;
+        }
+
+        tbody tr:nth-of-type(even) {
+            background: #333;
+        }
+
+        tbody tr:nth-child(n + 2):hover {
+            background: #555;
+        }
+
+        button {
+            background-color: #333;
+            color: #ddd;
+            border-color: white;
+
+            &:hover {
+                background-color: #2774ba;
+                color: black;
+            }
+        }
+
+        .parameters-and-functions-table-row {
+            &:nth-child(2n + 1) {
+                background: #111;
+            }
+
+            &:nth-child(2n) {
+                background: #222;
+            }
+
+            &:hover {
+                background: #333;
+            }
+        }
+
+        .table .header {
+            background: #333;
+            border-bottom: 0px solid #222;
+
+            .header-labels {
+                &:hover .resize-bar {
+                    background: #ccc;
+                }
+            }
+
+            &.shadow {
+                box-shadow: 1px 1px 2px 2px #222;
+            }
+
+            .notification {
+                &.info {
+                    background: #2775be;
+                }
+
+                &.error {
+                    background: #900;
+                }
+            }
+        }
+
+        .highlight {
+            background: #dba907 !important;
+        }
+
+        .search-bar input {
+            border-color: #555;
+            background: #222;
+            color: white;
+        }
+
+        .parameter-or-function-name {
+            color: #aad4ff;
+        }
+
+        .parameter-or-function-mapping,
+        .parameter-or-function-info {
+            color: #ccc;
+        }
+
+        .group-lines span {
+            background: #2774ba;
+        }
+
+        .info {
+            background: #336699;
+        }
+
+        .group-row:has(.symbol-group .parameter-with-prepared-value) > .group-label,
+        .parameter-with-prepared-value {
+            background: #6f5c00 !important;
+        }
+    }
+
+    .navigation {
+        border-right-color: #333;
+        .nav-button {
+            &:hover {
+                background: #444;
+            }
+            .runtime-diagnostics-toggle-btn {
+                background: #121212;
+            }
+        }
+    }
+
+    .open-permission-management-btn {
+        color: white;
+    }
+
+    .notification-bubble {
+        background: #e37717;
+        color: white;
+    }
+}

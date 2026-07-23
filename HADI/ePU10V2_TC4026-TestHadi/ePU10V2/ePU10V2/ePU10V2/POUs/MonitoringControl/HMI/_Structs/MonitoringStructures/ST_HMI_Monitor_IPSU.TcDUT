@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_HMI_Monitor_IPSU" Id="{e52d1aa3-31f1-4690-8796-8409796947cf}">
+    <Declaration><![CDATA[TYPE ST_HMI_Monitor_IPSU :
+STRUCT
+	b_24VdcOK			: BOOL;
+	b_400VacOK			: BOOL;
+	b_HvdcOK			: BOOL;
+	b_GridFuseOK		: BOOL;
+	b_CeeFuseOK			: BOOL;
+	e_400VSource		: e400VSupplySource;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

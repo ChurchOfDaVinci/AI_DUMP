@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PowerControl_Target" Id="{dabca9ba-0ea0-461d-b7da-d69218c13c14}">
+    <Declaration><![CDATA[TYPE ST_PowerControl_Target :
+STRUCT
+	PIDmode								: ePIDmode := ePIDmode.Q;
+	PeakshaveMode						: BOOL;// for use of genpeakshaving						
+	r_PIDRampRate						: REAL;
+	r_FeedInCurrentLimit				: REAL; // from battery/loads to peakshave target
+	r_SupplyCurrentLimit				: REAL; // from peakshave target to battery/loads
+	r_PowerTarget						: REAL;
+	b_EnableSocDrooping					: BOOL;
+	b_GenIsoPID							: BOOL; // PF = 1 set point enable, Currentlimit is pure active. 
+	r_droopMinimum						: REAL;
+	Syncdata							: ST_GenGridController_SyncData;
+	Measurements						: ST_Powercontrol_PsTarget_Measurements;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

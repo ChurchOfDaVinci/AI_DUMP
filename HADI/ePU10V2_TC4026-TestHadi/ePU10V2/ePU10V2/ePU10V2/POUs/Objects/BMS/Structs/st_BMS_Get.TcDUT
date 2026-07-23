@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="st_BMS_Get" Id="{005a8443-595a-4537-b6a8-503255910a5e}">
+    <Declaration><![CDATA[TYPE st_BMS_Get :
+STRUCT
+	BatteryInfo					: st_BMS_BatterySummary;
+	t_RemainingTimeToAutoCalibration : TIME;
+	//detailed info	
+	MBMU						:	st_MBMU_Status;
+	SBMU						:	ARRAY[0..3] OF st_SBMU_Status;
+	
+	Events						:	st_BMS_Events;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

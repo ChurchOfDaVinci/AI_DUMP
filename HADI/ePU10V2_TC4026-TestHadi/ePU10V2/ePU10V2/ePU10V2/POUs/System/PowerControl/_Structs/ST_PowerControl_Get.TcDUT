@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PowerControl_Get" Id="{3429e105-3dc5-46f5-85c1-8443d88c0294}">
+    <Declaration><![CDATA[TYPE ST_PowerControl_Get :
+STRUCT
+	r_CurrentAct				: REAL; // of the target
+	r_Sact						: REAL; // of the target
+	r_PAct						: REAL; // of the target
+	r_QAct						: REAL; // of the target
+	r_PhaseVoltageAct			: REAL; // of the target
+	r_PFact						: REAL; // of the target
+	
+	r_FeedInCurrentLimitActual	: REAL;
+	r_SupplyInCurrentLimitActual: REAL;
+	
+	b_ThrottlingActive			: BOOL;
+	ui_ThrottlingType			: UINT; // 0= max watt, 14 = derating
+	events						: ST_PowerControl_events;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

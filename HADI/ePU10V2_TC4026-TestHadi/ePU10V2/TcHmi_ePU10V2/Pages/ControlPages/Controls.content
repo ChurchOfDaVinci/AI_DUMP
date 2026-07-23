@@ -1,0 +1,36 @@
+<div id="Controls" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width="100" data-tchmi-height="100" data-tchmi-width-unit="%" data-tchmi-height-unit="%" data-tchmi-height-mode="Content"><div id="TcHmiTabNavigation_1" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTabNavigation" data-tchmi-height="500" data-tchmi-height-unit="px" data-tchmi-left="4" data-tchmi-left-unit="px" data-tchmi-text-horizontal-alignment="Center" data-tchmi-text-vertical-alignment="Center" data-tchmi-top="-53" data-tchmi-top-unit="px" data-tchmi-width="500" data-tchmi-width-unit="px">
+<script data-tchmi-target-attribute="data-tchmi-tabs" type="application/json">
+[
+  {
+    "displayName": "%l%L_Connections%/l%",
+    "name": "Connections"
+  },
+  {
+    "displayName": "%l%L_Genset%/l%",
+    "name": "Genset"
+  },
+  {
+    "displayName": "%l%L_Grid%/l%",
+    "name": "Grid"
+  },
+  {
+    "displayName": "%l%L_System%/l%",
+    "name": "System"
+  },
+  {
+    "displayName": "%l%L_DcCoupling%/l%",
+    "name": "DcCoupling"
+  },
+  {
+    "displayName": "%l%L_DcCharger%/l%",
+    "name": "DcCharger"
+  },
+  {
+    "displayName": "%l%L_PeakschaveBox%/l%",
+    "name": "Peakshavebox"
+  }
+]
+</script>
+
+</div>
+</div>

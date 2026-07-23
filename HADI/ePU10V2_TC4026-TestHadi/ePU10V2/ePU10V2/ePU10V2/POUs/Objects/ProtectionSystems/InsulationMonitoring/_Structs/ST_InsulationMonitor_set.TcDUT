@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_InsulationMonitor_set" Id="{e6b9b6ae-caca-44cd-ba0b-4659e3b637cb}">
+    <Declaration><![CDATA[TYPE ST_InsulationMonitor_set :
+STRUCT
+	b_enable			: BOOL;
+ 	e_EarthingSystem	: eEarthingSystems := eEarthingSystems.TN;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

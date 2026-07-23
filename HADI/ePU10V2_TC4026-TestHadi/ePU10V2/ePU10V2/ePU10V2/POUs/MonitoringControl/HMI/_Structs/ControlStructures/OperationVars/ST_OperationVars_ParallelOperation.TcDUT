@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_OperationVars_ParallelOperation" Id="{a48d97ec-5903-4d46-9682-ec2b5cca176c}">
+    <Declaration><![CDATA[TYPE ST_OperationVars_ParallelOperation :
+STRUCT
+	b_DetectSlaves					: BOOL;
+	
+	
+	// VDL ONLY
+	r_ActivePowerSlave1				: REAL;
+	r_ReactivePowerSlave1			: REAL;
+	r_ActivePowerSlave2				: REAL;
+	r_ReactivePowerSlave2			: REAL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

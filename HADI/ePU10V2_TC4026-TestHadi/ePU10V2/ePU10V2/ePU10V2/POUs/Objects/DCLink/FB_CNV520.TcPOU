@@ -1,0 +1,194 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_CNV520" Id="{e61763a2-5a44-4213-9573-40b48e201533}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_CNV520
+VAR_INPUT
+	
+END_VAR
+VAR_OUTPUT
+	
+END_VAR
+VAR
+	
+	
+	WriteOutput			: 	FB_MBWriteSingleReg;
+	OutputData			:	WORD;
+	StartWriteOutput	:	BOOL;
+	OutputWriteError	:	Ton	:=	(PT := T#10S);
+	NextStepDelay		:	Ton :=	(PT := T#50MS);
+	
+	ReadInputs			: 	FB_MBReadRegs;
+	DIData				:	ARRAY[0..1] OF WORD;
+	StartReadinputs		:	BOOL;	
+	InputReadError		:	Ton := (Pt := T#10S);
+	
+	ReadShuntInputs			: 	FB_MBReadInputRegs;
+	ShuntData				:	ARRAY[0..20] OF WORD;
+	StartReadShunt			:	BOOL;	
+	InputReadShuntError		:	Ton := (Pt := T#10S);
+	
+	dataInputs				: ARRAY[0..20] OF DWORD;
+	lw_Power				: LWORD;  // Unsigned int32
+	lw_Energy				: LWORD; // Unsigned int64
+	lw_Coulomb				: LWORD; // Signed int64
+	
+	StartHoldingWrite	:	BOOL;
+
+	TON_UpdateInterval	:	Ton;
+	
+	State : UINT	:=	0;
+	
+	AuxSurgeProtectionInput 	AT %I* : BOOL;
+	AuxMCCBStateInput 			AT %I* : BOOL;
+END_VAR
+
+VAR_INPUT
+	b_enable				:	BOOL;
+
+	UpdateInterval			:	TIME 	:=	T#500MS;
+	DigitalOutput_Enable	:	BOOL;
+END_VAR
+
+VAR_IN_OUT constant
+	st_params					: ST_DCLink_params;
+END_VAR
+
+VAR_OUTPUT
+	AnalogInput			:	REAL;
+	DigitalInput1		:	BOOL;
+	DigitalInput2		:	BOOL;
+	DigitalOutputState	:	BOOL;
+	
+	Powerdata			:	st_Bourns_powerdata;
+	CommFault			:	Bool;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+WriteOutput(
+	sIPAddr := st_params.IP,
+	nTCPPort := 502,
+	nUnitID := 247,
+	nMBAddr	:=	60,
+	nValue := OutputData,
+	bExecute := StartWriteOutput,
+	tTimeout := T#1000MS
+);
+OutputWriteError();
+
+Readinputs(
+	sIPAddr := ST_params.ip,
+	nTCPPort := 502,
+	nUnitID := 247,
+	nMBAddr	:=	56,
+	nQuantity := 1,
+	cbLength := SIZEOF(DIData),
+	pDestAddr := ADR(DiData),
+	bExecute := StartReadinputs,
+);
+InputReadError();
+
+ReadShuntinputs(
+	sIPAddr := st_params.IP,
+	nTCPPort := 502,
+	nUnitID := 1,
+	nMBAddr	:=	0,
+	nQuantity := 21,
+	cbLength := SIZEOF(ShuntData),
+	pDestAddr := ADR(ShuntData),
+	bExecute := StartReadshunt,
+);
+InputReadShuntError();
+
+TON_UpdateInterval(in := NOT TON_UpdateInterval.Q, PT:= UpdateInterval);
+NextStepDelay();
+
+CASE State OF
+	0:
+		IF b_enable AND Ton_UpdateInterval.Q THEN
+			State := 10;
+		END_IF	
+		
+	10:
+		outputData.0 := DigitalOutput_Enable;
+		StartWriteOutput := TRUE;
+		state := 11;
+		
+	11:
+		StartWriteOutput := FALSE;
+		IF NOT WriteOutput.bBusy THEN
+			IF NOT WriteOutput.bError THEN
+				DigitalOutputSTate := SEL(outputData.0, FALSE, TRUE);
+				OutputWriteError.IN := FALSE;
+			ELSE
+				OutputWriteError.IN := TRUE;
+			END_IF
+			NextStepDelay.IN := TRUE;
+			
+			IF st_params.DIWiredToPLC THEN
+				DigitalInput1 := AuxSurgeProtectionInput;
+				DigitalInput2 := AuxMCCBStateInput;
+				State := 30;
+			ELSE
+				State := 20;
+			END_IF
+		END_IF
+
+		
+	20:
+		IF NextStepDelay.Q THEN
+			NextStepDelay.IN := FALSE;
+			StartReadInputs := TRUE;
+			state := 21;
+		END_IF
+		
+	21:
+		StartReadInputs := FALSE;
+		IF NOT ReadInputs.bBusy THEN
+			IF NOT ReadInputs.bError THEN
+				DigitalInput1 := DIData[0].0;
+				DigitalInput2 := DIData[0].1;
+				AnalogInput := ((WORD_TO_REAL(DIData[1])/4096)+4);
+				InputReadError.IN := FALSE;
+			ELSE
+				InputReadError.IN := TRUE;
+			END_IF
+			State := 30;
+		END_IF
+		
+	30:
+		StartReadShunt := TRUE;
+		state := 31;
+		
+	31:
+		StartReadShunt := FALSE;
+		IF NOT ReadShuntInputs.bBusy THEN
+			IF NOT ReadShuntInputs.bError THEN
+				dataInputs[0]	:= SHL(WORD_TO_DWORD(ShuntData[1]), 16) OR (WORD_TO_DWORD(ShuntData[0]));   	
+				dataInputs[2]	:= SHL(WORD_TO_DWORD(ShuntData[3]), 16) OR (WORD_TO_DWORD(ShuntData[2])); 		
+				dataInputs[4]   := SHL(WORD_TO_DWORD(ShuntData[5]), 16) OR (WORD_TO_DWORD(ShuntData[4]));   
+				dataInputs[18]	:= SHL(WORD_TO_DWORD(ShuntData[19]), 16) OR (WORD_TO_DWORD(ShuntData[18]));	
+				
+				lw_Coulomb 		:= SHL(WORD_TO_LWORD(ShuntData[9]), 48) OR SHL(WORD_TO_LWORD(ShuntData[8]), 32) OR 
+									SHL(WORD_TO_DWORD(ShuntData[7]), 16) OR (ShuntData[6]);								
+				lw_Power     		:= SHL(WORD_TO_DWORD(ShuntData[11]), 16) OR (WORD_TO_DWORD(ShuntData[10]));   	
+				lw_Energy 		:= SHL(WORD_TO_LWORD(ShuntData[15]), 48) OR SHL(WORD_TO_LWORD(ShuntData[14]), 32) OR 
+									SHL(WORD_TO_DWORD(ShuntData[13]), 16) OR (ShuntData[12]);							
+	
+				Powerdata.Current			:= TO_REAL(DWORD_TO_DINT(dataInputs[0]))	/ 1000;  // mA to A
+				Powerdata.Temperature		:= TO_REAL(DWORD_TO_DINT(dataInputs[2])) / 10;	// 0.1 °C to °C
+				Powerdata.Voltage		   	:= TO_REAL(DWORD_TO_DINT(dataInputs[4])) / 1000; // mV to V
+				Powerdata.Power			:= TO_REAL(lw_power) / 10000; // 0.1 W to kW	
+				Powerdata.Energy			:= TO_REAL(lw_energy) / 1000;  // Wh to Kwh
+				
+				InputReadShuntError.IN := FALSE;
+			ELSE
+				InputReadShuntError.IN := TRUE;
+			END_IF
+			State := 0;
+		END_IF
+END_CASE
+
+CommFault := inputReaderror.Q OR outputWriteError.Q OR InputReadShuntError.q;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eDCstate" Id="{dd76ce5b-19c8-4e37-9a5c-6048aee1faf3}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE eDCstate :
+(
+	charging :=-1,
+	idle := 0,
+	discharging := 1
+);
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

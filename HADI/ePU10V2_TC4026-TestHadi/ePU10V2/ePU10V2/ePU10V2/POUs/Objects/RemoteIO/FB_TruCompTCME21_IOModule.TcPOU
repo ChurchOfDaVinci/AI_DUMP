@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_TruCompTCME21_IOModule" Id="{73842f08-ba7c-4385-8619-26f0ff3f942a}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TruCompTCME21_IOModule IMPLEMENTS ITF_StandardFB
+VAR_INPUT
+	set	:			ST_TCME31_SET;
+END_VAR
+VAR_OUTPUT
+	Get		:		st_TCME31_get;	
+END_VAR
+VAR
+	ReadCoils		:	FB_MBReadCoils;
+	
+	ReadInputs			:	FB_MBReadInputs;
+	StartInputRead		:	Bool;
+	InputData			:	array[0..1] of bool;
+	InputDataCommtimer	:	Ton := (PT := T#5s); 
+		
+	ReadInputRegs		:	FB_MBReadInputRegs;
+	StartInputRegRead	:	Bool;
+	InputRegData		:	Array[0..1] of uint;
+	InputRegDataCommtimer	:	Ton := (PT := T#5s); 
+	
+	WriteCoils			:	FB_MBWriteCoils;
+	StartCoilWrite		:	Bool;
+	CoilData			:	array[0..3] of bool;
+	CoilDataCommtimer	:	Ton := (PT := T#5s); 
+	
+	Step			: 	uint	:=	0;
+		
+	Ton_UpdateInterval	:	TON := (PT := T#1000ms);
+END_VAR
+
+VAR
+	i_instanceID		: INT;
+END_VAR
+VAR_STAT
+	i_noInstances : INT;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+Ton_UpdateInterval(in := not Ton_UpdateInterval.Q);
+
+if set.b_Enable and set.IPAddress <> '' then
+	
+	InputDataCommtimer(in := True);
+	InputRegDataCommtimer(in := True);
+	CoilDataCommtimer(in := True);
+	
+	get.b_CommFault := InputDataCommtimer.Q or InputRegDataCommtimer.Q or CoilDataCommtimer.Q;
+	
+	case step of
+		0:
+			if Ton_UpdateInterval.Q then
+				Step := 10;
+			END_IF
+			
+		10: //read digital input status
+			StartInputRead := true;	
+			Step := 11;
+		11: 
+			StartInputRead := false;
+			IF NOT ReadInputs.bBusy THEN
+				IF NOT ReadInputs.bError THEN	
+					get.DigitalInput1 := inputData[0];
+					get.DigitalInput2 := inputData[1];
+					InputDataCommtimer(in := false);
+				END_IF
+				step := 20;
+			end_if
+			
+		20: //read analog input status
+			StartInputRegRead := true;	
+			Step := 21;
+		21: 
+			StartInputRegRead := false;
+			IF NOT ReadInputRegs.bBusy THEN
+				IF NOT ReadInputregs.bError THEN	
+					get.AnalogInput1 	:= Uint_to_real(inputRegData[0])/1000;
+					get.AnalogInput2 	:= Uint_to_real(inputRegData[1])/1000;
+					InputRegDataCommtimer(in := false);
+				END_IF
+				step := 30;
+			end_if
+			
+		30: //Write digital Outputs
+			coildata[0] := set.DigitalOutput1;
+			coildata[1] := set.DigitalOutput2;
+			coildata[2] := set.DigitalOutput3;
+			coildata[3] := set.DigitalOutput4;
+			
+			StartCoilWrite := true;	
+			Step := 31;
+		31: 
+			StartCoilWrite := false;
+			IF NOT WriteCoils.bBusy THEN
+				IF NOT WriteCoils.bError THEN	
+					
+					set.DigitalOutput1	:=	coildata[0] ;
+					set.DigitalOutput2	:=	coildata[1] ; 
+					set.DigitalOutput3	:=	coildata[2] ; 
+					set.DigitalOutput4	:=	coildata[3] ; 
+					CoilDataCommtimer(in := false);
+				END_IF
+				step := 0;
+			end_if	
+			
+			
+	END_CASE
+end_if
+
+ReadInputs(
+	sIPAddr := set.IPAddress,
+	nTCPPort := 502,
+	nUnitID := 1,
+	nMBAddr := 0,
+	nQuantity := 2,
+	cbLength := SIZEOF(InputData),
+	pDestaddr := ADR(InputData),
+	bExecute := StartInputRead	
+);
+
+ReadInputregs(
+	sIPAddr := set.IPAddress,
+	nTCPPort := 502,
+	nUnitID := 1,
+	nMBAddr := 100,
+	nQuantity := 2,
+	cbLength := SIZEOF(InputRegData),
+	pDestaddr := ADR(InputRegData),
+	bExecute := StartInputRegRead	
+);
+
+WriteCoils(
+	sIPAddr := set.IPAddress,
+	nTCPPort := 502,
+	nUnitID := 1,
+	nMBAddr := 0,
+	nQuantity := 4,
+	cbLength := SIZEOF(CoilData),
+	pSrcAddr := ADR(CoilData),
+	bExecute := StartCoilWrite
+);
+]]></ST>
+    </Implementation>
+    <Method Name="EMstop" Id="{d69182aa-e9ae-4dd9-8057-1da4e72fcb4f}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD EMstop : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="FB_Init" Id="{ba01eea0-cdee-4228-8eb7-a575a19bfc75}">
+      <Declaration><![CDATA[//FB_Init is always available implicitly and it is used primarily for initialization.
+//The return value is not evaluated. For a specific influence, you can also declare the
+//methods explicitly and provide additional code there with the standard initialization
+//code. You can evaluate the return value.
+METHOD FB_Init: BOOL
+VAR_INPUT
+    bInitRetains: BOOL; // TRUE: the retain variables are initialized (reset warm / reset cold)
+    bInCopyCode: BOOL;  // TRUE: the instance will be copied to the copy code afterward (online change)   
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[i_noInstances := i_noInstances + 1;
+i_instanceID := i_noInstances;
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="getDiagnostics" Id="{48ad3800-097a-4bac-ab61-24bad8967a65}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD getDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[AddError[w_Index](
+	b_ErrorTrig			:= set.IPAddress = '',
+	out_ST_Error		:= a_ActiveEvents[w_Index],
+	w_ErrorID			:= 1 + i_instanceID,
+	e_ObjectID			:=  eObject_ID.RemoteIO,
+	s_Message			:= 'No IP address set for Cooling IO',
+	e_sev				:= eseverity.Warning,
+	b_AutoClear			:= TRUE
+);
+w_Index := w_Index +1;
+	
+
+AddError[w_Index](
+	b_ErrorTrig			:= Get.b_CommFault,
+	out_ST_Error		:= a_ActiveEvents[w_Index],
+	w_ErrorID			:= 2 + i_instanceID,
+	s_Message			:= 'Cooling IO module Communication error',
+	e_sev				:= eSeverity.warning,	
+	b_AutoClear			:= FALSE,
+);
+w_Index := w_Index +1;	]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Init" Id="{cf8228b0-c0b3-4ec4-857f-5541bb17e4ab}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Init : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="Reset" Id="{0c6472be-2e86-499b-9bae-e378fe1750ce}">
+      <Declaration><![CDATA[{warning 'Add method implementation '}
+METHOD Reset : BOOL
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

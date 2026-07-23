@@ -1,0 +1,647 @@
+{
+    "$schema": "http://json-schema.org/draft-04/schema",
+    "definitions": {
+        "TcHmi.Controls.Beckhoff.AuditTrailUtils.TcHmiAuditTrailGrid": {
+            "type": "object",
+            "frameworkInstanceOf": "TcHmi.Controls.System.TcHmiControl",
+            "frameworkControlType": "TcHmiAuditTrailGrid",
+            "frameworkControlNamespace": "TcHmi.Controls.Beckhoff.AuditTrailUtils"
+        },
+        "TcHmiAuditTrailGrid": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.AuditTrailUtils.TcHmiAuditTrailGrid"
+        },
+        "TcHmi.Controls.Beckhoff.AuditTrailUtils.TcHmiAuditTrailGrid.ColumnName": {
+            "title": "Preconfigured Column",
+            "type": "string",
+            "enum": [
+                "comment",
+                "contextDomain",
+                "error::code",
+                "error::reason",
+                "id",
+                "localizedText",
+                "name",
+                "newValue",
+                "oldValue",
+                "payload::name",
+                "payload::domain",
+                "payload::severity",
+                "payload::timeRaised",
+                "processedEnd",
+                "processedStart",
+                "readValue",
+                "serverUid",
+                "sessionId",
+                "symbolVersion",
+                "timestamp",
+                "timeReceived",
+                "type",
+                "userName"
+            ]
+        },
+        "TcHmi.Controls.Beckhoff.AuditTrailUtils.TcHmiAuditTrailGrid.MenuBarPosition": {
+            "type": "string",
+            "enum": ["Top", "Bottom", "Left", "Right"],
+            "default": "Top"
+        },
+        "TcHmi.Controls.Beckhoff.AuditTrailUtils.TcHmiAuditTrailGrid.ColumnDefinitionList": {
+            "title": "ColumnDefinitionList",
+            "type": "array",
+            "items": {
+                "oneOf": [
+                    {
+                        "title": "ColumnDefinition",
+                        "type": "object",
+                        "engineeringColumns": ["columnData", "width", "widthUnit"],
+                        "propertiesMeta": [
+                            {
+                                "name": "cellBackground",
+                                "displayName": "Cell Background",
+                                "category": "Colors",
+                                "displayPriority": 10,
+                                "description": "Background color of the cells in this column",
+                                "defaultValue": null,
+                                "defaultValueInternal": null
+                            },
+                            {
+                                "name": "textColor",
+                                "displayName": "Text Color",
+                                "category": "Colors",
+                                "displayPriority": 10,
+                                "description": "Text color of the cells in this column",
+                                "defaultValue": null,
+                                "defaultValueInternal": null
+                            },
+                            {
+                                "name": "columnData",
+                                "displayName": "Column Data",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "The data that will be displayed in the column. You don't need to fill in the 'label' property if you've selected a preconfigured columnData.",
+                                "defaultValue": "name",
+                                "defaultValueInternal": null
+                            },
+                            {
+                                "name": "label",
+                                "displayName": "Label",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Label of this column. You don't need to fill in this property if you've selected a preconfigured columnData.",
+                                "defaultValue": null,
+                                "defaultValueInternal": null
+                            },
+                            {
+                                "name": "width",
+                                "displayName": "Width",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Width for this column",
+                                "defaultValue": 100,
+                                "defaultValueInternal": null
+                            },
+                            {
+                                "name": "widthUnit",
+                                "refTo": "width",
+                                "displayName": "Width Unit",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Width unit for this column. px defines an absolute width, % is relative to the control width and factor can be used to divide the available space into fractions.",
+                                "defaultValue": "px",
+                                "defaultValueInternal": "px"
+                            },
+                            {
+                                "name": "resize",
+                                "displayName": "Resize",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Can this column be resized? Columns that have factor as their widthUnit can never be resizeable.",
+                                "defaultValue": false,
+                                "defaultValueInternal": false
+                            },
+                            {
+                                "name": "minWidth",
+                                "displayName": "Min Width",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Minimum width for this column",
+                                "defaultValue": 100,
+                                "defaultValueInternal": null
+                            },
+                            {
+                                "name": "minWidthUnit",
+                                "refTo": "minWidth",
+                                "displayName": "Min Width Unit",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Minimum width unit for this column",
+                                "defaultValue": "px",
+                                "defaultValueInternal": "px"
+                            },
+                            {
+                                "name": "horizontalAlignment",
+                                "displayName": "Horizontal Alignment",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Horizontal alignment of this column",
+                                "defaultValue": "Left",
+                                "defaultValueInternal": "Left"
+                            },
+                            {
+                                "name": "verticalAlignment",
+                                "displayName": "Vertical Alignment",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Vertical alignment of this column",
+                                "defaultValue": "Center",
+                                "defaultValueInternal": "Center"
+                            },
+                            {
+                                "name": "headerHorizontalAlignment",
+                                "displayName": "Header Horizontal Alignment",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Horizontal alignment of the header of this column",
+                                "defaultValue": "Center",
+                                "defaultValueInternal": "Center"
+                            },
+                            {
+                                "name": "headerVerticalAlignment",
+                                "displayName": "Header Vertical Alignment",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Vertical alignment of the header of this column",
+                                "defaultValue": "Center",
+                                "defaultValueInternal": "Center"
+                            },
+                            {
+                                "name": "format",
+                                "displayName": "Format",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "A reference of function which is called with each entry",
+                                "allowedFunctions": {
+                                    "returnType": "tchmi:general#/definitions/String",
+                                    "requiredArguments": [
+                                        {
+                                            "type": "tchmi:general#/definitions/Any",
+                                            "description": "The value to format."
+                                        }
+                                    ],
+                                    "requiredWaitMode": "Synchronous"
+                                },
+                                "defaultValue": null,
+                                "defaultValueInternal": null
+                            },
+                            {
+                                "name": "ignoreEscapeSequences",
+                                "displayName": "Ignore Escape Sequences",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "When set to true a backslash in a text will be shown verbatim in the HMI",
+                                "defaultValue": false,
+                                "defaultValueInternal": false
+                            }
+                        ],
+                        "properties": {
+                            "cellBackground": {
+                                "$ref": "tchmi:framework#/definitions/Color"
+                            },
+                            "textColor": {
+                                "$ref": "tchmi:framework#/definitions/SolidColor"
+                            },
+                            "columnData": {
+                                "anyOf": [
+                                    {
+                                        "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.AuditTrailUtils.TcHmiAuditTrailGrid.ColumnName"
+                                    },
+                                    {
+                                        "title": "Custom Column",
+                                        "type": "string",
+                                        "minLength": 1
+                                    }
+                                ]
+                            },
+                            "label": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "width": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/definitions/PositiveNumber"
+                                    },
+                                    {
+                                        "$ref": "#/definitions/MeasurementValue"
+                                    }
+                                ]
+                            },
+                            "widthUnit": {
+                                "$ref": "tchmi:framework#/definitions/MeasurementUnitOrFactor"
+                            },
+                            "resize": {
+                                "type": "boolean"
+                            },
+                            "minWidth": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/definitions/PositiveNumber"
+                                    },
+                                    {
+                                        "$ref": "#/definitions/MeasurementValue"
+                                    }
+                                ]
+                            },
+                            "minWidthUnit": {
+                                "$ref": "tchmi:framework#/definitions/MeasurementUnit"
+                            },
+                            "horizontalAlignment": {
+                                "$ref": "tchmi:framework#/definitions/HorizontalAlignment"
+                            },
+                            "verticalAlignment": {
+                                "$ref": "tchmi:framework#/definitions/VerticalAlignment"
+                            },
+                            "headerHorizontalAlignment": {
+                                "$ref": "tchmi:framework#/definitions/HorizontalAlignment"
+                            },
+                            "headerVerticalAlignment": {
+                                "$ref": "tchmi:framework#/definitions/VerticalAlignment"
+                            },
+                            "format": {
+                                "$ref": "tchmi:framework#/definitions/Function"
+                            },
+                            "ignoreEscapeSequences": {
+                                "type": "boolean"
+                            }
+                        },
+                        "required": [
+                            "columnData",
+                            "width",
+                            "widthUnit",
+                            "resize",
+                            "minWidth",
+                            "minWidthUnit",
+                            "horizontalAlignment",
+                            "verticalAlignment"
+                        ],
+                        "additionalProperties": false
+                    },
+                    {
+                        "title": "Message Column",
+                        "type": "object",
+                        "engineeringColumns": ["customMessage", "width", "widthUnit"],
+                        "propertiesMeta": [
+                            {
+                                "name": "cellBackground",
+                                "displayName": "Cell Background",
+                                "category": "Colors",
+                                "displayPriority": 10,
+                                "description": "Background color of the cells in this column",
+                                "defaultValue": null,
+                                "defaultValueInternal": null
+                            },
+                            {
+                                "name": "textColor",
+                                "displayName": "Text Color",
+                                "category": "Colors",
+                                "displayPriority": 10,
+                                "description": "Text color of the cells in this column",
+                                "defaultValue": null,
+                                "defaultValueInternal": null
+                            },
+                            {
+                                "name": "customMessage",
+                                "displayName": "Custom Message",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "A custom message that will be displayed in a column. You can defined properties with '$(propertyName)'.",
+                                "defaultValue": "The $(variables) will be exchanged if they match a property.",
+                                "defaultValueInternal": null
+                            },
+                            {
+                                "name": "label",
+                                "displayName": "Label",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Name of the label for this column",
+                                "defaultValue": "",
+                                "defaultValueInternal": null
+                            },
+                            {
+                                "name": "width",
+                                "displayName": "Width",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Width for this column",
+                                "defaultValue": 100,
+                                "defaultValueInternal": null
+                            },
+                            {
+                                "name": "widthUnit",
+                                "refTo": "width",
+                                "displayName": "Width Unit",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Width unit for this column. px defines an absolute width, % is relative to the control width and factor can be used to divide the available space into fractions.",
+                                "defaultValue": "px",
+                                "defaultValueInternal": "px"
+                            },
+                            {
+                                "name": "resize",
+                                "displayName": "Resize",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Can this column be resized? Columns that have factor as their widthUnit can never be resizeable.",
+                                "defaultValue": false,
+                                "defaultValueInternal": false
+                            },
+                            {
+                                "name": "minWidth",
+                                "displayName": "Min Width",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Minimum width for this column",
+                                "defaultValue": 100,
+                                "defaultValueInternal": null
+                            },
+                            {
+                                "name": "minWidthUnit",
+                                "refTo": "minWidth",
+                                "displayName": "Min Width Unit",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Minimum width unit for this column",
+                                "defaultValue": "px",
+                                "defaultValueInternal": "px"
+                            },
+                            {
+                                "name": "horizontalAlignment",
+                                "displayName": "Horizontal Alignment",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Horizontal alignment of this column",
+                                "defaultValue": "Left",
+                                "defaultValueInternal": "Left"
+                            },
+                            {
+                                "name": "verticalAlignment",
+                                "displayName": "Vertical Alignment",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Vertical alignment of this column",
+                                "defaultValue": "Center",
+                                "defaultValueInternal": "Center"
+                            },
+                            {
+                                "name": "headerHorizontalAlignment",
+                                "displayName": "Header Horizontal Alignment",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Horizontal alignment of the header of this column",
+                                "defaultValue": "Center",
+                                "defaultValueInternal": "Center"
+                            },
+                            {
+                                "name": "headerVerticalAlignment",
+                                "displayName": "Header Vertical Alignment",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "Vertical alignment of the header of this column",
+                                "defaultValue": "Center",
+                                "defaultValueInternal": "Center"
+                            },
+                            {
+                                "name": "format",
+                                "displayName": "Format",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "A reference of function which is called with each entry",
+                                "allowedFunctions": {
+                                    "returnType": "tchmi:general#/definitions/String",
+                                    "requiredArguments": [
+                                        {
+                                            "type": "tchmi:general#/definitions/Any",
+                                            "description": "The value to format."
+                                        }
+                                    ],
+                                    "requiredWaitMode": "Synchronous"
+                                },
+                                "defaultValue": null,
+                                "defaultValueInternal": null
+                            },
+                            {
+                                "name": "ignoreEscapeSequences",
+                                "displayName": "Ignore Escape Sequences",
+                                "category": "General",
+                                "displayPriority": 10,
+                                "description": "When set to true a backslash in a text will be shown verbatim in the HMI",
+                                "defaultValue": false,
+                                "defaultValueInternal": false
+                            }
+                        ],
+                        "properties": {
+                            "cellBackground": {
+                                "$ref": "tchmi:framework#/definitions/Color"
+                            },
+                            "textColor": {
+                                "$ref": "tchmi:framework#/definitions/SolidColor"
+                            },
+                            "customMessage": {
+                                "type": "string",
+                                "minLength": 1
+                            },
+                            "label": {
+                                "type": "string"
+                            },
+                            "width": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/definitions/PositiveNumber"
+                                    },
+                                    {
+                                        "$ref": "#/definitions/MeasurementValue"
+                                    }
+                                ]
+                            },
+                            "widthUnit": {
+                                "$ref": "tchmi:framework#/definitions/MeasurementUnitOrFactor"
+                            },
+                            "resize": {
+                                "type": "boolean"
+                            },
+                            "minWidth": {
+                                "allOf": [
+                                    {
+                                        "$ref": "#/definitions/PositiveNumber"
+                                    },
+                                    {
+                                        "$ref": "#/definitions/MeasurementValue"
+                                    }
+                                ]
+                            },
+                            "minWidthUnit": {
+                                "$ref": "tchmi:framework#/definitions/MeasurementUnit"
+                            },
+                            "horizontalAlignment": {
+                                "$ref": "tchmi:framework#/definitions/HorizontalAlignment"
+                            },
+                            "verticalAlignment": {
+                                "$ref": "tchmi:framework#/definitions/VerticalAlignment"
+                            },
+                            "headerHorizontalAlignment": {
+                                "$ref": "tchmi:framework#/definitions/HorizontalAlignment"
+                            },
+                            "headerVerticalAlignment": {
+                                "$ref": "tchmi:framework#/definitions/VerticalAlignment"
+                            },
+                            "format": {
+                                "$ref": "tchmi:framework#/definitions/Function"
+                            },
+                            "ignoreEscapeSequences": {
+                                "type": "boolean"
+                            }
+                        },
+                        "required": [
+                            "customMessage",
+                            "width",
+                            "widthUnit",
+                            "resize",
+                            "minWidth",
+                            "minWidthUnit",
+                            "horizontalAlignment",
+                            "verticalAlignment"
+                        ],
+                        "additionalProperties": false
+                    }
+                ]
+            }
+        },
+        "TcHmi.Controls.Beckhoff.AuditTrailUtils.TcHmiAuditTrailGrid.AuditTrailFilter": {
+            "items": {
+                "anyOf": [
+                    {
+                        "properties": {
+                            "comparator": {
+                                "enum": [
+                                    "==",
+                                    "!=",
+                                    "contains",
+                                    "contains not",
+                                    "== [ignore case]",
+                                    "!= [ignore case]",
+                                    "contains [ignore case]",
+                                    "contains not [ignore case]"
+                                ],
+                                "type": "string"
+                            },
+                            "path": {
+                                "enum": [
+                                    "comment",
+                                    "contextDomain",
+                                    "error::code",
+                                    "error::reason",
+                                    "localizedText",
+                                    "name",
+                                    "payload::name",
+                                    "payload::domain",
+                                    "serverUid",
+                                    "sessionId",
+                                    "userName"
+                                ],
+                                "type": "string"
+                            },
+                            "value": {
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": false,
+                        "required": ["path", "comparator", "value"],
+                        "type": "object"
+                    },
+                    {
+                        "properties": {
+                            "comparator": {
+                                "enum": ["==", "!=", "<", ">", "<=", ">="],
+                                "type": "string"
+                            },
+                            "path": {
+                                "enum": ["id", "payload::severity"],
+                                "type": "string"
+                            },
+                            "value": {
+                                "type": "number"
+                            }
+                        },
+                        "additionalProperties": false,
+                        "required": ["path", "comparator", "value"],
+                        "type": "object"
+                    },
+                    {
+                        "properties": {
+                            "comparator": {
+                                "enum": ["==", "!="],
+                                "type": "string"
+                            },
+                            "path": {
+                                "enum": ["type"],
+                                "type": "string"
+                            },
+                            "value": {
+                                "enum": ["Symbol", "Function", "Event", "AuditLogEntry"],
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": false,
+                        "required": ["path", "comparator", "value"],
+                        "type": "object"
+                    },
+                    {
+                        "properties": {
+                            "comparator": {
+                                "enum": ["==", "!=", "<", ">", "<=", ">="],
+                                "type": "string"
+                            },
+                            "path": {
+                                "enum": ["timestamp", "payload::timeRaised"],
+                                "type": "string"
+                            },
+                            "value": {
+                                "format": "date-time",
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": false,
+                        "required": ["path", "comparator", "value"],
+                        "type": "object"
+                    },
+                    {
+                        "properties": {
+                            "logic": {
+                                "enum": ["AND", "OR"],
+                                "type": "string"
+                            }
+                        },
+                        "additionalProperties": false,
+                        "required": ["logic"],
+                        "type": "object"
+                    },
+                    {
+                        "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.AuditTrailUtils.TcHmiAuditTrailGrid.AuditTrailFilter"
+                    }
+                ]
+            },
+            "title": "AuditTrailFilter",
+            "type": "array",
+            "id": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.AuditTrailUtils.TcHmiAuditTrailGrid.AuditTrailFilter"
+        },
+        "TcHmi.Controls.Beckhoff.AuditTrailUtils.TcHmiAuditTrailGrid.AuditTrailEventObject": {
+            "type": ["object", "null"],
+            "properties": {
+                "name": { "type": "string" }
+            },
+            "additionalProperties": false
+        },
+        "TcHmiAuditTrailGridAuditTrailEventObject": {
+            "$ref": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.AuditTrailUtils.TcHmiAuditTrailGrid.AuditTrailEventObject"
+        }
+    }
+}

@@ -1,0 +1,30 @@
+{
+  "function": {
+    "name": "InitIotDataSharingSettings",
+    "namespace": "TcHmi.Functions.TcHmi_ePU10",
+    "displayName": "InitIotDataSharingSettings",
+    "description": "Called from the IoTDataSharingSettings content onInitialized trigger. Resets any leftover saving state, hides the save overlay, shows the load overlay, and subscribes to the IoT data symbol so the load overlay is hidden as soon as the first successful value arrives from the PLC.",
+    "waitMode": "Asynchronous",
+    "category": "",
+    "returnValue": null,
+    "visible": true,
+    "injectContextObject": true,
+    "arguments": []
+  },
+  "$schema": "./../../Packages/Beckhoff.TwinCAT.HMI.Framework.12.760.59/runtimes/native1.12-tchmi/Schema/FunctionDescription.Schema.json",
+  "apiVersion": 1,
+  "version": {
+    "full": "0.0.0.0",
+    "major": 0,
+    "minor": 0,
+    "revision": 0,
+    "build": 0
+  },
+  "dependencyFiles": [
+    {
+      "name": "InitIotDataSharingSettings.js",
+      "type": "JavaScript",
+      "description": ""
+    }
+  ]
+}

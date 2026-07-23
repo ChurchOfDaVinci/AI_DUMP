@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_BMS_Service" Id="{a08981f6-9c60-4029-bc72-c77ccb499a9a}">
+    <Declaration><![CDATA[TYPE ST_BMS_Service :
+STRUCT
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

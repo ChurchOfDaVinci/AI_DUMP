@@ -1,0 +1,256 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "auditTrailSymbols": {
+      "configDescription": "descAuditTrailSymbols",
+      "type": "object",
+      "additionalProperties": {
+        "keyOptionMethod": {
+          "symbol": "ListSymbolNames"
+        },
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean",
+            "default": true
+          },
+          "commentRequired": {
+            "type": "boolean",
+            "default": false
+          },
+          "symbolData": {
+            "type": "string"
+          },
+          "mappingData": {
+            "type": "array",
+            "configDescription": "descMappingKeys",
+            "uniqueItems": true,
+            "items": {
+              "type": "string",
+              "optionMethod": {
+                "symbol": "GetDefinitions::definitions::symbol::properties",
+                "writeValue": {
+                  "type": "server"
+                }
+              }
+            },
+            "default": []
+          }
+        },
+        "required": [
+          "enabled",
+          "commentRequired"
+        ]
+      }
+    }
+  },
+  "properties": {
+    "createEventOnAudit": {
+      "type": "boolean",
+      "default": false,
+      "configDescription": "descCreateEventOnAudit"
+    },
+    "minCommentLength": {
+      "type": "integer",
+      "default": 0,
+      "configDescription": "descMinCommentLength"
+    },
+    "maxErrorLogSize": {
+      "allOf": [
+        {
+          "$ref": "tchmi:general#/definitions/INT64"
+        },
+        {
+          "unit": "byte",
+          "configDescription": "descMaxErrorLogSize",
+          "default": 2097152
+        }
+      ]
+    },
+    "blockCommandsOnError": {
+      "type": "boolean",
+      "default": false,
+      "configDescription": "descBlockCommandsOnError"
+    },
+    "databaseMaxEntries": {
+      "configDescription": "descDatabaseMaxEntries",
+      "type": "integer",
+      "minimum": 0,
+      "default": 15000,
+      "category": "database"
+    },
+    "remainingDatabaseEntriesHintLimit": {
+      "configDescription": "descRemainingDatabaseEntriesHintLimit",
+      "type": "integer",
+      "minimum": 1,
+      "default": 10,
+      "category": "database"
+    },
+    "configPageMaxEntries": {
+      "configDescription": "descConfigPageMaxEntries",
+      "type": "integer",
+      "default": 200
+    },
+    "signatureKey": {
+      "configDescription": "descSignatureKey",
+      "type": "string",
+      "default": "",
+      "format": "base64"
+    },
+    "eventFilters": {
+      "type": "object",
+      "configDescription": "descEventFilters",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "filter": {
+            "$ref": "tchmi:server#/definitions/eventFilter"
+          },
+          "enabled": {
+            "type": "boolean",
+            "default": true
+          }
+        },
+        "required": [
+          "filter",
+          "enabled"
+        ]
+      },
+      "default": {
+        "customAuditTrailLogEntry": {
+          "filter": [
+            {
+              "comparator": "==",
+              "path": "name",
+              "value": "AuditLogEntry"
+            }
+          ],
+          "enabled": true
+        },
+        "auditTrailErrorLogMessage": {
+          "filter": [
+            {
+              "comparator": "==",
+              "path": "name",
+              "value": "auditTrailErrorLogMessage"
+            }
+          ],
+          "enabled": true
+        },
+        "login": {
+          "filter": [
+            {
+              "comparator": "==",
+              "path": "name",
+              "value": "LOGIN_LOG"
+            },
+            {
+              "logic": "AND"
+            },
+            {
+              "comparator": "==",
+              "path": "payload::params::persistPreviousSession",
+              "value": false
+            }
+          ],
+          "enabled": true
+        },
+        "logout": {
+          "filter": [
+            {
+              "comparator": "==",
+              "path": "name",
+              "value": "LOGOUT_LOG"
+            },
+            {
+              "logic": "AND"
+            },
+            {
+              "comparator": "!=",
+              "path": "payload::params::reason",
+              "value": "PersistPreviousSession"
+            }
+          ],
+          "enabled": true
+        },
+        "authFailed": {
+          "filter": [
+            {
+              "comparator": "==",
+              "path": "name",
+              "value": "AUTH_FAILED"
+            },
+            {
+              "logic": "AND"
+            },
+            {
+              "comparator": "==",
+              "path": "payload::params::persistPreviousSession",
+              "value": false
+            }
+          ],
+          "enabled": true
+        },
+        "auditTrailDatabaseReset": {
+          "filter": [
+            {
+              "comparator": "==",
+              "path": "name",
+              "value": "auditTrailDatabaseReset"
+            }
+          ],
+          "enabled": true
+        }
+      }
+    },
+    "auditTrailSymbols": {
+      "$ref": "#/definitions/auditTrailSymbols"
+    },
+    "databaseConnection": {
+      "category": "database",
+      "configDescription": "descDatabaseConnection",
+      "defaultConfigurable": true,
+      "type": "object",
+      "properties": {
+        "connectionString": {
+          "type": "string",
+          "format": "multiline",
+          "default": "Server=localhost; Port=5432; Database=postgres; Uid=postgres; Pwd=@{password};Timeout=10;",
+          "configDescription": "descConnectionString"
+        },
+        "password": {
+          "type": "string",
+          "format": "masked",
+          "propertyOrder": 5
+        },
+        "tableId": {
+          "type": "integer",
+          "default": 1,
+          "category": "database",
+          "configDescription": "descTableId",
+          "defaultConfigurable": true,
+          "propertyOrder": 7
+        }
+      },
+      "required": [
+        "connectionString",
+        "tableId",
+        "password"
+      ]
+    }
+  },
+  "additionalProperties": false,
+  "required": [
+    "createEventOnAudit",
+    "signatureKey",
+    "eventFilters",
+    "databaseConnection",
+    "auditTrailSymbols",
+    "configPageMaxEntries",
+    "databaseMaxEntries",
+    "remainingDatabaseEntriesHintLimit",
+    "blockCommandsOnError",
+    "maxErrorLogSize",
+    "minCommentLength"
+  ]
+}

@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_HartingIO_params" Id="{bf2cf93f-f352-4fc3-84a1-1d7f8d497fa0}">
+    <Declaration><![CDATA[TYPE ST_HartingIO_params :
+STRUCT
+	PrimaryOutputContactSignal		: 	eOutputContactSignal := eOutputContactSignal.GenStartStop;
+	SecondaryOutputContactSignal	:	eOutputContactSignal := eOutputContactSignal.None;
+	PrimaryInputContactSignal		: 	eInputSignal := eInputSignal.None;
+	SecondaryInputContactSignal		: 	eInputSignal := eInputSignal.None;
+	AO1Target				: eAOTarget := eAOTarget.Genset;
+	AO2Target				: eAOTarget	:= eAOTarget.hPU;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

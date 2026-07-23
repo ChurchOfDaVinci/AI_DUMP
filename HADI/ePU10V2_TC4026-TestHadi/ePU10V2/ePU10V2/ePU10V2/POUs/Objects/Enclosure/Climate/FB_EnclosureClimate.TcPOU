@@ -1,0 +1,242 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_EnclosureClimate" Id="{7627f4c6-c9ed-4504-92a3-8fa7dd2f518b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EnclosureClimate
+VAR_IN_OUT CONSTANT
+	st_params				: ST_EnclosureClimate_params;
+END_VAR
+VAR_OUTPUT
+	get						: ST_EnclosureClimate_get;
+END_VAR
+
+VAR
+	TempRead		AT %I* : ST_AnalogInputData;
+	HumRead			AT %I* : ST_AnalogInputData;
+	
+	scaleTemp				: FB_CTRL_SCALE;
+	scaleHum				: FB_CTRL_SCALE;
+	scaleParams				: ST_CTRL_SCALE_Params;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[scaleParams.tCtrlCycleTime := T#100MS;
+	scaleParams.tTaskCycleTime := T#1MS;
+	scaleParams.fInMax := 16#7FFF;
+	scaleParams.fInMin := 16#0000;
+	scaleParams.fOutMax := 60;
+	scaleParams.fOutMin:= -40;
+
+scaleTemp(fin := TempRead.Value, fout => get.r_Temperature, stParams := scaleParams);
+scaleParams.fOutMax := 100;
+scaleParams.fOutMin := 0;
+scaleHum(fin := HumRead.Value, fout => get.r_Humidity, stParams := scaleParams);
+
+CalculateDewpoint();
+]]></ST>
+    </Implementation>
+    <Method Name="CalculateDewpoint" Id="{034daa5c-c877-46ab-96dd-55aa34f81334}">
+      <Declaration><![CDATA[METHOD CalculateDewpoint : REAL;
+var
+	Alpha : real;
+END_VAR
+]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[alpha := LN(MAX(get.r_Humidity,0.01)/100)+(17.625*get.r_Temperature/(243.12+get.r_Temperature));
+get.r_Dewpoint := 243.12*alpha/(17.625-alpha);]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="EnclosureConditioning" Id="{432dc92e-1fa5-4ee9-809d-2983130079c1}">
+      <Declaration><![CDATA[METHOD EnclosureConditioning : eConditioningRequirement;
+VAR_INST
+	HeatingRequired : SR;
+	CoolingRequired : SR;
+END_VAR
+
+VAR_INPUT
+	b_Reset	:	BOOL := FALSE;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	
+// TODO: test 123
+
+HeatingRequired.SET := get.r_Temperature < MAX(st_params.r_EnclosureConditioningTempMin, get.r_Dewpoint);
+HeatingRequired.Reset := get.r_Temperature > MAX(st_params.r_EnclosureConditioningTempMin, r_Enclosuredewpoint) + st_params.r_TemperatureHysteris OR b_Reset;
+
+CoolingRequired.SET := get.r_Temperature > st_params.r_EnclosureIdleTempMax;
+CoolingRequired.Reset := get.r_Temperature < MAX(st_params.r_EnclosureIdleTempMax-5) OR b_Reset;
+
+IF CoolingRequired.Q1 THEN
+	EnclosureConditioning := eConditioningRequirement.CoolingRequired;
+ELSIF HeatingRequired.Q1 THEN
+	EnclosureConditioning := eConditioningRequirement.HeatingRequired;
+ELSE
+	EnclosureConditioning := eConditioningRequirement.none;
+END_IF
+]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="GetDiagnostics" Id="{1d531cfe-b0ad-40a3-80d8-8c1cd2244edb}">
+      <Declaration><![CDATA[METHOD PUBLIC GetDiagnostics
+VAR_IN_OUT
+	AddError		: ARRAY [*] OF FB_AddErrorST;
+	a_ActiveEvents	: ARRAY [*] OF ST_ErrorStruct;
+	w_Index			: WORD;
+END_VAR
+
+
+VAR
+	by_errCt	: BYTE;
+	by_warnCt	: BYTE;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[	(*Humidity High*)		AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_HumidityHigh,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 1,
+		e_ObjectID				:=  eObject_ID.Enclosure_climate,
+		s_Message				:= 'humidity high',
+		e_sev					:= eseverity.Warning,
+		b_AutoClear			:= TRUE
+		);
+		w_Index := w_Index +1;
+	
+	(*Humidity Too High*)		AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_HumidityTooHigh,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 2,
+		s_Message				:= 'humidity too high',
+		e_sev					:= eseverity.QuickShutdown,
+		e_ErrAckAccess		:= eErrAckAccess.Operator
+	);
+	w_Index := w_Index +1;
+	
+	(*Temperature High*)		AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_TemperatureHigh,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 3,
+		s_Message				:= 'temperature high',
+		e_sev					:= eseverity.warning,
+		b_AutoClear			:= TRUE
+	);
+	w_Index := w_Index +1;
+	
+	(*Temperature Too High*)	AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_TemperatureTooHigh,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 4,
+		s_Message				:= 'temperature too high',
+		e_sev					:= eseverity.Quickshutdown,
+		e_ErrAckAccess		:= eErrAckAccess.Operator
+	);
+
+	w_Index := w_Index +1;
+	
+	(*Temperature Low*)	AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_TemperatureLow,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 5,
+		s_Message				:= 'temperature low',
+		e_sev					:= eseverity.Warning,
+		b_AutoClear			:= TRUE
+	);
+	w_Index := w_Index +1;
+	
+	(*Temperature Too Low*)	AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_TemperatureTooLow,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 6,
+		s_Message				:= 'temperature too low',
+		e_sev					:= eseverity.Normalshutdown,
+		e_ErrAckAccess		:= eErrAckAccess.Operator
+	);
+	w_Index := w_Index +1;
+	
+	(*4-20ma Overrange*)	AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_AIOverrange,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 7,
+		s_Message				:= 'analog input temp/humid overrange',
+		e_sev					:= eseverity.Warning,
+		b_AutoClear			:= TRUE
+	);
+	w_Index := w_Index +1;
+	
+	(*4-20ma Underrange*)	AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_AIUnderrange,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 8,
+		s_Message				:= 'analog input temp/humid underrange',
+		e_sev					:= eseverity.Warning,
+		b_AutoClear			:= TRUE
+	);
+	w_Index := w_Index +1;
+	
+	(*Analog input error*)	AddError[w_Index](
+		b_ErrorTrig			:= get.events.b_AIError,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID					:= 9,
+		s_Message				:= 'analog input temp/humid error',
+		e_sev					:= eseverity.warning,
+		b_AutoClear			:= TRUE
+	);
+	w_Index := w_Index +1;
+	
+	(*Analog input error*)	AddError[w_Index](
+		b_ErrorTrig				:= get.events.b_DewpointTooHigh,
+		out_ST_Error			:= a_ActiveEvents[w_Index],
+		w_ErrorID				:= 10,
+		s_Message				:= 'dewpoint too high alarm',
+		e_sev					:= eseverity.normalshutdown,
+	);
+	w_Index := w_Index +1;]]></ST>
+      </Implementation>
+    </Method>
+    <Method Name="SetEvents" Id="{b64fb439-3520-44f6-8de4-3a382103d83f}">
+      <Declaration><![CDATA[METHOD PRIVATE SetEvents : BOOL
+VAR_IN_OUT
+	get : ST_EnclosureClimate_get;
+	st_params : ST_EnclosureClimate_params;
+END_VAR
+
+VAR_INST
+	sr_HumHigh			: SR;
+	sr_HumTooHigh		: SR;
+	sr_TempHigh			: SR;
+	sr_TempTooHigh		: SR;
+	sr_TempLow			: SR;
+	sr_TempTooLow		: SR;
+END_VAR]]></Declaration>
+      <Implementation>
+        <ST><![CDATA[//set events
+get.events.b_AIError := TempRead.Status.Error OR HumRead.Status.Error;
+get.events.b_AIUnderrange := TempRead.Status.Underrange OR HumRead.Status.Underrange;
+get.events.b_AIOverrange := TempRead.Status.Overrange OR HumRead.Status.Overrange;
+
+sr_HumHigh(
+	SET1:= get.r_Humidity > st_params.r_HumidityHigh, 
+	RESET:= get.r_Humidity <= st_params.r_HumidityHigh - st_params.r_HumidityHysteris,
+	Q1 => get.events.b_HumidityHigh);
+sr_HumTooHigh(
+	SET1:= get.r_Humidity > st_params.r_HumidityTooHigh, 
+	RESET:= get.r_Humidity <= st_params.r_HumidityTooHigh - st_params.r_HumidityHysteris,
+	Q1 => get.events.b_HumidityTooHigh);	
+sr_TempHigh(
+	SET1:= get.r_Temperature > st_params.r_TemperatureHigh, 
+	RESET:= get.r_Temperature <= st_params.r_TemperatureHigh - st_params.r_TemperatureHysteris,
+	Q1 => get.events.b_TemperatureHigh);	
+sr_TempTooHigh(
+	SET1:= get.r_Temperature > st_params.r_TemperatureTooHigh, 
+	RESET:= get.r_Temperature <= st_params.r_TemperatureTooHigh - st_params.r_TemperatureHysteris,
+	Q1 => get.events.b_TemperatureTooHigh);
+sr_TempLow(
+	SET1:= get.r_Temperature < st_params.r_TemperatureLow, 
+	RESET:= get.r_Temperature >= st_params.r_TemperatureLow + st_params.r_TemperatureHysteris,
+	Q1 => get.events.b_TemperatureLow);
+sr_TempTooLow(
+	SET1:= get.r_Temperature < st_params.r_TemperatureTooLow, 
+	RESET:= get.r_Temperature >= st_params.r_TemperatureTooLow + st_params.r_TemperatureHysteris,
+	Q1 => get.events.b_TemperatureTooLow);]]></ST>
+      </Implementation>
+    </Method>
+  </POU>
+</TcPlcObject>

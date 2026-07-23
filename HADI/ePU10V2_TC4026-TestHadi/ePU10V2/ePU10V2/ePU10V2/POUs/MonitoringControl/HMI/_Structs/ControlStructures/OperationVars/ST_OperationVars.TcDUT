@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_OperationVars" Id="{2f7f4509-851b-400b-be45-6e9cbebfa50f}">
+    <Declaration><![CDATA[TYPE ST_OperationVars :
+STRUCT
+		inputgrid				: ST_OperationVars_Grid;
+		Genset					: ST_OperationVars_Genset;
+		PSB						: ST_OperationVars_Grid;
+		charger					: ST_OperationVars_DCcharger;
+		system					: ST_OperationVars_System;
+		parallel				: ST_OperationVars_ParallelOperation;	
+		BMS						: ST_OperationVars_BMS;	
+END_STRUCT
+END_TYPE
+ ]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,97 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <POU Name="FB_ShuntBournsSSD" Id="{2abeeb0a-8801-4eb3-8478-8a5d4a64cb9b}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_ShuntBournsSSD
+VAR	
+	ReadInputs			: 	FB_MBReadRegs;
+	InputData			:	ARRAY[0..20] OF WORD;
+	StartReadinputs		:	BOOL;	
+	InputReadError		:	Ton := (Pt := T#1S);
+	dataInputs				: ARRAY[0..20] OF DWORD;
+	lw_Power				: LWORD;  // Unsigned int32
+	lw_Energy				: LWORD; // Unsigned int64
+	lw_Coulomb				: LWORD; // Signed int64
+	
+	TON_UpdateInterval	:	Ton;
+	
+	State : UINT	:=	0;
+	
+END_VAR
+
+VAR_INPUT
+	b_enable				:	BOOL;
+	IP				:	STRING	:= '192.168.1.65';
+	UpdateInterval			:	TIME 	:=	T#100MS;
+END_VAR
+
+VAR_OUTPUT
+	get					:	ST_Bourns_Powerdata;
+	events				:	st_Bourns_errors;
+	CommFault			:	Bool;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[//Readinputs(
+//	sIPAddr := IP,
+//	nTCPPort := 502,
+//	nUnitID := 1,
+//	nMBAddr	:=	0,
+//	nQuantity := 21,
+//	cbLength := SIZEOF(InputData),
+//	pDestAddr := ADR(InputData),
+//	bExecute := StartReadinputs,
+//);
+//InputReadError();
+
+//TON_UpdateInterval(in := NOT TON_UpdateInterval.Q);
+
+
+//CASE State OF
+//	0:
+//		IF b_enable AND Ton_UpdateInterval.Q THEN
+//			State := 10;
+//		END_IF	
+		
+//	10:
+//		StartReadInputs := TRUE;
+//		state := 11;
+		
+//	11:
+//		StartReadInputs := FALSE;
+//		IF NOT ReadInputs.bBusy THEN
+//			IF NOT ReadInputs.bError THEN
+//				dataInputs[0]	:= SHL(WORD_TO_DWORD(InputData[1]), 16) OR (WORD_TO_DWORD(InputData[0]));   	
+//				dataInputs[2]	:= SHL(WORD_TO_DWORD(InputData[3]), 16) OR (WORD_TO_DWORD(InputData[2])); 		
+//				dataInputs[4]   := SHL(WORD_TO_DWORD(InputData[5]), 16) OR (WORD_TO_DWORD(InputData[4]));   
+//				dataInputs[18]	:= SHL(WORD_TO_DWORD(InputData[19]), 16) OR (WORD_TO_DWORD(InputData[18]));	
+				
+//				lw_Coulomb 		:= SHL(WORD_TO_LWORD(InputData[9]), 48) OR SHL(WORD_TO_LWORD(InputData[8]), 32) OR 
+//									SHL(WORD_TO_DWORD(InputData[7]), 16) OR (InputData[6]);								
+//				lw_Power     		:= SHL(WORD_TO_DWORD(InputData[11]), 16) OR (WORD_TO_DWORD(InputData[10]));   	
+//				lw_Energy 		:= SHL(WORD_TO_LWORD(InputData[15]), 48) OR SHL(WORD_TO_LWORD(InputData[14]), 32) OR 
+//									SHL(WORD_TO_DWORD(InputData[13]), 16) OR (InputData[12]);							
+	
+//				get.Current			:= TO_REAL(DWORD_TO_DINT(dataInputs[0]))	/ 1000;  // mA to A
+//				get.Temperature		:= TO_REAL(DWORD_TO_DINT(dataInputs[2])) / 10;	// 0.1 °C to °C
+//				get.Voltage		   	:= TO_REAL(DWORD_TO_DINT(dataInputs[4])) / 1000; // mV to V
+//				get.Power			:= TO_REAL(lw_Power) / 10000; // 0.1 W to kW	
+//				get.Energy			:= TO_REAL(lw_Energy) / 1000;  // Wh to Kwh
+				
+//				events.b_OvervoltageError	:= DataInputs[16].0 OR DataInputs[16].6;
+//				events.b_OverTemperatureError := DataInputs[16].4;
+//				events.b_OverCurrentError := DataInputs[16].3 OR DataInputs[16].1;
+//				events.b_EnergyOverflow		:= DataInputs[16].9;
+//				events.b_DeviceFault		:= DataInputs[16].10 OR DataInputs[16].13 OR DataInputs[16].14 OR DataInputs[16].12;
+
+//				InputReadError.IN := FALSE;
+//			ELSE
+//				InputReadError.IN := TRUE;
+//			END_IF
+//			State := 0;
+//		END_IF
+
+//END_CASE
+
+//CommFault := inputReaderror.Q;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

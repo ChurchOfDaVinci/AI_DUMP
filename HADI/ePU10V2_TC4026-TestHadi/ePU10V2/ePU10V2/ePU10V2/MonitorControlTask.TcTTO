@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <Task Name="MonitorControlTask" Id="{29372515-f907-4bc7-87ee-29f76fe15ca1}">
+    <!--CycleTime in micro seconds.-->
+    <CycleTime>10000</CycleTime>
+    <Priority>8</Priority>
+    <PouCall>
+      <Name>MAIN_Slow</Name>
+    </PouCall>
+    <TaskFBGuid>{2978a1d6-48fe-4844-af58-e71ae1239d0b}</TaskFBGuid>
+    <Fb_init>{69faa812-f63b-4d38-82ca-8582956a4ac6}</Fb_init>
+    <Fb_exit>{6f658b0f-2545-48e9-9611-6145c0b00ad0}</Fb_exit>
+    <CycleUpdate>{f6aee7a1-34f2-4887-b268-bfee431c14da}</CycleUpdate>
+    <PostCycleUpdate>{3b629862-c0eb-49c1-b81a-83b6a65ae7bc}</PostCycleUpdate>
+  </Task>
+</TcPlcObject>

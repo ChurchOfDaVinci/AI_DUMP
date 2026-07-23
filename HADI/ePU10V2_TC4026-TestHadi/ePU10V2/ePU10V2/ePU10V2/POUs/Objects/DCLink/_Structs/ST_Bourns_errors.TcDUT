@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Bourns_errors" Id="{8bc4e6ec-c22a-497e-9fc3-729509144c9c}">
+    <Declaration><![CDATA[TYPE ST_Bourns_errors :
+STRUCT
+	b_OvervoltageError		:	BOOL;
+	b_OverCurrentError		:	BOOL;
+	b_OverTemperatureError	:	BOOL; 
+	b_EnergyOverflow		:	BOOL;
+	b_DeviceFault			:	BOOL;
+	b_CommFault				:	BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

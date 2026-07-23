@@ -1,0 +1,782 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "definitions": {
+    "htmlContainers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "html": {
+            "type": "string",
+            "format": "html"
+          },
+          "className": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "html"
+        ]
+      }
+    },
+    "dataObject": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "symbol": {
+          "type": "string",
+          "optionMethod": {
+            "symbol": "ListSymbolNames"
+          }
+        },
+        "title": {
+          "type": "string"
+        },
+        "filter": {
+          "type": "string",
+          "configDescription": "descFilter"
+        },
+        "orderBy": {
+          "type": "string",
+          "configDescription": "descOrderBy"
+        },
+        "limit": {
+          "type": "integer",
+          "minimum": 1,
+          "configDescription": "descLimit"
+        }
+      },
+      "required": [
+        "symbol"
+      ]
+    }
+  },
+  "properties": {
+    "orderLimit": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 100,
+      "default": 5,
+      "configDescription": "descOrderLimit"
+    },
+    "generationTimeout": {
+      "type": "string",
+      "format": "timespan",
+      "formatMinimum": "PT1S",
+      "default": "PT1M",
+      "configDescription": "descGenerationTimeout"
+    },
+    "signatureCertificate": {
+      "type": "string",
+      "format": "base64",
+      "configDescription": "descSignatureCertificate"
+    },
+    "signatureKey": {
+      "type": "string",
+      "format": "masked",
+      "configDescription": "descSignatureKey"
+    },
+    "exportPath": {
+      "type": "string",
+      "configDescription": "descExportPath",
+      "format": "filename"
+    },
+    "overwriteReports": {
+      "type": "boolean",
+      "configDescription": "descOverwriteReports",
+      "default": false
+    },
+    "removeRemoteFile": {
+      "type": "boolean",
+      "configDescription": "descRemoveRemoteFile",
+      "default": true,
+      "visibility": "HideInEngineering"
+    },
+    "runtimes": {
+      "configDescription": "descRuntimes",
+      "default": {
+        "local": {
+          "netId": "127.0.0.1.1.1",
+          "reportingConfigurations": {}
+        }
+      },
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "netId": {
+            "allOf": [
+              {
+                "$ref": "tchmi:server#/definitions/adsRoute"
+              },
+              {
+                "propertyOrder": 2,
+                "configDescription": "descNetId"
+              }
+            ]
+          },
+          "reportingConfigurations": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "StoreType": {
+                  "type": "string",
+                  "enum": [
+                    "Ram"
+                  ],
+                  "default": "Ram",
+                  "visibility": "HideInEngineering"
+                },
+                "Header": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 2,
+                  "configDescription": "descHeader"
+                },
+                "Footer": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "maxItems": 3,
+                  "default": [
+                    "{date} {time}",
+                    "",
+                    "{page} of {total-pages}"
+                  ]
+                },
+                "TriggerOnRequiredKeyReceived": {
+                  "type": "boolean",
+                  "default": false,
+                  "visibility": "AlwaysHide"
+                },
+                "StyleSheets": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Location": {
+                        "type": "string"
+                      },
+                      "SortPriority": {
+                        "type": "integer"
+                      },
+                      "ParentTag": {
+                        "default": 1,
+                        "type": "integer",
+                        "enum": [
+                          0,
+                          1
+                        ],
+                        "visibility": "AlwaysHide"
+                      }
+                    },
+                    "required": [
+                      "Location",
+                      "SortPriority",
+                      "ParentTag"
+                    ]
+                  },
+                  "default": [
+                    {
+                      "Location": "StyleBeckhoff.css",
+                      "SortPriority": 0,
+                      "ParentTag": 0
+                    }
+                  ]
+                },
+                "ScriptFiles": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Location": {
+                        "type": "string"
+                      },
+                      "SortPriority": {
+                        "type": "integer"
+                      },
+                      "ParentTag": {
+                        "configDescription": "descParentTag",
+                        "default": 1,
+                        "type": "integer",
+                        "enum": [
+                          0,
+                          1
+                        ],
+                        "options": [
+                          {
+                            "value": 0,
+                            "label": "headScriptFile"
+                          },
+                          {
+                            "value": 1,
+                            "label": "bodyScriptFile"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "Location",
+                      "SortPriority",
+                      "ParentTag"
+                    ]
+                  }
+                },
+                "DefaultData": {
+                  "type": "object",
+                  "properties": {
+                    "ValuePairs": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "Key": {
+                            "type": "string"
+                          },
+                          "Comment": {
+                            "type": "string",
+                            "visibility": "HideInEngineering"
+                          },
+                          "ValuePair_Collection": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "Key": {
+                                  "type": "string"
+                                },
+                                "Value": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "Key",
+                                "Value"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "Key",
+                          "Comment",
+                          "ValuePair_Collection"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "ValuePairs"
+                  ]
+                },
+                "DataConfigurations": {
+                  "visibility": "HideInEngineering",
+                  "configDescription": "descDataConfigurations",
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "Key": {
+                        "type": "string"
+                      },
+                      "Title": {
+                        "type": "string",
+                        "visibility": "AlwaysHide"
+                      },
+                      "SortPriority": {
+                        "type": "integer",
+                        "configDescription": "descSortPriority"
+                      },
+                      "RoundTo": {
+                        "type": "integer",
+                        "visibility": "HideInEngineering",
+                        "configDescription": "descRoundTo"
+                      },
+                      "IsRequired": {
+                        "type": "boolean",
+                        "visibility": "AlwaysHide",
+                        "default": false
+                      },
+                      "StoreMode": {
+                        "type": "string",
+                        "enum": [
+                          "Overwriting",
+                          "Appending"
+                        ],
+                        "visibility": "AlwaysHide"
+                      },
+                      "TimestampFormat": {
+                        "type": "string",
+                        "default": "yyyy-MM-dd HH:mm:ss.ffff",
+                        "configDescription": "descTimestampFormat"
+                      }
+                    },
+                    "required": [
+                      "Key"
+                    ]
+                  }
+                },
+                "Logo": {
+                  "type": "string",
+                  "format": "base64",
+                  "default": ""
+                },
+                "publishLocations": {
+                  "type": "object",
+                  "properties": {
+                    "EmailPublishLocations": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "Type": {
+                            "type": "string",
+                            "default": "EMAIL",
+                            "enum": [
+                              "EMAIL"
+                            ],
+                            "visibility": "AlwaysHide"
+                          },
+                          "Address": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+                            },
+                            "configDescription": "descAddress"
+                          },
+                          "UseBCC": {
+                            "type": "boolean",
+                            "default": true,
+                            "configDescription": "descUseBCC"
+                          },
+                          "Text": {
+                            "type": "string",
+                            "configDescription": "descText"
+                          },
+                          "Format": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "PDF",
+                                "JSON",
+                                "HTML"
+                              ]
+                            },
+                            "default": [
+                              "PDF"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "Type",
+                          "Address",
+                          "UseBCC",
+                          "Text",
+                          "Format"
+                        ]
+                      }
+                    },
+                    "FilePublishLocations": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "Type": {
+                            "type": "string",
+                            "default": "File"
+                          },
+                          "Path": {
+                            "type": "string"
+                          },
+                          "Format": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "PDF",
+                                "JSON",
+                                "HTML"
+                              ]
+                            },
+                            "default": [
+                              "PDF"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "Type",
+                          "Path",
+                          "Format"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "EmailPublishLocations",
+                    "FilePublishLocations"
+                  ]
+                },
+                "SignatureConfiguration": {
+                  "configDescription": "descSignatureConfiguration",
+                  "type": "object",
+                  "properties": {
+                    "Name": {
+                      "type": "string"
+                    },
+                    "UseDigitalSignature": {
+                      "type": "boolean",
+                      "default": false
+                    },
+                    "UseHandwrittenSignature": {
+                      "type": "boolean",
+                      "default": false
+                    }
+                  },
+                  "required": [
+                    "Name",
+                    "UseDigitalSignature",
+                    "UseHandwrittenSignature"
+                  ]
+                },
+                "HandwrittenSignatureSettings": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "SignatureName": {
+                        "type": "string"
+                      },
+                      "SignatureOwner": {
+                        "type": "string"
+                      },
+                      "SignatureDateFormat": {
+                        "type": "string",
+                        "visibility": "HideInEngineering"
+                      },
+                      "SigningLocation": {
+                        "type": "string"
+                      },
+                      "Height": {
+                        "type": "integer",
+                        "default": 100,
+                        "minimum": 1
+                      },
+                      "Width": {
+                        "type": "integer",
+                        "default": 60,
+                        "minimum": 1
+                      },
+                      "BottomAlign": {
+                        "type": "integer",
+                        "default": 20,
+                        "minimum": 1
+                      },
+                      "LeftAlign": {
+                        "type": "integer",
+                        "default": 25,
+                        "minimum": 1
+                      },
+                      "FilePathToImage": {
+                        "type": "string",
+                        "visibility": "AlwaysHide"
+                      },
+                      "SignatureImage": {
+                        "type": "string",
+                        "default": "",
+                        "format": "base64",
+                        "acceptFileTypes": [
+                          ".png"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "SignatureName",
+                      "SignatureOwner",
+                      "SignatureDateFormat",
+                      "SigningLocation",
+                      "Height",
+                      "Width",
+                      "BottomAlign",
+                      "LeftAlign",
+                      "FilePathToImage",
+                      "SignatureImage"
+                    ]
+                  }
+                },
+                "DigitalSignatureSettings": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "SignatureName": {
+                        "type": "string"
+                      },
+                      "FilePathToCertificate": {
+                        "type": "string",
+                        "visibility": "AlwaysHide"
+                      },
+                      "SigningContact": {
+                        "type": "string"
+                      },
+                      "SigningLocation": {
+                        "type": "string"
+                      },
+                      "SigningReason": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "SignatureName",
+                      "FilePathToCertificate",
+                      "SigningContact",
+                      "SigningLocation",
+                      "SigningReason"
+                    ]
+                  }
+                },
+                "UsePdfAFormat": {
+                  "type": "boolean",
+                  "default": true
+                }
+              },
+              "required": [
+                "Header",
+                "StyleSheets",
+                "ScriptFiles",
+                "DefaultData",
+                "DataConfigurations",
+                "StoreType",
+                "Footer",
+                "Logo",
+                "publishLocations",
+                "SignatureConfiguration",
+                "HandwrittenSignatureSettings",
+                "DigitalSignatureSettings",
+                "UsePdfAFormat"
+              ]
+            }
+          }
+        },
+        "required": [
+          "netId",
+          "reportingConfigurations"
+        ]
+      }
+    },
+    "reports": {
+      "type": "object",
+      "configDescription": "descReports",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "runtime": {
+            "type": "string",
+            "optionMethod": {
+              "symbol": "{domain}.Config::runtimes"
+            },
+            "optionMethodAllowCustom": false
+          },
+          "config": {
+            "type": "string",
+            "optionMethod": {
+              "symbol": "{domain}.GetConfigurations",
+              "writeValue": {
+                "$data": "#/properties/reports/additionalProperties/properties/runtime"
+              }
+            },
+            "optionMethodAllowCustom": false
+          },
+          "textFields": {
+            "type": "object",
+            "additionalProperties": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/dataObject"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "properties": {
+                    "value": {
+                      "type": "string",
+                      "format": "html"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "tables": {
+            "type": "object",
+            "additionalProperties": {
+              "allOf": [
+                {
+                  "$ref": "#/definitions/dataObject"
+                },
+                {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "properties": {
+                    "columns": {
+                      "configDescription": "descColumns",
+                      "type": "object",
+                      "additionalProperties": {
+                        "keyOptionMethod": {
+                          "symbol": "{domain}.GetSymbolHeadline",
+                          "writeValue": {
+                            "$data": "#/properties/reports/additionalProperties/properties/Tables/items/properties/symbol"
+                          }
+                        },
+                        "type": "object",
+                        "properties": {
+                          "values": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "type": "object",
+                              "properties": {
+                                "value": {
+                                  "type": "string",
+                                  "configDescription": "descValue",
+                                  "format": "html"
+                                },
+                                "filter": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "path": {
+                                        "type": "string",
+                                        "optionMethod": {
+                                          "symbol": "{domain}.GetSymbolHeadline",
+                                          "writeValue": {
+                                            "$data": "#/properties/reports/additionalProperties/properties/Tables/items/properties/symbol"
+                                          }
+                                        },
+                                        "propertyOrder": 1
+                                      },
+                                      "comparator": {
+                                        "type": "string",
+                                        "enum": [
+                                          "==",
+                                          "!=",
+                                          "<",
+                                          ">",
+                                          "<=",
+                                          ">=",
+                                          "contains",
+                                          "contains not",
+                                          "== [ignore case]",
+                                          "!= [ignore case]",
+                                          "contains [ignore case]",
+                                          "contains not [ignore case]"
+                                        ],
+                                        "propertyOrder": 2
+                                      },
+                                      "value": {
+                                        "allOf": [
+                                          {
+                                            "propertyOrder": 3
+                                          },
+                                          {
+                                            "oneOf": [
+                                              {
+                                                "type": "string",
+                                                "configDescription": "string"
+                                              },
+                                              {
+                                                "type": "integer",
+                                                "configDescription": "integer"
+                                              },
+                                              {
+                                                "type": "boolean",
+                                                "configDescription": "boolean"
+                                              }
+                                            ]
+                                          }
+                                        ]
+                                      },
+                                      "logic": {
+                                        "propertyOrder": 4,
+                                        "type": "string",
+                                        "enum": [
+                                          "AND",
+                                          "OR"
+                                        ]
+                                      }
+                                    }
+                                  }
+                                }
+                              },
+                              "required": [
+                                "filter",
+                                "value"
+                              ]
+                            }
+                          },
+                          "title": {
+                            "type": "string"
+                          },
+                          "order": {
+                            "type": "integer"
+                          }
+                        },
+                        "required": [
+                          "values"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "columns"
+                  ]
+                }
+              ]
+            }
+          },
+          "htmlContainers": {
+            "$ref": "#/definitions/htmlContainers"
+          }
+        },
+        "required": [
+          "runtime",
+          "config",
+          "tables",
+          "textFields",
+          "htmlContainers"
+        ]
+      }
+    },
+    "extensionHostMaxReloads": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 10,
+      "configDescription": "DESC_EXTENSION_HOST_MAX_RELOADS"
+    },
+    "extensionHostReloadInterval": {
+      "type": "string",
+      "format": "timespan",
+      "default": "PT10S",
+      "configDescription": "DESC_EXTENSION_HOST_RELOAD_INTERVAL"
+    }
+  },
+  "type": "object",
+  "required": [
+    "orderLimit",
+    "signatureCertificate",
+    "signatureKey",
+    "runtimes",
+    "reports",
+    "overwriteReports",
+    "removeRemoteFile",
+    "exportPath",
+    "generationTimeout"
+  ]
+}

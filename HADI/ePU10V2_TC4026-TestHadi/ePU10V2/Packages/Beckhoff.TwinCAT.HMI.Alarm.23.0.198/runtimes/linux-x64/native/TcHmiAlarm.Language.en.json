@@ -1,0 +1,56 @@
+{
+  "locale": "en",
+  "localizedText": {
+    "enabled": "Enabled",
+    "onError": "On error",
+    "alarmTextKey": "Name / Text (key)",
+    "interval": "Interval time",
+    "severity": "Severity",
+    "condition": "Condition",
+    "alarmSymbols": "Alarm symbols",
+    "limitEventCount": "Limit event count",
+    "alarmSettings": "Alarm settings",
+    "titleAlarmSymbol": "Mapped symbol",
+    "notificationType": "Notification type",
+    "symbolName": "Symbol name",
+    "alarmSetting": "Alarm setting",
+    "version": "Symbol version",
+
+    "connectionState": "Connection state",
+    "importedEventsCount": "Imported events",
+    "importedMessagesCount": "Imported messages",
+    "importedAlarmsCount": "Imported alarms",
+    "importedInvalidAlarmsCount": "Imported invalid alarms",
+    "cachedMessagesCount": "Messages in the database",
+    "cachedAlarmsCount": "Alarms in the database",
+    "cachedInvalidAlarmsCount": "Invalid alarms in the database",
+    "activeAlarmsCount": "Active alarms",
+    "database": "Database",
+    "databaseSize": "Database size",
+    "numEntries": "Total number of entries",
+
+    "DESC_ALARM_SYMBOLS": "This list contains all configured alarm symbols.",
+    "DESC_LIMIT_EVENT_COUNT": "Active alarms will always be imported, even if this limit is thereby exceeded.",
+    "DESC_ALARM_SYMBOL": "Alarm symbol",
+    "DESC_CONDITION": "An alarm or message is triggered if the value is inside the value range.",
+    "DESC_ON_ERROR": "Send alarm if the current symbol value can't be read.",
+
+    "ENUM_m1_DIAGNOSTICS": "Diagnostics",
+    "ENUM_0_VERBOSE": "Verbose",
+    "ENUM_1_INFO": "Info",
+    "ENUM_2_WARNING": "Warning",
+    "ENUM_3_ERROR": "Error",
+    "ENUM_4_CRITICAL": "Critical",
+
+    "enum_0_message": "Message",
+    "enum_1_alarm_with_confirmation": "Alarm (with confirmation)",
+    "enum_2_alarm": "Alarm",
+
+    "valueReadError": "Symbol {symbolName} is unreadable. Error value: {error}",
+    "settingMatch": "Alarm setting {alarmSetting} for symbol {symbolName} matches.",
+    "databaseError": "Database error: {errorMessage}",
+    "closeDBError": "Closing database failed with error code {0}",
+
+    "RESET_TEMPORARY_EVENTS": "Resetting all temporary events"
+  }
+}

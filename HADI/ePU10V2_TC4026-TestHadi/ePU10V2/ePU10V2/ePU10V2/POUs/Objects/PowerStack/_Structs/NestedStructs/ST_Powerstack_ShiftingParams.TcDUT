@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Powerstack_ShiftingParams" Id="{8f14b0c8-3105-44b1-91f7-a93d0a536c1b}">
+    <Declaration><![CDATA[TYPE ST_Powerstack_ShiftingParams :
+STRUCT
+	InitialOverloadDelay		: TIME := T#1S; // ignore initial power surge
+	ShutdownDelay				: TIME := T#1M; // shutdown delay when limit is exceeded.
+	ShiftingHoldTime			: TIME := T#20M; // when shifting is applied, this time must pass before returning back.
+	ShiftingRate				: TIME := T#100MS; // time per step. Number of steps is + and - 1000. The stepsize is 1/2000 of the set min / max range.
+	FreqMaxPu					: REAL := 1.03; //per unit
+	FreqMinPu					: REAL := 0.97;
+	VoltMaxPu					: REAL := 1.1;
+	VoltMinPu					: REAL := 0.9;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

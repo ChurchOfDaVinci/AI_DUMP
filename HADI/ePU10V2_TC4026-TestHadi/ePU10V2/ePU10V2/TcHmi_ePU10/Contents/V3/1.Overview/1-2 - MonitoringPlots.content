@@ -1,0 +1,1243 @@
+<div id="1-2_-_MonitoringPlots" data-tchmi-type="TcHmi.Controls.System.TcHmiContent" data-tchmi-top="0" data-tchmi-left="0" data-tchmi-width-mode="Value" data-tchmi-height-mode="Value" data-tchmi-width="%ctrl%Desktop::RenderedWidth%/ctrl%" data-tchmi-height="%ctrl%Desktop::RenderedHeight%/ctrl%" data-tchmi-right="0" data-tchmi-bottom="0" data-tchmi-width-unit="px" data-tchmi-height-unit="px" data-tchmi-opacity="1">
+
+<div id="TcHmiTrendLineChart_2" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiTrendLineChart" data-tchmi-end="Latest" data-tchmi-grid-column-index="0" data-tchmi-grid-row-index="1" data-tchmi-height-unit="%" data-tchmi-left-unit="px" data-tchmi-start="PT5M" data-tchmi-top-unit="px" data-tchmi-width-unit="%" data-tchmi-x-axis-name="Time" data-tchmi-x-sub-tick-steps="4" data-tchmi-y-sub-tick-steps="4" data-tchmi-background-image-horizontal-alignment="Center" data-tchmi-background-image-vertical-alignment="Center" data-tchmi-show-grid="true" data-tchmi-grid-show-horizontal-lines="true" data-tchmi-grid-show-vertical-lines="false" data-tchmi-subgrid-show-horizontal-lines="false" data-tchmi-subgrid-show-vertical-lines="false" data-tchmi-show-menu-bar="true" data-tchmi-show-legend="true" data-tchmi-x-show-labels="false" data-tchmi-show-x-axis="false" data-tchmi-interval="500" data-tchmi-reference-lines-position="Background" data-tchmi-y-main-tick-steps="11" data-tchmi-show-y-sub-ticks="false" data-tchmi-y-axis-width="0" data-tchmi-show-x-axis-name="false" data-tchmi-x-main-tick-steps="5" data-tchmi-width="100" data-tchmi-height="100">
+<script data-tchmi-target-attribute="data-tchmi-border-width" type="application/json">
+{
+  "left": 0,
+  "right": 0,
+  "top": 0,
+  "bottom": 0,
+  "leftUnit": "px",
+  "rightUnit": "px",
+  "topUnit": "px",
+  "bottomUnit": "px"
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-border-radius" type="application/json">
+{
+  "topLeft": 0.0,
+  "topRight": 0.0,
+  "bottomLeft": 0.0,
+  "bottomRight": 0.0,
+  "topLeftUnit": "px",
+  "topRightUnit": "px",
+  "bottomLeftUnit": "px",
+  "bottomRightUnit": "px"
+}
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-reference-lines" type="application/json">
+[
+  {
+    "yAxisId": 1,
+    "show": true,
+    "name": "Test",
+    "orientation": "Horizontal",
+    "value": "%f%-%s%PLC.PLC.HMI.Monitoringvars::Powercontroller::r_FeedInCurrentLimitActual%/s%%/f%",
+    "color": {
+      "color": "rgba(71, 148, 218, 1)"
+    },
+    "lineWidth": 1,
+    "showLabel": false,
+    "labelHorizontalAlignment": "Right",
+    "labelVerticalAlignment": "Top",
+    "labelFontFamily": "",
+    "labelFontSize": 12,
+    "labelFontSizeUnit": "px",
+    "labelFontWeight": "Normal"
+  },
+  {
+    "yAxisId": 1,
+    "show": true,
+    "name": "",
+    "orientation": "Horizontal",
+    "value": "%s%PLC.PLC.HMI.Monitoringvars::Powercontroller::r_SupplyInCurrentLimitActual%/s%",
+    "color": {
+      "color": "rgba(71, 148, 218, 1)"
+    },
+    "lineWidth": 1,
+    "showLabel": false,
+    "labelHorizontalAlignment": "Right",
+    "labelVerticalAlignment": "Top",
+    "labelFontFamily": "",
+    "labelFontSize": 12,
+    "labelFontSizeUnit": "px",
+    "labelFontWeight": "Normal"
+  }
+]
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script data-tchmi-target-attribute="data-tchmi-trigger" type="application/json">[
+  {
+    "event": "%ctrl%TcHmiCombobox_ChartSelector::SelectedId%/ctrl%",
+    "actions": [
+      {
+        "objectType": "SwitchCase",
+        "active": true,
+        "compare": {
+          "objectType": "Symbol",
+          "valueType": "tchmi:general#/definitions/UDINT",
+          "symbolExpression": "%ctrl%TcHmiCombobox_ChartSelector::SelectedId%/ctrl%"
+        },
+        "cases": [
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/UDINT",
+              "value": 1
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::LineGraphDescription%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiTrendLineChart.ChartLineGraphDescriptionDefinitionList",
+                  "value": [
+                    {
+                      "yAxisId": 1,
+                      "symbol": "PLC.HMI.Historizevars::Output::Current",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Output",
+                      "pointDot": false,
+                      "pointDotRadius": 2,
+                      "pointDotStrokeWidth": 0,
+                      "lineColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 1,
+                      "symbol": "PLC.HMI.Historizevars::Input::Current",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Input",
+                      "pointDot": false,
+                      "pointDotRadius": 2,
+                      "pointDotStrokeWidth": 0,
+                      "lineColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 1,
+                      "symbol": "PLC.HMI.Historizevars::Inverter::Current",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Inverter",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 1,
+                      "symbol": "PLC.HMI.Historizevars::PSB::Current",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "PSB",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 1,
+                      "symbol": "PLC.HMI.Historizevars::Battery::Current",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Battery (DC)",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(156, 49, 255, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(156, 49, 255, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(156, 49, 255, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(156, 49, 255, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 1,
+                      "symbol": "PLC.HMI.Historizevars::Charger::Current",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "%l%DCcharger%/l%",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 1,
+                      "symbol": "PLC.HMI.Historizevars::DcCoupling::Current",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "%l%DCcoupling%/l%",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(255, 48, 48, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(255, 48, 48, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(255, 48, 48, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(255, 48, 48, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    }
+                  ]
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::YAxis%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiTrendLineChart.ChartYAxisDefinitionList",
+                  "value": [
+                    {
+                      "id": 1,
+                      "showAxis": true,
+                      "position": "Left",
+                      "mainTickMinValue": 0.0,
+                      "mainTickMaxValue": 1000.0,
+                      "showLabels": true,
+                      "showAxisName": true,
+                      "axisName": "%l%Current%/l%",
+                      "axisNameFontFamily": "",
+                      "axisNameFontSize": 15,
+                      "axisNameFontSizeUnit": "px",
+                      "axisNameFontWeight": "Bold",
+                      "decimalPlaces": 1,
+                      "unit": "A",
+                      "autoScaling": true,
+                      "logarithmicScale": false,
+                      "axisLabeling": "Number",
+                      "labelFontColor": null,
+                      "axisColor": null,
+                      "axisNameFontColor": null
+                    }
+                  ]
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/UDINT",
+              "value": 2
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::LineGraphDescription%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiTrendLineChart.ChartLineGraphDescriptionDefinitionList",
+                  "value": [
+                    {
+                      "yAxisId": 2,
+                      "symbol": "PLC.HMI.Historizevars::Output::ActivePower",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Output",
+                      "pointDot": false,
+                      "pointDotRadius": 2,
+                      "pointDotStrokeWidth": 0,
+                      "lineColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 2,
+                      "symbol": "PLC.HMI.Historizevars::Input::ActivePower",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Input",
+                      "pointDot": false,
+                      "pointDotRadius": 2,
+                      "pointDotStrokeWidth": 0,
+                      "lineColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 2,
+                      "symbol": "PLC.HMI.Historizevars::Inverter::ActivePower",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Inverter",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 2,
+                      "symbol": "PLC.HMI.Historizevars::PSB::ActivePower",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "PSB",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 2,
+                      "symbol": "PLC.HMI.Historizevars::Battery::Power",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Battery (DC)",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(156, 49, 255, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(156, 49, 255, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(156, 49, 255, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(156, 49, 255, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 2,
+                      "symbol": "PLC.HMI.Historizevars::Charger::ActivePower",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "%l%DCcharger%/l%",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 2,
+                      "symbol": "PLC.HMI.Historizevars::DcCoupling::Power",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "%l%DCcoupling%/l%",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(255, 48, 48, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(255, 48, 48, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(255, 48, 48, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(255, 48, 48, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    }
+                  ]
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::YAxis%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiTrendLineChart.ChartYAxisDefinitionList",
+                  "value": [
+                    {
+                      "id": 2,
+                      "showAxis": true,
+                      "position": "Left",
+                      "mainTickMinValue": -800.0,
+                      "mainTickMaxValue": 800.0,
+                      "showLabels": true,
+                      "showAxisName": true,
+                      "axisName": "%l%ActivePower%/l%",
+                      "axisNameFontFamily": "",
+                      "axisNameFontSize": 15,
+                      "axisNameFontSizeUnit": "px",
+                      "axisNameFontWeight": "Bold",
+                      "decimalPlaces": 1,
+                      "unit": "kW",
+                      "autoScaling": true,
+                      "logarithmicScale": false,
+                      "axisLabeling": "Number",
+                      "labelFontColor": null,
+                      "axisColor": null,
+                      "axisNameFontColor": null
+                    }
+                  ]
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/UDINT",
+              "value": 3
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::LineGraphDescription%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiTrendLineChart.ChartLineGraphDescriptionDefinitionList",
+                  "value": [
+                    {
+                      "yAxisId": 3,
+                      "symbol": "PLC.HMI.Historizevars::Output::ReactivePower",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Output",
+                      "pointDot": false,
+                      "pointDotRadius": 2,
+                      "pointDotStrokeWidth": 0,
+                      "lineColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 3,
+                      "symbol": "PLC.HMI.Historizevars::Inverter::ReactivePower",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Input",
+                      "pointDot": false,
+                      "pointDotRadius": 2,
+                      "pointDotStrokeWidth": 0,
+                      "lineColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 3,
+                      "symbol": "PLC.HMI.Historizevars::Inverter::ReactivePower",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Inverter",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 3,
+                      "symbol": "PLC.HMI.Historizevars::PSB::ReactivePower",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "PSB",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 3,
+                      "symbol": "PLC.HMI.Historizevars::Charger::ReactivePower",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "%l%DCcharger%/l%",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    }
+                  ]
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::YAxis%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiTrendLineChart.ChartYAxisDefinitionList",
+                  "value": [
+                    {
+                      "id": 3,
+                      "showAxis": true,
+                      "position": "Left",
+                      "mainTickMinValue": -800.0,
+                      "mainTickMaxValue": 800.0,
+                      "showLabels": true,
+                      "showAxisName": true,
+                      "axisName": "%l%ReactivePower%/l%",
+                      "axisNameFontFamily": "",
+                      "axisNameFontSize": 15,
+                      "axisNameFontSizeUnit": "px",
+                      "axisNameFontWeight": "Bold",
+                      "decimalPlaces": 1,
+                      "unit": "kvar",
+                      "autoScaling": true,
+                      "logarithmicScale": false,
+                      "axisLabeling": "Number",
+                      "labelFontColor": null,
+                      "axisColor": null,
+                      "axisNameFontColor": null
+                    }
+                  ]
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/UDINT",
+              "value": 4
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::LineGraphDescription%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiTrendLineChart.ChartLineGraphDescriptionDefinitionList",
+                  "value": [
+                    {
+                      "yAxisId": 4,
+                      "symbol": "PLC.HMI.Historizevars::Output::Voltage",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Output",
+                      "pointDot": false,
+                      "pointDotRadius": 2,
+                      "pointDotStrokeWidth": 0,
+                      "lineColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 4,
+                      "symbol": "PLC.HMI.Historizevars::Input::Voltage",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Input",
+                      "pointDot": false,
+                      "pointDotRadius": 2,
+                      "pointDotStrokeWidth": 0,
+                      "lineColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 4,
+                      "symbol": "PLC.HMI.Historizevars::Inverter::Voltage",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Inverter",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 4,
+                      "symbol": "PLC.HMI.Historizevars::PSB::Voltage",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "PSB",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 4,
+                      "symbol": "PLC.HMI.Historizevars::Battery::Voltage",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Battery",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(156, 49, 255, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(156, 49, 255, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(156, 49, 255, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(156, 49, 255, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 4,
+                      "symbol": "PLC.HMI.Historizevars::Charger::Voltage",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "%l%DCcharger%/l%",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 4,
+                      "symbol": "PLC.HMI.Historizevars::DcCoupling::Voltage",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "%l%DCcoupling%/l%",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(255, 48, 48, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(255, 48, 48, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(255, 48, 48, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(255, 48, 48, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    }
+                  ]
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::YAxis%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiTrendLineChart.ChartYAxisDefinitionList",
+                  "value": [
+                    {
+                      "id": 4,
+                      "showAxis": true,
+                      "position": "Left",
+                      "mainTickMinValue": 300.0,
+                      "mainTickMaxValue": 500.0,
+                      "showLabels": true,
+                      "showAxisName": true,
+                      "axisName": "%l%Voltage%/l%",
+                      "axisNameFontFamily": "",
+                      "axisNameFontSize": 15,
+                      "axisNameFontSizeUnit": "px",
+                      "axisNameFontWeight": "Bold",
+                      "decimalPlaces": 1,
+                      "unit": "V",
+                      "autoScaling": true,
+                      "logarithmicScale": false,
+                      "axisLabeling": "Number",
+                      "labelFontColor": null,
+                      "axisColor": null,
+                      "axisNameFontColor": null
+                    }
+                  ]
+                },
+                "asyncWait": true
+              }
+            ]
+          },
+          {
+            "caseValue": {
+              "objectType": "StaticValue",
+              "valueType": "tchmi:general#/definitions/UDINT",
+              "value": 5
+            },
+            "actions": [
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::LineGraphDescription%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiTrendLineChart.ChartLineGraphDescriptionDefinitionList",
+                  "value": [
+                    {
+                      "yAxisId": 5,
+                      "symbol": "PLC.HMI.Historizevars::Output::Frequency",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Output",
+                      "pointDot": false,
+                      "pointDotRadius": 2,
+                      "pointDotStrokeWidth": 0,
+                      "lineColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(71, 148, 218, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 5,
+                      "symbol": "PLC.HMI.Historizevars::Input::Frequency",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Input",
+                      "pointDot": false,
+                      "pointDotRadius": 2,
+                      "pointDotStrokeWidth": 0,
+                      "lineColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(218, 106, 71, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 5,
+                      "symbol": "PLC.HMI.Historizevars::Inverter::Frequency",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "Inverter",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(0, 144, 46, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 5,
+                      "symbol": "PLC.HMI.Historizevars::PSB::Frequency",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "PSB",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(1, 200, 237, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    },
+                    {
+                      "yAxisId": 5,
+                      "symbol": "PLC.HMI.Historizevars::Charger::Frequency",
+                      "lineWidth": 1,
+                      "scaleFactor": 1.0,
+                      "legendName": "%l%DCcharger%/l%",
+                      "pointDot": false,
+                      "pointDotRadius": 3,
+                      "pointDotStrokeWidth": 1,
+                      "lineColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotFillColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotStrokeColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "fillColor": {
+                        "color": "rgba(255, 213, 48, 1)"
+                      },
+                      "pointDotInStopMode": true,
+                      "fillMode": "None",
+                      "fillTransparency": 50.0
+                    }
+                  ]
+                },
+                "asyncWait": true
+              },
+              {
+                "objectType": "WriteToSymbol",
+                "active": true,
+                "symbolExpression": "%ctx%owner::YAxis%/ctx%",
+                "value": {
+                  "objectType": "StaticValue",
+                  "valueType": "tchmi:framework#/definitions/TcHmi.Controls.Beckhoff.TcHmiTrendLineChart.ChartYAxisDefinitionList",
+                  "value": [
+                    {
+                      "id": 5,
+                      "showAxis": true,
+                      "position": "Left",
+                      "logarithmicScale": false,
+                      "axisLabeling": "Number",
+                      "showLabels": true,
+                      "mainTickMinValue": 49.5,
+                      "mainTickMaxValue": 50.5,
+                      "showAxisName": true,
+                      "axisName": "%l%Frequency%/l%",
+                      "axisNameFontFamily": "",
+                      "axisNameFontSize": 15,
+                      "axisNameFontSizeUnit": "px",
+                      "axisNameFontWeight": "Bold",
+                      "decimalPlaces": 2,
+                      "autoScaling": false,
+                      "unit": "Hz"
+                    }
+                  ]
+                },
+                "asyncWait": true
+              }
+            ]
+          }
+        ],
+        "asyncWait": true
+      },
+      {
+        "objectType": "Comment",
+        "comment": "Required to show plots when not all legends are selected and then source has changed."
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctx%owner::ShowLegend%/ctx%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:general#/definitions/Boolean",
+          "value": false
+        },
+        "asyncWait": true
+      },
+      {
+        "objectType": "WriteToSymbol",
+        "active": true,
+        "symbolExpression": "%ctx%owner::ShowLegend%/ctx%",
+        "value": {
+          "objectType": "StaticValue",
+          "valueType": "tchmi:general#/definitions/Boolean",
+          "value": true
+        },
+        "asyncWait": true
+      }
+    ]
+  }
+]</script>
+</div>
+<div id="TcHmiCombobox_ChartSelector" data-tchmi-type="TcHmi.Controls.Beckhoff.TcHmiCombobox" data-tchmi-auto-focus-out="true" data-tchmi-combobox-text="Select" data-tchmi-height="20" data-tchmi-height-unit="px" data-tchmi-left-unit="px" data-tchmi-top="3" data-tchmi-top-unit="px" data-tchmi-width="168" data-tchmi-width-unit="px" data-tchmi-right="100" data-tchmi-selected-id="1" data-tchmi-right-unit="px">
+<script data-tchmi-target-attribute="data-tchmi-content-padding" type="application/json">
+{
+  "top": 3,
+  "right": 3,
+  "bottom": 3,
+  "left": 3
+}
+</script>
+
+
+<script data-tchmi-target-attribute="data-tchmi-src-data" type="application/json">
+[
+  {
+    "id": 1.0,
+    "text": "%l%Current%/l%",
+    "value": 1.0
+  },
+  {
+    "id": 2.0,
+    "text": "%l%ActivePower%/l%",
+    "value": 2.0
+  },
+  {
+    "id": 3.0,
+    "text": "%l%ReactivePower%/l%",
+    "value": 3.0
+  },
+  {
+    "id": 4.0,
+    "text": "%l%Voltage%/l%",
+    "value": 4.0
+  },
+  {
+    "id": 5.0,
+    "text": "%l%Frequency%/l%",
+    "value": 5.0
+  }
+]
+</script>
+</div>
+</div>

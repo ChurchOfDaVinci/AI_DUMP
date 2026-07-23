@@ -1,0 +1,48 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="eObject_ID" Id="{a0b9e265-8d3e-4dbc-b77a-daab1096195b}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'to_string'}
+TYPE eObject_ID :
+(	
+	None					:= 0,
+	Safety					:= 10,
+	PowerStack				:= 100,
+	NetContactor			:= 150,
+	PowerModuleMaster 		:= 200,
+	PowerModuleSlave 		:= 300,
+	PowerMonitor			:= 400,
+	InternalPowerSupply		:= 500,
+	UPS						:= 550,
+	NeutralTransformer		:= 600,
+	HartingIO				:= 650,
+	Battery					:= 700,
+	Cooling					:= 800,
+	HeatPump				:= 850,
+	AC_Switchgear			:= 900,
+	DC_Switchgear			:= 950,
+	RCM						:= 1000,
+	SurgeProtection			:= 1010,
+	InsulationMonitor		:= 1020,
+	Firedetection			:= 1030,
+	OCP						:= 1050,
+	Enclosure_LED			:= 1200,
+	Enclosure_doors			:= 1210,
+	Enclosure_climate		:= 1220,
+	PLC						:= 2000,
+	Router					:= 2100,
+	PNcontroller			:= 2200,
+	IotController			:= 2300,
+	PeakshaveBox			:= 2400,
+	ACDCCharger				:= 2500,
+	RemoteIO				:= 2600,
+	GenGridController		:= 3000,
+	PowerController			:= 3100,
+	System					:= 3200,
+	Genset					:= 4000
+	
+) WORD := None;
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

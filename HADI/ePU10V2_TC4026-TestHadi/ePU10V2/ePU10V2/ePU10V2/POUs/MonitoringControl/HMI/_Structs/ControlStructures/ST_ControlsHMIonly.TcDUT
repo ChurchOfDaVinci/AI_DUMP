@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_ControlsHMIonly" Id="{0869cd08-c9aa-420b-8083-cc7819d10dc9}">
+    <Declaration><![CDATA[TYPE ST_ControlsHMIonly:
+STRUCT
+	b_Pup							: BOOL;
+	b_Pdown							: BOOL;
+	b_Qup							: BOOL;
+	b_Qdown							: BOOL;
+	b_QReset						: BOOL;
+	b_PReset						: BOOL;
+	b_HMITaskKill					: BOOL;
+	b_ActivateSetting				: BOOL;
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

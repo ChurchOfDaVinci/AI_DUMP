@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_PNOutput_GenControl" Id="{8e5287c1-9f6f-4e04-8256-395225825020}">
+    <Declaration><![CDATA[TYPE ST_PNOutput_GenControl :
+STRUCT
+	w_Status					:	WORD;
+	w_Warnings					:	WORD;
+	w_Faults					:	WORD;
+	ui_GeneratorStatus			:	UINT;	
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

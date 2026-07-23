@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Service_DigitalOutInWithDependency" Id="{b24e9df1-b230-4fa5-a353-d54e008c1808}">
+    <Declaration><![CDATA[TYPE ST_Service_DigitalOutInWithDependency EXTENDS ST_Service_DigitalOutIn:
+STRUCT
+	{attribute 'TcHmiSystemEng.Parameter.Name' := 'Dependency state'}
+	DependencyOK			: BOOL; 
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

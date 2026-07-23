@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_Service_DigitalOutIn" Id="{911f8c75-949f-45dc-9c83-709ac1c9a933}">
+    <Declaration><![CDATA[TYPE ST_Service_DigitalOutIn :
+STRUCT
+	Force				: eForceBool; //write value
+	Feedback			: BOOL; // readvalue
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.18">
+  <DUT Name="ST_ACDCCharger_Service" Id="{421c01bf-48df-4106-b173-4f5705cbbd23}">
+    <Declaration><![CDATA[TYPE ST_ACDCCharger_Service :
+STRUCT
+END_STRUCT
+END_TYPE
+]]></Declaration>
+  </DUT>
+</TcPlcObject>
